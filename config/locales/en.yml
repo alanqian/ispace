@@ -21,3 +21,22 @@
 
 en:
   hello: "Hello world"
+
+  dict:
+    plan: "规划"
+    plan_set: "规划组"
+    fixture: "货架"
+    bay: "货备"
+    obstacle: "障碍"
+    notch_spacing: "槽空间"
+    takeoff_height: "顶部高度"
+    peg_hole: "钉孔"
+    relative_to_shelf_below: "相对于下层货架的位置"
+    shelf: "隔板"
+    peg_board: "钉板"
+    chest_space: "腔体空间"
+    rsb: "后支撑条"
+    range: "排面"
+    facing: "排面"
+    range_info: "排面"
+
