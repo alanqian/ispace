@@ -40,3 +40,11 @@ en:
     facing: "排面"
     range_info: "排面"
 
+  categories:
+    index:
+      id: "品类"
+      new: "添加新品类"
+    edit:
+      id: "品类"
+      desc: "备注"
+
