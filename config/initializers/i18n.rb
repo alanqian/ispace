@@ -1,3 +1,4 @@
+#encoding: utf-8
 #---
 # Excerpted from "Agile Web Development with Rails",
 # published by The Pragmatic Bookshelf.
@@ -6,9 +7,8 @@
 # We make no guarantees that this code is fit for any purpose.
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
-#encoding: utf-8
 I18n.default_locale = :en
 LANGUAGES = [
   ['English',   'en'],
-  ["中文",      'zh_CN']
+  ['中文',   'zh_CN']
 ]
