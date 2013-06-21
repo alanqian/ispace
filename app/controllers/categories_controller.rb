@@ -61,9 +61,24 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def manage
+    logger.debug "manage categories..."
+    @categories = Category.paginate page: params[:page], per_page: 10
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def bulk_update
+    # TODO:
+    flash[:notice] = "updated"
+    redirect_to manage_path(:page => params[:page])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_category
+      logger.debug "set_category callback"
       @category = Category.find(params[:id])
     end
 

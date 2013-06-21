@@ -1,4 +1,6 @@
 Ispace::Application.routes.draw do
+  get "categories/manage"
+  post "categories/bulk_update"
   resources :categories
 
   # The priority is based upon order of creation: first created -> highest priority.
