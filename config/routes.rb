@@ -1,4 +1,14 @@
 Ispace::Application.routes.draw do
+  resources :rear_support_bars
+
+  resources :freezer_chests
+
+  resources :peg_boards
+
+  resources :open_shelves
+
+  resources :bays
+
   get "categories/manage"
   post "categories/bulk_update"
   resources :categories

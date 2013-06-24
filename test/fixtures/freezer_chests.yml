@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  bay_id: 1
+  level: 1
+  name: MyString
+  height: 9.99
+  depth: 9.99
+  inside_height: 9.99
+  wall_thick: 9.99
+  merch_height: 9.99
+
+two:
+  bay_id: 1
+  level: 1
+  name: MyString
+  height: 9.99
+  depth: 9.99
+  inside_height: 9.99
+  wall_thick: 9.99
+  merch_height: 9.99

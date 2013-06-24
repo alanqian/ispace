@@ -1,0 +1,53 @@
+<h1>Listing bays</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Back height</th>
+      <th>Back width</th>
+      <th>Back thick</th>
+      <th>Back color</th>
+      <th>Notch spacing</th>
+      <th>Notch 1st</th>
+      <th>Base height</th>
+      <th>Base width</th>
+      <th>Base depth</th>
+      <th>Base color</th>
+      <th>Takeoff height</th>
+      <th>Elem type</th>
+      <th>Elem count</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bays.each do |bay| %>
+      <tr>
+        <td><%= bay.name %></td>
+        <td><%= bay.back_height %></td>
+        <td><%= bay.back_width %></td>
+        <td><%= bay.back_thick %></td>
+        <td><%= bay.back_color %></td>
+        <td><%= bay.notch_spacing %></td>
+        <td><%= bay.notch_1st %></td>
+        <td><%= bay.base_height %></td>
+        <td><%= bay.base_width %></td>
+        <td><%= bay.base_depth %></td>
+        <td><%= bay.base_color %></td>
+        <td><%= bay.takeoff_height %></td>
+        <td><%= bay.elem_type %></td>
+        <td><%= bay.elem_count %></td>
+        <td><%= link_to 'Show', bay %></td>
+        <td><%= link_to 'Edit', edit_bay_path(bay) %></td>
+        <td><%= link_to 'Destroy', bay, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Bay', new_bay_path %>

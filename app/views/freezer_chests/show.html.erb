@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Bay:</strong>
+  <%= @freezer_chest.bay_id %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @freezer_chest.level %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @freezer_chest.name %>
+</p>
+
+<p>
+  <strong>Height:</strong>
+  <%= @freezer_chest.height %>
+</p>
+
+<p>
+  <strong>Depth:</strong>
+  <%= @freezer_chest.depth %>
+</p>
+
+<p>
+  <strong>Inside height:</strong>
+  <%= @freezer_chest.inside_height %>
+</p>
+
+<p>
+  <strong>Wall thick:</strong>
+  <%= @freezer_chest.wall_thick %>
+</p>
+
+<p>
+  <strong>Merch height:</strong>
+  <%= @freezer_chest.merch_height %>
+</p>
+
+<%= link_to 'Edit', edit_freezer_chest_path(@freezer_chest) %> |
+<%= link_to 'Back', freezer_chests_path %>

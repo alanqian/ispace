@@ -1,0 +1,21 @@
+<%= simple_form_for(@peg_board) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :bay_id %>
+    <%= f.input :level %>
+    <%= f.input :name %>
+    <%= f.input :height %>
+    <%= f.input :depth %>
+    <%= f.input :vert_space %>
+    <%= f.input :horz_space %>
+    <%= f.input :vert_start %>
+    <%= f.input :horz_start %>
+    <%= f.input :notch_num %>
+    <%= f.input :color %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

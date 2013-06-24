@@ -1,0 +1,24 @@
+<%= simple_form_for(@bay) do |f| %>
+  <%= f.error_notification %>
+
+  <% field_set_tag "Basic" do %>
+  <div class="inputs">
+    <%= f.input :name %>
+    <%= f.input :back_height %>
+    <%= f.input :back_width %>
+    <%= f.input :back_thick %>
+    <%= f.input :back_color %>
+    <%= f.input :notch_spacing %>
+    <%= f.input :notch_1st %>
+    <%= f.input :base_height %>
+    <%= f.input :base_width %>
+    <%= f.input :base_depth %>
+    <%= f.input :base_color %>
+    <%= f.input :takeoff_height %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+  <% end %>
+<% end %>

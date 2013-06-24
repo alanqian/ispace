@@ -1,0 +1,20 @@
+<%= simple_form_for(@rear_support_bar) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :bay_id %>
+    <%= f.input :level %>
+    <%= f.input :name %>
+    <%= f.input :height %>
+    <%= f.input :bar_depth %>
+    <%= f.input :bar_thick %>
+    <%= f.input :from_back %>
+    <%= f.input :hook_length %>
+    <%= f.input :notch_num %>
+    <%= f.input :color %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

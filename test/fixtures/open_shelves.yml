@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  bay_id: 1
+  level: 1
+  name: MyString
+  height: 9.99
+  depth: 9.99
+  thick: 9.99
+  slope: 9.99
+  riser: 9.99
+  notch_num: 1
+  color: MyString
+  from_back: 9.99
+  finger_space: 9.99
+
+two:
+  bay_id: 1
+  level: 1
+  name: MyString
+  height: 9.99
+  depth: 9.99
+  thick: 9.99
+  slope: 9.99
+  riser: 9.99
+  notch_num: 1
+  color: MyString
+  from_back: 9.99
+  finger_space: 9.99
