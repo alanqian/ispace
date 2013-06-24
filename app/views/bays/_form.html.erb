@@ -3,11 +3,11 @@
 
   <% field_set_tag "Basic" do %>
   <div class="inputs">
-    <%= f.input :name %>
+    <%= f.input :name, wrapper_html: { class: 'foo' } %>
     <%= f.input :back_height %>
     <%= f.input :back_width %>
     <%= f.input :back_thick %>
-    <%= f.input :back_color %>
+    <%= f.input :back_color, :input_html => {:maxlength =>7,:style=> 'width: 20px'} %>
     <%= f.input :notch_spacing %>
     <%= f.input :notch_1st %>
     <%= f.input :base_height %>
