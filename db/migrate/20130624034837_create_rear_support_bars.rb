@@ -11,6 +11,7 @@ class CreateRearSupportBars < ActiveRecord::Migration
       t.decimal :hook_length, :precision => 6, :scale => 1, :null => false
       t.integer :notch_num
       t.string :color
+      t.decimal :bar_slope, :precision => 4, :scale => 1, :null => false
 
       t.timestamps
     end

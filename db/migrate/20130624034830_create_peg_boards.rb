@@ -11,6 +11,7 @@ class CreatePegBoards < ActiveRecord::Migration
       t.decimal :vert_start, :precision => 6, :scale => 1, :null => false
       t.decimal :horz_start, :precision => 6, :scale => 1, :null => false
       t.integer :notch_num
+      t.decimal :from_base, :precision => 6, :scale => 1, :null => false
       t.string :color
 
       t.timestamps

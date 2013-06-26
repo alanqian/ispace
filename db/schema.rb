@@ -44,9 +44,10 @@ ActiveRecord::Schema.define(version: 20130624034837) do
     t.string   "name"
     t.decimal  "height",        precision: 6, scale: 1, null: false
     t.decimal  "depth",         precision: 6, scale: 1, null: false
-    t.decimal  "inside_height", precision: 6, scale: 1, null: false
     t.decimal  "wall_thick",    precision: 6, scale: 1, null: false
+    t.decimal  "inside_height", precision: 6, scale: 1, null: false
     t.decimal  "merch_height",  precision: 6, scale: 1, null: false
+    t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,14 +57,17 @@ ActiveRecord::Schema.define(version: 20130624034837) do
     t.integer  "level"
     t.string   "name"
     t.decimal  "height",       precision: 6, scale: 1, null: false
+    t.decimal  "width",        precision: 6, scale: 1, null: false
     t.decimal  "depth",        precision: 6, scale: 1, null: false
     t.decimal  "thick",        precision: 6, scale: 1, null: false
-    t.decimal  "slope",        precision: 6, scale: 1, null: false
+    t.decimal  "slope",        precision: 4, scale: 1, null: false
     t.decimal  "riser",        precision: 6, scale: 1, null: false
     t.integer  "notch_num"
+    t.decimal  "from_base",    precision: 6, scale: 1, null: false
     t.string   "color"
     t.decimal  "from_back",    precision: 6, scale: 1, null: false
     t.decimal  "finger_space", precision: 6, scale: 1, null: false
+    t.decimal  "x_positon",    precision: 6, scale: 1, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -79,6 +83,7 @@ ActiveRecord::Schema.define(version: 20130624034837) do
     t.decimal  "vert_start", precision: 6, scale: 1, null: false
     t.decimal  "horz_start", precision: 6, scale: 1, null: false
     t.integer  "notch_num"
+    t.decimal  "from_base",  precision: 6, scale: 1, null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -95,6 +100,7 @@ ActiveRecord::Schema.define(version: 20130624034837) do
     t.decimal  "hook_length", precision: 6, scale: 1, null: false
     t.integer  "notch_num"
     t.string   "color"
+    t.decimal  "bar_slope",   precision: 4, scale: 1, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

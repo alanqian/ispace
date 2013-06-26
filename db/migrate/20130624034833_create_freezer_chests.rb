@@ -6,9 +6,10 @@ class CreateFreezerChests < ActiveRecord::Migration
       t.string :name, :length => 32
       t.decimal :height, :precision => 6, :scale => 1, :null => false
       t.decimal :depth, :precision => 6, :scale => 1, :null => false
-      t.decimal :inside_height, :precision => 6, :scale => 1, :null => false
       t.decimal :wall_thick, :precision => 6, :scale => 1, :null => false
+      t.decimal :inside_height, :precision => 6, :scale => 1, :null => false
       t.decimal :merch_height, :precision => 6, :scale => 1, :null => false
+      t.string :color
 
       t.timestamps
     end
