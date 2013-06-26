@@ -15,6 +15,7 @@ class BaysController < ApplicationController
   # GET /bays/new
   def new
     @bay = Bay.new
+    # @bay.open_shelves.build
   end
 
   # GET /bays/1/edit
