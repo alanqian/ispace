@@ -1,26 +1,32 @@
 <%= simple_form_for(@bay) do |f| %>
   <%= f.error_notification %>
 
-  <div class="inputs">
+  <div id="basic" class="inputs">
     <%= f.input :name, wrapper_html: { class: 'foo' } %>
-    <%= f.input :back_height %>
-    <%= f.input :back_width %>
-    <%= f.input :back_thick %>
-    <%= f.input :back_color, :input_html => {:maxlength =>7,:style=> 'width: 20px'} %>
-    <%= f.input :has_notch?, :as => :boolean, :boolean_style => :inline  %>
-    <%= f.input :notch_spacing %>
-    <%= f.input :notch_1st %>
-    <%= f.input :base_height %>
-    <%= f.input :base_width %>
-    <%= f.input :base_depth %>
-    <%= f.input :base_color %>
-    <%= f.input :takeoff_height %>
+    <br/>
+    <%= f.input :back_height, wrapper_html: { class: 'col_1_4' }  %>
+    <%= f.input :back_width, wrapper_html: { class: 'col_1_4' } %>
+    <%= f.input :back_thick, wrapper_html: { class: 'col_1_4' } %>
+    <%= f.input :back_color, wrapper_html: { class: 'col_4_4' }, :input_html => { class: 'color' } %>
+    <%= f.input :has_notch?, wrapper_html: { class: 'col_check' }, :as => :boolean, :boolean_style => :inline, :label => false %>
+    <%= f.input :notch_spacing, wrapper_html: { class: 'col_pre notch_on' } %>
+    <%= f.input :notch_1st, wrapper_html: { class: 'col_end notch_on' } %>
+    <%= f.input :base_height, wrapper_html: { class: 'col_1_4' }  %>
+    <%= f.input :base_width, wrapper_html: { class: 'col_1_4' }  %>
+    <%= f.input :base_depth, wrapper_html: { class: 'col_1_4' }  %>
+    <%= f.input :base_color, wrapper_html: { class: 'col_4_4' }, :input_html => { class: 'color' } %>
+    <%= f.input :takeoff_height, wrapper_html: { class: 'col_end' } %>
+    <!-- checkbox: shelf position relative to shelf below -->
+    <!-- show peg holes -->
   </div>
 
   <br/>
   <%= link_to_add_fields "Add OpenShelf", f, :open_shelves %>
 
   <div id='accordion'>
+  </div>
+
+  <div id="dummy">
     <%= f.simple_fields_for :open_shelves do |builder| %>
       <%= render 'open_shelf_fields', f: builder %>
     <% end %>

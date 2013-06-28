@@ -1,3 +1,104 @@
 // Place all the styles related to the bays controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#basic {
+  display: block;
+  float: top;
+  width: 360px;
+  border: 1px 1px 1px 1px;
+  border-color: 0;
+  background-color: #f0f0f0;
+
+  div.col_1_4 {
+    display: inline-block;
+    float: left;
+    padding-right: 20px;
+    width: 80px;
+
+    label {
+      display: block;
+      width: 80px;
+    }
+    input {
+      width: 80px;
+    }
+  }
+
+  div.col_4_4 {
+    display: block;
+    float: left;
+    width: 50px;
+
+    label {
+      display: block;
+      width: 50px;
+    }
+    input {
+      width: 50px;
+    }
+  }
+
+  div.col_check {
+    display: inline-block;
+    float: left;
+  }
+
+  div.col_pre {
+    display: inline-block;
+    float: left;
+    input {
+      display: inline-block;
+      width: 50px;
+    }
+  }
+
+  div.col_end {
+    input {
+      width: 50px;
+    }
+  }
+
+  div.notch_on {
+  }
+
+}
+
+#accordion {
+  div.col_1 {
+    label {
+      display: inline-block;
+      width: 80px;
+    }
+    input {
+      width: 100px;
+    }
+  }
+
+  div.col_1_2 {
+    display: inline-block;
+    float: left;
+    padding-right: 20px;
+
+    label {
+      display: inline-block;
+      width: 80px;
+    }
+    input {
+      display: inline-block;
+      width: 100px;
+    }
+  }
+
+  div.col_2_2 {
+    display: block;
+
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input {
+      width: 100px;
+    }
+  }
+}

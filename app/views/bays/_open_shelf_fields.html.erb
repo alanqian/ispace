@@ -1,20 +1,21 @@
 <div class="elem_inputs">
-  <h3><%= f.input_field :name, class: 'elem_name'  %></h3>
-  <%= f.input :bay_id, as: :hidden %>
-  <%= f.input :level, as: :hidden, input_html: { class: 'elem_level' } %>
+  <h3><%= f.input_field :name, size: 10, class: 'elem_name wrap'  %></h3>
   <div>
-  <%= f.input :height %>
-  <%= f.input :width %>
-  <%= f.input :depth %>
-  <%= f.input :thick %>
-  <%= f.input :slope %>
-  <%= f.input :riser %>
-  <%= f.input :notch_num %>
-  <%= f.input :from_base %>
-  <%= f.input :color %>
-  <%= f.input :from_back %>
-  <%= f.input :finger_space %>
-  <%= f.input :x_positon %>
+  <%= f.input :level, as: :hidden, input_html: { class: 'elem_level' } %>
+  <%= f.input :bay_id, as: :hidden %>
+
+  <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
+  <%= f.input :width, wrapper_html: { class: 'col_2_2' }  %>
+  <%= f.input :depth, wrapper_html: { class: 'col_1_2' }  %>
+  <%= f.input :thick, wrapper_html: { class: 'col_2_2' }   %>
+  <%= f.input :slope, wrapper_html: { class: 'col_1_2' } %>
+  <%= f.input :riser, wrapper_html: { class: 'col_2_2' } %>
+  <%= f.input :notch_num, wrapper_html: { class: 'col_1_2 notch_on' } %>
+  <%= f.input :from_base, wrapper_html: { class: 'col_1_2 notch_off' } %>
+  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  <%= f.input :from_back, wrapper_html: { class: 'col_1_2' }  %>
+  <%= f.input :finger_space, wrapper_html: { class: 'col_2_2' } %>
+  <%= f.input :x_positon, wrapper_html: { class: 'col_1' }  %>
   </div>
 </div>
 
