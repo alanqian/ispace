@@ -15,7 +15,7 @@ class CreateOpenShelves < ActiveRecord::Migration
       t.string :color
       t.decimal :from_back, :precision => 6, :scale => 1, :null => false
       t.decimal :finger_space, :precision => 6, :scale => 1, :null => false
-      t.decimal :x_positon, :precision => 6, :scale => 1, :null => false
+      t.decimal :x_position, :precision => 6, :scale => 1, :null => false
 
       t.timestamps
     end

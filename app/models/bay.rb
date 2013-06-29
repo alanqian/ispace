@@ -10,7 +10,7 @@ class Bay < ActiveRecord::Base
   # elem_type
   # elem_count
 
-  def has_notch?
+  def use_notch
     false
   end
 end
