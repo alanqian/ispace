@@ -274,6 +274,7 @@ OpenShelf.create(
     from_back: from_back,
     hook_length: 40.0,
     notch_num: notch_num,
+    from_base: (notch_num - 1) * bay.notch_spacing + bay.notch_1st,
     color: '#ff007f',
     bar_slope: 0.0,
   )
