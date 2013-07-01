@@ -65,6 +65,8 @@
 }
 
 #accordion {
+  width: 500px;
+
   div.col_1 {
     label {
       display: inline-block;
@@ -101,4 +103,47 @@
       width: 100px;
     }
   }
+}
+
+#dummy, #template {
+  display: none;
+}
+
+#add_open_shelf {
+  background: url('/images/add_open_shelf.png') no-repeat top;
+}
+#add_peg_board {
+  background: url('/images/add_peg_board.png') no-repeat top;
+}
+#add_rear_supported_bar {
+  background: url('/images/add_rear_supported_bar.png') no-repeat top;
+}
+#add_freezer_chest {
+  background: url('/images/add_freezer_chest.png') no-repeat top;
+}
+
+a.remove_element {
+  display: inline-block;
+  float: right;
+  padding: 1px;
+  width: 1em;
+}
+
+input.bay_elem_button {
+  display: inline-block;
+  width: 32px;
+  height: 31px;
+  background-color: #67a0cf;
+  border:2px outset #2683cf;
+  color:#fff;
+  padding:3px 3px 3px 3px;
+  margin: 1px;
+}
+
+input.bay_elem_button:active {
+  background-color: #67b4cf;
+  border: 2px inset #1d659f;
+  color: #e0ffaf;
+  padding: 1px 5px 5px 1px;
+  margin: 0px;
 }

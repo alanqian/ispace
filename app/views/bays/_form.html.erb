@@ -1,6 +1,7 @@
 <%= simple_form_for(@bay) do |f| %>
   <%= f.error_notification %>
 
+  <%= field_set_tag 'BasicInfo', id: "bases" do %>
   <div id="basic" class="inputs">
     <%= f.input :name, wrapper_html: { class: 'foo' } %>
     <br/>
@@ -19,16 +20,31 @@
     <!-- checkbox: shelf position relative to shelf below -->
     <!-- show peg holes -->
   </div>
+  <% end %>
 
   <br/>
-  <%= link_to_add_fields "Add OpenShelf", f, :open_shelves %>
+
+  <%= button_to_function " ", "", class: 'add_element bay_elem_button', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'open shelf' %>
+  <%= button_to_function " ", "", class: 'add_element bay_elem_button', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'peg_board' %>
+  <%= button_to_function " ", "", class: 'add_element bay_elem_button', id: 'add_freezer_chest', 'data-id' => '#freezer_chest' %>
+  <%= button_to_function " ", "", class: 'add_element bay_elem_button', id: 'add_rear_supported_bar', 'data-id' => '#rear_supported_bar' %>
 
   <div id='accordion'>
   </div>
 
+  <div id="template">
+    <%= f.simple_fields_for :open_shelf do |builder| %>
+      <div id="open_shelf" data-id='\[open_shelf\]' data-nid=>
+        <%= render 'open_shelf_fields', f: builder %>
+      </div>
+    <% end %>
+  </div>
+
   <div id="dummy">
     <%= f.simple_fields_for :open_shelves do |builder| %>
-      <%= render 'open_shelf_fields', f: builder %>
+      <div class="elem_inputs">
+        <%= render 'open_shelf_fields', f: builder %>
+      </div>
     <% end %>
   </div>
 

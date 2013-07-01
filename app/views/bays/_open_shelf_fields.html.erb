@@ -1,9 +1,11 @@
-<div class="elem_inputs">
-  <h3><%= f.input_field :name, size: 10, class: 'elem_name wrap'  %></h3>
-  <div>
-  <%= f.input :level, as: :hidden, input_html: { class: 'elem_level' } %>
+<h3>
+  <%= f.input_field :name, size: 10, class: 'elem_name wrap'  %>
   <%= f.input :bay_id, as: :hidden %>
-
+  <%= f.input :level, as: :hidden, input_html: { class: 'elem_level' } %>
+  <%= f.hidden_field :_destroy %>
+  <%= link_to_function "x", "", class: 'remove_element' %>
+</h3>
+<div>
   <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
   <%= f.input :width, wrapper_html: { class: 'col_2_2' }  %>
   <%= f.input :depth, wrapper_html: { class: 'col_1_2' }  %>
@@ -16,6 +18,5 @@
   <%= f.input :from_back, wrapper_html: { class: 'col_1_2' }  %>
   <%= f.input :finger_space, wrapper_html: { class: 'col_2_2' } %>
   <%= f.input :x_position, wrapper_html: { class: 'col_1' }  %>
-  </div>
 </div>
 

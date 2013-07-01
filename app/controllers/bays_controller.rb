@@ -20,6 +20,8 @@ class BaysController < ApplicationController
 
   # GET /bays/1/edit
   def edit
+    # set template members
+    @open_shelf = OpenShelf.new
   end
 
   # POST /bays
