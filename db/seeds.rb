@@ -19,6 +19,25 @@ PegBoard.delete_all
 FreezerChest.delete_all
 RearSupportBar.delete_all
 
+# create template open_shelf
+OpenShelf.create(
+  id: 0,
+  bay_id: 0,
+  name: "shelf ",
+  height: 20.0,
+  width: 120.0,
+  depth: 50.0,
+  thick: 1.0,
+  slope: 0.0,
+  riser: 0.0,
+  notch_num: 0,
+  from_base: 1.0,
+  color: '#dfdfdf',
+  from_back: 0.0,
+  finger_space: 0.0,
+  x_position: 0.0,
+)
+
 # create Bay '120*7层板',
 bay = Bay.create(
   name: '120x7层板',
@@ -26,8 +45,8 @@ bay = Bay.create(
   back_width: 120.0,
   back_thick: 3.0,
   back_color: '#ffffff',
-  notch_spacing:  0.0,
-  notch_1st: 0.0,
+  notch_spacing: 1.0,
+  notch_1st: 1.0,
   base_height: 15.0,
   base_width: 120.0,
   base_depth: 50.0,
@@ -45,7 +64,6 @@ level = 1
 [1.0, 27.0, 53.0, 79.0, 105.0, 131.0, 157.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    level: level,
     name: "shelf #{level}",
     height: 20.0,
     width: 120.0,
@@ -53,6 +71,7 @@ level = 1
     thick: 5.0,
     slope: 0.0,
     riser: 0.0,
+    notch_num: 0,
     from_base: from_base,
     color: '#dfdfdf',
     from_back: 0.0,
@@ -69,8 +88,8 @@ bay = Bay.create(
     back_width: 120.0,
     back_thick: 3.0,
     back_color: '#ffffff',
-    notch_spacing:  0.0,
-    notch_1st: 0.0,
+    notch_spacing: 1.0,
+    notch_1st: 1.0,
     base_height: 15.0,
     base_width: 120.0,
     base_depth: 50.0,
@@ -84,7 +103,6 @@ level = 1
 [1.0, 23.0, 45.0, 67.0, 89.0, 111.0, 133.0, 155.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    level: level,
     name: "shelf #{level}",
     height: 20.0,
     width: 120.0,
@@ -92,6 +110,7 @@ level = 1
     thick: 1.0,
     slope: 0.0,
     riser: 0.0,
+    notch_num: 0,
     from_base: from_base,
     color: '#dfdfdf',
     from_back: 0.0,
@@ -107,8 +126,8 @@ bay = Bay.create(
     back_width: 60.0,
     back_thick: 3.0,
     back_color: '#ffffff',
-    notch_spacing:  0.0,
-    notch_1st: 0.0,
+    notch_spacing: 1.0,
+    notch_1st: 1.0,
     base_height: 15.0,
     base_width: 60.0,
     base_depth: 50.0,
@@ -121,7 +140,6 @@ level = 1
 [1.0, 23.0, 45.0, 67.0, 89.0, 111.0, 133.0, 155.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    level: level,
     name: "shelf #{level}",
     height: 20.0,
     width: 60.0,
@@ -129,6 +147,7 @@ level = 1
     thick: 1.0,
     slope: 0.0,
     riser: 0.0,
+    notch_num: 0,
     from_base: from_base,
     color: '#ffffff',
     from_back: 0.0,
@@ -144,8 +163,8 @@ bay = Bay.create(
     back_width: 60.0,
     back_thick: 3.0,
     back_color: '#400040',
-    notch_spacing:  0.0,
-    notch_1st: 0.0,
+    notch_spacing: 1.0,
+    notch_1st: 1.0,
     base_height: 15.0,
     base_width: 60.0,
     base_depth: 50.0,
@@ -158,7 +177,6 @@ level = 1
 [1.0, 27.0, 53.0, 79.0, 105.0, 131.0, 157.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    level: level,
     name: "shelf #{level}",
     height: 20.0,
     width: 60.0,
@@ -166,6 +184,7 @@ level = 1
     thick: 5.0,
     slope: 0.0,
     riser: 0.0,
+    notch_num: 0,
     from_base: from_base,
     color: '#dfdfdf',
     from_back: 0.0,
@@ -195,7 +214,6 @@ bay = Bay.create(
 level = 1
 OpenShelf.create(
   bay_id: bay.id,
-  level: level,
   name: "shelf #{level}",
   height: 30.0,
   width: 133.0,
@@ -214,7 +232,6 @@ level += 1
 # ???: some errors in peg board
 PegBoard.create(
   bay_id: bay.id,
-  level: level,
   name: "Pegboard #{level}",
   height: 200.0,
   depth: 30.0,
@@ -247,7 +264,6 @@ bay = Bay.create(
 level = 1
 OpenShelf.create(
   bay_id: bay.id,
-  level: level,
   name: "shelf #{level}",
   height: 30.0,
   width: 133.0,
@@ -266,7 +282,6 @@ OpenShelf.create(
   level += 1
   RearSupportBar.create(
     bay_id: bay.id,
-    level: level,
     name: "Bar #{level-1}",
     height: height,
     bar_depth: 4.0,
@@ -299,7 +314,6 @@ bay = Bay.create(
 )
 FreezerChest.create(
   bay_id: bay.id,
-  level: 1,
   name: 'Chest',
   height: 90.0,
   depth: 100.0,
@@ -308,11 +322,10 @@ FreezerChest.create(
   merch_height: 70.0,
   color: '#ffff',
 )
-[[2, 31, 48.0], [3, 43, 0.0]].each do |level, notch_num, from_back|
+[[1, 31, 48.0], [2, 43, 0.0]].each do |level, notch_num, from_back|
   OpenShelf.create(
     bay_id: bay.id,
-    level: level,
-    name: "shelf #{level-1}",
+    name: "shelf #{level}",
     height: 30.0,
     width: 133.0,
     depth: 50.0,

@@ -21,7 +21,9 @@ class BaysController < ApplicationController
   # GET /bays/1/edit
   def edit
     # set template members
-    @open_shelf = OpenShelf.new
+    @templates = {
+      "open_shelf" => OpenShelf.template(@bay)
+    }
   end
 
   # POST /bays
@@ -43,6 +45,7 @@ class BaysController < ApplicationController
   # PATCH/PUT /bays/1
   # PATCH/PUT /bays/1.json
   def update
+    logger.debug "#{abc}"
     respond_to do |format|
       if @bay.update(bay_params)
         format.html { redirect_to @bay, notice: 'Bay was successfully updated.' }

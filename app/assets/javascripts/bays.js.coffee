@@ -48,11 +48,13 @@ $ ->
     if use_notch
       $(".elem_notch_num").parent().show()
       $(".elem_from_base").parent().hide()
+      $(".elem_from_base").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", false)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 1)
     else
       $(".elem_from_base").parent().show()
       $(".elem_notch_num").parent().hide()
+      $(".elem_notch_num").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", true)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 0.5)
 
@@ -72,7 +74,7 @@ $ ->
     tmpl = $(dataId)
 
     re = new RegExp(tmpl.data("id"), "g")
-    fieldId = "[#{tmpl.attr('id')}][#{window.bay.newIndex}]"
+    fieldId = window.bay.newIndex.toString()
     console.log re
     console.log "fieldId:", fieldId
     newHtml = $(tmpl).html().replace("\\n", "").replace(re, fieldId)

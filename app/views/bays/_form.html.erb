@@ -17,8 +17,7 @@
     <%= f.input :base_depth, wrapper_html: { class: 'col_1_4' }  %>
     <%= f.input :base_color, wrapper_html: { class: 'col_4_4' }, :input_html => { class: 'color' } %>
     <%= f.input :takeoff_height, wrapper_html: { class: 'col_end' } %>
-    <!-- checkbox: shelf position relative to shelf below -->
-    <!-- show peg holes -->
+    <%= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
   </div>
   <% end %>
 
@@ -33,10 +32,12 @@
   </div>
 
   <div id="template">
-    <%= f.simple_fields_for :open_shelf do |builder| %>
-      <div id="open_shelf" data-id='\[open_shelf\]'>
-        <%= render 'open_shelf_fields', f: builder %>
-      </div>
+    <% @templates.each do |id, template_obj| %>
+      <%= f.simple_fields_for(template_obj, index: "new_#{id}_index") do |builder| %>
+        <div id="<%= id %>" data-id="<%= "new_#{id}_index" %>">
+          <%= render "#{id}_fields", f: builder %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
