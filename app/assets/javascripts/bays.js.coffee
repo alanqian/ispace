@@ -2,9 +2,10 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-sortByLevel = (a, b) ->
-  va = parseInt($(a).find(".elem_level")[0].value)
-  vb = parseInt($(b).find(".elem_level")[0].value)
+sortByFromBase = (a, b) ->
+  va = parseFloat($(a).find(".elem_from_base")[0].value) || 0.0
+  vb = parseFloat($(b).find(".elem_from_base")[0].value) || 0.0
+  # console.log "sort:", va, vb
   return vb - va
 
 $ ->
@@ -12,7 +13,7 @@ $ ->
   $("div .elem_inputs").animate({ marginLeft: 10 }, 'fast')
   $("div .elem_inputs").css({'background-color':'#88ff88'})
 
-  $("div .elem_inputs").sort(sortByLevel).children().appendTo("#accordion")
+  $("div .elem_inputs").sort(sortByFromBase).children().appendTo("#accordion")
   count = $("#accordion h3").length
   $("#accordion").accordion({active: count - 1})
   window.bay = { newIndex: count + 10, active: count - 1 }
@@ -29,6 +30,9 @@ $ ->
     return false
 
   $(".remove_element").click(fnRemoveElement)
+
+  # move template to outside of the form
+  $("form").after($("#template"))
 
   $(".add_element").click (ev) ->
     curElem = $("#accordion").accordion("option", "active");
@@ -52,6 +56,10 @@ $ ->
     window.bay.newIndex += 1
     ev.preventDefault()
     return false
+
+  $(".elem_notch_num").change (ev) ->
+    console.log "notch_num changed!"
+    console.log $(this)
 
   console.log "bay editor loaded..."
 

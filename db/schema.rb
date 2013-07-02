@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130624034837) do
+ActiveRecord::Schema.define(version: 20130702015045) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(version: 20130624034837) do
 
   create_table "freezer_chests", force: true do |t|
     t.integer  "bay_id"
-    t.integer  "level"
     t.string   "name"
     t.decimal  "height",        precision: 6, scale: 1, null: false
     t.decimal  "depth",         precision: 6, scale: 1, null: false
@@ -54,7 +53,6 @@ ActiveRecord::Schema.define(version: 20130624034837) do
 
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
-    t.integer  "level"
     t.string   "name"
     t.decimal  "height",       precision: 6, scale: 1, null: false
     t.decimal  "width",        precision: 6, scale: 1, null: false
@@ -74,7 +72,6 @@ ActiveRecord::Schema.define(version: 20130624034837) do
 
   create_table "peg_boards", force: true do |t|
     t.integer  "bay_id"
-    t.integer  "level"
     t.string   "name"
     t.decimal  "height",     precision: 6, scale: 1, null: false
     t.decimal  "depth",      precision: 6, scale: 1, null: false
@@ -91,7 +88,6 @@ ActiveRecord::Schema.define(version: 20130624034837) do
 
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
-    t.integer  "level"
     t.string   "name"
     t.decimal  "height",      precision: 6, scale: 1, null: false
     t.decimal  "bar_depth",   precision: 6, scale: 1, null: false
