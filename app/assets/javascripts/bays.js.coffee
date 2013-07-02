@@ -8,6 +8,7 @@ sortByLevel = (a, b) ->
   return vb - va
 
 $ ->
+  console.log "bay editor start loading..."
   $("div .elem_inputs").animate({ marginLeft: 10 }, 'fast')
   $("div .elem_inputs").css({'background-color':'#88ff88'})
 
@@ -51,4 +52,6 @@ $ ->
     window.bay.newIndex += 1
     ev.preventDefault()
     return false
+
+  console.log "bay editor loaded..."
 

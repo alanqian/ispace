@@ -34,7 +34,7 @@
 
   <div id="template">
     <%= f.simple_fields_for :open_shelf do |builder| %>
-      <div id="open_shelf" data-id='\[open_shelf\]' data-nid=>
+      <div id="open_shelf" data-id='\[open_shelf\]'>
         <%= render 'open_shelf_fields', f: builder %>
       </div>
     <% end %>
