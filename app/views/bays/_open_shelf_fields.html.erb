@@ -2,7 +2,7 @@
   <%= f.input_field :name, size: 10, class: 'elem_name wrap'  %>
   <%= f.input :bay_id, as: :hidden %>
   <%= f.hidden_field :_destroy %>
-  <%= link_to_function raw("&times"), "", class: 'remove_element' %>
+  <%= link_to raw("&times"), "#", class: 'remove_element' %>
 </h3>
 <div>
   <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
