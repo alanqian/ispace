@@ -13,12 +13,12 @@ $ ->
   $("div .elem_inputs").animate({ marginLeft: 10 }, "fast")
   $("div .elem_inputs").css({"background-color":"#88ff88"})
 
+  count = $("div .elem_inputs").length
   $("div .elem_inputs").sort(sortByFromBase).children().appendTo("#accordion")
-  count = $("#accordion h3").length
-  $("#accordion").accordion({active: count - 1})
+  $("#accordion").accordion({active: -1, heightStyle: "content" })
 
   window.bay =
-    newIndex: count + 10
+    newIndex: count + 1
     active: count - 1
     use_notch: -> $("#bay_use_notch").is(":checked")
     notch_spacing: -> parseFloat $("#bay_notch_spacing").val()
@@ -65,8 +65,8 @@ $ ->
   $("form").after($("#template"))
 
   $(".add_element").click (ev) ->
-    curElem = $("#accordion").accordion("option", "active")
-    console.log "current active element:", curElem
+    console.log "current active element:",
+      $("#accordion").accordion("option", "active")
 
     dataId = $(this).attr "data-id"
     console.log "data-id:", dataId
@@ -74,14 +74,17 @@ $ ->
     tmpl = $(dataId)
 
     re = new RegExp(tmpl.data("id"), "g")
-    fieldId = window.bay.newIndex.toString()
+    fieldId = (window.bay.newIndex + 10).toString()
     console.log re
     console.log "fieldId:", fieldId
-    newHtml = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
-    console.log newHtml
-    $("#accordion").prepend(newHtml).accordion("destroy").accordion()
-
+    src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
+    # console.log src
+    $("#accordion").prepend(src).accordion("destroy").accordion({ heightStyle: "content" })
     $(".remove_element").click(fnRemoveElement)
+
+    # assume first input is element name
+    nameElem = $("#accordion h3 input").first()
+    nameElem.val(nameElem.val() + window.bay.newIndex) if nameElem
 
     window.bay.newIndex += 1
     ev.preventDefault()
