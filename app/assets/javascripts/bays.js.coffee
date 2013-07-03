@@ -2,6 +2,22 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+root = exports ? this
+root.removeElement = (el) ->
+  console.log "removeElement"
+  # set _destroy to true
+  $(el).prev("input[type=hidden]").val("1")
+  # move the elements h3+div to dummy
+  h3 = $(el).closest("h3")
+  rIndex = $("#accordion").children("h3").index(h3)
+  active = $("#accordion").accordion( "option", "active")
+  active -= 1 if rIndex <= active && active > 0
+  # console.log "index: ", rIndex, "active: ", active
+  h3.next().andSelf().appendTo($("#dummy"))
+  $("#accordion").accordion("refresh")
+  $("#accordion").accordion("option", "active", active)
+  return false
+
 sortByFromBase = (a, b) ->
   va = parseFloat($(a).find(".elem_from_base")[0].value) || 0.0
   vb = parseFloat($(b).find(".elem_from_base")[0].value) || 0.0
@@ -33,17 +49,6 @@ $ ->
       else
         ""
 
-  fnRemoveElement = (ev) ->
-    # set _destroy to true
-    $(this).prev("input[type=hidden]").val("1")
-
-    # move the elements h3+div to dummy
-    h3 = $(this).closest("h3")
-    h3.next().andSelf().appendTo($("#dummy"))
-    $("#accordion").accordion("refresh")
-    ev.preventDefault()
-    return false
-
   fnUpdateNotchInputElements = (use_notch) ->
     if use_notch
       $(".elem_notch_num").parent().show()
@@ -59,7 +64,6 @@ $ ->
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 0.5)
 
   fnUpdateNotchInputElements $("#bay_use_notch").is(":checked")
-  $(".remove_element").click(fnRemoveElement)
 
   # move template to outside of the form
   $("form").after($("#template"))
@@ -80,7 +84,6 @@ $ ->
     src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
     # console.log src
     $("#accordion").prepend(src).accordion("destroy").accordion({ heightStyle: "content" })
-    $(".remove_element").click(fnRemoveElement)
 
     # assume first input is element name
     nameElem = $("#accordion h3 input").first()
