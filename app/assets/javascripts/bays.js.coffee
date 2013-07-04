@@ -18,6 +18,88 @@ root.removeElement = (el) ->
   $("#accordion").accordion("option", "active", active)
   return false
 
+root.test = () ->
+  data = input2json("bay", "form input:not([type='submit'])")
+  return data
+
+String::chompPrefix = (prefix) ->
+  len = prefix.length
+  if this.substr(0, len) == prefix
+    return this.substr(len, this.length)
+  else
+    return ""
+
+input2json = (obName, selector) ->
+  data =
+    _re: new RegExp("\\[([\\w\\d\_]+)\\]", "g")
+    eval: (inputName) ->
+      val = this
+      while m = this._re.exec(inputName)
+        field = m[1].replace("_attributes", "") # m[1] -> $1, ...
+        field = parseInt(field) if field.match /^\d+$/
+        val = val[field]
+      return val
+  removed = {}
+
+  $(selector).each (index, el) ->
+    name = el.name.chompPrefix(obName)
+    return true unless name != ""
+
+    fields = []
+    while m = data._re.exec(name)
+      field = m[1].replace("_attributes", "") # m[1] -> $1, ...
+      field = parseInt(field) if field.match /^\d+$/
+      fields.push field
+    tail = fields.pop()
+    key = fields.join(".")
+    return true if removed[key]?
+
+    # normalize value
+    if $(el).hasClass("decimal")
+      val = parseFloat($(el).val())
+    else if $(el).hasClass("integer")
+      val = parseInt($(el).val())
+    else if $(el).hasClass("string")
+      val = $(el).val()
+    else if $(el).attr("type") == "checkbox"
+      val = $(el).is(":checked")
+    else if $(el).attr("type") == "hidden"
+      val = $(el).val()
+    else
+      console.log "unknown input: ", el
+      val = $(el).val()
+
+    #console.log key, tail, val
+    if tail == "_destroy"
+      if val == "1"  # hidden
+        # remove the whole parent branch
+        removed[key] = val
+        tail = fields.pop()
+        v = data
+        for field in fields
+          if v[field]?
+            v = v[field]
+          else
+            return true
+        delete v.splice(tail, 1)
+    else
+      # initialize the section value to [] if undefined
+      v = data
+      for field in fields
+        unless v[field]?
+          if typeof(field) == "number"
+            v[field] = {}
+          else
+            v[field] = []
+        v = v[field]
+      # set node value
+      v[tail] = val
+    return true
+
+  # console.log removed
+  return data
+
+
 sortByFromBase = (a, b) ->
   va = parseFloat($(a).find(".elem_from_base")[0].value) || 0.0
   vb = parseFloat($(b).find(".elem_from_base")[0].value) || 0.0
