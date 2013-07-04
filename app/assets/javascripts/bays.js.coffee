@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 root = exports ? this
-root.removeElement = (el) ->
+root.removeElement = (event, el) ->
   console.log "removeElement"
   # set _destroy to true
   $(el).prev("input[type=hidden]").val("1")
@@ -14,8 +14,34 @@ root.removeElement = (el) ->
   active -= 1 if rIndex <= active && active > 0
   # console.log "index: ", rIndex, "active: ", active
   h3.next().andSelf().appendTo($("#dummy"))
+  $("#accordion").accordion("option", "active", -1)
   $("#accordion").accordion("refresh")
-  $("#accordion").accordion("option", "active", active)
+  event.preventDefault()
+  return false
+
+root.addElement = (event, el) ->
+  console.log "current active element:",
+    $("#accordion").accordion("option", "active")
+
+  dataId = $(el).attr "data-id"
+  console.log "data-id:", dataId
+  console.log "maxElems:", window.bay.maxElems
+  tmpl = $(dataId)
+
+  re = new RegExp(tmpl.data("id"), "g")
+  fieldId = (window.bay.newIndex + 10).toString()
+  console.log re
+  console.log "fieldId:", fieldId
+  src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
+  # console.log src
+  $("#accordion").prepend(src).accordion("destroy").accordion({ heightStyle: "content" })
+
+  # assume first input is element name
+  nameElem = $("#accordion h3 input").first()
+  nameElem.val(nameElem.val() + window.bay.newIndex) if nameElem
+
+  window.bay.newIndex += 1
+  event.preventDefault()
   return false
 
 root.test = () ->
@@ -149,31 +175,6 @@ $ ->
 
   # move template to outside of the form
   $("form").after($("#template"))
-
-  $(".add_element").click (ev) ->
-    console.log "current active element:",
-      $("#accordion").accordion("option", "active")
-
-    dataId = $(this).attr "data-id"
-    console.log "data-id:", dataId
-    console.log "maxElems:", window.bay.maxElems
-    tmpl = $(dataId)
-
-    re = new RegExp(tmpl.data("id"), "g")
-    fieldId = (window.bay.newIndex + 10).toString()
-    console.log re
-    console.log "fieldId:", fieldId
-    src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
-    # console.log src
-    $("#accordion").prepend(src).accordion("destroy").accordion({ heightStyle: "content" })
-
-    # assume first input is element name
-    nameElem = $("#accordion h3 input").first()
-    nameElem.val(nameElem.val() + window.bay.newIndex) if nameElem
-
-    window.bay.newIndex += 1
-    ev.preventDefault()
-    return false
 
   $("#bay_use_notch").change (ev) ->
     console.log "use notch changed!", $(this).is(":checked")

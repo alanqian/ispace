@@ -129,7 +129,7 @@ a.remove_element {
   width: 1em;
 }
 
-input.bay_elem_button {
+input.add_element {
   display: inline-block;
   width: 32px;
   height: 31px;
@@ -140,7 +140,7 @@ input.bay_elem_button {
   margin: 1px;
 }
 
-input.bay_elem_button:active {
+input.add_element:active {
   background-color: #67b4cf;
   border: 2px inset #1d659f;
   color: #e0ffaf;

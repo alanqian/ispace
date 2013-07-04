@@ -8,7 +8,11 @@ class FreezerChest < ActiveRecord::Base
   validates :color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/,
     message: 'color' }
 
+  attr_writer :from_base, :notch_num
   def from_base
     0.0
+  end
+  def notch_num
+    1
   end
 end

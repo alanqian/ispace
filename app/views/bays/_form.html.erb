@@ -23,17 +23,17 @@
 
   <br/>
 
-  <%= submit_tag "", class: 'add_element bay_elem_button', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'add open shelf' %>
-  <%= submit_tag "", class: 'add_element bay_elem_button', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'add peg board' %>
-  <%= submit_tag "", class: 'add_element bay_elem_button', id: 'add_freezer_chest', 'data-id' => '#freezer_chest', title: "add freezer chest" %>
-  <%= submit_tag "", class: 'add_element bay_elem_button', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar', title: "add rsb" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'add open shelf', onclick: "addElement(event,this);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'add peg board', onclick: "addElement(event,this);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest', title: "add freezer chest", onclick: "addElement(event,this);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar', title: "add rsb", onclick: "addElement(event,this);" %>
 
   <div id='accordion'>
   </div>
 
   <div id="template">
-    <% @templates.each do |id, template_obj| %>
-      <%= f.simple_fields_for(template_obj, index: "new_#{id}_index") do |builder| %>
+    <% @templates.each do |id, model_name, template_obj| %>
+      <%= f.simple_fields_for(model_name, template_obj, child_index: "new_#{id}_index") do |builder| %>
         <div id="<%= id %>" data-id="<%= "new_#{id}_index" %>">
           <%= render "#{id}_fields", f: builder %>
         </div>

@@ -1,5 +1,8 @@
+require 'json'
+
 class BaysController < ApplicationController
   before_action :set_bay, only: [:show, :edit, :update, :destroy]
+  before_action :set_extra, only: [:show, :edit]
 
   # GET /bays
   # GET /bays.json
@@ -15,15 +18,12 @@ class BaysController < ApplicationController
   # GET /bays/new
   def new
     @bay = Bay.new
-    # @bay.open_shelves.build
+    @bay.open_shelves.build
+    set_extra
   end
 
   # GET /bays/1/edit
   def edit
-    # set template members
-    @templates = {
-      "open_shelf" => OpenShelf.template(@bay)
-    }
   end
 
   # POST /bays
@@ -45,7 +45,6 @@ class BaysController < ApplicationController
   # PATCH/PUT /bays/1
   # PATCH/PUT /bays/1.json
   def update
-    logger.debug "#{abc}"
     respond_to do |format|
       if @bay.update(bay_params)
         format.html { redirect_to @bay, notice: 'Bay was successfully updated.' }
@@ -73,8 +72,50 @@ class BaysController < ApplicationController
       @bay = Bay.find(params[:id])
     end
 
+    def set_extra
+      # set template members
+      @templates = [
+        ["open_shelf", :open_shelves, OpenShelf.template(@bay)],
+      ]
+    end
+
+    def normalize_params(bay_params)
+      if bay_params.permitted?
+        # update elem_type, elem_count correctly
+        elem_exists = lambda { |pair| pair[1][:_destroy] == "false" }
+        attrs = bay_params[:open_shelves_attributes]
+        bay_params[:elem_type] = 1 # TODO: check mixed type
+        bay_params[:elem_count] = attrs.count(&elem_exists)
+
+        # update from_base if use_notch
+        if bay_params[:use_notch]
+          logger.debug "notch:", bay_params[:notch_spacing], bay_params[:notch_1st]
+          logger.debug "notch.class:", bay_params[:notch_spacing].class, bay_params[:notch_1st].class
+          bay_params[:notch_spacing] ||= 1.0
+          bay_params[:notch_1st] ||= 1.0
+          attrs.each do |_, el|
+            logger.debug "shelf:", el[:name], el[:notch_num], el[:from_base]
+            logger.debug "shelf.class:", el[:name], el[:notch_num].class, el[:from_base].class
+            el[:from_base] = bay_params[:notch_1st] +
+              bay_params[:notch_spacing] * (el[:notch_num].to_i - 1)
+          end
+        end
+      end
+      bay_params
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def bay_params
-      params.require(:bay).permit(:name, :back_height, :back_width, :back_thick, :back_color, :notch_spacing, :notch_1st, :base_height, :base_width, :base_depth, :base_color, :takeoff_height, :elem_type, :elem_count)
+      normalize_params params.require(:bay).permit(
+        :name, :back_height, :back_width, :back_thick, :back_color,
+        :use_notch, :notch_spacing, :notch_1st,
+        :base_height, :base_width, :base_depth, :base_color,
+        :takeoff_height, :elem_type, :elem_count,
+        :show_peg_holes,
+        open_shelves_attributes: [:_destroy, :id, :bay_id, :name, :height, :width, :depth, :thick,
+          :slope, :riser, :notch_num, :from_base, :color, :from_back,
+          :finger_space, :x_position ])
     end
 end
+
+
