@@ -19,11 +19,5 @@ class Bay < ActiveRecord::Base
   # elem_type
   # elem_count
 
-  def use_notch
-    false
-  end
-
-  def show_peg_holes
-    true
-  end
+  attr_accessor :use_notch, :show_peg_holes
 end
