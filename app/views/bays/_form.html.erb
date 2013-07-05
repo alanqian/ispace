@@ -23,10 +23,10 @@
 
   <br/>
 
-  <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'add open shelf', onclick: "addElement(event,this);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'add peg board', onclick: "addElement(event,this);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest', title: "add freezer chest", onclick: "addElement(event,this);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar', title: "add rsb", onclick: "addElement(event,this);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'add open shelf', onclick: "addElement(event,this,false);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'add peg board', onclick: "addElement(event,this,false);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest', title: "add freezer chest", onclick: "addElement(event,this,true);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar', title: "add rsb", onclick: "addElement(event,this,false);" %>
 
   <div id='accordion'>
   </div>

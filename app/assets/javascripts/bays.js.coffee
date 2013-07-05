@@ -5,6 +5,7 @@
 root = exports ? this
 root.removeElement = (event, el) ->
   console.log "removeElement"
+  event.preventDefault()
   # set _destroy to true
   $(el).prev("input[type=hidden]").val("1")
   # move the elements h3+div to dummy
@@ -16,13 +17,18 @@ root.removeElement = (event, el) ->
   h3.next().andSelf().appendTo($("#dummy"))
   $("#accordion").accordion("option", "active", -1)
   $("#accordion").accordion("refresh")
-  event.preventDefault()
   return false
 
-root.addElement = (event, el) ->
+# if isChest on, add to bottom, and only one
+root.addElement = (event, el, isChest) ->
+  event.preventDefault()
+  if isChest && $("#accordion .bottom_only").length
+    alert "hey, only one chest"
+    console.log "**** chest exists ****"
+    return
+
   console.log "current active element:",
     $("#accordion").accordion("option", "active")
-
   dataId = $(el).attr "data-id"
   console.log "data-id:", dataId
   console.log "maxElems:", window.bay.maxElems
@@ -34,14 +40,17 @@ root.addElement = (event, el) ->
   console.log "fieldId:", fieldId
   src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
   # console.log src
-  $("#accordion").prepend(src).accordion("destroy").accordion({ heightStyle: "content" })
+  if isChest
+    $("#accordion").append(src)
+  else
+    $("#accordion").prepend(src)
+  $("#accordion").accordion("destroy").accordion({ heightStyle: "content" })
 
   # assume first input is element name
   nameElem = $("#accordion h3 input").first()
   nameElem.val(nameElem.val() + window.bay.newIndex) if nameElem
 
   window.bay.newIndex += 1
-  event.preventDefault()
   return false
 
 root.test = () ->
