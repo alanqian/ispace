@@ -17,8 +17,7 @@ class BaysController < ApplicationController
 
   # GET /bays/new
   def new
-    @bay = Bay.new
-    @bay.open_shelves.build
+    @bay = Bay.template
     set_extra
   end
 
@@ -76,6 +75,9 @@ class BaysController < ApplicationController
       # set template members
       @templates = [
         ["open_shelf", :open_shelves, OpenShelf.template(@bay)],
+        ["peg_board", :peg_boards, PegBoard.template(@bay)],
+        ["freezer_chest", :freezer_chests, FreezerChest.template(@bay)],
+        ["rear_support_bar", :rear_support_bars, RearSupportBar.template(@bay)],
       ]
     end
 

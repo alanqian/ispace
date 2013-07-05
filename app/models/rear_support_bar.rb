@@ -17,4 +17,10 @@ class RearSupportBar < ActiveRecord::Base
     message: 'color' }
   validates :bar_slope, presence: true,
     numericality: { greater_than_or_equal_to: 0.0 }
+
+  def self.template(bay)
+    r = self.where(bay_id: -1).first
+    r.bay_id = bay.id if r
+    r
+  end
 end

@@ -21,7 +21,6 @@ RearSupportBar.delete_all
 
 # create template open_shelf
 OpenShelf.create(
-  id: 0,
   bay_id: -1,
   name: "shelf ",
   height: 20.0,
@@ -32,11 +31,48 @@ OpenShelf.create(
   riser: 0.0,
   notch_num: 1,
   from_base: 1.0,
-  color: '#dfdfdf',
+  color: '#ffffff',
   from_back: 0.0,
   finger_space: 0.0,
   x_position: 0.0,
 )
+PegBoard.create(
+  bay_id: -1,
+  name: "Pegboard ",
+  height: 200.0,
+  depth: 30.0,
+  vert_space: 6.0,
+  horz_space: 6.0,
+  vert_start: 6.0,
+  horz_start: 6.0,
+  notch_num: 1,
+  from_base: 1.0,
+  color: '#dfdfdf',
+)
+FreezerChest.create(
+  bay_id: -1,
+  name: 'Chest',
+  height: 90.0,
+  depth: 100.0,
+  wall_thick: 4.0,
+  inside_height: 80.0,
+  merch_height: 70.0,
+  color: '#ffff',
+)
+RearSupportBar.create(
+  bay_id: -1,
+  name: "Bar ",
+  height: 30.0,
+  bar_depth: 4.0,
+  bar_thick: 4.0,
+  from_back: 45.0,
+  hook_length: 40.0,
+  notch_num: 20,
+  from_base: 80.0,
+  color: '#ff007f',
+  bar_slope: 0.0,
+)
+
 
 # create Bay '120*7层板',
 bay = Bay.create(
@@ -242,7 +278,7 @@ PegBoard.create(
   notch_num: 9,
   from_base: bay.notch_to(9),
   color: '#dfdfdf',
-);
+)
 
 # hanging bars
 bay = Bay.create(

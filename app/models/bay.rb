@@ -1,6 +1,12 @@
 class Bay < ActiveRecord::Base
   has_many :open_shelves
+  has_many :peg_boards
+  has_many :freezer_chests
+  has_many :rear_support_bars
   accepts_nested_attributes_for :open_shelves, allow_destroy: true
+  accepts_nested_attributes_for :peg_boards, allow_destroy: true
+  accepts_nested_attributes_for :freezer_chests, allow_destroy: true
+  accepts_nested_attributes_for :rear_support_bars, allow_destroy: true
 
   validates :name, presence: true, length: { maximum: 64 }
   validates :back_height, :back_width, :back_thick, presence: true,
@@ -38,6 +44,27 @@ class Bay < ActiveRecord::Base
     (notch_num - 1) * notch_spacing + notch_1st
   end
 
+  def self.template
+    bay = self.new(
+      name: 'bay ',
+      back_height: 185.0,
+      back_width: 120.0,
+      back_thick: 3.0,
+      back_color: '#ffffff',
+      notch_spacing: 1.0,
+      notch_1st: 1.0,
+      base_height: 15.0,
+      base_width: 120.0,
+      base_depth: 50.0,
+      base_color: '#400040',
+      takeoff_height: 190.0,
+      elem_type: 1,
+      elem_count: 1
+    )
+    bay.open_shelves.concat(OpenShelf.template(bay))
+    bay
+  end
+
   def deep_copy
     # copy self
     new_bay = self.dup # shallow copy
@@ -45,7 +72,8 @@ class Bay < ActiveRecord::Base
     new_bay.save!
 
     # copy associations
-    copy_assoc_to(new_bay, :open_shelves)
+    elements = [:open_shelves, :peg_boards, :freezer_chests, :rear_support_bars]
+    elements.each { |assoc| copy_assoc_to(new_bay, assoc) }
 
     new_bay
   end

@@ -15,4 +15,10 @@ class FreezerChest < ActiveRecord::Base
   def notch_num
     1
   end
+
+  def self.template(bay)
+    r = self.where(bay_id: -1).first
+    r.bay_id = bay.id if r
+    r
+  end
 end

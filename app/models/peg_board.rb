@@ -15,4 +15,10 @@ class PegBoard < ActiveRecord::Base
 
   validates :color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/,
     message: 'color' }
+
+  def self.template(bay)
+    r = self.where(bay_id: -1).first
+    r.bay_id = bay.id if r
+    r
+  end
 end

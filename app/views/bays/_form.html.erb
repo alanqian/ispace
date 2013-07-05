@@ -42,10 +42,12 @@
   </div>
 
   <div id="dummy">
-    <%= f.simple_fields_for :open_shelves do |builder| %>
-      <div class="elem_inputs">
-        <%= render 'open_shelf_fields', f: builder %>
-      </div>
+    <%= ["open_shelf", "peg_board", "freezer_chest", "rear_support_bar"].each do |elem| %>
+      <%= f.simple_fields_for elem.pluralize.to_sym do |builder| %>
+        <div class="elem_inputs">
+          <%= render "#{elem}_fields", f: builder %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
