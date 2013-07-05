@@ -9,7 +9,7 @@ class Bay < ActiveRecord::Base
     message: 'color' }
 
   validates :notch_spacing, :notch_1st, presence: true,
-    numericality: { greater_than: 0.1 }
+    numericality: { greater_than_or_equal_to: 1.0 }
   validates :base_height, :base_width, :base_depth, presence: true,
     numericality: { greater_than: 0.1 }
   validates :base_color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/ }
@@ -20,4 +20,21 @@ class Bay < ActiveRecord::Base
   # elem_count
 
   attr_accessor :use_notch, :show_peg_holes
+
+  def use_notch
+    true
+  end
+  def show_peg_holes
+    true
+  end
+
+  def to_notch(from_base)
+    (from_base - notch_1st) / notch_spacing
+  end
+
+  # for notch_num
+  # from_base = (notch_num - 1) * notch_spacing + notch_first
+  def notch_to(notch_num)
+    (notch_num - 1) * notch_spacing + notch_first
+  end
 end

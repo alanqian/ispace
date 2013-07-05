@@ -147,46 +147,52 @@ $ ->
     use_notch: -> $("#bay_use_notch").is(":checked")
     notch_spacing: -> parseFloat $("#bay_notch_spacing").val()
     notch_1st: -> parseFloat $("#bay_notch_1st").val()
+    notches_to: () ->
+      notch_spacing = @notch_spacing()
+      notch_1st = @notch_1st()
+      return if notch_spacing < 0.5 || notch_1st < 0.5
 
-    notch_to: (notch) ->
-      (parseInt(notch) - 1) * @notch_spacing() + @notch_1st()
+      notch_nums = $("#accordion .elem_notch_num").map () -> parseInt $(this).val()
+      # console.log "notches_to: ", notch_nums.get()
+      $("#accordion .elem_from_base").each (i, el) =>
+        $(el).val (notch_nums.get(i) - 1) * notch_spacing + notch_1st
+      # console.log "end of notches_to"
 
-    to_notch: (from_base) ->
-      if @notch_spacing() > 0.1
-        Math.floor((parseFloat(from_base) - @notch_1st()) / @notch_spacing()) + 1
-      else
-        ""
+    to_notches: () ->
+      notch_spacing = @notch_spacing()
+      notch_1st = @notch_1st()
+      return if notch_spacing < 0.5 || notch_1st < 0.5
 
-  fnUpdateNotchInputElements = (use_notch) ->
+      from_bases = $("#accordion .elem_from_base").map () -> parseFloat $(this).val()
+      # console.log "to_notches: ", from_bases.get()
+      $("#accordion .elem_notch_num").each (i, el) =>
+        $(el).val Math.floor((from_bases.get(i) - notch_1st) / notch_spacing) + 1
+      # console.log "end of to_notches"
+
+  updateNotchInputView = (use_notch) ->
     if use_notch
+      window.bay.to_notches()
       $(".elem_notch_num").parent().show()
       $(".elem_from_base").parent().hide()
       $(".elem_from_base").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", false)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 1)
     else
+      window.bay.notches_to()
       $(".elem_from_base").parent().show()
       $(".elem_notch_num").parent().hide()
       $(".elem_notch_num").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", true)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 0.5)
 
-  fnUpdateNotchInputElements $("#bay_use_notch").is(":checked")
+  updateNotchInputView $("#bay_use_notch").is(":checked")
 
   # move template to outside of the form
   $("form").after($("#template"))
 
   $("#bay_use_notch").change (ev) ->
     console.log "use notch changed!", $(this).is(":checked")
-    fnUpdateNotchInputElements $(this).is(":checked")
-
-  $(".elem_from_base").change (ev) ->
-    console.log "from_base changed!", $(this).val()
-    $(this).parent().prev().children("input").val window.bay.to_notch $(this).val()
-
-  $(".elem_notch_num").change (ev) ->
-    console.log "notch_num changed!", $(this).val()
-    $(this).parent().next().children("input").val window.bay.notch_to $(this).val()
+    updateNotchInputView $(this).is(":checked")
 
   console.log "bay editor loaded..."
 
