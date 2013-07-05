@@ -1,5 +1,5 @@
 class Bay < ActiveRecord::Base
-  has_many :open_shelves, class_name: OpenShelf
+  has_many :open_shelves
   accepts_nested_attributes_for :open_shelves, allow_destroy: true
 
   validates :name, presence: true, length: { maximum: 64 }
@@ -35,6 +35,26 @@ class Bay < ActiveRecord::Base
   # for notch_num
   # from_base = (notch_num - 1) * notch_spacing + notch_first
   def notch_to(notch_num)
-    (notch_num - 1) * notch_spacing + notch_first
+    (notch_num - 1) * notch_spacing + notch_1st
   end
+
+  def deep_copy
+    # copy self
+    new_bay = self.dup # shallow copy
+    new_bay.name += "(copy)"
+    new_bay.save!
+
+    # copy associations
+    copy_assoc_to(new_bay, :open_shelves)
+
+    new_bay
+  end
+
+  private
+    def copy_assoc_to(new_bay, assoc_sym)
+      self.send(assoc_sym).each do |row|
+        new_row = row.dup # shallow copy
+        new_bay.send(assoc_sym) << new_row
+      end
+    end
 end

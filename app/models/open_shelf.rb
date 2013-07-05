@@ -24,8 +24,8 @@ class OpenShelf < ActiveRecord::Base
     numericality: { greater_than_or_equal_to: 0.0 }
 
   def self.template(bay)
-    elem = self.find(@@template_id)
-    elem.bay_id = bay.id
-    elem
+    r = self.where(bay_id: -1).first
+    r.bay_id = bay.id
+    r
   end
 end

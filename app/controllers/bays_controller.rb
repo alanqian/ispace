@@ -80,6 +80,7 @@ class BaysController < ApplicationController
     end
 
     def normalize_params(bay_params)
+      # NOTE: all values in bay_params is String
       if bay_params.permitted?
         # update elem_type, elem_count correctly
         elem_exists = lambda { |pair| pair[1][:_destroy] == "false" }
@@ -88,16 +89,12 @@ class BaysController < ApplicationController
         bay_params[:elem_count] = attrs.count(&elem_exists)
 
         # update from_base if use_notch
-        if bay_params[:use_notch]
-          logger.debug "notch:", bay_params[:notch_spacing], bay_params[:notch_1st]
-          logger.debug "notch.class:", bay_params[:notch_spacing].class, bay_params[:notch_1st].class
-          bay_params[:notch_spacing] ||= 1.0
-          bay_params[:notch_1st] ||= 1.0
+        if bay_params[:use_notch] == "1"
+          notch_spacing = bay_params[:notch_spacing].to_f || 1.0
+          notch_1st = bay_params[:notch_1st].to_f || 1.0
           attrs.each do |_, el|
-            logger.debug "shelf:", el[:name], el[:notch_num], el[:from_base]
-            logger.debug "shelf.class:", el[:name], el[:notch_num].class, el[:from_base].class
-            el[:from_base] = bay_params[:notch_1st] +
-              bay_params[:notch_spacing] * (el[:notch_num].to_i - 1)
+            el[:from_base] = notch_1st +
+              notch_spacing * (el[:notch_num].to_i - 1)
           end
         end
       end

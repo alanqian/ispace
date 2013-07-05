@@ -22,7 +22,7 @@ RearSupportBar.delete_all
 # create template open_shelf
 OpenShelf.create(
   id: 0,
-  bay_id: 0,
+  bay_id: -1,
   name: "shelf ",
   height: 20.0,
   width: 120.0,
@@ -272,7 +272,7 @@ OpenShelf.create(
   slope: 0.0,
   riser: 0.0,
   notch_num: 1,
-  from_base: bay.notch_to(1)
+  from_base: bay.notch_to(1),
   color: '#dfdfdf',
   from_back: 0.0,
   finger_space: 0.0,
@@ -289,7 +289,7 @@ OpenShelf.create(
     from_back: from_back,
     hook_length: 40.0,
     notch_num: notch_num,
-    from_base: bay.notch_to(notch_num)
+    from_base: bay.notch_to(notch_num),
     color: '#ff007f',
     bar_slope: 0.0,
   )
@@ -333,7 +333,7 @@ FreezerChest.create(
     slope: 30.0,
     riser: 10.0,
     notch_num: notch_num,
-    from_base: bay.notch_to(notch_num)
+    from_base: bay.notch_to(notch_num),
     color: '#dfdfdf',
     from_back: from_back,
     finger_space: 0.0,
