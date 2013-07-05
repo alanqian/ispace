@@ -2,7 +2,6 @@ class CreatePegBoards < ActiveRecord::Migration
   def change
     create_table :peg_boards do |t|
       t.integer :bay_id
-      t.integer :level
       t.string :name, :length => 32
       t.decimal :height, :precision => 6, :scale => 1, :null => false
       t.decimal :depth, :precision => 6, :scale => 1, :null => false
@@ -15,6 +14,8 @@ class CreatePegBoards < ActiveRecord::Migration
       t.string :color
 
       t.timestamps
+      t.index :bay_id
     end
   end
+
 end

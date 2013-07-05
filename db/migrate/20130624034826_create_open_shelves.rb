@@ -2,7 +2,6 @@ class CreateOpenShelves < ActiveRecord::Migration
   def change
     create_table :open_shelves do |t|
       t.integer :bay_id
-      t.integer :level
       t.string :name, :length => 32
       t.decimal :height, :precision => 6, :scale => 1, :null => false
       t.decimal :width, :precision => 6, :scale => 1, :null => false
@@ -18,6 +17,7 @@ class CreateOpenShelves < ActiveRecord::Migration
       t.decimal :x_position, :precision => 6, :scale => 1, :null => false
 
       t.timestamps
+      t.index :bay_id
     end
   end
 end

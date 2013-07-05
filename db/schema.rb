@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130702015045) do
+ActiveRecord::Schema.define(version: 20130624034837) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(version: 20130702015045) do
     t.datetime "updated_at"
   end
 
+  add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
+
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -70,6 +72,8 @@ ActiveRecord::Schema.define(version: 20130702015045) do
     t.datetime "updated_at"
   end
 
+  add_index "open_shelves", ["bay_id"], name: "index_open_shelves_on_bay_id", using: :btree
+
   create_table "peg_boards", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -86,6 +90,8 @@ ActiveRecord::Schema.define(version: 20130702015045) do
     t.datetime "updated_at"
   end
 
+  add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
+
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -101,5 +107,7 @@ ActiveRecord::Schema.define(version: 20130702015045) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
 
 end
