@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130706060225) do
+ActiveRecord::Schema.define(version: 20130706063345) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -37,6 +37,37 @@ ActiveRecord::Schema.define(version: 20130706060225) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "fixture_items", force: true do |t|
+    t.integer  "fixture_id"
+    t.integer  "bay_id"
+    t.integer  "num_bays"
+    t.integer  "row"
+    t.boolean  "continuous"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fixture_items", ["bay_id"], name: "index_fixture_items_on_bay_id", using: :btree
+  add_index "fixture_items", ["fixture_id"], name: "index_fixture_items_on_fixture_id", using: :btree
+
+  create_table "fixtures", force: true do |t|
+    t.string   "name"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.string   "category_id"
+    t.decimal  "run",         precision: 10, scale: 0
+    t.decimal  "linear",      precision: 10, scale: 0
+    t.decimal  "area",        precision: 10, scale: 0
+    t.decimal  "cube",        precision: 10, scale: 0
+    t.boolean  "flow_l2r"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fixtures", ["category_id"], name: "index_fixtures_on_category_id", using: :btree
+  add_index "fixtures", ["name"], name: "index_fixtures_on_name", using: :btree
+  add_index "fixtures", ["user_id"], name: "index_fixtures_on_user_id", using: :btree
 
   create_table "freezer_chests", force: true do |t|
     t.integer  "bay_id"

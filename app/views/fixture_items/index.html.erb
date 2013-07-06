@@ -1,0 +1,35 @@
+<h1>Listing fixture_items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fixture</th>
+      <th>Bay</th>
+      <th>Num bays</th>
+      <th>Row</th>
+      <th>Continuous</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @fixture_items.each do |fixture_item| %>
+      <tr>
+        <td><%= fixture_item.fixture_id %></td>
+        <td><%= fixture_item.bay_id %></td>
+        <td><%= fixture_item.num_bays %></td>
+        <td><%= fixture_item.row %></td>
+        <td><%= fixture_item.continuous %></td>
+        <td><%= link_to 'Show', fixture_item %></td>
+        <td><%= link_to 'Edit', edit_fixture_item_path(fixture_item) %></td>
+        <td><%= link_to 'Destroy', fixture_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Fixture item', new_fixture_item_path %>

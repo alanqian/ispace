@@ -7,6 +7,11 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+__END__
+
+#####################################################################
+# bay data
+
 Bay.delete_all
 OpenShelf.delete_all
 PegBoard.delete_all
@@ -371,6 +376,8 @@ FreezerChest.create(
   )
 end
 
+__END__
+
 #####################################################################
 # basic admin data
 
@@ -402,3 +409,4 @@ Store.create(region_id: "cn.north.bj",
              name: "18号店",
              desc: "亚运村，tel: 81231234")
 
+__END__

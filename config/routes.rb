@@ -1,4 +1,8 @@
 Ispace::Application.routes.draw do
+  resources :fixture_items
+
+  resources :fixtures
+
   resources :stores
 
   resources :regions

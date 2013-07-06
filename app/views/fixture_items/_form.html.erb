@@ -1,0 +1,15 @@
+<%= simple_form_for(@fixture_item) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :fixture_id %>
+    <%= f.input :bay_id %>
+    <%= f.input :num_bays %>
+    <%= f.input :row %>
+    <%= f.input :continuous %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

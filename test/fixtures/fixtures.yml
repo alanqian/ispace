@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  store_id: 1
+  user_id: 1
+  category_id: MyString
+  run: 9.99
+  linear: 9.99
+  area: 9.99
+  cube: 9.99
+  flow_l2r: false
+
+two:
+  name: MyString
+  store_id: 1
+  user_id: 1
+  category_id: MyString
+  run: 9.99
+  linear: 9.99
+  area: 9.99
+  cube: 9.99
+  flow_l2r: false

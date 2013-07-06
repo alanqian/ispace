@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fixture.name %>
+</p>
+
+<p>
+  <strong>Store:</strong>
+  <%= @fixture.store_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @fixture.user_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @fixture.category_id %>
+</p>
+
+<p>
+  <strong>Run:</strong>
+  <%= @fixture.run %>
+</p>
+
+<p>
+  <strong>Linear:</strong>
+  <%= @fixture.linear %>
+</p>
+
+<p>
+  <strong>Area:</strong>
+  <%= @fixture.area %>
+</p>
+
+<p>
+  <strong>Cube:</strong>
+  <%= @fixture.cube %>
+</p>
+
+<p>
+  <strong>Flow l2r:</strong>
+  <%= @fixture.flow_l2r %>
+</p>
+
+<%= link_to 'Edit', edit_fixture_path(@fixture) %> |
+<%= link_to 'Back', fixtures_path %>
