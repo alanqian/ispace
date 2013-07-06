@@ -1,0 +1,17 @@
+<h3>
+  <%= f.input_field :name, size: 10, class: 'elem_name wrap'  %>
+  <%= f.hidden_field :_destroy %>
+  <%= link_to raw("&times"), "#", onclick: "removeElement(event,this);", class: 'remove_element' %>
+</h3>
+
+<div>
+  <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
+  <%= f.input :depth, wrapper_html: { class: 'col_2_2' } %>
+  <%= f.input :vert_space, wrapper_html: { class: 'col_1_2' } %>
+  <%= f.input :horz_space , wrapper_html: { class: 'col_2_2' }%>
+  <%= f.input :vert_start , wrapper_html: { class: 'col_1_2' }%>
+  <%= f.input :horz_start , wrapper_html: { class: 'col_2_2' }%>
+  <%= f.input :notch_num, wrapper_html: { class: 'col_1_2 notch_on' }, input_html: { class: 'elem_notch_num' }  %>
+  <%= f.input :from_base, wrapper_html: { class: 'col_1_2 notch_off' }, input_html: { class: 'elem_from_base' } %>
+  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+</div>

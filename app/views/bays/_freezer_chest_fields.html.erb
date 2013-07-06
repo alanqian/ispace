@@ -1,0 +1,16 @@
+<h3>
+  <%= f.input_field :name, size: 10, class: 'elem_name wrap bottom_only'  %>
+  <%= f.hidden_field :_destroy %>
+  <%= link_to raw("&times"), "#", onclick: "removeElement(event,this);", class: 'remove_element' %>
+</h3>
+<div>
+  <%= f.input :height, wrapper_html: { class: 'col_1' }  %>
+  <%= f.input :depth , wrapper_html: { class: 'col_1_2' }%>
+  <%= f.input :inside_height, wrapper_html: { class: 'col_2_2' }%>
+  <%= f.input :wall_thick, wrapper_html: { class: 'col_1_2' } %>
+  <%= f.input :merch_height, wrapper_html: { class: 'col_2_2' }%>
+  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  <%= f.hidden_field :notch_num, class: 'elem_notch_num' %>
+  <%= f.hidden_field :from_base, class: 'elem_from_base' %>
+</div>
+

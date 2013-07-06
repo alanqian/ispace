@@ -1,0 +1,2 @@
+module RearSupportBarsHelper
+end

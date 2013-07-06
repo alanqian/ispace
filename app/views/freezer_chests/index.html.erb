@@ -1,0 +1,41 @@
+<h1>Listing freezer_chests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bay</th>
+      <th>Level</th>
+      <th>Name</th>
+      <th>Height</th>
+      <th>Depth</th>
+      <th>Inside height</th>
+      <th>Wall thick</th>
+      <th>Merch height</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @freezer_chests.each do |freezer_chest| %>
+      <tr>
+        <td><%= freezer_chest.bay_id %></td>
+        <td><%= freezer_chest.level %></td>
+        <td><%= freezer_chest.name %></td>
+        <td><%= freezer_chest.height %></td>
+        <td><%= freezer_chest.depth %></td>
+        <td><%= freezer_chest.inside_height %></td>
+        <td><%= freezer_chest.wall_thick %></td>
+        <td><%= freezer_chest.merch_height %></td>
+        <td><%= link_to 'Show', freezer_chest %></td>
+        <td><%= link_to 'Edit', edit_freezer_chest_path(freezer_chest) %></td>
+        <td><%= link_to 'Destroy', freezer_chest, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Freezer chest', new_freezer_chest_path %>

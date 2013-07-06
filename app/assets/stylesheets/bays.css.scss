@@ -1,0 +1,149 @@
+// Place all the styles related to the bays controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#basic {
+  display: block;
+  float: top;
+  width: 360px;
+  border: 1px 1px 1px 1px;
+  border-color: 0;
+  background-color: #f0f0f0;
+
+  div.col_1_4 {
+    display: inline-block;
+    float: left;
+    padding-right: 20px;
+    width: 80px;
+
+    label {
+      display: block;
+      width: 80px;
+    }
+    input {
+      width: 80px;
+    }
+  }
+
+  div.col_4_4 {
+    display: block;
+    float: left;
+    width: 50px;
+
+    label {
+      display: block;
+      width: 50px;
+    }
+    input {
+      width: 50px;
+    }
+  }
+
+  div.col_check {
+    display: inline-block;
+    float: left;
+  }
+
+  div.col_pre {
+    display: inline-block;
+    float: left;
+    input {
+      display: inline-block;
+      width: 50px;
+    }
+  }
+
+  div.col_end {
+    input {
+      width: 50px;
+    }
+  }
+
+  div.notch_on {
+  }
+
+}
+
+#accordion {
+  width: 500px;
+
+  div.col_1 {
+    label {
+      display: inline-block;
+      width: 80px;
+    }
+    input {
+      width: 100px;
+    }
+  }
+
+  div.col_1_2 {
+    display: inline-block;
+    float: left;
+    padding-right: 20px;
+
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input {
+      display: inline-block;
+      width: 100px;
+    }
+  }
+
+  div.col_2_2 {
+    display: block;
+
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input {
+      width: 100px;
+    }
+  }
+}
+
+#dummy, #template {
+  display: none;
+}
+
+#add_open_shelf {
+  background: url('/assets/add_open_shelf.png') no-repeat top;
+}
+#add_peg_board {
+  background: url('/assets/add_peg_board.png') no-repeat top;
+}
+#add_rear_supported_bar {
+  background: url('/assets/add_rear_supported_bar.png') no-repeat top;
+}
+#add_freezer_chest {
+  background: url('/assets/add_freezer_chest.png') no-repeat top;
+}
+
+a.remove_element {
+  display: inline-block;
+  float: right;
+  padding: 1px;
+  width: 1em;
+}
+
+input.add_element {
+  display: inline-block;
+  width: 32px;
+  height: 31px;
+  background-color: #67a0cf;
+  border:2px outset #2683cf;
+  color:#fff;
+  padding:3px 3px 3px 3px;
+  margin: 1px;
+}
+
+input.add_element:active {
+  background-color: #67b4cf;
+  border: 2px inset #1d659f;
+  color: #e0ffaf;
+  padding: 1px 5px 5px 1px;
+  margin: 0px;
+}
