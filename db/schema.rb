@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130624034837) do
+ActiveRecord::Schema.define(version: 20130706060225) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -109,5 +109,25 @@ ActiveRecord::Schema.define(version: 20130624034837) do
   end
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
+
+  create_table "regions", force: true do |t|
+    t.string   "name",       null: false
+    t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
+
+  create_table "stores", force: true do |t|
+    t.string   "region_id",  null: false
+    t.string   "name"
+    t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stores", ["name"], name: "index_stores_on_name", using: :btree
+  add_index "stores", ["region_id"], name: "index_stores_on_region_id", using: :btree
 
 end

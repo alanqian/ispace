@@ -7,12 +7,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Category.delete_all
-Category.create(id: '牙膏',
-                desc: %{各种品类的牙膏，含特种牙膏})
-Category.create(id: '饮料',
-                desc: %{可乐、纯净水、矿泉水等})
-
 Bay.delete_all
 OpenShelf.delete_all
 PegBoard.delete_all
@@ -376,4 +370,35 @@ FreezerChest.create(
     x_position: 0.0,
   )
 end
+
+#####################################################################
+# basic admin data
+
+Category.delete_all
+Category.create(id: '牙膏',
+                desc: %{各种品类的牙膏，含特种牙膏})
+Category.create(id: '饮料',
+                desc: %{可乐、纯净水、矿泉水等})
+
+Region.delete_all
+Store.delete_all
+
+Region.create(id: "cn",
+              name: "中国",
+              desc: "中国总部")
+
+Region.create(id: "cn.north",
+              name: "华北区",
+              desc: "华北区，含内蒙")
+
+Region.create(id: "cn.north.bj",
+              name: "北京",
+              desc: "北京，含各郊县")
+
+Store.create(region_id: "cn.north.bj",
+             name: "12号店",
+             desc: "牡丹园，tel: 81231234")
+Store.create(region_id: "cn.north.bj",
+             name: "18号店",
+             desc: "亚运村，tel: 81231234")
 

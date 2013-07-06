@@ -1,0 +1,13 @@
+<%= simple_form_for(@store) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :region_id %>
+    <%= f.input :name %>
+    <%= f.input :desc %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

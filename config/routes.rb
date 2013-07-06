@@ -1,4 +1,8 @@
 Ispace::Application.routes.draw do
+  resources :stores
+
+  resources :regions
+
   resources :rear_support_bars
 
   resources :freezer_chests
