@@ -1,5 +1,4 @@
 Ispace::Application.routes.draw do
-  resources :fixture_items
 
   resources :fixtures
 
@@ -7,13 +6,12 @@ Ispace::Application.routes.draw do
 
   resources :regions
 
-  resources :rear_support_bars
-
-  resources :freezer_chests
-
-  resources :peg_boards
-
-  resources :open_shelves
+  # removed resources
+  # resources :fixture_items
+  # resources :rear_support_bars
+  # resources :freezer_chests
+  # resources :peg_boards
+  # resources :open_shelves
 
   resources :bays
 
