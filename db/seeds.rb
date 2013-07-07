@@ -7,6 +7,71 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+Fixture.delete_all
+FixtureItem.delete_all
+store = Store.all.first
+
+fixtures = []
+["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
+  fixtures.push Fixture.create(
+    name: name,
+    store_id: store.id,
+    user_id: 0,
+    category_id: "牙膏",
+    run: 0.0,
+    linear: 0.0,
+    area: 0.0,
+    cube: 0.0,
+    flow_l2r: true,
+  )
+end
+
+# 120x7层板
+# 120x8层板
+# 60x8层板
+# 60x7层板
+bays = Bay.all.first(4)
+
+# "120x8层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[0].id,
+  bay_id: bays[1].id,
+  num_bays: 1,
+  item_index: 0,
+  continuous: true,
+)
+# "5组120层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[1].id,
+  bay_id: bays[0].id,
+  num_bays: 5,
+  item_index: 0,
+  continuous: true,
+)
+# "4组120层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[2].id,
+  bay_id: bays[0].id,
+  num_bays: 4,
+  item_index: 0,
+  continuous: true,
+)
+# "3组120层板+1组60层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[3].id,
+  bay_id: bays[0].id,
+  num_bays: 3,
+  item_index: 0,
+  continuous: true,
+)
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[3].id,
+  bay_id: bays[3].id,
+  num_bays: 1,
+  item_index: 1,
+  continuous: true,
+)
+
 __END__
 
 #####################################################################

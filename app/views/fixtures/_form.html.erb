@@ -1,19 +1,39 @@
+<div>
+  <%= content_tag :p, @fixture.store_id %>
+  <%= content_tag :p, @fixture.user_id %>
+  <%= content_tag :p, @fixture.run %>
+  <%= content_tag :p, @fixture.linear %>
+  <%= content_tag :p, @fixture.area %>
+  <%= content_tag :p, @fixture.cube %>
+  <%= content_tag :p, @fixture.flow_l2r %>
+</div>
+<hr/>
 <%= simple_form_for(@fixture) do |f| %>
   <%= f.error_notification %>
 
   <div class="inputs">
     <%= f.input :name %>
-    <%= f.input :store_id %>
-    <%= f.input :user_id %>
-    <%= f.input :category_id %>
-    <%= f.input :run %>
-    <%= f.input :linear %>
-    <%= f.input :area %>
-    <%= f.input :cube %>
-    <%= f.input :flow_l2r %>
+    <%= f.input :category_id, collection: @categories %>
+  </div>
+
+  <div id="foo">
+    <%= f.simple_fields_for :fixture_items do |builder| %>
+      <%= render "fixture_item_fields", f: builder, bays: @bays %>
+    <% end %>
   </div>
 
   <div class="actions">
     <%= f.button :submit %>
+  </div>
+
+  <%= submit_tag "", class: 'add_element', id: 'add_bay', 'data-id' => '#bay', title: 'add bay', onclick: "addBay(event,this);" %>
+
+  <div id="template">
+    <%# id: fixture_item, model_name: :fixture_items, template_obj: @fixture_item_new %>
+    <%= f.simple_fields_for(:fixture_items, @fixture_item_new, child_index: "new_fixture_item_index") do |builder| %>
+      <div id="fixture_item" data-id="<%= "new_fixture_item_index" %>">
+        <%= render "fixture_item_fields", f: builder, bays: @bays %>
+      </div>
+    <% end %>
   </div>
 <% end %>

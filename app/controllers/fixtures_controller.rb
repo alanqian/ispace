@@ -1,5 +1,6 @@
 class FixturesController < ApplicationController
   before_action :set_fixture, only: [:show, :edit, :update, :destroy]
+  before_action :set_aux, only: [:new, :edit]
 
   # GET /fixtures
   # GET /fixtures.json
@@ -15,10 +16,15 @@ class FixturesController < ApplicationController
   # GET /fixtures/new
   def new
     @fixture = Fixture.new
+    @fixture_item_new = FixtureItem.new(num_bays: 1, continuous: true)
   end
 
   # GET /fixtures/1/edit
   def edit
+    @fixture_item_new = FixtureItem.new(
+      fixture_id: @fixture.id,
+      num_bays: 1,
+      continuous: true)
   end
 
   # POST /fixtures
@@ -42,6 +48,7 @@ class FixturesController < ApplicationController
   def update
     respond_to do |format|
       if @fixture.update(fixture_params)
+        logger.debug fixture_params
         format.html { redirect_to @fixture, notice: 'Fixture was successfully updated.' }
         format.json { head :no_content }
       else
@@ -67,8 +74,19 @@ class FixturesController < ApplicationController
       @fixture = Fixture.find(params[:id])
     end
 
+    def set_aux
+      # load categories
+      @categories = Category.select("id").map { |ar| ar.id }
+
+      # load all bays: id => name, run, liear, area, cube
+      @bays = Bay.all
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def fixture_params
-      params.require(:fixture).permit(:name, :store_id, :user_id, :category_id, :run, :linear, :area, :cube, :flow_l2r)
+      params.require(:fixture).permit(
+        :name, :store_id, :user_id, :category_id,
+        :run, :linear, :area, :cube, :flow_l2r,
+        fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
     end
 end

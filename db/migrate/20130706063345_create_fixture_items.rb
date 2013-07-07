@@ -4,7 +4,7 @@ class CreateFixtureItems < ActiveRecord::Migration
       t.integer :fixture_id
       t.integer :bay_id
       t.integer :num_bays
-      t.integer :row
+      t.integer :item_index
       t.boolean :continuous
 
       t.timestamps

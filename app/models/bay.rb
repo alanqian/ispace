@@ -1,4 +1,6 @@
 class Bay < ActiveRecord::Base
+  has_many :fixture_items
+
   has_many :open_shelves
   has_many :peg_boards
   has_many :freezer_chests
@@ -26,6 +28,7 @@ class Bay < ActiveRecord::Base
   # elem_count
 
   attr_accessor :use_notch, :show_peg_holes
+  attr_reader :run, :liear, :area, :cube
 
   def use_notch
     true
@@ -42,6 +45,22 @@ class Bay < ActiveRecord::Base
   # from_base = (notch_num - 1) * notch_spacing + notch_first
   def notch_to(notch_num)
     (notch_num - 1) * notch_spacing + notch_1st
+  end
+
+  def run
+    base_width
+  end
+
+  def liear
+    base_width * elem_count
+  end
+
+  def area
+    base_width * base_depth * elem_count
+  end
+
+  def cube
+    base_width * base_depth * back_height
   end
 
   def self.template

@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20130706063345) do
     t.integer  "fixture_id"
     t.integer  "bay_id"
     t.integer  "num_bays"
-    t.integer  "row"
+    t.integer  "item_index"
     t.boolean  "continuous"
     t.datetime "created_at"
     t.datetime "updated_at"
