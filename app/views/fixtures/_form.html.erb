@@ -1,39 +1,63 @@
 <div>
   <%= content_tag :p, @fixture.store_id %>
   <%= content_tag :p, @fixture.user_id %>
-  <%= content_tag :p, @fixture.run %>
-  <%= content_tag :p, @fixture.linear %>
-  <%= content_tag :p, @fixture.area %>
-  <%= content_tag :p, @fixture.cube %>
   <%= content_tag :p, @fixture.flow_l2r %>
 </div>
+
+<table id="fixture_metrics" border=1 cellspacing=0 cellpadding=2>
+  <tr>
+  <td>run</td><%= content_tag :td, @fixture.run, id: "run" %>
+  </tr>
+  <tr>
+  <td>linear</td><%= content_tag :td, @fixture.linear, id: "linear" %>
+  </tr>
+  <tr>
+  <td>area</td><%= content_tag :td, @fixture.area, id: "area" %>
+  </tr>
+  <tr>
+  <td>cube</td><%= content_tag :td, @fixture.cube, id: "cube" %>
+  </tr>
+</table>
+
 <hr/>
+
 <%= simple_form_for(@fixture) do |f| %>
   <%= f.error_notification %>
 
-  <div class="inputs">
+  <%= submit_tag "+", class: 'add_element', id: 'add_fixture_item', 'data-id' => '#fixture_item', title: 'add bay', onclick: "addFixtureItem(event,this);" %>
+  <%= submit_tag "-", class: 'add_element', id: 'remove_fixture_item', 'data-id' => '#fixture_item', title: 'remove bay', onclick: "removeFixtureItem(event);" %>
+
+  <div id="fixture_basic" class="inputs">
     <%= f.input :name %>
     <%= f.input :category_id, collection: @categories %>
   </div>
 
-  <div id="foo">
+  <table id="fixture_items" border=1 cellspacing=0 cellpadding=2>
+  <tr>
+    <%= f.simple_fields_for @fixture_item_new do |builder| %>
+      <th><%= builder.label :bay_id %></th>
+      <th><%= builder.label :num_bays %></th>
+      <th><%= builder.label :continuous %></th>
+    <% end %>
+  </tr>
     <%= f.simple_fields_for :fixture_items do |builder| %>
       <%= render "fixture_item_fields", f: builder, bays: @bays %>
     <% end %>
-  </div>
+  </table>
 
   <div class="actions">
     <%= f.button :submit %>
   </div>
 
-  <%= submit_tag "", class: 'add_element', id: 'add_bay', 'data-id' => '#bay', title: 'add bay', onclick: "addBay(event,this);" %>
-
   <div id="template">
     <%# id: fixture_item, model_name: :fixture_items, template_obj: @fixture_item_new %>
     <%= f.simple_fields_for(:fixture_items, @fixture_item_new, child_index: "new_fixture_item_index") do |builder| %>
-      <div id="fixture_item" data-id="<%= "new_fixture_item_index" %>">
+      <div id="fixture_item" data-id="new_fixture_item_index" data-target="#fixture_items" %>
         <%= render "fixture_item_fields", f: builder, bays: @bays %>
       </div>
     <% end %>
   </div>
+  <script>
+    window.bays = <%=raw @metrics.to_json.html_safe %>
+  </script>
 <% end %>

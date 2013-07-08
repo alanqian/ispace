@@ -28,7 +28,7 @@ class Bay < ActiveRecord::Base
   # elem_count
 
   attr_accessor :use_notch, :show_peg_holes
-  attr_reader :run, :liear, :area, :cube
+  attr_reader :run, :linear, :area, :cube
 
   def use_notch
     true
@@ -51,7 +51,7 @@ class Bay < ActiveRecord::Base
     base_width
   end
 
-  def liear
+  def linear
     base_width * elem_count
   end
 
