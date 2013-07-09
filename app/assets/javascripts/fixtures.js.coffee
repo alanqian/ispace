@@ -53,7 +53,7 @@ root.removeFixtureItem = (event) ->
     tbody = $("td.fixture_item").closest('tbody')
     tr = tbody.children("tr").eq(active)
     # set conrepond _destroy to 1
-    $("input[type=hidden][name*=_destroy]", tr).val("1")
+    $("input[type=hidden][name$='[_destroy]']", tr).val("1")
     window.fixture.setActive -1
     tr.hide()
   else

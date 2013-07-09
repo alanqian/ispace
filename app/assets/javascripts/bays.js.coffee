@@ -7,7 +7,7 @@ root.removeElement = (event, el) ->
   console.log "removeElement"
   event.preventDefault()
   # set _destroy to true
-  $(el).prev("input[type=hidden][name*=_destroy]").val("1")
+  $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
   # move the elements h3+div to dummy
   h3 = $(el).closest("h3")
   rIndex = $("#accordion").children("h3").index(h3)
