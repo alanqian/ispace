@@ -1,11 +1,11 @@
 <tr>
-  <td>
+  <td class="fixture_item">
   <%= f.input_field :bay_id, collection: bays, label_method: :name, value_method: :id, :include_blank => false %>
   </td>
-  <td>
+  <td class="fixture_item">
   <%= f.input_field :num_bays %>
   </td>
-  <td>
+  <td class="fixture_item">
   <%= f.input_field :continuous, as: :select, :include_blank => false %>
   <%= f.hidden_field :item_index %>
   <%= f.hidden_field :_destroy %>

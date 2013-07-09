@@ -16,7 +16,10 @@ class FixturesController < ApplicationController
   # GET /fixtures/new
   def new
     @fixture = Fixture.new
-    @fixture_item_new = FixtureItem.new(num_bays: 1, continuous: true)
+    @fixture_item_new = FixtureItem.new(
+      num_bays: 1,
+      item_index: -1,
+      continuous: true)
   end
 
   # GET /fixtures/1/edit
@@ -24,6 +27,7 @@ class FixturesController < ApplicationController
     @fixture_item_new = FixtureItem.new(
       fixture_id: @fixture.id,
       num_bays: 1,
+      item_index: -1,
       continuous: true)
   end
 
