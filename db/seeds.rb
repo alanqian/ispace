@@ -18,10 +18,6 @@ fixtures = []
     store_id: store.id,
     user_id: 0,
     category_id: "牙膏",
-    run: 0.0,
-    linear: 0.0,
-    area: 0.0,
-    cube: 0.0,
     flow_l2r: true,
   )
 end
@@ -136,6 +132,7 @@ RearSupportBar.create(
   color: '#ff007f',
   bar_slope: 0.0,
 )
+bay.recalc_space
 
 
 # create Bay '120*7层板',
@@ -180,6 +177,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 # 120x8层板
 bay = Bay.create(
@@ -219,6 +217,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 bay = Bay.create(
     name: '60x8层板',
@@ -256,6 +255,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 bay = Bay.create(
     name: '60x7层板',
@@ -293,6 +293,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 # peg board
 bay = Bay.create(
@@ -343,6 +344,7 @@ PegBoard.create(
   from_base: bay.notch_to(9),
   color: '#dfdfdf',
 )
+bay.recalc_space
 
 # hanging bars
 bay = Bay.create(
@@ -394,6 +396,7 @@ OpenShelf.create(
     bar_slope: 0.0,
   )
 end
+bay.recalc_space
 
 # create Bay 'Freezer with shelves',
 bay = Bay.create(
@@ -440,6 +443,7 @@ FreezerChest.create(
     x_position: 0.0,
   )
 end
+bay.recalc_space
 
 __END__
 

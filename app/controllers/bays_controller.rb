@@ -81,6 +81,28 @@ class BaysController < ApplicationController
       ]
     end
 
+    # run = back_width
+    # linear = Σ(shelf_width)
+    # area = Σ(shelf_width * shelf_height)
+    # cube = Σ(shelf_width * shelf_height * shelf_depth)
+    def recalc_bay_space(bay_params)
+      linear = 0.0
+      area = 0.0
+      cube = 0.0
+      bay_params[:open_shelves_attributes].each do |_, el|
+        if el[:_destroy] == "false"
+          width, height, depth = [:width, :height, :depth].map { |f| el[f].to_f }
+          linear += width
+          area += width * height
+          cube += width * height * depth
+        end
+      end
+      bay_params[:linear] = linear
+      bay_params[:area] = area
+      bay_params[:cube] = cube
+      bay_params
+    end
+
     def normalize_params(bay_params)
       # NOTE: all values in bay_params is String
       if bay_params.permitted?
@@ -99,6 +121,8 @@ class BaysController < ApplicationController
               notch_spacing * (el[:notch_num].to_i - 1)
           end
         end
+
+        # recalc bay space
       end
       bay_params
     end

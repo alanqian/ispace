@@ -27,8 +27,8 @@ class Bay < ActiveRecord::Base
   # elem_type
   # elem_count
 
+  alias_attribute :run, :back_width
   attr_accessor :use_notch, :show_peg_holes
-  attr_reader :run, :linear, :area, :cube
 
   def use_notch
     true
@@ -47,20 +47,17 @@ class Bay < ActiveRecord::Base
     (notch_num - 1) * notch_spacing + notch_1st
   end
 
-  def run
-    base_width
-  end
-
-  def linear
-    base_width * elem_count
-  end
-
-  def area
-    base_width * base_depth * elem_count
-  end
-
-  def cube
-    base_width * base_depth * back_height
+  # helper for seeds.rb
+  def recalc_space
+    self.linear = 0.0
+    self.area = 0.0
+    self.cube = 0.0
+    open_shelves.each do |el|
+      self.linear += el.width
+      self.area += el.width * el.height
+      self.cube += el.width * el.height * el.depth
+    end
+    save
   end
 
   def self.template

@@ -6,16 +6,16 @@
 
 <table id="fixture_metrics" border=1 cellspacing=0 cellpadding=2>
   <tr>
-  <td>run</td><%= content_tag :td, @fixture.run, id: "run" %>
+  <td>run</td><%= content_tag :td, 0.0, id: "run" %>
   </tr>
   <tr>
-  <td>linear</td><%= content_tag :td, @fixture.linear, id: "linear" %>
+  <td>linear</td><%= content_tag :td, 0.0, id: "linear" %>
   </tr>
   <tr>
-  <td>area</td><%= content_tag :td, @fixture.area, id: "area" %>
+  <td>area</td><%= content_tag :td, 0.0, id: "area" %>
   </tr>
   <tr>
-  <td>cube</td><%= content_tag :td, @fixture.cube, id: "cube" %>
+  <td>cube</td><%= content_tag :td, 0.0, id: "cube" %>
   </tr>
 </table>
 
@@ -64,6 +64,6 @@
     </table>
   </div>
   <script>
-    window.bays = <%=raw @metrics.to_json.html_safe %>
+    window.bays = <%=raw @space.to_json.html_safe %>
   </script>
 <% end %>

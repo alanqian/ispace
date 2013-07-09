@@ -84,9 +84,9 @@ class FixturesController < ApplicationController
 
       # load all bays: id => name, run, liear, area, cube
       @bays = Bay.all
-      metrics = @bays.map { |bay| [bay.id, { name: bay.name, run: bay.run,
+      space = @bays.map { |bay| [bay.id, { name: bay.name, run: bay.run,
         linear: bay.linear, area: bay.area, cube: bay.cube}] }
-      @metrics = Hash[metrics]
+      @space = Hash[space]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
