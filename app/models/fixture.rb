@@ -1,5 +1,5 @@
 class Fixture < ActiveRecord::Base
-  has_many :fixture_items, dependent: :destroy
+  has_many :fixture_items, dependent: :destroy, order: 'item_index'
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
 
   def deep_copy(store_id, uid)
