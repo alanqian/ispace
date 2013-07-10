@@ -47,6 +47,18 @@ class Bay < ActiveRecord::Base
     (notch_num - 1) * notch_spacing + notch_1st
   end
 
+  # take off height: only for open_shelf, guide line for designer
+  # from floor up to top of open_shelf
+  # take_off_height = base_height + MAX(from_base + height)
+  def takeoff_height
+    top_shelf = open_shelves.order('from_base desc').first
+    base_height + top_shelf.from_base + top_shelf.height
+  end
+
+  # fake attr writer
+  def takeoff_height=(val)
+  end
+
   # helper for seeds.rb
   def recalc_space
     self.linear = 0.0

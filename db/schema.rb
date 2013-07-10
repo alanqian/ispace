@@ -11,28 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130709135933) do
+ActiveRecord::Schema.define(version: 20130710030620) do
 
   create_table "bays", force: true do |t|
-    t.string   "name",                                    null: false
-    t.decimal  "back_height",    precision: 6,  scale: 1, null: false
-    t.decimal  "back_width",     precision: 7,  scale: 1, null: false
-    t.decimal  "back_thick",     precision: 6,  scale: 1, null: false
-    t.string   "back_color",                              null: false
-    t.decimal  "notch_spacing",  precision: 6,  scale: 1
-    t.decimal  "notch_1st",      precision: 6,  scale: 1
-    t.decimal  "base_height",    precision: 6,  scale: 1, null: false
-    t.decimal  "base_width",     precision: 6,  scale: 1, null: false
-    t.decimal  "base_depth",     precision: 6,  scale: 1, null: false
-    t.string   "base_color",                              null: false
-    t.decimal  "takeoff_height", precision: 6,  scale: 1
+    t.string   "name",                                   null: false
+    t.decimal  "back_height",   precision: 6,  scale: 1, null: false
+    t.decimal  "back_width",    precision: 7,  scale: 1, null: false
+    t.decimal  "back_thick",    precision: 6,  scale: 1, null: false
+    t.string   "back_color",                             null: false
+    t.decimal  "notch_spacing", precision: 6,  scale: 1
+    t.decimal  "notch_1st",     precision: 6,  scale: 1
+    t.decimal  "base_height",   precision: 6,  scale: 1, null: false
+    t.decimal  "base_width",    precision: 6,  scale: 1, null: false
+    t.decimal  "base_depth",    precision: 6,  scale: 1, null: false
+    t.string   "base_color",                             null: false
     t.integer  "elem_type"
     t.integer  "elem_count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "linear",         precision: 10, scale: 0
-    t.decimal  "area",           precision: 10, scale: 0
-    t.decimal  "cube",           precision: 10, scale: 0
+    t.decimal  "linear",        precision: 10, scale: 0
+    t.decimal  "area",          precision: 10, scale: 0
+    t.decimal  "cube",          precision: 10, scale: 0
   end
 
   create_table "categories", force: true do |t|

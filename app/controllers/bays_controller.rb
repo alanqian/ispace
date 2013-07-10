@@ -121,8 +121,6 @@ class BaysController < ApplicationController
               notch_spacing * (el[:notch_num].to_i - 1)
           end
         end
-
-        # recalc bay space
       end
       bay_params
     end
