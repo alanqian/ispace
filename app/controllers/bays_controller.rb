@@ -129,7 +129,7 @@ class BaysController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bay_params
-      normalize_params params.require(:bay).permit(
+      recalc_bay_space normalize_params params.require(:bay).permit(
         :name, :back_height, :back_width, :back_thick, :back_color,
         :use_notch, :notch_spacing, :notch_1st,
         :base_height, :base_width, :base_depth, :base_color,

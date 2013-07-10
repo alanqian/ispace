@@ -25,7 +25,11 @@ class OpenShelf < ActiveRecord::Base
 
   def self.template(bay)
     r = self.where(bay_id: -1).first
-    r.bay_id = bay.id if r
+    if r
+      r.bay_id = bay.id
+      r.width = bay.back_width
+      r.depth = bay.base_depth
+    end
     r
   end
 end

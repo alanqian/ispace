@@ -20,7 +20,9 @@ class RearSupportBar < ActiveRecord::Base
 
   def self.template(bay)
     r = self.where(bay_id: -1).first
-    r.bay_id = bay.id if r
+    if r
+      r.bay_id = bay.id
+    end
     r
   end
 end

@@ -18,7 +18,10 @@ class PegBoard < ActiveRecord::Base
 
   def self.template(bay)
     r = self.where(bay_id: -1).first
-    r.bay_id = bay.id if r
+    if r
+      r.bay_id = bay.id
+      r.height = bay.back_height
+    end
     r
   end
 end
