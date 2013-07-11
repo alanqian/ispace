@@ -16,7 +16,7 @@
     <%= f.input :base_width, wrapper_html: { class: 'col_1_4' }  %>
     <%= f.input :base_depth, wrapper_html: { class: 'col_1_4' }  %>
     <%= f.input :base_color, wrapper_html: { class: 'col_4_4' }, :input_html => { class: 'color' } %>
-    <%= f.input :takeoff_height, wrapper_html: { class: 'col_end' } %>
+    <%= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
     <%= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
   </div>
   <% end %>

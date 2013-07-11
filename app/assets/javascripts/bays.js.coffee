@@ -7,7 +7,7 @@ root.removeElement = (event, el) ->
   console.log "removeElement"
   event.preventDefault()
   # set _destroy to true
-  $(el).prev("input[type=hidden]").val("1")
+  $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
   # move the elements h3+div to dummy
   h3 = $(el).closest("h3")
   rIndex = $("#accordion").children("h3").index(h3)
@@ -57,7 +57,7 @@ root.test = () ->
   data = input2json("bay", "form input:not([type='submit'])")
   return data
 
-String::chompPrefix = (prefix) ->
+String::chopPrefix = (prefix) ->
   len = prefix.length
   if this.substr(0, len) == prefix
     return this.substr(len, this.length)
@@ -77,7 +77,7 @@ input2json = (obName, selector) ->
   removed = {}
 
   $(selector).each (index, el) ->
-    name = el.name.chompPrefix(obName)
+    name = el.name.chopPrefix(obName)
     return true unless name != ""
 
     fields = []
@@ -196,7 +196,7 @@ $ ->
 
   updateNotchInputView $("#bay_use_notch").is(":checked")
 
-  # move template to outside of the form
+  # move template outside of the form
   $("form").after($("#template"))
 
   $("#bay_use_notch").change (ev) ->

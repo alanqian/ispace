@@ -1,4 +1,6 @@
 class Bay < ActiveRecord::Base
+  has_many :fixture_items
+
   has_many :open_shelves
   has_many :peg_boards
   has_many :freezer_chests
@@ -25,6 +27,7 @@ class Bay < ActiveRecord::Base
   # elem_type
   # elem_count
 
+  alias_attribute :run, :back_width
   attr_accessor :use_notch, :show_peg_holes
 
   def use_notch
@@ -42,6 +45,31 @@ class Bay < ActiveRecord::Base
   # from_base = (notch_num - 1) * notch_spacing + notch_first
   def notch_to(notch_num)
     (notch_num - 1) * notch_spacing + notch_1st
+  end
+
+  # take off height: only for open_shelf, guide line for designer
+  # from floor up to top of open_shelf
+  # take_off_height = base_height + MAX(from_base + height)
+  def takeoff_height
+    top_shelf = open_shelves.order('from_base desc').first
+    base_height + top_shelf.from_base + top_shelf.height
+  end
+
+  # fake attr writer
+  def takeoff_height=(val)
+  end
+
+  # helper for seeds.rb
+  def recalc_space
+    self.linear = 0.0
+    self.area = 0.0
+    self.cube = 0.0
+    open_shelves.each do |el|
+      self.linear += el.width
+      self.area += el.width * el.height
+      self.cube += el.width * el.height * el.depth
+    end
+    save
   end
 
   def self.template

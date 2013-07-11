@@ -7,11 +7,71 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Category.delete_all
-Category.create(id: '牙膏',
-                desc: %{各种品类的牙膏，含特种牙膏})
-Category.create(id: '饮料',
-                desc: %{可乐、纯净水、矿泉水等})
+Fixture.delete_all
+FixtureItem.delete_all
+store = Store.all.first
+
+fixtures = []
+["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
+  fixtures.push Fixture.create(
+    name: name,
+    store_id: store.id,
+    user_id: 0,
+    category_id: "牙膏",
+    flow_l2r: true,
+  )
+end
+
+# 120x7层板
+# 120x8层板
+# 60x8层板
+# 60x7层板
+bays = Bay.all.first(4)
+
+# "120x8层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[0].id,
+  bay_id: bays[1].id,
+  num_bays: 1,
+  item_index: 0,
+  continuous: true,
+)
+# "5组120层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[1].id,
+  bay_id: bays[0].id,
+  num_bays: 5,
+  item_index: 0,
+  continuous: true,
+)
+# "4组120层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[2].id,
+  bay_id: bays[0].id,
+  num_bays: 4,
+  item_index: 0,
+  continuous: true,
+)
+# "3组120层板+1组60层板货架"
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[3].id,
+  bay_id: bays[0].id,
+  num_bays: 3,
+  item_index: 0,
+  continuous: true,
+)
+fixture_item = FixtureItem.create(
+  fixture_id: fixtures[3].id,
+  bay_id: bays[3].id,
+  num_bays: 1,
+  item_index: 1,
+  continuous: true,
+)
+
+__END__
+
+#####################################################################
+# bay data
 
 Bay.delete_all
 OpenShelf.delete_all
@@ -72,6 +132,7 @@ RearSupportBar.create(
   color: '#ff007f',
   bar_slope: 0.0,
 )
+bay.recalc_space
 
 
 # create Bay '120*7层板',
@@ -116,6 +177,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 # 120x8层板
 bay = Bay.create(
@@ -155,6 +217,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 bay = Bay.create(
     name: '60x8层板',
@@ -192,6 +255,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 bay = Bay.create(
     name: '60x7层板',
@@ -229,6 +293,7 @@ level = 1
   )
   level += 1
 end
+bay.recalc_space
 
 # peg board
 bay = Bay.create(
@@ -279,6 +344,7 @@ PegBoard.create(
   from_base: bay.notch_to(9),
   color: '#dfdfdf',
 )
+bay.recalc_space
 
 # hanging bars
 bay = Bay.create(
@@ -330,6 +396,7 @@ OpenShelf.create(
     bar_slope: 0.0,
   )
 end
+bay.recalc_space
 
 # create Bay 'Freezer with shelves',
 bay = Bay.create(
@@ -376,4 +443,39 @@ FreezerChest.create(
     x_position: 0.0,
   )
 end
+bay.recalc_space
 
+__END__
+
+#####################################################################
+# basic admin data
+
+Category.delete_all
+Category.create(id: '牙膏',
+                desc: %{各种品类的牙膏，含特种牙膏})
+Category.create(id: '饮料',
+                desc: %{可乐、纯净水、矿泉水等})
+
+Region.delete_all
+Store.delete_all
+
+Region.create(id: "cn",
+              name: "中国",
+              desc: "中国总部")
+
+Region.create(id: "cn.north",
+              name: "华北区",
+              desc: "华北区，含内蒙")
+
+Region.create(id: "cn.north.bj",
+              name: "北京",
+              desc: "北京，含各郊县")
+
+Store.create(region_id: "cn.north.bj",
+             name: "12号店",
+             desc: "牡丹园，tel: 81231234")
+Store.create(region_id: "cn.north.bj",
+             name: "18号店",
+             desc: "亚运村，tel: 81231234")
+
+__END__
