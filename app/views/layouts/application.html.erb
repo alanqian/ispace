@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ispace</title>
+  <title>Sales Space</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "app" %>
@@ -9,9 +9,29 @@
   <%= stylesheet_link_tag    params[:controller] %>
   <%= csrf_meta_tags %>
 </head>
-<body>
 
-<%= yield %>
-
+<body class="<%= controller.controller_name %>">
+  <div id="banner">
+    <%= image_tag("logo.png") %>
+    <%= @page_title || "Sales Space" %>
+  </div>
+  <div id="columns">
+    <div id="side">
+      <ul>
+        <li><a href="http://www....">Home</a></li>
+        <li><%= link_to 'Fixtures', fixtures_path %></li>
+        <li><%= link_to 'Bays', bays_path %> </li>
+        <li><a href="http://www..../news">Products</a></li>
+        <li><a href="http://www..../contact">Plans</a></li>
+      </ul>
+    </div>
+    <div id="main">
+      <%= yield %>
+    </div>
+  </div>
+  <div id="footer">
+    <p>Powered by SaleSpace, Copyright &copy; BitTech Inc, 2013</p>
+  </div>
 </body>
 </html>
+
