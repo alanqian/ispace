@@ -15,6 +15,13 @@
     <%= image_tag("logo.png") %>
     <%= @page_title || "Sales Space" %>
   </div>
+  <ul id="menubar">
+    <li><a href="http://www....">Home</a></li>
+    <li><%= link_to 'Fixtures', fixtures_path %></li>
+    <li><%= link_to 'Bays', bays_path %> </li>
+    <li><a href="http://www..../news">Products</a></li>
+    <li><a href="http://www..../contact">Plans</a></li>
+  </ul>
   <div id="columns">
     <div id="side">
       <ul>

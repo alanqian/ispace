@@ -3,6 +3,7 @@ require 'json'
 class BaysController < ApplicationController
   before_action :set_bay, only: [:show, :edit, :update, :destroy]
   before_action :set_extra, only: [:show, :edit]
+  before_filter :set_expires
 
   # GET /bays
   # GET /bays.json
@@ -136,6 +137,10 @@ class BaysController < ApplicationController
         open_shelves_attributes: [:_destroy, :id, :bay_id, :name, :height, :width, :depth, :thick,
           :slope, :riser, :notch_num, :from_base, :color, :from_back,
           :finger_space, :x_position ])
+    end
+
+    def set_expires
+      expires_now
     end
 end
 

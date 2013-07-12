@@ -13,4 +13,5 @@
 //= require jquery
 //= require jquery.ui.all
 //= require jquery_ujs
+//= require splitter-152.js
 //= require turbolinks

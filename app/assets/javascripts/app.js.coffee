@@ -5,4 +5,5 @@ root.foo = () ->
 
 $ ->
   console.log "application common loaded"
+  $("#menubar").menu()
 

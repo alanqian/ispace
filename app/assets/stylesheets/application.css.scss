@@ -10,8 +10,8 @@
  * at the top of the compiled file, but it's generally better to create a new
  * file per style scope.
  *
- *= require_self
  *= require jquery.ui.all
+ *= require_self
  */
 
 #banner {
@@ -47,6 +47,27 @@
   font: bold smaller sans-serif;
 }
 
+/* clearfix for the menu */
+.ui-menu:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+.ui-menu .ui-menu-item {
+  display: inline-block;
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+
+#menubar {
+  background: #9c9;
+}
+
 #columns {
   background: #141;
   width: 100%;
@@ -55,6 +76,49 @@
     margin-right: 15em;
     padding: 1em;
     background: white;
+
+    /* for splitter */
+    .splitter {
+      /* height: 400px; */
+      width: 100%;
+      margin: 1em 3em;
+      border: 4px solid #bdb;
+      background: #f8fff8;
+    }
+
+    .ui-state-default {
+      background-color: #aca;
+    }
+    .ui-state-hover {
+      background-color: #bdb;
+    }
+    .ui-state-highlight {
+      background-color: #add;
+    }
+    .ui-state-error {
+      background-color: #eaa;
+    }
+    .splitter-pane {
+      overflow: auto;
+    }
+    .splitter-bar-horizontal {
+      height: 6px;
+      background-image: url(/assets/hgrabber.gif);
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .splitter-bar-horizontal-docked {
+      height: 10px;
+      background-image: url(/assets/hdockbar-trans.gif);
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .splitter-bar.ui-state-highlight {
+      opacity: 0.7;
+    }
+    .splitter-iframe-hide {
+      visibility: hidden;
+    }
   }
 
   #side {
