@@ -112,25 +112,31 @@ root.updateControls = (updateMetricOnly) ->
   updateFixtureMetrics()
 
 $ ->
+  setFixture = ->
+    window.fixture = {
+      active: -1,
+      newIndex: $("td.fixture_item").parent().length + 10,
+      setActive: (index) ->
+        # deactive the old index, active the new index
+        tbody = $("td.fixture_item").closest('tbody')
+        if @active != index
+          if @active >= 0
+            tbody.children("tr").eq(@active).removeClass("active")
+          if index >= 0
+            tbody.children("tr").eq(index).addClass("active")
+          @active = index
+        return @active
+    }
+
   console.log "fixture editor start..."
-  console.log window.bays[30]
+  if window.bays
+    console.log "#{Object.keys(window.bays).length} bays in system"
 
-  # move template outside of the form
-  $("form").after($("#template"))
-
-  window.fixture = {
-    active: -1,
-    newIndex: $("td.fixture_item").parent().length + 10,
-    setActive: (index) ->
-      # deactive the old index, active the new index
-      tbody = $("td.fixture_item").closest('tbody')
-      if @active != index
-        if @active >= 0
-          tbody.children("tr").eq(@active).removeClass("active")
-        if index >= 0
-          tbody.children("tr").eq(index).addClass("active")
-        @active = index
-      return @active
-  }
-  updateControls(false)
+    # move template outside of the form
+    $("form").after($("#template"))
+    setFixture()
+    updateControls(false)
+  else
+    console.log "no bays"
+  console.log "fixture editor loaded."
 
