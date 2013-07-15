@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130710030620) do
+ActiveRecord::Schema.define(version: 20130715132913) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -81,6 +81,17 @@ ActiveRecord::Schema.define(version: 20130710030620) do
   end
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
+
+  create_table "imports", force: true do |t|
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.string   "comment"
+    t.string   "filename"
+    t.string   "ext"
+    t.integer  "step"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"

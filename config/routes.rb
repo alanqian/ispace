@@ -1,5 +1,10 @@
 Ispace::Application.routes.draw do
 
+  get "upload/save"
+  get "upload/get"
+  get "upload/show"
+  post "upload/save"
+
   resources :fixtures
 
   resources :stores
