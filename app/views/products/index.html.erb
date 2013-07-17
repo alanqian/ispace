@@ -1,55 +1,48 @@
-<h1>Listing products</h1>
+<div id="product-tabs">
+  <ul>
+    <li><a href="#tab-import">Import</a></li>
+    <li><a href="#tab-list">List</a></li>
+    <li><a href="#tab-edit">Edit</a></li>
+  </ul>
+  <div id="tab-list">
+    <p>Here place products on shelf</p>
+    <p>Select "category", by store, datatime?</p>
+  </div>
+  <div id="tab-import">
+    <p>Import product data here:</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th>Brand</th>
-      <th>Mfr</th>
-      <th>User</th>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Height</th>
-      <th>Width</th>
-      <th>Depth</th>
-      <th>Weight</th>
-      <th>Price level</th>
-      <th>Size name</th>
-      <th>Case pack name</th>
-      <th>Bar code</th>
-      <th>Color</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+    <p> Step 1: upload files (in xls,xlsx,csv)
+    <div id="import-file">
+      <%= form_for @import, url: { action: 'import' }, :html => {:multipart => true} do |f| %>
+        <%= f.hidden_field :store_id %>
+        <%= f.hidden_field :user_id %>
+        <p>
+          <%= f.file_field :upload_sheet %>
+        </p>
+        <p><%= f.submit "upload" %></p>
+      <% end %>
+    </div>
 
-  <tbody>
-    <% @products.each do |product| %>
-      <tr>
-        <td><%= product.category_id %></td>
-        <td><%= product.brand_id %></td>
-        <td><%= product.mfr_id %></td>
-        <td><%= product.user_id %></td>
-        <td><%= product.id %></td>
-        <td><%= product.name %></td>
-        <td><%= product.height %></td>
-        <td><%= product.width %></td>
-        <td><%= product.depth %></td>
-        <td><%= product.weight %></td>
-        <td><%= product.price_level %></td>
-        <td><%= product.size_name %></td>
-        <td><%= product.case_pack_name %></td>
-        <td><%= product.bar_code %></td>
-        <td><%= product.color %></td>
-        <td><%= link_to 'Show', product %></td>
-        <td><%= link_to 'Edit', edit_product_path(product) %></td>
-        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <% if @imports %>
+    <div id="choose-sheets">
+      <p> Step 2: choose sheets if necessary</p>
+      list filename, datetime, user w/ preview
+      [ ] sheet -> category
+      [ ] sheet -> category
+      [ ] sheet -> category
+    </div>
     <% end %>
-  </tbody>
-</table>
 
-<br>
+    <div id="set-mapping">
+      <p> Step 3: Set field mapping...</p>
+      blah,blah
+    </div>
 
-<%= link_to 'New Product', new_product_path %>
+    <p> Finish, to return to products#index? </p>
+
+  </div>
+  <div id="tab-edit">
+    <p>edit product data here, include brand/manufecturer/supplier, etc.</p>
+  </div>
+</div>
+

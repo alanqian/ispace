@@ -2,6 +2,7 @@ Ispace::Application.routes.draw do
 
   resources :merchandises
 
+  post "products/import"
   resources :products
 
   resources :suppliers

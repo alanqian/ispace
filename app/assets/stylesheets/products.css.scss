@@ -1,3 +1,38 @@
 // Place all the styles related to the products controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#product-tabs {
+  .ui-widget-header {
+    height:13px;
+    ul {
+      height:11px;
+    }
+  }
+
+  .ui-tabs-nav {
+    .del {
+      clear: left;
+      padding: 0 .2em .2em .2em;
+    }
+    li {
+      height: 11px;
+      font-size: 10px;
+      a {
+        position: relative;
+        top: -6px;
+      }
+      .del {
+        top: auto;
+        bottom: 0;
+        margin: 0 .2em 1px 0;
+        border-bottom: auto;
+        border-top: 0;
+      }
+    }
+    li.no-ui-tabs-active {
+      margin-top: -1px;
+      padding-top: 1px;
+    }
+  }
+}

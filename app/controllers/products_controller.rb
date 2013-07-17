@@ -4,7 +4,20 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
+    @store_id = 1
     @products = Product.all
+    @import = Import.new
+    @imports = Import.where(stord_id: @store_id, step: 1)
+  end
+
+  # POST /products/import
+  def import
+    @import = Import.new(sheet_params)
+    if @import.save
+      redirect_to(action: 'show', id: @import.id)
+    else
+      redirect_to(action: 'get')
+    end
   end
 
   # GET /products/1
@@ -70,5 +83,9 @@ class ProductsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
       params.require(:product).permit(:category_id, :brand_id, :mfr_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :bar_code, :color)
+    end
+
+    def sheet_params
+      params.require(:import).permit(:upload_sheet, :store_id, :user_id)
     end
 end
