@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  category_id: MyString
+  brand_id: MyString
+  mfr_id: 1
+  user_id: 1
+  id: MyString
+  name: MyString
+  height: 9.99
+  width: 9.99
+  depth: 9.99
+  weight: 9.99
+  price_level: MyString
+  size_name: MyString
+  case_pack_name: MyString
+  bar_code: MyString
+  color: MyString
+
+two:
+  category_id: MyString
+  brand_id: MyString
+  mfr_id: 1
+  user_id: 1
+  id: MyString
+  name: MyString
+  height: 9.99
+  width: 9.99
+  depth: 9.99
+  weight: 9.99
+  price_level: MyString
+  size_name: MyString
+  case_pack_name: MyString
+  bar_code: MyString
+  color: MyString

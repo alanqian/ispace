@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130715132913) do
+ActiveRecord::Schema.define(version: 20130717075547) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -33,6 +33,16 @@ ActiveRecord::Schema.define(version: 20130715132913) do
     t.decimal  "area",          precision: 10, scale: 0
     t.decimal  "cube",          precision: 10, scale: 0
   end
+
+  create_table "brands", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", force: true do |t|
     t.string   "desc"
@@ -93,6 +103,46 @@ ActiveRecord::Schema.define(version: 20130715132913) do
     t.datetime "updated_at"
   end
 
+  create_table "manufacturers", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "desc"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "manufacturers", ["name", "category_id"], name: "index_manufacturers_on_name_and_category_id", unique: true, using: :btree
+
+  create_table "merchandises", force: true do |t|
+    t.string   "product_id"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.integer  "supplier_id"
+    t.decimal  "price",           precision: 10, scale: 0
+    t.boolean  "new_product"
+    t.boolean  "on_promotion"
+    t.boolean  "force_on_shelf"
+    t.boolean  "forbid_on_shelf"
+    t.integer  "max_facing"
+    t.integer  "min_facing"
+    t.integer  "rcmd_facing"
+    t.integer  "volume"
+    t.integer  "vulume_rank"
+    t.decimal  "value",           precision: 10, scale: 0
+    t.integer  "value_rank"
+    t.decimal  "profit",          precision: 10, scale: 0
+    t.integer  "profit_rank"
+    t.decimal  "psi",             precision: 10, scale: 0
+    t.decimal  "psi_rank",        precision: 10, scale: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
+  add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
+  add_index "merchandises", ["supplier_id"], name: "index_merchandises_on_supplier_id", using: :btree
+
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -132,6 +182,29 @@ ActiveRecord::Schema.define(version: 20130715132913) do
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
+  create_table "products", force: true do |t|
+    t.string   "category_id"
+    t.integer  "brand_id"
+    t.integer  "mfr_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.decimal  "height",         precision: 10, scale: 0
+    t.decimal  "width",          precision: 10, scale: 0
+    t.decimal  "depth",          precision: 10, scale: 0
+    t.decimal  "weight",         precision: 10, scale: 0
+    t.string   "price_level"
+    t.string   "size_name"
+    t.string   "case_pack_name"
+    t.string   "bar_code"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
+  add_index "products", ["id"], name: "index_products_on_id", using: :btree
+  add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", unique: true, using: :btree
+
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -169,5 +242,16 @@ ActiveRecord::Schema.define(version: 20130715132913) do
 
   add_index "stores", ["name"], name: "index_stores_on_name", using: :btree
   add_index "stores", ["region_id"], name: "index_stores_on_region_id", using: :btree
+
+  create_table "suppliers", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "desc"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "suppliers", ["name", "category_id"], name: "index_suppliers_on_name_and_category_id", unique: true, using: :btree
 
 end

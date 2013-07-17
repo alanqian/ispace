@@ -1,5 +1,15 @@
 Ispace::Application.routes.draw do
 
+  resources :merchandises
+
+  resources :products
+
+  resources :suppliers
+
+  resources :manufacturers
+
+  resources :brands
+
   get "upload/save"
   get "upload/get"
   get "upload/show"

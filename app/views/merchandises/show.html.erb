@@ -1,0 +1,104 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @merchandise.product_id %>
+</p>
+
+<p>
+  <strong>Store:</strong>
+  <%= @merchandise.store_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @merchandise.user_id %>
+</p>
+
+<p>
+  <strong>Supplier:</strong>
+  <%= @merchandise.supplier_id %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @merchandise.price %>
+</p>
+
+<p>
+  <strong>New product:</strong>
+  <%= @merchandise.new_product %>
+</p>
+
+<p>
+  <strong>On promotion:</strong>
+  <%= @merchandise.on_promotion %>
+</p>
+
+<p>
+  <strong>Force on shelf:</strong>
+  <%= @merchandise.force_on_shelf %>
+</p>
+
+<p>
+  <strong>Forbid on shelf:</strong>
+  <%= @merchandise.forbid_on_shelf %>
+</p>
+
+<p>
+  <strong>Max facing:</strong>
+  <%= @merchandise.max_facing %>
+</p>
+
+<p>
+  <strong>Min facing:</strong>
+  <%= @merchandise.min_facing %>
+</p>
+
+<p>
+  <strong>Rcmd facing:</strong>
+  <%= @merchandise.rcmd_facing %>
+</p>
+
+<p>
+  <strong>Volume:</strong>
+  <%= @merchandise.volume %>
+</p>
+
+<p>
+  <strong>Vulume rank:</strong>
+  <%= @merchandise.vulume_rank %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @merchandise.value %>
+</p>
+
+<p>
+  <strong>Value rank:</strong>
+  <%= @merchandise.value_rank %>
+</p>
+
+<p>
+  <strong>Profit:</strong>
+  <%= @merchandise.profit %>
+</p>
+
+<p>
+  <strong>Profit rank:</strong>
+  <%= @merchandise.profit_rank %>
+</p>
+
+<p>
+  <strong>Psi:</strong>
+  <%= @merchandise.psi %>
+</p>
+
+<p>
+  <strong>Psi rank:</strong>
+  <%= @merchandise.psi_rank %>
+</p>
+
+<%= link_to 'Edit', edit_merchandise_path(@merchandise) %> |
+<%= link_to 'Back', merchandises_path %>
