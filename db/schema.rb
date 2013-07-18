@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130717075547) do
+ActiveRecord::Schema.define(version: 20130718123023) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -101,6 +101,8 @@ ActiveRecord::Schema.define(version: 20130717075547) do
     t.integer  "step"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sheets"
+    t.binary   "cells"
   end
 
   create_table "manufacturers", force: true do |t|
