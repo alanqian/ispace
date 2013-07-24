@@ -1,0 +1,12 @@
+<ul>
+  <% imports.each do |import_sheet| %>
+    <li><%= import_sheet.filename %>
+      <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
+    <%= simple_form_for(import_sheet, action: "update", remote: false) do |f| %>
+      <%= f.collection_check_boxes :sel_sheet, coll, :first, :last %>
+      <%= f.input :to_category, collection: categories %>
+      <%= f.button :submit, 'choose' %>
+    <% end %>
+    </li>
+  <% end %>
+</ul>

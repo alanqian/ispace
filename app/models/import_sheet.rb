@@ -3,7 +3,19 @@ require "roo"
 
 class ImportSheet < ActiveRecord::Base
   validates :upload_sheet, presence: true
-  validates :data, presence: true
+  validates :sheets, presence: true
+  serialize :sheets, Array
+  serialize :selected, Hash
+
+  # fake method for rails
+  def to_category
+  end
+  def to_category=(f)
+  end
+  def sel_sheet
+  end
+  def sel_sheet=(f)
+  end
 
   # :message => "Please upload csv, xls, xlsx file!"
   # fake method for rails
@@ -15,10 +27,9 @@ class ImportSheet < ActiveRecord::Base
     logger.debug "upload_sheet, user_id: #{self.user_id}"
     self.filename = base_part_of(sheet_field.original_filename)
     self.ext = File.extname(self.filename).downcase
-    xls = load_xls(sheet_field)
-    if xls
+    self.sheets = load_xls(sheet_field)
+    if self.sheets && !self.sheets.empty?
       self.step = 2
-      self.data = xls.to_json
       # save to local file system, as backup
       FileUtils.mkdir_p(File.dirname(local_file))
       File.open(local_file, 'wb') { |f| f.write sheet_field.read }
@@ -28,9 +39,10 @@ class ImportSheet < ActiveRecord::Base
     logger.debug "upload_sheet failed, filename:#{sheet_field.original_filename}"
   end
 
-  # readonly
-  def sheets
-    self.data ? JSON.parse(self.data) : nil
+  def add_import_sheet(param)
+    self.selected ||= {}
+    self.selected[param[:sel_sheet]] = param[:to_category]
+    self.save
   end
 
   private

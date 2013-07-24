@@ -19,21 +19,19 @@
     <li><a href="http://www....">Home</a></li>
     <li><%= link_to 'Fixtures', fixtures_path %></li>
     <li><%= link_to 'Bays', bays_path %> </li>
-    <li><%= link_to 'Products', products_path %></li>
+    <li>
+      <!-- <%= link_to 'Products', bays_path %> -->
+      <a href="#">Products</a>
+      <ul>
+        <li><%= link_to 'List', products_path %></li>
+        <li><%= link_to 'Import', products_path %></li>
+        <li><%= link_to 'Edit', products_path %></li>
+      </ul>
+    </li>
     <li><a href="http://www..../plan">Plans</a></li>
   </ul>
   <div id="columns">
-    <div id="side">
-      <ul>
-        <li><a href="http://www....">Home</a></li>
-        <li><%= link_to 'Fixtures', fixtures_path %></li>
-        <li><%= link_to 'Bays', bays_path %> </li>
-        <li><%= link_to 'Products', products_path %></li>
-      </ul>
-    </div>
-    <div id="main">
-      <%= yield %>
-    </div>
+    <%= yield %>
   </div>
   <div id="footer">
     <p>Powered by SaleSpace, Copyright &copy; BitTech Inc, 2013</p>

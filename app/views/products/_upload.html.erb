@@ -1,0 +1,16 @@
+<%= simple_form_for(new_import, remote: true) do |f| %>
+  <%= f.error_notification %>
+  <%= token_tag %>
+
+  <div class="inputs">
+    <%= f.hidden_field :store_id %>
+    <%= f.hidden_field :user_id %>
+    <%= f.label "Please upload product file in csv/xls/xlsx format:" %>
+    <%= f.input :comment, input_html: { size: 22 } %>
+    <%= f.file_field :upload_sheet %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit, "upload!" %>
+  </div>
+<% end %>

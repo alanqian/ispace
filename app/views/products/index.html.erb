@@ -1,3 +1,27 @@
+<div id="side">
+  <div class="accordion">
+    <h3>Step 1: Import file</h3>
+    <div id="import-file">
+      <%= render "upload", new_import: @import_sheet %>
+    </div>
+    <h3>Step 2: Choose sheet</h3>
+    <div id="choose-sheets">
+    <% if @sheets %>
+      <%= render "choose_sheet", imports: @sheets, categories: @categories %>
+    <% end %>
+    </div>
+    <h3>Step 3: mapping fields</h3>
+    <div id="set-mapping">
+      <p> Step 3: Set field mapping...</p>
+      blah,blah
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="preview">
+  </div>
+
 <div id="product-tabs">
   <ul>
     <li><a href="#tab-import">Import</a></li>
@@ -12,31 +36,6 @@
     <p>Import product data here:</p>
 
     <p> Step 1: upload files (in xls,xlsx,csv)
-    <div id="import-file">
-      <%= form_for @import, url: { action: 'import' }, :html => {:multipart => true} do |f| %>
-        <%= f.hidden_field :store_id %>
-        <%= f.hidden_field :user_id %>
-        <p>
-          <%= f.file_field :upload_sheet %>
-        </p>
-        <p><%= f.submit "upload" %></p>
-      <% end %>
-    </div>
-
-    <% if @imports %>
-    <div id="choose-sheets">
-      <p> Step 2: choose sheets if necessary</p>
-      list filename, datetime, user w/ preview
-      [ ] sheet -> category
-      [ ] sheet -> category
-      [ ] sheet -> category
-    </div>
-    <% end %>
-
-    <div id="set-mapping">
-      <p> Step 3: Set field mapping...</p>
-      blah,blah
-    </div>
 
     <p> Finish, to return to products#index? </p>
 
@@ -44,5 +43,7 @@
   <div id="tab-edit">
     <p>edit product data here, include brand/manufecturer/supplier, etc.</p>
   </div>
+</div>
+
 </div>
 

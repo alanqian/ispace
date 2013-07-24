@@ -48,7 +48,7 @@
 }
 
 /* clearfix for the menu */
-.ui-menu:after {
+ul.ui-menu:after {
   content: ".";
   display: block;
   clear: both;
@@ -56,16 +56,37 @@
   line-height: 0;
   height: 0;
 }
-.ui-menu .ui-menu-item {
-  display: inline-block;
-  float: left;
-  margin: 0;
-  padding: 0;
-  width: auto;
-}
 
-#menubar {
+ul#menubar {
   background: #9c9;
+  float: top;
+  width: 100%;
+
+  li.ui-menu-item {
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: auto;
+
+    ul.ui-menu {
+      display: block;
+      clear: both;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      width: 200px;
+      background-color: #9c9;
+    }
+
+    ul.ui-menu > li {
+      display: block;
+      clear: both;
+      float: top;
+      width: 100%;
+      background-color: #9c9;
+    }
+  }
 }
 
 #columns {
@@ -73,7 +94,7 @@
   width: 100%;
 
   #main {
-    margin-right: 15em;
+    margin-left: 15em;
     padding: 1em;
     background: white;
 
@@ -122,29 +143,83 @@
   }
 
   #side {
-    float: right;
-    padding: 1em 2em;
-    width: 10em;
+    float: left;
+    padding: 0.3em;
+    width: 14em;
     background: #141;
 
-    form, div {
-      display: inline;
+    .accordion {
+      width: 100%;
+      padding: 0.2em;
+      margin: 0;
+      h3 {
+        font-size: 11pt;
+      }
     }
+  }
+}
 
-    input {
-      font-size: small;
-    }
+table.no-wrap {
+  th,td {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
 
-    ul {
-      padding: 0;
+table.grid-control {
+  width: 100%;
+  overflow: hidden;
+  max-width: 1440px;
 
-      li {
-        list-style: none;
+  th {
+     border:1px solid #bbb;
+     text-align: center;
+  }
 
-        a {
-          color: #bfb;
-          font-size: small;
-        }
+  td {
+    border-bottom:1px solid #bbb;
+    border-left:1px solid #bbb;
+  }
+
+  td.left {
+    border-left:1px solid #2e638e;
+  }
+
+  td.right {
+    border-right:1px solid #2e638e;
+  }
+
+  td.bottom {
+    border-bottom:1px solid #2e638e;
+  }
+}
+
+div.preview {
+  height: 300px;
+  overflow: hidden;
+}
+
+.ui-hidden {
+  display: none;
+}
+
+.ui-tabs .ui-tabs-panel {
+  padding: 0 0.2em 0.2em 0.2em;
+}
+
+div.tabs-bottom {
+  .ui-tabs-nav {
+    clear: left;
+    padding: 0 .2em .2em .2em;
+    li {
+      top: auto;
+      bottom: 0;
+      margin: 0 .2em 1px 0;
+      border-bottom: auto;
+      border-top: 0;
+      .ui-tabs-active {
+        margin-top: -1px;
+        padding-top: 1px;
       }
     }
   }

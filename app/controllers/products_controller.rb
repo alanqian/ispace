@@ -1,16 +1,32 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
+  # Product List
   # GET /products
   # GET /products.json
   def index
     @store_id = 1
+    @user_id = 1
     @products = Product.all
-    @import = Import.new
-    @imports = Import.where(stord_id: @store_id, step: 1)
+    @import_sheet = ImportSheet.new(step: 1, store_id: @store_id, user_id:
+                                    @user_id)
+    @sheets = ImportSheet.where(store_id: @store_id, step: 2)
+    @categories = Category.all
   end
 
   # POST /products/import
+  # import process:
+  #   1. upload
+  #      save sheet/header/cells info of uploaded file,
+  #      ok => import?step=2, choose-sheet
+  #      fail => import?step=1, show error;
+  #   2. choose sheet of files if necessary
+  #      sheet -> category => import?step=3, sheet =
+  #   3. set file mapping
+  #      file/sheet:
+  #      headers -> fields
+  #   4. finish, show recent 10 import results
+  #
   def import
     @import = Import.new(sheet_params)
     if @import.save

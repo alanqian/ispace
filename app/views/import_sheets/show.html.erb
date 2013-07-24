@@ -1,0 +1,41 @@
+<% if @import_sheet.step != "2" %>
+  <p id="notice"><%= notice %></p>
+  <p>
+    <strong>Store:</strong>
+    <%= @import_sheet.store_id %>
+  </p>
+  <p>
+    <strong>User:</strong>
+    <%= @import_sheet.user_id %>
+  </p>
+  <p>
+    <strong>Step:</strong>
+    <%= @import_sheet.step %>
+  </p>
+  <p>
+    <strong>Filename:</strong>
+    <%= @import_sheet.filename %>
+  </p>
+  <p>
+    <strong>Comment:</strong>
+    <%= @import_sheet.comment %>
+  </p>
+  <p>
+    <strong>Ext:</strong>
+    <%= @import_sheet.ext %>
+  </p>
+  <p>
+    <strong>Selected:</strong>
+    <%= @import_sheet.selected %>
+  </p>
+  <%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
+  <%= link_to 'Back', import_sheets_path %>
+<% else %>
+  <p id="notice">file:
+    <span id="upload-filename"><%= @import_sheet.filename %></span>, comment:
+    <span id="upload-comment"><%= @import_sheet.comment %></span>
+  </p>
+  <%= render 'sheet', :spread_sheet => @import_sheet.sheets %>
+<% end %>
+
+

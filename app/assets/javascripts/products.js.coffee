@@ -3,9 +3,13 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
-  $("#product-tabs").tabs(
-    activate: (event, ui) ->
-      console.log "activate:", ui.newPanel.selector
-      window.location.hash = ui.newPanel.selector
+  $('#new_import_sheet').bind('ajax:success', (event, data, status, xhr) ->
+    console.log "ajax success new_import_sheet"
+    console.log data
+  ).bind("ajax:error", (evt, xhr, status, error) ->
+    console.log "ajax error"
+    console.log status, error
+    console.log xhr
   )
 
+  console.log "set ajax ok"

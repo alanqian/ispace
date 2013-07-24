@@ -1,5 +1,7 @@
 Ispace::Application.routes.draw do
 
+  resources :import_sheets
+
   resources :merchandises
 
   post "products/import"

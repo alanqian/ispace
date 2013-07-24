@@ -1,0 +1,42 @@
+<div class="tabs tabs-bottom">
+<ul class="ui-hidden">
+<% spread_sheet.each do |sheet| %>
+  <% id = "#tab-sheet-#{sheet['id']}" %>
+  <li><a href="<%= id %>"><%= sheet['name'] %></a></li>
+<% end %>
+</ul>
+<% spread_sheet.each do |sheet| %>
+  <div id=<%= "tab-sheet-#{sheet['id']}" %> class="preview">
+    <table id=<%= "sheet-#{sheet['id']}" %> class="grid-control no-wrap resizable" cellspacing=0>
+      <thead class="ui-widget-header">
+        <tr>
+          <th>&nbsp;</th>
+          <% sheet["thead"].each do |th| %>
+            <th><%= th %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody class="ui-widget-content"><tr>
+        <% if !sheet["empty"] %>
+          <% i = 1 %>
+          <% sheet["cells"].each do |row| %>
+            <tr><td><%= i %></td>
+            <%=raw row.map {|td| "<td>#{td}</td>" }.join %>
+            <% i += 1 %>
+            </tr>
+          <% end %>
+        <% else %>
+          <% cols = sheet["thead"].size %>
+          <% 1.upto(66) do |i| %>
+            <tr><td><%= i %></td>
+            <% cols.times do |_| %>
+              <td></td>
+            <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+</div>

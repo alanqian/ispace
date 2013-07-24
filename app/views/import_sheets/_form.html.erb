@@ -1,0 +1,19 @@
+<%= simple_form_for(@import_sheet) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :store_id %>
+    <%= f.input :user_id %>
+    <%= f.input :step %>
+    <%= f.input :filename %>
+    <%= f.input :sheets %>
+    <%= f.input :comment %>
+    <%= f.input :ext %>
+    <%= f.input :selected %>
+    <%= f.input :mapping %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

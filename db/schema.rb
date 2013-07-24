@@ -96,9 +96,9 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "comment"
     t.string   "filename"
     t.string   "ext"
-    t.text     "data",       limit: 2147483647
-    t.string   "selected"
-    t.string   "mapping"
+    t.text     "sheets",     limit: 2147483647
+    t.text     "selected"
+    t.text     "mapping",    limit: 16777215
     t.integer  "store_id"
     t.integer  "user_id"
     t.integer  "step",                          default: 1

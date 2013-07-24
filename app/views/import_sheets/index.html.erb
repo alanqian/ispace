@@ -1,0 +1,43 @@
+<h1>Listing import_sheets</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Store</th>
+      <th>User</th>
+      <th>Step</th>
+      <th>Filename</th>
+      <th>Comment</th>
+      <th>Ext</th>
+      <th>Sheets</th>
+      <th>Selected</th>
+      <th>Mapping</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @import_sheets.each do |import_sheet| %>
+      <tr>
+        <td><%= import_sheet.store_id %></td>
+        <td><%= import_sheet.user_id %></td>
+        <td><%= import_sheet.step %></td>
+        <td><%= import_sheet.filename %></td>
+        <td><%= import_sheet.comment %></td>
+        <td><%= import_sheet.ext %></td>
+        <td><%= import_sheet.sheets %></td>
+        <td><%= import_sheet.selected %></td>
+        <td><%= import_sheet.mapping %></td>
+        <td><%= link_to 'Show', import_sheet %></td>
+        <td><%= link_to 'Edit', edit_import_sheet_path(import_sheet) %></td>
+        <td><%= link_to 'Destroy', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Import sheet', new_import_sheet_path %>

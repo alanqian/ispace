@@ -7,8 +7,9 @@ one:
   filename: MyString
   comment: MyString
   ext: MyString
+  sheets:
   selected: MyString
-  data:
+  mapping:
 
 two:
   store_id: 1
@@ -16,6 +17,7 @@ two:
   step: 1
   comment: MyString
   filename: MyString
-  data:
+  sheets:
   ext: MyString
   selected: MyString
+  mapping:
