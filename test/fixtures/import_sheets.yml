@@ -3,11 +3,19 @@
 one:
   store_id: 1
   user_id: 1
+  step: 1
   filename: MyString
-  content_type: MyString
+  comment: MyString
+  ext: MyString
+  selected: MyString
+  data:
 
 two:
   store_id: 1
   user_id: 1
+  step: 1
+  comment: MyString
   filename: MyString
-  content_type: MyString
+  data:
+  ext: MyString
+  selected: MyString

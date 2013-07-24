@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  id: MyString
+  code: MyString
   name: MyString
   desc: MyString
 
 two:
-  id: MyString
+  code: MyString
   name: MyString
   desc: MyString

@@ -20,6 +20,7 @@
 *.sassc
 .sass-cache
 /public/system/*
+/public/sheets/*
 rerun.txt
 pickle-email-*.html
 

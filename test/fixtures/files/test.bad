@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  name: ctg1
+  id: MyString
   desc: MyString
 
 two:
-  name: ctg2
+  id: MyString
   desc: MyString

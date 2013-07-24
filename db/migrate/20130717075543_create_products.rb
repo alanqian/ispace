@@ -1,7 +1,7 @@
 class CreateProducts < ActiveRecord::Migration
   def change
     create_table(:products, id: false) do |t|
-      t.string :id, :length => 80, :null => false
+      t.string :code, :length => 80, :null => false
       t.string :category_id
       t.integer :brand_id
       t.integer :mfr_id
@@ -20,8 +20,7 @@ class CreateProducts < ActiveRecord::Migration
       t.timestamps
       t.index [:name, :category_id], unique: true
       t.index :category_id
-      t.index :id
     end
-    execute "ALTER TABLE products ADD PRIMARY KEY (id);"
+    execute "ALTER TABLE products ADD PRIMARY KEY (code);"
   end
 end

@@ -97,7 +97,14 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    remotipart (1.2.1)
+    roo (1.11.2)
+      nokogiri
+      rubyzip
+      spreadsheet (> 0.6.4)
     ruby-hmac (0.4.0)
+    ruby-ole (1.2.11.6)
+    rubyzip (0.9.9)
     sass (3.2.9)
     sass-rails (4.0.0.rc2)
       railties (>= 4.0.0.beta, < 5.0)
@@ -107,6 +114,8 @@ GEM
       json (>= 1.1.3)
       rdoc (~> 3.10)
     simple_form (1.4.1)
+    spreadsheet (0.8.5)
+      ruby-ole (>= 1.0)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -145,6 +154,8 @@ DEPENDENCIES
   jquery-ui-rails
   mysql2
   rails (= 4.0.0.rc1)
+  remotipart (~> 1.0)
+  roo
   sass-rails (~> 4.0.0.rc1)
   sdoc
   simple_form

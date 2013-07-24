@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130718123023) do
+ActiveRecord::Schema.define(version: 20130724092508) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20130718123023) do
 
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
-  create_table "categories", force: true do |t|
+  create_table "categories", primary_key: "name", force: true do |t|
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -92,17 +92,18 @@ ActiveRecord::Schema.define(version: 20130718123023) do
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
 
-  create_table "imports", force: true do |t|
-    t.integer  "store_id"
-    t.integer  "user_id"
+  create_table "import_sheets", force: true do |t|
     t.string   "comment"
     t.string   "filename"
     t.string   "ext"
-    t.integer  "step"
+    t.text     "data",       limit: 2147483647
+    t.string   "selected"
+    t.string   "mapping"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.integer  "step",                          default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "sheets"
-    t.binary   "cells"
   end
 
   create_table "manufacturers", force: true do |t|
@@ -184,7 +185,7 @@ ActiveRecord::Schema.define(version: 20130718123023) do
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
-  create_table "products", force: true do |t|
+  create_table "products", primary_key: "code", force: true do |t|
     t.string   "category_id"
     t.integer  "brand_id"
     t.integer  "mfr_id"
@@ -204,7 +205,6 @@ ActiveRecord::Schema.define(version: 20130718123023) do
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
-  add_index "products", ["id"], name: "index_products_on_id", using: :btree
   add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", unique: true, using: :btree
 
   create_table "rear_support_bars", force: true do |t|
@@ -225,7 +225,7 @@ ActiveRecord::Schema.define(version: 20130718123023) do
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
 
-  create_table "regions", force: true do |t|
+  create_table "regions", primary_key: "code", force: true do |t|
     t.string   "name",       null: false
     t.string   "desc"
     t.datetime "created_at"
