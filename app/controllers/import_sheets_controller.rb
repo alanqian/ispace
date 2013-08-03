@@ -44,7 +44,6 @@ class ImportSheetsController < ApplicationController
   # PATCH/PUT /import_sheets/1
   # PATCH/PUT /import_sheets/1.json
   def update
-    logger.debug aaa
     respond_to do |format|
       if @import_sheet.update(import_sheet_params)
         format.html { redirect_to @import_sheet, notice: 'Import sheet was successfully updated.' }
@@ -72,20 +71,27 @@ class ImportSheetsController < ApplicationController
       @import_sheet = ImportSheet.find(params[:id])
     end
 
-    def create_import_params
-      params.require(:import_sheet).permit(:store_id, :user_id, :step, :comment, :upload_sheet)
-    end
-
-    def update_import_params
-      case params[:import_sheet][:step]
-      when "2" params.require(:import_sheet).permit(:user_id, :step, :sel_sheet, :to_category)
-      when "3" params.require(:import_sheet).permit(:user_id, :step, :mapping)
-      else nil
-      end
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_sheet_params
-      params.require(:import_sheet).permit(:store_id, :user_id, :filename, :comment, :ext, :upload_sheet)
+      logger.debug "step: #{params[:import_sheet][:step]}"
+      case params[:import_sheet][:step]
+      when 2,"2"
+        logger.debug "choose sheet step"
+        prm = params.require(:import_sheet).permit(:user_id, :step, :category_id, :sel_sheets => [])
+        return prm
+      when 3,"3"
+        logger.debug "mapping step"
+        prm = params.require(:import_sheet).permit(:user_id, :step).tap do |whitelist|
+          whitelist[:mapping] = params[:import_sheet][:mapping]
+        end
+        logger.debug "form param: #{prm.to_json}"
+        return prm
+      else
+        logger.debug "upload step, step:#{params[:import_sheet][:step]}"
+        prm = params.require(:import_sheet).permit(:store_id, :user_id, :comment, :upload_sheet)
+        logger.debug "form param: #{prm.to_json}"
+        return prm
+      end
+      # params.require(:import_sheet).permit(:store_id, :user_id, :filename, :comment, :ext, :upload_sheet)
     end
 end

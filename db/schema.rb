@@ -96,12 +96,13 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "comment"
     t.string   "filename"
     t.string   "ext"
-    t.text     "sheets",     limit: 2147483647
-    t.text     "selected"
-    t.text     "mapping",    limit: 16777215
+    t.text     "sheets",      limit: 2147483647
+    t.string   "sel_sheets"
+    t.string   "category_id"
+    t.text     "mapping",     limit: 16777215
     t.integer  "store_id"
     t.integer  "user_id"
-    t.integer  "step",                          default: 1
+    t.integer  "step",                           default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -121,6 +122,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "product_id"
     t.integer  "store_id"
     t.integer  "user_id"
+    t.integer  "import_id",                                default: -1
     t.integer  "supplier_id"
     t.decimal  "price",           precision: 10, scale: 0
     t.boolean  "new_product"
@@ -190,6 +192,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.integer  "brand_id"
     t.integer  "mfr_id"
     t.integer  "user_id"
+    t.integer  "import_id",                               default: -1
     t.string   "name"
     t.decimal  "height",         precision: 10, scale: 0
     t.decimal  "width",          precision: 10, scale: 0
@@ -205,7 +208,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
-  add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", unique: true, using: :btree
+  add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", using: :btree
 
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"

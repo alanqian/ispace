@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'csv'
 require "roo"
 
@@ -5,16 +6,31 @@ class ImportSheet < ActiveRecord::Base
   validates :upload_sheet, presence: true
   validates :sheets, presence: true
   serialize :sheets, Array
-  serialize :selected, Hash
+  serialize :sel_sheets, Array
+  serialize :mapping, Hash
 
-  # fake method for rails
-  def to_category
-  end
-  def to_category=(f)
-  end
-  def sel_sheet
-  end
-  def sel_sheet=(f)
+  before_update do
+    case self.step
+    when 2
+      # update chosen sheets & category, save to sheets field
+      if not self.category_id.empty?
+        count = 0
+        self.sel_sheets.each do |id|
+          id = id.empty?() ? -1 : id.to_i  # form parameters is string
+          if id >= 0 && id < self.sheets.size && !self.sheets[id][:empty]
+            self.sheets[id][:category_id] = self.category_id
+            count += 1
+          end
+        end
+        self.step = 3 if count > 0
+      end
+    when 3
+      # update mappings
+      self.mapping = self.mapping.to_hash.reject { |_,v| !v || v.empty? }
+      logger.debug "mapping: #{mapping.class}, #{self.mapping}"
+    end
+    logger.debug "before_update, #{self.sel_sheets}"
+    logger.debug "before_update, #{self.to_json}"
   end
 
   # :message => "Please upload csv, xls, xlsx file!"
@@ -39,10 +55,127 @@ class ImportSheet < ActiveRecord::Base
     logger.debug "upload_sheet failed, filename:#{sheet_field.original_filename}"
   end
 
-  def add_import_sheet(param)
-    self.selected ||= {}
-    self.selected[param[:sel_sheet]] = param[:to_category]
-    self.save
+  def sheet_fields
+    fields = []
+    sheets.each do |sheet|
+      if sheet[:category_id] && !sheet[:empty]
+        fields += sheet[:header].select { |e| e }
+      end
+    end
+    fields.uniq
+  end
+
+  def self.foo
+    "foo"
+  end
+
+  def self.test
+    table = "import_sheet"
+    logger.debug table.camelize.constantize
+  end
+
+  # finish the import task
+  def finalize
+    return if mapping.empty?
+    # TODO: get user id from session
+
+    self.sheets.each do |sheet|
+      next if sheet[:empty] || !sheet[:category_id]
+
+      # get the mapping
+      map = []
+      sheet[:header].each do |field|
+        map.push mapping[field]
+      end
+
+      sheet[:cells].shift # remove 1st header row
+      sheet[:cells].each do |row|
+        category_id = sheet[:category_id]
+        params = {
+          supplier: {},
+          manufacturer: {},
+          merchandise: {},
+          brand: {},
+          product: {},
+        }
+
+        for i in 0..(map.size-1)
+          to_field = map[i]
+          if to_field
+            table, field = to_field.split(".")
+            params[table.to_sym][field.to_sym] = row[i]
+          end
+        end
+        # logger.debug "import ok: #{params.to_json}"
+        [:supplier, :manufacturer, :brand].each do |k|
+          if not params[k].empty?
+            klass = k.to_s.camelize.constantize
+            params[k]["category_id"] = category_id
+            r = klass.where(params[k])
+            if r.empty?
+              params[k][:id] = klass.create(params[k]).id
+            else
+              params[k][:id] = r.first.id
+            end
+          end
+        end
+
+        # create product
+        params[:product].merge! ({
+          category_id: category_id,
+          brand_id: params[:brand][:id],
+          mfr_id: params[:manufacturer][:id],
+          user_id: self.user_id,
+          import_id: self.id,
+        })
+        strip_dot_zero(params, :product)
+
+        # logger.debug "import product: #{params[:product].to_json}"
+        r = Product.where({code: params[:product][:code]})
+        if r.empty?
+          params[:product][:id] = Product.create(params[:product]).id
+        else
+          # TODO: update?
+          params[:product][:id] = r.first.id
+        end
+
+        # create merchandise
+        # TODO: rcmd/min/max face
+        params[:merchandise].merge! ({
+          store_id: self.store_id,
+          user_id: self.user_id,
+          product_id: params[:product][:id],
+          supplier_id: params[:supplier][:id],
+          import_id: self.id,
+        })
+        strip_dot_zero(params, :merchandise)
+
+        logger.debug "import merchandise: #{params[:merchandise].to_json}"
+        r = Merchandise.where({product_id: params[:product][:id], import_id:
+                              self.id})
+        if r.empty?
+          mcds = Merchandise.create(params[:merchandise])
+          logger.debug "merchandise imported, id:#{mcds.id}"
+        else
+          # TODO: update?
+        end
+      end
+    end
+    self.step = 4
+  end
+
+  # make a patch for roo, for string fields
+  def strip_dot_zero(params, table)
+    klass = table.to_s.camelize.constantize
+    # logger.debug klass
+    params[table].each do |k, v|
+      # logger.debug "table: #{table}, field:#{k}"
+      column = klass.columns_hash[k.to_s]
+      if column && column.type == :string
+        s = params[table][k].to_s
+        params[table][k] = s.sub(/\.0+/, '')
+      end
+    end
   end
 
   private
@@ -57,7 +190,7 @@ class ImportSheet < ActiveRecord::Base
   def load_xls(file)
     xls = self.class.open_spreadsheet(file, self.ext)
     sheets = []
-    id = 1
+    id = 0
     xls.sheets.each do |sheet|
       xls.default_sheet = sheet
       if xls.last_row && xls.last_column
@@ -115,33 +248,40 @@ class ImportSheet < ActiveRecord::Base
     else raise "Unknown uploaded type: #{file.original_filename}"
     end
   end
-end
 
-__END__
+  # returns hash of name => [value, label]
+  def self.auto_mapping
+    @@dict[:_mapping]
+  end
+  def self.mapping_fields
+    @@dict[:_fields]
+  end
 
-#!/usr/bin/env ruby
-# encoding: utf-8
-require 'roo'
-
-class WorkBook
-  # sheets
-  # headers: fields
-  # data: array of hash: by header, by column
-  SheetInfo = Struct.new :name, :header, :rows, :columns, :records
-  def self.init_dict(dict)
-    mapping = {}
+  def self.init_dict(dict, init_mapping)
+    def_mapping = {}
+    fields = []
     dict.each do |table, map|
       map.each do |k, v|
-        mapping[v] = "#{table}.#{k}"
+        def_mapping[v] = "#{table}.#{k}"
+        fields.push ["#{table}.#{k}", v]
       end
     end
-    dict[:_mapping].merge!(mapping)
+
+    init_mapping.each do |k, v|
+      cat, field = v.split(".")
+      label = dict[cat.to_sym][field.to_sym]
+      def_mapping[k] = v
+      fields.push [v, label]
+    end
+
+    dict[:_mapping] = def_mapping
+    dict[:_fields] = fields.uniq
     dict
   end
 
   @@dict = self.init_dict({
     product: {
-      id: "产品标识",
+      code: "产品标识",
       name: "产品名称",
       height: "高度",
       width: "宽度",
@@ -183,12 +323,24 @@ class WorkBook
 
     manufacturer: {
       name: "生产商",
-    },
-    _mapping: {
+    }}, {
+      # customized mapping add here
       "名称" => "product.name",
       "大小" => "product.size_name",
-    },
-  })
+    })
+end
+
+__END__
+
+#!/usr/bin/env ruby
+# encoding: utf-8
+require 'roo'
+
+class WorkBook
+  # sheets
+  # headers: fields
+  # data: array of hash: by header, by column
+  SheetInfo = Struct.new :name, :header, :rows, :columns, :records
 
 
   def initialize(file_path)

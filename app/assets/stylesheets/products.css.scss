@@ -37,12 +37,69 @@
   }
 }
 
+div#mapping {
+  overflow: hidden;
+
+  div.mapping-src {
+    display: inline-block;
+    float: left;
+    overflow: auto;
+    width: 10em;
+    height: 20em;
+    border: 1px solid black;
+
+    td.active {
+      background-color: blue;
+    }
+  }
+
+  div.mapping-dest {
+    display: inline-block;
+    float: left;
+    overflow: auto;
+    height: 20em;
+    width: 8.5em;
+    margin-left: 2em;
+    border: 1px solid black;
+
+    ul.mapping-to-fields {
+      list-style: none;
+      margin: 0.2em 2px;
+      line-height: 1.4em;
+      padding-left: 0;
+
+      li {
+        padding-left: 1em;
+        text-indent: -1em;
+        border: 1px solid white;
+      }
+
+      li.checked {
+        background-color: #cdcdcd;
+        border: 1px solid #cdcdcd;
+      }
+      li.active {
+        border: 1px dashed #666666;
+      }
+
+      li:before {
+        content: "➜";
+        padding-left: 3px;
+        padding-right: 2px;
+      }
+
+      li.checked:before {
+        content: "✓";
+        padding-left: 3px;
+        padding-right: 2px;
+      }
+    }
+  }
+}
+
 
 form {
   clear: both;
-  float: top;
-  display: block;
-  width: 10em;
   padding: 0;
   font-size: 10pt;
 

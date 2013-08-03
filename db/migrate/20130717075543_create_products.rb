@@ -6,6 +6,7 @@ class CreateProducts < ActiveRecord::Migration
       t.integer :brand_id
       t.integer :mfr_id
       t.integer :user_id
+      t.integer :import_id, :default => -1
       t.string :name
       t.decimal :height
       t.decimal :width
@@ -18,7 +19,7 @@ class CreateProducts < ActiveRecord::Migration
       t.string :color
 
       t.timestamps
-      t.index [:name, :category_id], unique: true
+      t.index [:name, :category_id], unique: false
       t.index :category_id
     end
     execute "ALTER TABLE products ADD PRIMARY KEY (code);"

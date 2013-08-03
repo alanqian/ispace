@@ -25,8 +25,12 @@
     <%= @import_sheet.ext %>
   </p>
   <p>
-    <strong>Selected:</strong>
-    <%= @import_sheet.selected %>
+    <strong>sel_sheets:</strong>
+    <%= @import_sheet.sel_sheets %>
+  </p>
+  <p>
+    <strong>Category:</strong>
+    <%= @import_sheet.category_id %>
   </p>
   <%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
   <%= link_to 'Back', import_sheets_path %>

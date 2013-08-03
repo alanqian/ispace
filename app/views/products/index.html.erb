@@ -2,25 +2,30 @@
   <div class="accordion">
     <h3>Step 1: Import file</h3>
     <div id="import-file">
-      <%= render "upload", new_import: @import_sheet %>
+      <%= render "/import_sheets/upload", new_import: @new_import %>
     </div>
     <h3>Step 2: Choose sheet</h3>
     <div id="choose-sheets">
-    <% if @sheets %>
-      <%= render "choose_sheet", imports: @sheets, categories: @categories %>
+    <% if @choose_sheets %>
+      <%= render "/import_sheets/choose_sheet", imports: @choose_sheets, categories: @categories %>
     <% end %>
     </div>
     <h3>Step 3: mapping fields</h3>
     <div id="set-mapping">
-      <p> Step 3: Set field mapping...</p>
-      blah,blah
     </div>
   </div>
 </div>
 
 <div id="main">
   <div id="preview">
+    <p>set field mapping</p>
+    <div id="set-mapping">
+      <% if @mapping_sheets %>
+        <%= render "/import_sheets/mapping_fields", imports: @mapping_sheets, to_fields: @to_fields, auto_mapping: @auto_mapping %>
+      <% end %>
+    </div>
   </div>
+  <hr>
 
 <div id="product-tabs">
   <ul>

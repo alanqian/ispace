@@ -8,10 +8,14 @@ class ProductsController < ApplicationController
     @store_id = 1
     @user_id = 1
     @products = Product.all
-    @import_sheet = ImportSheet.new(step: 1, store_id: @store_id, user_id:
+    @new_import = ImportSheet.new(step: 1, store_id: @store_id, user_id:
                                     @user_id)
-    @sheets = ImportSheet.where(store_id: @store_id, step: 2)
+    @choose_sheets = ImportSheet.where(store_id: @store_id, step: 2)
     @categories = Category.all
+
+    @mapping_sheets = ImportSheet.where(store_id: @store_id, step: 3)
+    @auto_mapping = ImportSheet.auto_mapping
+    @to_fields = ImportSheet.mapping_fields # @auto_mapping.values.uniq
   end
 
   # POST /products/import

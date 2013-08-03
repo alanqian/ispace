@@ -1,0 +1,38 @@
+<script>
+  window.field_mapping = { activeRow: null, activeTo: null, }
+</script>
+<div id="mapping">
+  <% imports.each do |import_sheet| %>
+    <p><%= import_sheet.filename %></p>
+      <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
+      <% fields = import_sheet.sheet_fields %>
+      <% map_from = Hash[fields.zip([""] * fields.size)] %>
+      <%= simple_form_for(import_sheet, action: "update", remote: false) do |f| %>
+        <%= f.hidden_field :step %>
+        <div class="mapping-src">
+          <table border=1 cellspacing=0 cellpadding=2>
+              <%= f.simple_fields_for :mapping, OpenStruct.new(Hash[fields.zip([""] * fields.size)]) do |fm| %>
+            <% fields.each do |field| %>
+              <tr>
+                <td width='50%' class="mapping-name"><%= field %></td>
+                <td width='50%' class="mapping-input" data-field="<%= field %>">
+                <%= fm.hidden_field field %>
+                <span></span>
+                </td>
+              </tr>
+            <% end %>
+              <% end %>
+          </table>
+        </div>
+        <div class="mapping-dest">
+          <ul class="mapping-to-fields">
+          <% to_fields.each do |field| %>
+            <li data-field="<%= field[0] %>"><%= field[1] %></li>
+          <% end %>
+          </ul>
+        </div>
+        <%= submit_tag 'Auto map!', onclick: 'autoMapping(event,this);return false;', "data-src" => auto_mapping.to_json %>
+        <%= f.button :submit, 'finish!' %>
+      <% end %>
+  <% end %>
+</div>

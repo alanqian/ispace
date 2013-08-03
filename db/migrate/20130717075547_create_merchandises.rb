@@ -4,6 +4,7 @@ class CreateMerchandises < ActiveRecord::Migration
       t.string :product_id
       t.integer :store_id
       t.integer :user_id
+      t.integer :import_id, :default => -1
       t.integer :supplier_id
       t.decimal :price
       t.boolean :new_product

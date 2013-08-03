@@ -194,6 +194,12 @@ table.grid-control {
   }
 }
 
+div.ui-accordion {
+  .ui-accordion-content {
+    padding: 0.3em 0.3em
+  }
+}
+
 div.preview {
   height: 300px;
   overflow: hidden;
