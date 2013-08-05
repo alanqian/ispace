@@ -85,6 +85,8 @@ ul#menubar {
       float: top;
       width: 100%;
       background-color: #9c9;
+      position: relative;
+      z-index: 10001;
     }
   }
 }
