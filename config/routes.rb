@@ -1,27 +1,13 @@
 Ispace::Application.routes.draw do
 
   resources :import_sheets
-
   resources :merchandises
-
-  post "products/import"
   resources :products
-
   resources :suppliers
-
   resources :manufacturers
-
   resources :brands
-
-  get "upload/save"
-  get "upload/get"
-  get "upload/show"
-  post "upload/save"
-
   resources :fixtures
-
   resources :stores
-
   resources :regions
 
   # removed resources

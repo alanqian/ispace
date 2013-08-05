@@ -38,10 +38,12 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "name"
     t.string   "category_id"
     t.string   "color"
+    t.integer  "import_id",   default: -1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "brands", ["import_id"], name: "index_brands_on_import_id", using: :btree
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", primary_key: "name", force: true do |t|
@@ -100,6 +102,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "sel_sheets"
     t.string   "category_id"
     t.text     "mapping",     limit: 16777215
+    t.string   "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.integer  "step",                           default: 1
@@ -112,10 +115,12 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "category_id"
     t.string   "desc"
     t.string   "color"
+    t.integer  "import_id",   default: -1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "manufacturers", ["import_id"], name: "index_manufacturers_on_import_id", using: :btree
   add_index "manufacturers", ["name", "category_id"], name: "index_manufacturers_on_name_and_category_id", unique: true, using: :btree
 
   create_table "merchandises", force: true do |t|
@@ -144,6 +149,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.datetime "updated_at"
   end
 
+  add_index "merchandises", ["import_id"], name: "index_merchandises_on_import_id", using: :btree
   add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
   add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
   add_index "merchandises", ["supplier_id"], name: "index_merchandises_on_supplier_id", using: :btree
@@ -208,6 +214,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
+  add_index "products", ["import_id"], name: "index_products_on_import_id", using: :btree
   add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", using: :btree
 
   create_table "rear_support_bars", force: true do |t|
@@ -253,10 +260,12 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.string   "category_id"
     t.string   "desc"
     t.string   "color"
+    t.integer  "import_id",   default: -1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "suppliers", ["import_id"], name: "index_suppliers_on_import_id", using: :btree
   add_index "suppliers", ["name", "category_id"], name: "index_suppliers_on_name_and_category_id", unique: true, using: :btree
 
 end

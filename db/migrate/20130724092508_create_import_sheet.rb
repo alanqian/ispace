@@ -8,6 +8,7 @@ class CreateImportSheet < ActiveRecord::Migration
       t.string   "sel_sheets"
       t.string   "category_id", length: 64
       t.text     "mapping", limit: 64 * 1024
+      t.string   "imported"
       t.integer  "store_id"
       t.integer  "user_id"
       t.integer  "step", default: 1

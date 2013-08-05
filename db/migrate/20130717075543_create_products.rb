@@ -20,6 +20,7 @@ class CreateProducts < ActiveRecord::Migration
 
       t.timestamps
       t.index [:name, :category_id], unique: false
+      t.index :import_id, unique: false
       t.index :category_id
     end
     execute "ALTER TABLE products ADD PRIMARY KEY (code);"

@@ -27,6 +27,7 @@ class CreateMerchandises < ActiveRecord::Migration
       t.index :product_id
       t.index :store_id
       t.index :supplier_id
+      t.index :import_id, unique: false
     end
   end
 end
