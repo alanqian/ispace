@@ -18,8 +18,10 @@ class ImportSheet < ActiveRecord::Base
   serialize :imported, Hash
 
   def sel_sheets=(sel)
-    sel.reject! { |v| v.empty? }
-    sel.map! { |v| v.to_i }
+    if sel
+      sel.reject! { |v| v.empty? }
+      sel.map! { |v| v.to_i }
+    end
     logger.debug "before assign, sel_sheets=#{sel_sheets}"
     super(sel)
     logger.debug "assigned, sel_sheets=#{sel_sheets} category_id=#{category_id}"
@@ -34,9 +36,13 @@ class ImportSheet < ActiveRecord::Base
   def mapping=(param)
     logger.debug "before assign, mapping:#{self.mapping} param:#{param}"
     # TODO: strip nil value
-    m = param.to_hash.reject { |k,v| v.empty? }
-    super(m)
-    logger.debug "assigned, mapping:#{self.mapping} param:#{m}"
+    if param
+      m = param.to_hash.reject { |k,v| v.empty? }
+      super(m)
+      logger.debug "assigned, mapping:#{self.mapping} param:#{m}"
+    else
+      super(param)
+    end
   end
 
   def choose_at_least_one_no_empty_sheets
@@ -85,14 +91,14 @@ class ImportSheet < ActiveRecord::Base
 
   def upload_sheet=(sheet_field)
     logger.debug "upload_sheet, user_id: #{self.user_id}"
-    self.filename = base_part_of(sheet_field.original_filename)
-    self.ext = File.extname(self.filename).downcase
+    self.filename = sheet_field.original_filename
+    self.ext = File.extname(base_part_of(self.filename).downcase)
     self.sheets = load_xls(sheet_field)
     if self.sheets && !self.sheets.empty?
-      self.step = 2
       # save to local file system, as backup
       #FileUtils.mkdir_p(File.dirname(local_file))
       #File.open(local_file, 'wb') { |f| f.write sheet_field.read }
+      self.step = 2
       logger.debug "upload_sheet ok, filename:#{sheet_field.original_filename}"
     end
   rescue

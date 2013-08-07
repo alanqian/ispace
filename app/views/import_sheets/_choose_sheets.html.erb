@@ -2,7 +2,7 @@
   <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
   <%= simple_form_for(import_sheet, action: "update", remote: true) do |f| %>
     <%= f.hidden_field :step %>
-    <div class="inputs">
+    <div class="inputs choose">
       <%= f.input :filename, input_html: { size: 20, title: "上传文件", disabled: true } %>
       <%= f.input :comment, input_html: { size: 22, title: "你的备注" } %>
       <%= f.collection_check_boxes :sel_sheets, coll, :first, :last %>

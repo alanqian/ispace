@@ -164,61 +164,83 @@ ul#menubar {
 div#container {
   display: block;
   background: white;
-  width: 420px;
-  border: 2px solid red;
+  width: 400px;
+  height: 300px;
+  border: 4px solid #888;
 }
 
 div#import-wizard {
+  display: block;
+  border: 2px dashed #CDCDCD;
+
   form {
     clear: both;
     padding: 0;
     width: 380px;
-    height: 260px;
+    //height: 260px;
+    margin: 4px;
     font-size: 10pt;
     border: 2px dashed red;
 
+    div.upload {
+      display: block;
+      min-height: 60% !important;
+    }
+    div.choose {
+      display: block;
+      min-height: 60% !important;
+    }
+    div.map {
+      display: block;
+      min-height: 16em !important;
+    }
     div.inputs {
       display: block;
       float: top;
-      width: 100%;
       height: auto;
-      min-height: 60% !important;
       padding: 0.2em;
       font-size: 10pt;
       border: 1px dotted blue;
 
-      input[type=submit] {
-        display: block;
-        float: top;
+      button {
+        display: inline-block;
+        float: left;
+        width: 2em;
+        height: 10em;
+        text-align:center;
+        margin: 2em 0.8em 1em 1.2em;
       }
 
       div.mapping-src {
         display: inline-block;
         float: left;
-        overflow: auto;
         width: 14em;
-        height: 12em;
-        border: 1px solid black;
 
-        td.active {
-          background-color: blue;
+        div.mapping-src-fields {
+          overflow: auto;
+          height: 12em;
+          border: 1px solid black;
+
+          td.active {
+            background-color: blue;
+          }
         }
       }
 
       div.mapping-dest {
         display: inline-block;
-        float: left;
-        overflow: auto;
+        float: right;
         height: 12em;
-        width: 11em;
-        margin-left: 1em;
-        border: 1px solid black;
+        width: 9.5em;
 
         ul.mapping-to-fields {
           list-style: none;
-          margin: 0.2em 2px;
+          margin: 0 2px;
           line-height: 1.4em;
           padding-left: 0;
+          overflow: auto;
+          height: 12em;
+          border: 1px solid black;
 
           li {
             padding-left: 1em;
@@ -252,27 +274,27 @@ div#import-wizard {
       display: block;
       clear: bottom;
       float: bottom;
-      height: 2em;
-      padding: 0.8em 0 0;
-      font-size: 11pt;
+      height: 1.8em;
+      padding: 0.2em;
       margin: 0.4em 1em;
       border:1px solid blue;
-      border-top:1px solid #bbb;
+      border-top:1px dashed blue;
+
+      input[type='submit'] {
+        display: block;
+        font-size: 12pt;
+      }
 
       input[type='submit'][data-wizard-action='cancel'] {
-        display: block;
         float: left;
       }
       input[type='submit'][data-wizard-action='prev'] {
-        display: block;
         float: left;
       }
       input[type='submit'][data-wizard-action='next'] {
-        display: block;
         float: right;
       }
       input[type='submit'][data-wizard-action='finish'] {
-        display: block;
         float: right;
       }
     }

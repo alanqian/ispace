@@ -1,4 +1,4 @@
-root = exports ? this  # w/o data-to
+root = exports ? this
 
 root.foo = () ->
   console.log "foo"
@@ -19,8 +19,9 @@ root.mapUtil =
     $('td.mapping-input').click ->
       console.log "mapping-input td clicked!"
       self.setActiveRow($(this).parent())
+    console.log "mapping-input ui init'd!"
 
-  autoMapping: (event,el) =>
+  autoMapping: (event,el) ->
     event.preventDefault()
     console.log "auto mapping by ", el, $(el).data('src')
     mapping = $(el).data('src')
@@ -194,6 +195,7 @@ root.importWizard =
     url: "/import_sheets/#{@id}/edit?ajax=mapFields"
     prev: @chooseSheets # window.importWizard.chooseSheets
     cancel: null # function called when canceled
+    width: 430
     finish: () -> # function called when finished, must set if no given url
       console.log "import product sheet file completed!"
     debug: true
@@ -221,8 +223,6 @@ root.importWizard =
     if !@inited
       [@upload, @chooseSheets, @mapFields].map (wizard) =>
         wizard.selector = @common.selector
-        wizard.width = @common.width if @common.width
-        wizard.height = @common.height if @common.height
         wizard.cancel = @clearImport unless wizard.cancel
       @chooseSheets.prev = @upload
       @mapFields.prev = @chooseSheets
@@ -262,7 +262,7 @@ root.showWizard = (wizard) ->
 
     $(@selector).hide()
     $(@selector).dialog
-      minWidth: 410
+      minWidth: 430
       minHeight: 220
       close: (event, ui) =>
         console.log "wizard dialog closed, then destroy", event

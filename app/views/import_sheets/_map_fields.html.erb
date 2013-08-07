@@ -4,25 +4,29 @@
   <% map_from = Hash[fields.zip([""] * fields.size)] %>
   <%= simple_form_for(import_sheet, action: "update", remote: false) do |f| %>
     <%= f.hidden_field :step %>
-    <div class="inputs">
-      <%= f.input :filename, input_html: { size: 20, title: "上传文件", disabled: true } %>
-      <%= submit_tag '自动映射 »', onclick: 'mapUtil.autoMapping(event,this);return false;', "data-src" => auto_mapping.to_json %>
+    <div class="inputs map">
+      <%= f.input :filename, input_html: { size: 40, title: "上传文件", disabled: true } %>
       <div class="mapping-src">
-        <table border=1 cellspacing=0 cellpadding=2>
-        <%= f.simple_fields_for :mapping, OpenStruct.new(Hash[fields.zip([""] * fields.size)]) do |fm| %>
-          <% fields.each do |field| %>
-            <tr>
-              <td width='50%' class="mapping-name"><%= field %></td>
-              <td width='50%' class="mapping-input" data-field="<%= field %>">
-              <%= fm.hidden_field field %>
-              <span></span>
-              </td>
-            </tr>
+        <%= label_tag :mapping, "电子表字段:", class: "header" %>
+        <div class="mapping-src-fields">
+          <table border=1 cellspacing=0 cellpadding=2>
+          <%= f.simple_fields_for :mapping, OpenStruct.new(Hash[fields.zip([""] * fields.size)]) do |fm| %>
+            <% fields.each do |field| %>
+              <tr>
+                <td width='50%' class="mapping-name"><%= field %></td>
+                <td width='50%' class="mapping-input" data-field="<%= field %>">
+                <%= fm.hidden_field field %>
+                <span></span>
+                </td>
+              </tr>
+            <% end %>
           <% end %>
-        <% end %>
-        </table>
+          </table>
+        </div>
       </div>
+      <%= button_tag '自动映射 »', onclick: 'mapUtil.autoMapping(event,this);return false;', "data-src" => auto_mapping.to_json %>
       <div class="mapping-dest">
+        <%= label_tag :mapping, "映射字段:", class: "header" %>
         <ul class="mapping-to-fields">
         <% to_fields.each do |field| %>
           <li data-field="<%= field[0] %>"><%= field[1] %></li>
@@ -36,4 +40,7 @@
       <%= f.submit "完成", data: { "wizard-action" => "finish" } %>
     </div>
   <% end %>
+  <script>
+    window.mapUtil.init();
+  </script>
 </div>

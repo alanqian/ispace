@@ -56,17 +56,20 @@ class ImportSheetsController < ApplicationController
     respond_to do |format|
       case params[:ajax]
       when "chooseSheets"
+        @import_sheet.step = 2
         format.html { render partial: 'choose_sheets', locals: {
           import_sheet: @import_sheet,
           categories: Category.all,
         }}
       when "mapFields"
+        @import_sheet.step = 3
         format.html { render partial: 'map_fields', locals: {
           import_sheet: @import_sheet,
           to_fields: ImportSheet.mapping_fields,
           auto_mapping: ImportSheet.auto_mapping,
         }}
       else
+        @test = params[:test]
         format.html
       end
     end
