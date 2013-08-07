@@ -3,31 +3,75 @@ require 'csv'
 require "roo"
 
 class ImportSheet < ActiveRecord::Base
-  validates :upload_sheet, presence: true
-  validates :sheets, presence: true
+  validates :upload_sheet, presence: true, on: :create
+  validates :sheets, presence: true, on: :create
+  validates :comment, presence: true, on: :create
+
+  validates :category_id, presence: true, on: :update
+  validate :choose_at_least_one_no_empty_sheets, on: :update, if: "step == 2"
+
+  validate :map_fields_check_requied, on: :update, if: "step == 3"
+
   serialize :sheets, Array
   serialize :sel_sheets, Array
   serialize :mapping, Hash
+  serialize :imported, Hash
+
+  def sel_sheets=(sel)
+    sel.reject! { |v| v.empty? }
+    sel.map! { |v| v.to_i }
+    logger.debug "before assign, sel_sheets=#{sel_sheets}"
+    super(sel)
+    logger.debug "assigned, sel_sheets=#{sel_sheets} category_id=#{category_id}"
+    if self.category_id.present?
+      self.sel_sheets.each do |id|
+        self.sheets[id][:category_id] = self.category_id
+      end
+      logger.debug "sel_sheets/category have been updated to sheets"
+    end
+  end
+
+  def mapping=(param)
+    logger.debug "before assign, mapping:#{self.mapping} param:#{param}"
+    # TODO: strip nil value
+    m = param.to_hash.reject { |k,v| v.empty? }
+    super(m)
+    logger.debug "assigned, mapping:#{self.mapping} param:#{m}"
+  end
+
+  def choose_at_least_one_no_empty_sheets
+    logger.debug "validate :choose_at_least_one_no_empty_sheets!"
+    count = sel_sheets.count do |id|
+      id >= 0 && id < self.sheets.size && !self.sheets[id][:empty]
+    end
+    if count > 0
+      return true
+    else
+      self.errors[:sel_sheets] << "请至少选择一个非空的工作表"
+      return false
+    end
+  end
+
+  def map_fields_check_requied
+    logger.debug "validate map_fields_check_requied"
+
+    fields = @@dict[:_required].reject { |k,v| mapping.has_value?(k) }
+    if fields.empty?
+      return true
+    else
+      self.errors[:mapping] << "必须映射下列字段：#{fields.values.join(",")}"
+      return false
+    end
+  end
 
   before_update do
     case self.step
     when 2
-      # update chosen sheets & category, save to sheets field
-      if not self.category_id.empty?
-        count = 0
-        self.sel_sheets.each do |id|
-          id = id.empty?() ? -1 : id.to_i  # form parameters is string
-          if id >= 0 && id < self.sheets.size && !self.sheets[id][:empty]
-            self.sheets[id][:category_id] = self.category_id
-            count += 1
-          end
-        end
-        self.step = 3 if count > 0
-      end
+      self.step = 3
     when 3
-      # update mappings
-      self.mapping = self.mapping.to_hash.reject { |_,v| !v || v.empty? }
-      logger.debug "mapping: #{mapping.class}, #{self.mapping}"
+      # TODO: check required fields
+      # ???: step to 0
+      self.step = 4
     end
     logger.debug "before_update, #{self.sel_sheets}"
     logger.debug "before_update, #{self.to_json}"
@@ -47,11 +91,12 @@ class ImportSheet < ActiveRecord::Base
     if self.sheets && !self.sheets.empty?
       self.step = 2
       # save to local file system, as backup
-      FileUtils.mkdir_p(File.dirname(local_file))
-      File.open(local_file, 'wb') { |f| f.write sheet_field.read }
+      #FileUtils.mkdir_p(File.dirname(local_file))
+      #File.open(local_file, 'wb') { |f| f.write sheet_field.read }
       logger.debug "upload_sheet ok, filename:#{sheet_field.original_filename}"
     end
   rescue
+    self.errors[:upload_sheet] << "failed to open sheet: #{sheet_field.original_filename}"
     logger.debug "upload_sheet failed, filename:#{sheet_field.original_filename}"
   end
 
@@ -65,20 +110,18 @@ class ImportSheet < ActiveRecord::Base
     fields.uniq
   end
 
-  def self.foo
-    "foo"
-  end
-
-  def self.test
-    table = "import_sheet"
-    logger.debug table.camelize.constantize
-  end
-
   # finish the import task
   def finalize
     return if mapping.empty?
     # TODO: get user id from session
 
+    self.imported = {
+      supplier: 0,
+      manufacturer: 0,
+      merchandise: 0,
+      brand: 0,
+      product: 0,
+    }
     self.sheets.each do |sheet|
       next if sheet[:empty] || !sheet[:category_id]
 
@@ -88,7 +131,6 @@ class ImportSheet < ActiveRecord::Base
         map.push mapping[field]
       end
 
-      sheet[:cells].shift # remove 1st header row
       sheet[:cells].each do |row|
         category_id = sheet[:category_id]
         params = {
@@ -114,6 +156,7 @@ class ImportSheet < ActiveRecord::Base
             r = klass.where(params[k])
             if r.empty?
               params[k][:id] = klass.create(params[k]).id
+              self.imported[k] += 1
             else
               params[k][:id] = r.first.id
             end
@@ -134,6 +177,7 @@ class ImportSheet < ActiveRecord::Base
         r = Product.where({code: params[:product][:code]})
         if r.empty?
           params[:product][:id] = Product.create(params[:product]).id
+          self.imported[:product] += 1
         else
           # TODO: update?
           params[:product][:id] = r.first.id
@@ -155,13 +199,39 @@ class ImportSheet < ActiveRecord::Base
                               self.id})
         if r.empty?
           mcds = Merchandise.create(params[:merchandise])
+          self.imported[:merchandise] += 1
           logger.debug "merchandise imported, id:#{mcds.id}"
         else
           # TODO: update?
         end
       end
     end
-    self.step = 4
+    self.step = 0
+    self.save
+  end
+
+  def discard
+    if self.step == 0 && !self.imported.empty?
+      if imported[:brand] > 0
+        Brand.delete_all(["import_id=?", self.id])
+      end
+      if imported[:supplier] > 0
+        Supplier.delete_all(["import_id=?", self.id])
+      end
+      if imported[:manufacturer] > 0
+        Manufacturer.delete_all(["import_id=?", self.id])
+      end
+      if imported[:product] > 0
+        Product.delete_all(["import_id=?", self.id])
+      end
+      if imported[:merchandise] > 0
+        Merchandise.delete_all(["import_id=?", self.id])
+      end
+
+      self.imported.clear
+      self.step = 3
+      self.save
+    end
   end
 
   # make a patch for roo, for string fields
@@ -205,7 +275,7 @@ class ImportSheet < ActiveRecord::Base
           columns: xls.last_column,
           thead: self.class.sheet_header(xls.last_column),
           header: xls.row(row_1st),
-          cells: row_1st.upto(rows).map { |i| xls.row(i) }
+          cells: (row_1st+1).upto(rows).map { |i| xls.row(i) }
         })
       else
         # empty sheet
@@ -253,6 +323,7 @@ class ImportSheet < ActiveRecord::Base
   def self.auto_mapping
     @@dict[:_mapping]
   end
+
   def self.mapping_fields
     @@dict[:_fields]
   end
@@ -276,6 +347,13 @@ class ImportSheet < ActiveRecord::Base
 
     dict[:_mapping] = def_mapping
     dict[:_fields] = fields.uniq
+    dict[:_required] = {
+      "product.code" => "产品标识",
+      "product.name" => "产品名称",
+      "product.height" => "高度",
+      "product.width" => "宽度",
+      "product.depth" => "深度",
+    }
     dict
   end
 

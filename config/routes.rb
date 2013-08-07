@@ -1,11 +1,12 @@
 Ispace::Application.routes.draw do
-
-  resources :import_sheets
-  resources :merchandises
   resources :products
+
+  resources :brands
   resources :suppliers
   resources :manufacturers
-  resources :brands
+  resources :merchandises
+  resources :import_sheets
+
   resources :fixtures
   resources :stores
   resources :regions

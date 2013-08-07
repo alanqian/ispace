@@ -1,3 +1,22 @@
+=begin
+product pages:
+
+1: products.index
+  brands.index
+  manufactures.index
+  suppliers.index:
+  products.index:
+  merchandises.index:
+  -------------
+  import_sheets.index, include import wizard;
+
+2 products.import?
+
+3. products.edit
+
+4. products.destroy
+
+=end
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 

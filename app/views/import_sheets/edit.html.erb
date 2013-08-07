@@ -1,6 +1,10 @@
 <h1>Editing import_sheet</h1>
 
-<%= render 'form' %>
+<%# = render 'form' %>
+
+<div id="container">
+<%= render 'map_fields', import_sheet: @import_sheet, to_fields: ImportSheet.mapping_fields, auto_mapping: ImportSheet.auto_mapping %>
+</div>
 
 <%= link_to 'Show', @import_sheet %> |
 <%= link_to 'Back', import_sheets_path %>
