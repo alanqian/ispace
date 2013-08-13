@@ -2,7 +2,9 @@
   <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
   <% fields = import_sheet.sheet_fields %>
   <% map_from = Hash[fields.zip([""] * fields.size)] %>
-  <%= simple_form_for(import_sheet, action: "update", remote: false) do |f| %>
+  <%= simple_form_for(import_sheet, action: "update", remote: true) do |f| %>
+    <%# = f.error_notification %>
+    <%= f.error :base %>
     <%= f.hidden_field :step %>
     <div class="inputs map">
       <%= f.input :filename, input_html: { size: 40, title: "上传文件", disabled: true } %>
@@ -33,6 +35,7 @@
         <% end %>
         </ul>
       </div>
+      <div class="clear"></div>
     </div>
     <div class="actions">
       <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
@@ -40,7 +43,7 @@
       <%= f.submit "完成", data: { "wizard-action" => "finish" } %>
     </div>
   <% end %>
-  <script>
+  <script type="text/javascript">
     window.mapUtil.init();
   </script>
 </div>

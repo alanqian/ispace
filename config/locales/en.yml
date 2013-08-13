@@ -20,7 +20,29 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
+  # In the model user.rb define the validation
+  #   validates :email, :presence => true
+  activerecord:
+    models:
+      user: "Customer"
+      brand: "品牌"
+      supplier: "供应商"
+      manufacturer: "生产商"
+      product: "产品"
+      merchandise: "商品"
+    attributes:
+      user:
+        email: "E-mail address"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "is required"
+
+  import_sheet:
+    comment: "write comment for this upload file, please"
 
   dict:
     plan: "规划"

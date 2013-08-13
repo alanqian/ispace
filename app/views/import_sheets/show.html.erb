@@ -1,45 +1,39 @@
-<% if @import_sheet.step != "2" %>
-  <p id="notice"><%= notice %></p>
-  <p>
-    <strong>Store:</strong>
-    <%= @import_sheet.store_id %>
-  </p>
-  <p>
-    <strong>User:</strong>
-    <%= @import_sheet.user_id %>
-  </p>
-  <p>
-    <strong>Step:</strong>
-    <%= @import_sheet.step %>
-  </p>
-  <p>
-    <strong>Filename:</strong>
-    <%= @import_sheet.filename %>
-  </p>
-  <p>
-    <strong>Comment:</strong>
-    <%= @import_sheet.comment %>
-  </p>
-  <p>
-    <strong>Ext:</strong>
-    <%= @import_sheet.ext %>
-  </p>
-  <p>
-    <strong>sel_sheets:</strong>
-    <%= @import_sheet.sel_sheets %>
-  </p>
-  <p>
-    <strong>Category:</strong>
-    <%= @import_sheet.category_id %>
-  </p>
-  <%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
-  <%= link_to 'Back', import_sheets_path %>
-<% else %>
-  <p id="notice">file:
-    <span id="upload-filename"><%= @import_sheet.filename %></span>, comment:
-    <span id="upload-comment"><%= @import_sheet.comment %></span>
-  </p>
-  <%= render 'sheet', :spread_sheet => @import_sheet.sheets %>
-<% end %>
+<%# show import results ONLY %>
 
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>User:</strong>
+  <%= @import_sheet.user_id %>
+</p>
+<p>
+  <strong>Filename:</strong>
+  <%= @import_sheet.filename %>
+</p>
+<p>
+  <strong>Comment:</strong>
+  <%= @import_sheet.comment %>
+</p>
+<p>
+  <strong>Sel_sheets:</strong>
+  <%= @import_sheet.sel_sheets %>
+</p>
+<p>
+  <strong>Category:</strong>
+  <%= @import_sheet.category_id %>
+</p>
+<p>
+  <strong>Imported:</strong>
+  <%#= @import_sheet.imported %>
+  <ol>
+    <% @import_sheet.imported.each do |k,count| %>
+      <% table = t("activerecord.models.#{k}") %>
+      <% ctrler = k.to_s.pluralize %>
+      <%= link_to "#{table}: #{count}", controller: ctrler, action: 'index', import_id: @import_sheet.id %>
+    <% end %>
+  </ol>
+</p>
 
+<hr/>
+
+<%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
+<%= link_to 'Back', import_sheets_path %>

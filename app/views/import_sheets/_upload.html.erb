@@ -6,9 +6,9 @@
   <div class="inputs upload">
     <%= f.hidden_field :store_id %>
     <%= f.hidden_field :user_id %>
-    <%= f.label :upload_sheet, "请上传商品信息的电子表文件(xls,xlsx,csv)" %>
+    <%= f.label :upload_sheet %> <!-- "请上传商品信息的电子表文件(xls,xlsx,csv)" -->
     <%= f.file_field :upload_sheet %>
-    <%= f.input :comment, input_html: { size: 22, title: "为你的上传写点备注吧，比如日期、促销事件等等" } %>
+    <%= f.input :comment, input_html: { size: 22, title: t("import_sheet.comment") } %>
   </div>
 
   <div class="actions">

@@ -1,18 +1,29 @@
-=begin
-import_sheet pages:
-1. import_sheets.index, if import
+=begin "interfaces of :import_sheet"
+
+1. import_sheets/index
    list successfully imported spreadsheet files;
+   // filename, comment, updated_at, user_id
+   NOTE: show import button instead of the default new link...
+
 2. import wizard(ajax)
-   2.a import_sheets.new/create: upload file;
-   2.b import_sheets.edit/update(step=2): choose sheet;
-   2.c import_sheets.edit/update(step=3): set field mapping;
-3. show import details:
-   linked to results' page(brands, suppliers, manufactures, products, merchandises);
-   params: category_id=?, import_id=?
-   add discard link?
+   2.a import_sheets.new?ajax=1
+       -> /create: upload file;
+   2.b import_sheets.edit?ajax=chooseSheets
+       -> /update(step=2): choose sheet;
+   2.c import_sheets.edit?ajax=mapFields
+       -> /update(step=3): set field mapping;
+
+3. 3.a show import details: /show?part=result
+       ONLY show import results, with links to (brands, suppliers, manufactures, products, merchandises);
+             with params: import_id=?
+       TBD: add discard link?
+   3.b show sheet contents: /show?part=sheet
+       ONLY show spreadsheet part of this imported files
+
 4. discard imported
    import_sheets.destroy  update(step=0): discard imported records
    TODO: check other related models? such as Plan?
+
 =end
 
 class ImportSheetsController < ApplicationController
@@ -22,18 +33,33 @@ class ImportSheetsController < ApplicationController
   # GET /import_sheets
   # GET /import_sheets.json
   def index
-    if params[:static]
+    if params[:test]
       logger.debug "import#static, don't show wizard, #{params[:static]}"
     end
     store_id = 1
     user_id = 1
-    @import_sheets = ImportSheet.where([
-      "store_id=? and user_id=? and (step=0 or step=4)", store_id, user_id])
+
+    if params[:test]
+      @import_sheets = ImportSheet.where([
+        "store_id=? and user_id=?", store_id, user_id])
+      render 'index-test', locals: { test: params[:test] }
+    else
+      @import_sheets = ImportSheet.where([
+        "store_id=? and user_id=? and (step=0 or step=4)", store_id, user_id])
+    end
   end
 
   # GET /import_sheets/1
   # GET /import_sheets/1.json
   def show
+    case params[:part]
+    when "result"
+      render 'show'
+    when "sheets"
+      render "show-sheet"
+    else
+      render 'show-test'
+    end
   end
 
   # GET /import_sheets/new
@@ -69,6 +95,8 @@ class ImportSheetsController < ApplicationController
           auto_mapping: ImportSheet.auto_mapping,
         }}
       else
+        @import_sheet.errors[:base] << "base error of sel_sheets"
+        @import_sheet.errors[:mapping] << "mappings wrong"
         @test = params[:test]
         format.html
       end

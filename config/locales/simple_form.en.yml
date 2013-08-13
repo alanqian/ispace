@@ -8,17 +8,52 @@ en:
       # You can uncomment the line below if you need to overwrite the whole required html.
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
+
     error_notification:
       default_message: "Some errors were found, please take a look:"
-    # Labels and hints examples
-    # labels:
-    #   password: 'Password'
-    #   user:
-    #     new:
-    #       email: 'E-mail para efetuar o sign in.'
-    #     edit:
-    #       email: 'E-mail.'
-    # hints:
-    #   username: 'User name to sign in.'
-    #   password: 'No special characters, please.'
+      # import_sheet: "import sheet error message"
+
+    labels:
+      # password: 'Password'
+      # user:
+      #   new:
+      #     email: 'E-mail para efetuar o sign in.'
+      #   edit:
+      #     email: 'E-mail.'
+      # my customize below here
+      defaults:
+
+      import_sheet:
+        upload_sheet: "Please upload product info file(xls,xlsx,csv):"
+        # 请上传商品信息的电子表文件(xls,xlsx,csv)
+        filename: "upload spreadsheet file:"
+        comment: ""
+        category_id: "Choose a Category of Product: "
+
+    # "hints" is put after input element! write it ONLY WHEN NECESSARY!
+    hints:
+      defaults:
+      #  username: 'User name to sign in.'
+      #  password: 'No special characters, please.'
+      import_sheet:
+        #upload_sheet: "*.xls,*.xlsx,*.csv"
+        #filename: "xls,xlsx,csv file:"
+        #comment: "comment"
+        #category_id: "Category of Product"
+
+    # By default, show in EMPTY input element in gray color
+    placeholders:
+      # model/field: message
+      import_sheet:
+        filename: "--filename--"
+        comment: "--comment for this upload file, --"
+
+    options:
+      # struct:: model/field/option: message
+
+# ActiveRecord error messages:
+# Generic model error messages:
+#   https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml
+# ActiveRecord error messages, include how to write own messages:
+#   https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml
 

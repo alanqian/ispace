@@ -1,5 +1,8 @@
 <%= simple_form_for(@import_sheet) do |f| %>
-  <%= f.error_notification %>
+  <%# = f.error_notification %>
+
+  <%= f.error :base %>
+  <%= f.error :ext %>
 
   <div class="inputs">
     <%= f.input :store_id %>
@@ -18,3 +21,4 @@
     <%= f.button :submit %>
   </div>
 <% end %>
+<!-- <span class="clear"><span> -->

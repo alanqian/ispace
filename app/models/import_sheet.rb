@@ -119,7 +119,6 @@ class ImportSheet < ActiveRecord::Base
   # finish the import task
   def finalize
     return if mapping.empty?
-    # TODO: get user id from session
 
     self.imported = {
       supplier: 0,
@@ -252,6 +251,41 @@ class ImportSheet < ActiveRecord::Base
         params[table][k] = s.sub(/\.0+/, '')
       end
     end
+  end
+
+  def auto_import_local_file(local_file, comment, ctg_id)
+    # TODO: set store_id, user_id at first
+    # step 1: upload
+    self.comment = comment || "auto import"
+    self.filename = local_file
+    self.step = 1
+    file = File.open(local_file)
+    def file.original_filename
+      self.path
+    end
+    self.upload_sheet = file
+
+    # step 2: choose sheets
+    self.category_id = ctg_id
+    sel = self.sheets.select { |sheet| !sheet[:empty] } .map { |sheet| sheet[:id].to_s }
+    self.sel_sheets = sel
+    self.step = 3
+
+    # step 3: map fields
+    map_param = {}
+    auto = self.class.auto_mapping
+    self.sheets.each do |sheet|
+      next if sheet[:empty] || !sheet[:category_id]
+      sheet[:header].each do |field|
+        map_param[field] = auto[field] if auto[field]
+      end
+    end
+    self.mapping = map_param
+    self.step = 4
+
+    # finalize
+    self.finalize
+    self
   end
 
   private
