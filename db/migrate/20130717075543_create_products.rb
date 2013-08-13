@@ -17,11 +17,14 @@ class CreateProducts < ActiveRecord::Migration
       t.string :case_pack_name
       t.string :bar_code
       t.string :color
+      t.datetime :discard_from
+      t.integer :discard_by
 
       t.timestamps
       t.index [:name, :category_id], unique: false
       t.index :import_id, unique: false
       t.index :category_id
+      t.index :discard_from, unique: false
     end
     execute "ALTER TABLE products ADD PRIMARY KEY (code);"
   end

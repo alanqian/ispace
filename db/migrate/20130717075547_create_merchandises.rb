@@ -23,11 +23,15 @@ class CreateMerchandises < ActiveRecord::Migration
       t.decimal :psi
       t.decimal :psi_rank
 
+      t.datetime :discard_from
+      t.integer :discard_by
+
       t.timestamps
       t.index :product_id
       t.index :store_id
       t.index :supplier_id
       t.index :import_id, unique: false
+      t.index :discard_from, unique: false
     end
   end
 end
