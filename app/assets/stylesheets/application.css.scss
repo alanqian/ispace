@@ -11,6 +11,8 @@
  * file per style scope.
  *
  *= require jquery.ui.all
+ *= require jquery.dataTables.css
+ *= require demo_table_jui.css
  *= require_self
  */
 
@@ -92,7 +94,7 @@ ul#menubar {
 }
 
 #columns {
-  background: #141;
+  background: white;
   width: 100%;
 
   #main {
@@ -324,10 +326,68 @@ div#import-wizard {
   }
 }
 
+// for data grid table
 table.no-wrap {
   th,td {
     white-space: nowrap;
     overflow: hidden;
+  }
+}
+
+// for dataTable
+
+div.dataTables_wrapper {
+
+  -webkit-box-shadow: 2px 2px 6px #666;
+  box-shadow: 2px 2px 6px #666;
+  border-radius: 5px;
+
+  div.top {
+    #data_filter {
+      display: inline-block;
+      float: left;
+      width: 40px;
+      height: 10px;
+      background-color: red;
+    }
+
+    .dataTables_info {
+      display: inline-block;
+      padding-top: 0;
+    }
+
+    .dataTables_paginate {
+      padding-top: 0;
+    }
+
+    .dataTables_filter {
+      padding-top: 0;
+    }
+  }
+}
+
+.css_right {
+  float: right;
+}
+
+
+table.dataTable {
+  tbody {
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #AAA;
+  }
+
+  thead th:first-child {
+    border-left: 1px solid #AAA;
+  }
+
+  thead th:last-child {
+    border-right: 1px solid #AAA;
+    padding-right: +1px;
+  }
+
+  tbody td:last-child {
+    border-right: 1px solid #AAA;
   }
 }
 

@@ -357,7 +357,7 @@ root.setSheetUI = () ->
 
   # set bgcolor of first column of a spreadsheet
   bgcolor = $(".ui-widget-header").css("background-color")
-  $("td:first", $("table.grid-control tbody tr")).css("background-color",
+  $("td:first", $("table.spreadsheet tbody tr")).css("background-color",
     bgcolor).css("text-align", "center")
 
 
@@ -378,7 +378,7 @@ $ ->
     # dataTables_info
     # dataTables_paginate
     # dataTables_filter
-    "sDom": '<"top"ipf>rt<"clear">',
+    "sDom": '<"top"<"#data_filter">ipf<"clear">>rt<"clear">',
     "oLanguage": {
         "sProcessing":   "处理中...",
         "sLengthMenu":   "每页显示 _MENU_ 条，",
