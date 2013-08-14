@@ -1,30 +1,27 @@
 <h1>Listing brands</h1>
 
-<table>
+<div>
+<table id="brands-list" class="dataTable grid-control no-wrap resizable" cellspacing=0>
   <thead>
     <tr>
-      <th>Name</th>
+      <th data-input="brands[name]">Name</th>
       <th>Category</th>
-      <th>Color</th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th data-input="brands[color]">Color</th>
+      <th>edit</th>
     </tr>
   </thead>
-
   <tbody>
     <% @brands.each do |brand| %>
       <tr>
         <td><%= brand.name %></td>
         <td><%= brand.category_id %></td>
         <td><%= brand.color %></td>
-        <td><%= link_to 'Show', brand %></td>
         <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
-        <td><%= link_to 'Destroy', brand, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+</div>
 
 <br>
 

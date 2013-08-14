@@ -1,3 +1,44 @@
+=begin "interfaces of :brands"
+
+/brands/
+  filter: select category
+  filter: select
+  resizable table view, auto paginate
+  in-place edit: bind form to tr
+
+  in-place edit implementation:
+
+  $(table).inplaceEdit() ->
+    init ->
+      template: $()
+      fields: [field-name-1, null, field-name-2, null, ...]
+    tr.click ->
+      if not same row
+        wrap td value with <span>, hidden
+        mv template input into td
+        change value of input
+        change width, height of input
+    input.blur
+      if out of this tr
+        ajax update ->
+        hide template inputs, move out of tds (before thread)
+        replace tr with new value(ajax return) and show
+
+  field-mapping:
+    <th data-input="field-name">
+  id:
+    <th data-input="id"> or <tr data-id="record-id">
+  eg:
+    <form ...>
+    <input id="brand_name" name="brand[name]" size="50">
+    <input ...>
+    </form>
+
+/brands/1:  in-place edit template
+  color-edit
+
+=end
+
 class BrandsController < ApplicationController
   before_action :set_brand, only: [:show, :edit, :update, :destroy]
 
