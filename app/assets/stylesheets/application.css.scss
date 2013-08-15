@@ -163,6 +163,9 @@ ul#menubar {
   }
 }
 
+.hide {
+  display: none;
+}
 .template {
   display: none;
 }
@@ -419,6 +422,16 @@ table.grid-control {
 
   td.bottom {
     border-bottom:1px solid #2e638e;
+  }
+}
+
+// inplace edit form, hide when not inplace
+form.inplace {
+  div.inputs {
+    display: none;
+  }
+  div.actions {
+    display: none;
   }
 }
 

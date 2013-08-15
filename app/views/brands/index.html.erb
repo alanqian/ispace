@@ -1,26 +1,39 @@
 <h1>Listing brands</h1>
 
-<div>
-<table id="brands-list" data-sinfoempty="无结果，请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable" cellspacing=0>
-  <thead>
-    <tr>
-      <th data-input="brands[name]">Name</th>
-      <th>Category</th>
-      <th data-input="brands[color]">Color</th>
-      <th>edit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @brands.each do |brand| %>
-      <tr>
-        <td><%= brand.name %></td>
-        <td><%= brand.category_id %></td>
-        <td><%= brand.color %></td>
-        <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div id="brands-list">
+  <%= simple_form_for(brand_new,
+                      url: "/brands/2",
+                      data: { url: brand_path(brand_new) },
+                      html: { id: "brands-form", class: "inplace__", },
+                      method: "patch", remote:false) do |f| %>
+    <div class="inputs">
+      <%= f.input :name %>
+      <%= f.input :color %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+    <table id="brands-table" data-form="#brands-form" data-sinfoempty="无结果，请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable" cellspacing=0>
+      <thead>
+        <tr>
+          <th data-input="brand[name]">Name</th>
+          <th>Category</th>
+          <th data-input="brand[color]">Color</th>
+          <th>edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @brands.each do |brand| %>
+          <tr data-id="<%= brand.id %>">
+            <td><%= brand.name %></td>
+            <td><%= brand.category_id %></td>
+            <td><%= brand.color %></td>
+            <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 </div>
 
 <div id="dataTable-filter" class="template">
@@ -32,6 +45,7 @@
     <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
   <% end %>
 </div>
+
 <p><%= brand_new.category_id %></p>
 
 <%= link_to 'New Brand', new_brand_path %>

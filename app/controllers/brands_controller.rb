@@ -27,7 +27,7 @@
   field-mapping:
     <th data-input="field-name">
   id:
-    <th data-input="id"> or <tr data-id="record-id">
+    <tr data-id="record-id">
   eg:
     <form ...>
     <input id="brand_name" name="brand[name]" size="50">
