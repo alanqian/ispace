@@ -163,6 +163,10 @@ ul#menubar {
   }
 }
 
+.template {
+  display: none;
+}
+
 .clear {
   clear: both;
 }
@@ -346,14 +350,14 @@ div.dataTables_wrapper {
     #data_filter {
       display: inline-block;
       float: left;
-      width: 40px;
-      height: 10px;
-      background-color: red;
+      padding-top: 0;
+      //background-color: red;
     }
 
     .dataTables_info {
       display: inline-block;
       padding-top: 0;
+      padding-left: 10px;
     }
 
     .dataTables_paginate {
@@ -369,7 +373,6 @@ div.dataTables_wrapper {
 .css_right {
   float: right;
 }
-
 
 table.dataTable {
   tbody {

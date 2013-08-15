@@ -45,7 +45,16 @@ class BrandsController < ApplicationController
   # GET /brands
   # GET /brands.json
   def index
-    @brands = Brand.all
+    category_id = params[:category]
+    if category_id
+      @brands = Brand.where([
+        "category_id=?", category_id])
+      brand_new = Brand.new(category_id: category_id)
+    else
+      @brands = []
+      brand_new = Brand.new()
+    end
+    render 'index', locals: { categories: Category.all, brand_new: brand_new }
   end
 
   # GET /brands/1

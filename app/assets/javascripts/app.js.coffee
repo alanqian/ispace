@@ -360,6 +360,11 @@ root.setSheetUI = () ->
   $("td:first", $("table.spreadsheet tbody tr")).css("background-color",
     bgcolor).css("text-align", "center")
 
+# for dataTable's category select elements
+root.onDataTableCategoryChange = (event, el)->
+  console.log "dataTable category change!", $(el).val()
+  if $(el).val() != ""
+    window.location = $(el).data("url") + $(el).val()
 
 $ ->
   console.log "loading common components..."
@@ -382,9 +387,9 @@ $ ->
     "oLanguage": {
         "sProcessing":   "处理中...",
         "sLengthMenu":   "每页显示 _MENU_ 条，",
-        "sZeroRecords":  "没有匹配结果",
-        "sInfo":         "_START_ - _END_，共 _TOTAL_ 条",
-        "sInfoEmpty":    "无结果，请重新搜索",
+        "sZeroRecords":  $("table.dataTable").data("szerorecords") || "没有匹配结果",
+        "sInfo":         "_START_-_END_，共 _TOTAL_ 条",
+        "sInfoEmpty":    $("table.dataTable").data("sinfoempty") || "无结果，请重新搜索",
         "sInfoFiltered": "&#47; _MAX_ 条",
         "sInfoPostFix":  "",
         "sSearch":       "搜索:",
@@ -396,6 +401,9 @@ $ ->
             "sLast":     "末页"
         }
     }})
+
+  # update dataTable filter: custom div inject to dataTable
+  $("#dataTable-filter").children().appendTo(".dataTables_wrapper .top #data_filter")
 
   # resizable, tabs, tabs-bottom, ...
   setSheetUI()
