@@ -7,13 +7,12 @@ gem 'rails', '4.0.0.rc1'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'roo'
-gem "fog"
-gem "carrierwave"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0.rc1'
 gem 'simple_form'
 gem "remotipart", "~> 1.0"
+gem 'jquery-simplecolorpicker-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

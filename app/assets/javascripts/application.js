@@ -17,3 +17,4 @@
 //= require splitter-152.js
 //= require jquery.dataTables.js
 //= require colResizable-1.3.source.js
+//= require jquery.simplecolorpicker.js
