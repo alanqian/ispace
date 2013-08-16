@@ -94,9 +94,11 @@ class BrandsController < ApplicationController
       if @brand.update(brand_params)
         format.html { redirect_to @brand, notice: 'Brand was successfully updated.' }
         format.json { head :no_content }
+        format.js
       else
         format.html { render action: 'edit' }
         format.json { render json: @brand.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end

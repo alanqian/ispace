@@ -1,11 +1,11 @@
 <h1>Listing brands</h1>
 
 <div id="brands-list">
-  <%= simple_form_for(brand_new,
+  <%= simple_form_for(brand_new, method: "patch", remote: true,
                       url: "/brands/2",
                       data: { url: brand_path(brand_new) },
                       html: { id: "brands-form", class: "inplace__", },
-                      method: "patch", remote:false) do |f| %>
+                     ) do |f| %>
     <div class="inputs">
       <%= f.input :name %>
       <% def_color = t("dict.colors.default") %>
@@ -18,21 +18,13 @@
       <thead>
         <tr>
           <th data-input="brand[name]">Name</th>
-          <th>Category</th>
           <th data-select="brand[color]">Color</th>
           <th>edit</th>
         </tr>
       </thead>
       <tbody>
         <% @brands.each do |brand| %>
-          <tr data-id="<%= brand.id %>">
-            <td><%= brand.name %></td>
-            <td><%= brand.category_id %></td>
-            <td data-val="<%= brand.color %>">
-              <span class="colorbox" style="background-color: <%= brand.color %>">&nbsp;</span>
-            </td>
-            <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
-          </tr>
+          <%= render 'row', brand: brand %>
         <% end %>
       </tbody>
     </table>
