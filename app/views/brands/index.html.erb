@@ -8,7 +8,8 @@
                       method: "patch", remote:false) do |f| %>
     <div class="inputs">
       <%= f.input :name %>
-      <%= f.input :color %>
+      <% def_color = t("dict.colors.default") %>
+      <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
     </div>
     <div class="actions">
       <%= f.submit %>
@@ -18,7 +19,7 @@
         <tr>
           <th data-input="brand[name]">Name</th>
           <th>Category</th>
-          <th data-input="brand[color]">Color</th>
+          <th data-select="brand[color]">Color</th>
           <th>edit</th>
         </tr>
       </thead>
@@ -27,7 +28,9 @@
           <tr data-id="<%= brand.id %>">
             <td><%= brand.name %></td>
             <td><%= brand.category_id %></td>
-            <td><%= brand.color %></td>
+            <td data-val="<%= brand.color %>">
+              <span class="colorbox" style="background-color: <%= brand.color %>">&nbsp;</span>
+            </td>
             <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
           </tr>
         <% end %>

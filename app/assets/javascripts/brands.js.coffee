@@ -37,17 +37,10 @@ class InplaceEditor
 
     return self
 
-  inputIntoTd: (input, td) ->
-    # modify input size, and move into td
-    if input.attr("type") == "text"
-      input.css("width", "98%")
-      input.css("height", "99%")
-    td.wrapInner("<span class='hide'>")
-    input.appendTo(td)
-
   initInputVal: (input, td) ->
     if input.prop("tagName") == "SELECT"
       val = td.data("val") || td.text()
+      input.val(val)
     else if input.prop("tagName") == "INPUT"
       if input.attr("type") == "checkbox"
         val = td.data("val")
@@ -58,10 +51,25 @@ class InplaceEditor
         else
           input.val(td.text())
 
+  inputIntoTd: (input, td) ->
+    # modify input size, and move into td
+    if input.attr("type") == "text"
+      input.css("width", "98%")
+      input.css("height", "99%")
+    td.wrapInner("<span class='hide'>")
+    input = input.appendTo(td)
+    # patch for jquery simplecolorpicker
+    console.log "into td:", input
+    if input.hasClass("colorpicker")
+      input.simplecolorpicker({picker: true})
+
   inputOutOfTd: (td, div) ->
-    input = $("input", td)
+    input = $("input,select", td)
+    # patch for jquery simplecolorpicker
+    if input.hasClass("colorpicker")
+      input.simplecolorpicker("destroy")
     input.appendTo(div)
-    $("span", td).contents().unwrap()
+    $("> span.hide", td).contents().unwrap()
 
   onBlur: (input) ->
     if isBinded(input)
@@ -146,4 +154,8 @@ $ ->
     editor.init(table)
     table.editor = editor
     window.editor = editor # for debug only
+
+  # notes for simple color picker
+  # $('select.colorpicker').simplecolorpicker({picker: true})
+  # simplecolorpicker("destroy")
 

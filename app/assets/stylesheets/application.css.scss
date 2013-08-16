@@ -442,6 +442,22 @@ div.ui-accordion {
   }
 }
 
+// simple color picker
+span.simplecolorpicker.icon {
+  display: inline-block;
+  width: 2em;
+  border: 1px dashed black;
+}
+
+span.colorbox {
+  display: inline-block;
+  width: 2em;
+  border: 1px solid black;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
 div.preview {
   height: 300px;
   overflow: hidden;
