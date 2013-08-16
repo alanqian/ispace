@@ -33,7 +33,7 @@ class InplaceEditor
 
     # td.onclick handler
     $(table).on "click", "tbody tr td", (event) ->
-      self.bind($(this).parent())
+      self.bind($(this).parent(), this)
 
     return self
 
@@ -107,7 +107,7 @@ class InplaceEditor
 
     @activeRow = null # reset active row
 
-  bind: (tr) ->
+  bind: (tr, td) ->
     self = @
     if !@table
       console.log "uninited editor"
@@ -143,6 +143,9 @@ class InplaceEditor
         self.inputIntoTd(input, tds.eq(index))
     # console.log "bind tr", tr
     @activeRow = tr[0]
+
+    # click it if td is a colorpicker field
+    $(">span.simplecolorpicker.icon", td).click()
 
 $ ->
   console.log "brands.js start"
