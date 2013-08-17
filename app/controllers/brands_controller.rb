@@ -1,13 +1,12 @@
 =begin "interfaces of :brands"
 
-/brands/
+1. /brands/: combo-list with inplace edit, batch new
   filter: select category
   filter: select
   resizable table view, auto paginate
-  in-place edit: bind form to tr
+  in-place edit
 
   in-place edit implementation:
-
   $(table).inplaceEdit() ->
     init ->
       template: $()
@@ -18,24 +17,29 @@
         mv template input into td
         change value of input
         change width, height of input
-    input.blur
+    TODO: input.blur
       if out of this tr
         ajax update ->
         hide template inputs, move out of tds (before thread)
         replace tr with new value(ajax return) and show
 
   field-mapping:
-    <th data-input="field-name">
-  id:
-    <tr data-id="record-id">
-  eg:
-    <form ...>
-    <input id="brand_name" name="brand[name]" size="50">
-    <input ...>
-    </form>
+    <table data-form="#form-id-name">
 
-/brands/1:  in-place edit template
-  color-edit
+      <th data-input="field-name">
+      <th data-select="field-name">
+    <tr data-id="record-id">
+      <td data-val="value">
+      <td>value</td>
+
+2. /brands/1: PATCH
+  ajax update by in-place edit
+
+3. /brands: POST
+  batch mode new, redirect to index
+
+4. inplace color picker
+  fire a click on color picker span if click on the proper td
 
 =end
 
@@ -64,7 +68,8 @@ class BrandsController < ApplicationController
 
   # GET /brands/new
   def new
-    @brand = Brand.new
+    @brand = Brand.new(category_id: params[:category])
+    render 'new', locals: { categories: Category.all }
   end
 
   # GET /brands/1/edit
@@ -76,13 +81,34 @@ class BrandsController < ApplicationController
   def create
     @brand = Brand.new(brand_params)
 
-    respond_to do |format|
-      if @brand.save
-        format.html { redirect_to @brand, notice: 'Brand was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @brand }
+    # check the whole input at first, for all attributes
+    @brand.valid?
+
+    # validate the splited names
+    columns = [:category_id, :name]
+    values = []
+    names = @brand.name.split(/\r?\n/).map {|n| n.strip } .keep_if {|n| !n.empty?}
+    names.each do |name|
+      errors = Brand.validate_attribute(:name, name)
+      if errors.any?
+        @brand.errors[:name].concat(errors)
       else
-        format.html { render action: 'new' }
+        values << [@brand.category_id, name]
+      end
+    end
+
+    respond_to do |format|
+      if @brand.errors.any?
+        logger.warn "create.import failed, category:#{@brand.category_id}"
+        format.html { render action: 'new', locals: { categories: Category.all } }
         format.json { render json: @brand.errors, status: :unprocessable_entity }
+      else
+        # still need validate to ensure the records
+        # Brand.import will filter the dup records automatically
+        Brand.import(columns, values)
+        logger.debug "create.import ok, category:#{@brand.category_id}"
+        format.html { redirect_to brands_url(category: @brand.category_id) }
+        format.json { render action: 'show', status: :created, location: @brand }
       end
     end
   end
