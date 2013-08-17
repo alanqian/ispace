@@ -30,6 +30,9 @@ en:
         comment: ""
         category_id: "Choose a Category of Product: "
 
+      brand:
+
+
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:
       defaults:

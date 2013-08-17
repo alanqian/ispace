@@ -2,8 +2,10 @@
   <%= f.error_notification %>
 
   <div class="inputs">
-    <%= f.input :category_id, collection: categories, prompt: "选择品类" %>
-    <%= f.input :name, as: :text, wrapper_html: { class: 'brands-new-name'} %>
+    <%= f.input :category_id, collection: categories, label: "选择品类" %>
+    <%= f.input :name, as: :text, label: "请输入品牌名，每行一个：",
+      input_html: { rows: 8, cols: 26 },
+      wrapper_html: { class: 'brands-new-name'} %>
   </div>
 
   <div class="actions">
