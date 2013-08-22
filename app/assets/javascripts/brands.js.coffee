@@ -5,6 +5,7 @@
 root = exports ? this
 
 class InplaceEditor
+  debug: false
   table: null
   inputs: null
   form: null
@@ -27,13 +28,14 @@ class InplaceEditor
         self.inputs.push "select[name='#{sel}']"
       else
         self.inputs.push undefined
+      if @debug
+        console.log @inputs
 
-    console.log @inputs
     @table = table
 
     # td.onclick handler
     $(table).on "click", "tbody tr td", (event) ->
-      self.bind($(this).parent(), this)
+      self.bind($(this).parent(), this, event.target)
 
     return self
 
@@ -59,7 +61,8 @@ class InplaceEditor
     td.wrapInner("<span class='hide'>")
     input = input.appendTo(td)
     # patch for jquery simplecolorpicker
-    console.log "into td:", input
+    if @debug
+      console.log "into td:", input
     if input.hasClass("colorpicker")
       input.simplecolorpicker({picker: true})
 
@@ -69,32 +72,63 @@ class InplaceEditor
     if input.hasClass("colorpicker")
       input.simplecolorpicker("destroy")
     input.appendTo(div)
-    $("> span.hide", td).contents().unwrap()
+    $(">span.hide", td).contents().unwrap()
 
-  onBlur: (input) ->
-    if isBinded(input)
-      console.log "unbind input, ignored", input
+  onblurInput: (event) ->
+    picking = false
+    el = event.target
+    if $(el).prop("blurBy")
+      rel = $(el).prop("blurBy")
+      picking = $(el).prop("picking")
+    else
+      rel = event.relatedTarget
+    console.log "onblur:", event, el, rel
+
+    if !@isParentTD(el)
+      console.log "unbind input, ignored.", rel, el, el.parentElement
+      return false
+    if el.parentElement == rel
+      console.log "blur by same td, ignored.", el, rel
       return false
 
-    el = document.activeElement
-    if el.tagName != "INPUT" && el.tagName != "SELECT"
-      # unbind and ...
-      @unbind()
-    else if $(el).closet("form")[0] == $(@form)[0]
-      # inputs of same form, do nothing
-      console.log "same form"
+    # find who will get focus
+    input = $(el)
+    relOb = @getInputOb(rel)
+    if relOb == null
+      rel = document.activeElement
     else
+      rel = relOb[0]
+    console.log ">focus rel=", rel
+
+    if rel.tagName != "INPUT" && rel.tagName != "SELECT"
+      # user click out of inputs, submit it
+      console.log "@unbind, focus to", rel
+      @unbind()
+    else if $(rel).closest("form")[0] == $(@form)[0]
+      # click input els of same form, do nothing
+      console.log "do nothing, input of same form"
+    else
+      # click input els of other form, submit
+      console.log "unbind: input of other form"
       @unbind()
 
-  isBinded: (input) ->
-    td = input.parent()
-    if td.prop("tagName") != "TD"
-      return false
-    else
-      return true
+  getInputOb: (el) ->
+    if el
+      if el.tagName == "INPUT" || el.tagName == "SELECT"
+        return $(el)
+
+      # make a patch for simple color picker
+      if el.tagName == "SPAN" &&
+        $(el).hasClass("simplecolorpicker") &&
+        $(el).hasClass("icon")
+          return $(el).prev('select')
+    return null
+
+  isParentTD: (el) ->
+    el.parentElement.tagName == "TD"
 
   unbind: ()->
-    console.log "ajax submit..."
+    console.log "unbinding..."
     self = @
     if @activeRow != null
       # move inputs out of td
@@ -103,11 +137,12 @@ class InplaceEditor
         if sel
           self.inputOutOfTd(tds.eq(index), self.div)
       # submit form
-      # $(@form).submit()
+      console.log "ajax submit ", $(@form).attr("action")
+      $(@form).submit()
 
     @activeRow = null # reset active row
 
-  bind: (tr, td) ->
+  bind: (tr, td, target) ->
     self = @
     if !@table
       console.log "uninited editor"
@@ -118,10 +153,12 @@ class InplaceEditor
 
     # check active row, unbind if different row
     if @activeRow == tr[0]
-      console.log "same row, return"
+      if @debug
+        console.log "same row, return"
       return true
     else
-      console.log "click another row, unbind old"
+      if @debug
+        console.log "click another row, unbind old"
       @unbind()
 
     # set action attr of the form
@@ -130,7 +167,7 @@ class InplaceEditor
       console.log "error: no id for tr element"
       return false
     else
-      console.log "new action:", @url + id, $(@form)[0]
+      console.log "binding set new action:", @url + id, $(@form)[0]
       $(@form).attr("action", @url + id)
 
     # move relative INPUT into td
@@ -138,21 +175,27 @@ class InplaceEditor
     @inputs.forEach (sel, index) ->
       if sel
         input = $(sel)
-        console.log "binding td", index, sel, tds[index], input[0]
+        if @debug
+          console.log "binding td", index, sel, tds[index], input[0]
         self.initInputVal(input, tds.eq(index))
         self.inputIntoTd(input, tds.eq(index))
-    # console.log "bind tr", tr
+        $(sel).blur (e) ->
+          self.onblurInput(e)
+
+    if @debug
+      console.log "bind tr", tr
     @activeRow = tr[0]
 
     # click it if td is a colorpicker field
-    $(">span.simplecolorpicker.icon", td).click()
+    if target.tagName == "SPAN" && $(target).hasClass("colorbox")
+      $(">span.simplecolorpicker.icon", td).click()
 
 $ ->
   console.log "brands.js start"
   # inplace-edit init
   window.editor = null
   $("table.dataTable[data-form]").each (index, table) ->
-    console.log index, $(table)
+    # console.log index, $(table)
     editor =  new InplaceEditor
     editor.init(table)
     table.editor = editor

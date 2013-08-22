@@ -4,7 +4,7 @@
   <%= simple_form_for(brand_new, method: "patch", remote: true,
                       url: "/brands/2",
                       data: { url: brand_path(brand_new) },
-                      html: { id: "brands-form", class: "inplace__", },
+                      html: { id: "brands-form", class: "inplace", },
                      ) do |f| %>
     <div class="inputs">
       <%= f.input :name %>
