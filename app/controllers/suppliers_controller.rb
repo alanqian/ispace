@@ -27,7 +27,6 @@ class SuppliersController < ApplicationController
       supplier_new = Supplier.new(category_id: category_id)
     else
       @suppliers = []
-      @suppliers = Supplier.all
       supplier_new = Supplier.new()
     end
     render 'index', locals: { categories: Category.all, supplier_new: supplier_new }
