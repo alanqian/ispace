@@ -1,10 +1,36 @@
+=begin "interfaces of :suppliers"
+
+1. /suppliers/: combo-list with inplace edit, batch new
+  filter: select category
+
+2. /suppliers/1: PATCH
+  ajax update by in-place edit
+
+3. /suppliers: POST
+  batch mode new, redirect to index
+
+4. inplace color picker
+  fire a click on color picker span if click on the proper td
+
+=end
+
 class SuppliersController < ApplicationController
   before_action :set_supplier, only: [:show, :edit, :update, :destroy]
 
   # GET /suppliers
   # GET /suppliers.json
   def index
-    @suppliers = Supplier.all
+    category_id = params[:category]
+    if category_id
+      @suppliers = Supplier.where([
+        "category_id=?", category_id])
+      supplier_new = Supplier.new(category_id: category_id)
+    else
+      @suppliers = []
+      @suppliers = Supplier.all
+      supplier_new = Supplier.new()
+    end
+    render 'index', locals: { categories: Category.all, supplier_new: supplier_new }
   end
 
   # GET /suppliers/1
@@ -14,7 +40,8 @@ class SuppliersController < ApplicationController
 
   # GET /suppliers/new
   def new
-    @supplier = Supplier.new
+    @supplier = Supplier.new(category_id: params[:category])
+    render 'new', locals: { categories: Category.all }
   end
 
   # GET /suppliers/1/edit
@@ -26,13 +53,34 @@ class SuppliersController < ApplicationController
   def create
     @supplier = Supplier.new(supplier_params)
 
-    respond_to do |format|
-      if @supplier.save
-        format.html { redirect_to @supplier, notice: 'Supplier was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @supplier }
+    # check the whole input at first, for all attributes
+    @supplier.valid?
+
+    # validate the splited names
+    columns = [:category_id, :name]
+    values = []
+    names = @supplier.name.split(/\r?\n/).map {|n| n.strip } .keep_if {|n| !n.empty?}
+    names.each do |name|
+      errors = Supplier.validate_attribute(:name, name)
+      if errors.any?
+        @supplier.errors[:name].concat(errors)
       else
-        format.html { render action: 'new' }
+        values << [@supplier.category_id, name]
+      end
+    end
+
+    respond_to do |format|
+      if @supplier.errors.any?
+        logger.warn "create.import failed, category:#{@supplier.category_id}"
+        format.html { render action: 'new', locals: { categories: Category.all } }
         format.json { render json: @supplier.errors, status: :unprocessable_entity }
+      else
+        # still need validate to ensure the records
+        # supplier.import will filter the dup records automatically
+        Supplier.import(columns, values)
+        logger.debug "create.import ok, category:#{@supplier.category_id}"
+        format.html { redirect_to suppliers_url(category: @supplier.category_id) }
+        format.json { render action: 'show', status: :created, location: @supplier }
       end
     end
   end
@@ -44,9 +92,11 @@ class SuppliersController < ApplicationController
       if @supplier.update(supplier_params)
         format.html { redirect_to @supplier, notice: 'Supplier was successfully updated.' }
         format.json { head :no_content }
+        format.js
       else
         format.html { render action: 'edit' }
         format.json { render json: @supplier.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end

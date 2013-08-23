@@ -1,33 +1,47 @@
 <h1>Listing suppliers</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Desc</th>
-      <th>Color</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div id="suppliers-list">
+  <%= simple_form_for(supplier_new, method: "patch", remote: true,
+                      url: "/suppliers/2",
+                      data: { url: supplier_path(supplier_new) },
+                      html: { id: "suppliers-form", class: "inplace", },
+                     ) do |f| %>
+    <div class="inputs">
+      <%= f.input :name %>
+      <%= f.input :desc %>
+      <% def_color = t("dict.colors.default") %>
+      <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+    <table id="suppliers-table" data-form="#suppliers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <th class="name" data-input="supplier[name]"><%= t("activerecord.attributes.supplier.name") %></th>
+          <th class="color" data-select="supplier[color]"><%= t("dict.color") %></th>
+          <th class="desc" data-input="supplier[desc]"><%= t("dict.desc") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @suppliers.each do |supplier| %>
+          <%= render 'row', supplier: supplier %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
 
-  <tbody>
-    <% @suppliers.each do |supplier| %>
-      <tr>
-        <td><%= supplier.name %></td>
-        <td><%= supplier.category_id %></td>
-        <td><%= supplier.desc %></td>
-        <td><%= supplier.color %></td>
-        <td><%= link_to 'Show', supplier %></td>
-        <td><%= link_to 'Edit', edit_supplier_path(supplier) %></td>
-        <td><%= link_to 'Destroy', supplier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+<div id="dataTable-filter" class="template">
+  <%= simple_form_for(supplier_new, remote:true,
+                      html: { id: "suppliers-choose-category" }) do |f| %>
+    <%= f.input :category_id, collection: categories, prompt: "选择品类",
+      label: "",
+      input_html: {
+        data: { url: suppliers_path(category: "") },
+        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
+    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+  <% end %>
+</div>
 
 <%= link_to 'New Supplier', new_supplier_path %>

@@ -36,6 +36,8 @@ en:
         email: "E-mail address"
       brand:
         name: "品牌名"
+      supplier:
+        name: "供应商名称"
     errors:
       models:
         user:
@@ -47,6 +49,25 @@ en:
     comment: "write comment for this upload file, please"
 
   dict:
+    colors:
+      default:     '#EEEEEE'
+      green:       '#7bd148'
+      bold_blue:   '#5484ed'
+      blue:        '#a4bdfc'
+      turquoise:   '#46d6db'
+      light_green: '#7ae7bf'
+      bold_green:  '#51b749'
+      yellow:      '#fbd75b'
+      orange:      '#ffb878'
+      red:         '#ff887c'
+      bold_red:    '#dc2127'
+      purple:      '#dbadff'
+      gray:        '#e1e1e1'
+      white:       '#ffffff'
+    desc: "备注"
+    color: "颜色"
+    supplier_name: "供应商"
+    #######################################
     plan: "规划"
     plan_set: "规划组"
     fixture: "货架"
@@ -63,22 +84,6 @@ en:
     range: "排面"
     facing: "排面"
     range_info: "排面"
-    color: "颜色"
-    colors:
-      default:     '#EEEEEE'
-      green:       '#7bd148'
-      bold_blue:   '#5484ed'
-      blue:        '#a4bdfc'
-      turquoise:   '#46d6db'
-      light_green: '#7ae7bf'
-      bold_green:  '#51b749'
-      yellow:      '#fbd75b'
-      orange:      '#ffb878'
-      red:         '#ff887c'
-      bold_red:    '#dc2127'
-      purple:      '#dbadff'
-      gray:        '#e1e1e1'
-      white:       '#ffffff'
 
   categories:
     index:

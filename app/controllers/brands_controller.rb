@@ -25,7 +25,6 @@
 
   field-mapping:
     <table data-form="#form-id-name">
-
       <th data-input="field-name">
       <th data-select="field-name">
     <tr data-id="record-id">

@@ -1,3 +1,32 @@
 // Place all the styles related to the suppliers controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+form#new_supplier {
+  div.suppliers-new-name {
+    margin-top: 0.3em;
+
+    label {
+      display: block;
+    }
+  }
+}
+
+div#suppliers-list {
+  width: 660px;
+
+  table#suppliers-table {
+    width: 600px;
+    float: left;
+    th.name {
+      width: 26em;
+    }
+    th.desc {
+      width: 24em;
+    }
+    th.color {
+      width: 5em;
+    }
+  }
+}
+
