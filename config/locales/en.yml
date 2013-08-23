@@ -38,6 +38,8 @@ en:
         name: "品牌名"
       supplier:
         name: "供应商名称"
+      manufacturer:
+        name:  "生产商名称"
     errors:
       models:
         user:
@@ -64,9 +66,13 @@ en:
       purple:      '#dbadff'
       gray:        '#e1e1e1'
       white:       '#ffffff'
+    category: "品类"
     desc: "备注"
     color: "颜色"
-    supplier_name: "供应商"
+    height: "高度"
+    width: "宽度"
+    depth: "深度"
+    weight: "重量"
     #######################################
     plan: "规划"
     plan_set: "规划组"
