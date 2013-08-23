@@ -14,12 +14,11 @@
     <div class="actions">
       <%= f.submit %>
     </div>
-    <table id="brands-table" data-form="#brands-form" data-sinfoempty="无结果，请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable" cellspacing=0>
+    <table id="brands-table" data-form="#brands-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable" cellspacing=0>
       <thead>
         <tr>
-          <th data-input="brand[name]">Name</th>
-          <th data-select="brand[color]">Color</th>
-          <th>edit</th>
+          <th data-input="brand[name]"><%= t("activerecord.attributes.brand.name") %></th>
+          <th data-select="brand[color]"><%= t("dict.color") %></th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +34,7 @@
   <%= simple_form_for(brand_new, remote:true,
                       html: { id: "brands-choose-category" }) do |f| %>
     <%= f.input :category_id, collection: categories, prompt: "选择品类",
+      label: "",
       input_html: {
         data: { url: brands_path(category: "") },
         onchange: "javascript: onDataTableCategoryChange(event,this)" } %>

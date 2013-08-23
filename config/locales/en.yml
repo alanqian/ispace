@@ -34,6 +34,8 @@ en:
     attributes:
       user:
         email: "E-mail address"
+      brand:
+        name: "品牌名"
     errors:
       models:
         user:
@@ -61,6 +63,7 @@ en:
     range: "排面"
     facing: "排面"
     range_info: "排面"
+    color: "颜色"
     colors:
       default:     '#EEEEEE'
       green:       '#7bd148'
