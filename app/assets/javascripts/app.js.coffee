@@ -546,9 +546,9 @@ root.setSheetUI = () ->
   $("td:first", $("table.spreadsheet tbody tr")).css("background-color",
     bgcolor).css("text-align", "center")
 
-root.setDataTableListUI = () ->
+root.setInplaceEditUI = () ->
   root.editor = null
-  $("table.dataTable[data-form]").each (index, table) ->
+  $("table.dataTable[data-form].inplace_edit").each (index, table) ->
     # console.log index, $(table)
     editor =  new InplaceEditor
     editor.init(table)
@@ -602,6 +602,7 @@ $ ->
 
   # resizable, tabs, tabs-bottom, ...
   setSheetUI()
+  setInplaceEditUI()
   $("div.accordion").accordion()
 
   console.log "common components loaded"
