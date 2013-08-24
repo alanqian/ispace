@@ -1,10 +1,11 @@
 Ispace::Application.routes.draw do
-  resources :products
+  get "sales/" => 'sales#index'
 
   resources :brands
   resources :suppliers
   resources :manufacturers
   resources :merchandises
+  resources :products
   resources :import_sheets
 
   resources :fixtures
