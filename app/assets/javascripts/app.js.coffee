@@ -304,7 +304,7 @@ root.showWizard = (wizard) ->
   if $("div#import-wizard").length > 0
     console.log "importWizard start..."
     $.ajax
-      url: "/import_sheets/new?ajax=1",
+      url: "/import_sheets/new?ajax=1"
       error: () ->
         console.log "..ajax error"
       complete: (jqXHR) ->
@@ -519,12 +519,83 @@ class InplaceEditor
     if target.tagName == "SPAN" && $(target).hasClass("colorbox")
       $(">span.simplecolorpicker.icon", td).click()
 
+getScrollBarWidth = () ->
+  inner = document.createElement('p')
+  inner.style.width = "100%"
+  inner.style.height = "200px"
+
+  outer = document.createElement('div')
+  outer.style.position = "absolute"
+  outer.style.top = "0px"
+  outer.style.left = "0px"
+  outer.style.visibility = "hidden"
+  outer.style.width = "200px"
+  outer.style.height = "150px"
+  outer.style.overflow = "hidden"
+  outer.appendChild (inner)
+
+  document.body.appendChild (outer)
+  w1 = inner.offsetWidth
+  outer.style.overflow = 'scroll'
+  w2 = inner.offsetWidth
+  if w1 == w2
+    w2 = outer.clientWidth
+
+  document.body.removeChild (outer)
+  return w1 - w2
+
+copyColsWidth = (src, dest) ->
+  # copy cols width
+  ths = $("th", dest)
+  $("th", src).each (index, e) ->
+    ths.eq(index).width $(e).width()
+
+root.onDataTableResizing = (e) ->
+  table = $(e.currentTarget)
+  console.log "Resizing #{e.currentTarget.id}", table
+  # for splitted dataTable,
+  # head: table#JColResizer0 JColResizer
+  # body: table#suppliers-table JColResizer, thead: height=0
+  headerHeight = table.children("thead").height()
+  isHeaderResizer = (e.currentTarget.id.match(/^JColResizer/) != null)
+  if isHeaderResizer && headerHeight > 0
+    console.log "resizer by header!"
+    div = table.closest("div.dataTables_scroll")
+    rel = $("div.dataTables_scrollBody>table", div)
+    console.log "related table", rel
+    copyColsWidth table, rel
+  else if headerHeight == 0
+    console.log "resizer by body, height=", headerHeight
+    div = table.closest("div.dataTables_scroll")
+    rel = $("div.dataTables_scrollHead table", div)
+    console.log "related table", rel
+    copyColsWidth table, rel
+  else
+    console.log "normal table, do nothing"
+
+root.onDataTableResized = (e) ->
+  onDataTableResizing(e)
+  $("table.resizable").colResizable
+    disable: true
+  $("table.resizable").colResizable
+    liveDrag: true
+    gripInnerHtml: "<div class='grip'></div>"
+    draggingClass: "dragging"
+    onResize: onDataTableResized
+    onDrag: onDataTableResizing
+
 root.setSheetUI = () ->
-  $("table.resizable").colResizable({
-    liveDrag: true,
-    gripInnerHtml: "<div class='grip'></div>",
-    draggingClass: "dragging",
-    onResize: null})
+  # shrink table 1px per column for colResizable
+  $("table.resizable").each (index,e) ->
+    cols = $("thead>tr:first>th", e).length
+    $(e).width($(e).width() - cols)
+
+  $("table.resizable").colResizable
+    liveDrag: true
+    gripInnerHtml: "<div class='grip'></div>"
+    draggingClass: "dragging"
+    onResize: onDataTableResized
+    onDrag: onDataTableResizing
 
   $("div.tabs").tabs(
     activate: (event, ui) ->
@@ -565,37 +636,41 @@ $ ->
   console.log "loading common components..."
   # $.ajaxSettings.dataType = "json"
   $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
-  $("table.dataTable").dataTable({
-    "aaSorting": [[ 4, "desc" ]],
-    "bJQueryUI": true,
-    "aLengthMenu": [[5, 10, 15, 25, 50, -1], [5, 10, 15, 25, 50, "All"]],
-    "iDisplayLength": 10,
-    'bLengthChange': false,
+  $("table.dataTable").dataTable
+    aaSorting: [[ 4, "desc" ]]
+    bJQueryUI: true
+    bPaginate: false
+    iDisplayLength: -1
+    bLengthChange: false
+    bScrollAutoCss: true
+    sScrollY: "100px"
+    # "aLengthMenu": [[5, 10, 15, 25, 50, -1], [5, 10, 15, 25, 50, "All"]]
+    #"sScrollXInner": "#{tableWidth}px"
     #"sScrollY": calcDataTableHeight(), don't use, it will split to two tables
-    #"sPaginationType": "full_numbers",
+    #"sPaginationType": "full_numbers"
     # length-change, info, pagination, filtering input
     # dataTables_length
     # dataTables_info
     # dataTables_paginate
     # dataTables_filter
-    "sDom": '<"top"<"#data_filter">ipf<"clear">>rt<"clear">',
-    "oLanguage": {
-        "sProcessing":   "处理中...",
-        "sLengthMenu":   "每页显示 _MENU_ 条，",
-        "sZeroRecords":  $("table.dataTable").data("szerorecords") || "没有匹配结果",
-        "sInfo":         "_START_-_END_，共 _TOTAL_ 条",
-        "sInfoEmpty":    $("table.dataTable").data("sinfoempty") || "无结果，请重新搜索",
-        "sInfoFiltered": "&#47; _MAX_ 条",
-        "sInfoPostFix":  "",
-        "sSearch":       "搜索:",
-        "sUrl":          "",
-        "oPaginate": {
-            "sFirst":    "首页",
-            "sPrevious": "上页",
-            "sNext":     "下页",
-            "sLast":     "末页"
-        }
-    }})
+    #"sDom": '<"top"<"#data_filter">ipf<"clear">>rt<"clear">'
+    sDom: '<"top"<"#data_filter">if<"clear">>rt<"clear">'
+    oLanguage:
+      sProcessing:   "处理中..."
+      sLengthMenu:   "每页显示 _MENU_ 条，"
+      sZeroRecords:  $("table.dataTable").data("szerorecords") || "没有匹配结果"
+      # sInfo:         "_START_-_END_，共 _TOTAL_ 条"
+      sInfo:         "共_TOTAL_条"
+      sInfoEmpty:    $("table.dataTable").data("sinfoempty") || "无结果，请重新搜索"
+      sInfoFiltered: "&#47; _MAX_ 条"
+      sInfoPostFix:  ""
+      sSearch:       "搜索:"
+      sUrl:          ""
+      oPaginate:
+        sFirst:    "首页"
+        sPrevious: "上页"
+        sNext:     "下页"
+        sLast:     "末页"
 
   # update dataTable filter: custom div inject to dataTable
   $("#dataTable-filter").children().appendTo(".dataTables_wrapper .top #data_filter")
