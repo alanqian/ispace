@@ -13,4 +13,8 @@ module ApplicationHelper
     end
     return I18n.t("#{prefixs[0]}.#{field}")
   end
+
+  def color_tag(color)
+    content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
+  end
 end

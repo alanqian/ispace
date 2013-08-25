@@ -1,8 +1,6 @@
 <tr data-id="<%= supplier.id %>">
   <td><%= supplier.name %></td>
-  <td data-val="<%= supplier.color %>">
-    <%= content_tag :span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{supplier.color};" %>
-  </td>
+  <td data-val="<%= supplier.color %>"><%=color_tag supplier.color %></td>
   <td><%= supplier.desc %></td>
   <%#
   <td><%= link_to 'Edit', edit_supplier_path(supplier) ></td>
