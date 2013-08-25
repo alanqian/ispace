@@ -1,22 +1,25 @@
 <%= simple_form_for(@product) do |f| %>
   <%= f.error_notification %>
-
   <div class="inputs">
-    <%= f.input :category_id %>
-    <%= f.input :brand_id %>
-    <%= f.input :mfr_id %>
-    <%= f.input :user_id %>
+    <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
+      input_html: {
+        data: { brand_id: rel3_hash(brands_all, :category_id, :id, :name),
+          mfr_id: rel3_hash(mfrs_all, :category_id, :id, :name) },
+        onchange: "javascript: onProductCategoryChange(event,this)" } %>
+    <%= f.input :brand_id, collection: [] %>
+    <%= f.input :mfr_id, collection: [] %>
     <%= f.input :code %>
     <%= f.input :name %>
     <%= f.input :height %>
     <%= f.input :width %>
     <%= f.input :depth %>
     <%= f.input :weight %>
-    <%= f.input :price_level %>
+    <%= f.input :price_level, collection: t("dict.prices") %>
     <%= f.input :size_name %>
     <%= f.input :case_pack_name %>
     <%= f.input :barcode %>
-    <%= f.input :color %>
+    <% def_color = t("dict.colors.default") %>
+    <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
   </div>
 
   <div class="actions">

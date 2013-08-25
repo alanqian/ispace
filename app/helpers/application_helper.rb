@@ -21,4 +21,13 @@ module ApplicationHelper
   def rel_hash(rel_array, key, value)
     return Hash[* rel_array.map{|r| [r[key], r[value]]}.flatten]
   end
+
+  def rel3_hash(rel3_array, f1, f2, f3)
+    hash = {}
+    rel3_array.each do |r|
+      hash[r[f1]] ||= {}
+      hash[r[f1]][r[f2]] = r[f3]
+    end
+    hash
+  end
 end

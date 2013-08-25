@@ -7,7 +7,7 @@
   <td><%= product.width %></td>
   <td><%= product.depth %></td>
   <td><%= product.weight %></td>
-  <td data-val="<%= product.price_level %>"><%= t("prices")[product.price_level]%></td>
+  <td data-val="<%= product.price_level %>"><%= t("dict.prices").invert()[product.price_level] %></td>
   <td><%= product.size_name %></td>
   <td><%= product.case_pack_name %></td>
   <td><%= product.barcode %></td>

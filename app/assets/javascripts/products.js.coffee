@@ -3,17 +3,22 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 root = exports ? this
 
-$ ->
-  $('#new_import_sheet').bind('ajax:success', (event, data, status, xhr) ->
-    console.log "ajax success new_import_sheet"
-    console.log data
-  ).bind("ajax:error", (evt, xhr, status, error) ->
-    console.log "ajax error"
-    console.log status, error
-    console.log xhr
-  )
-  console.log "set ajax ok"
+root.onProductCategoryChange = (event, el) ->
+  form = $(el).closest("form.product")
+  selDatas =
+    "select#product_brand_id": "brand-id",
+    "select#product_mfr_id": "mfr-id",
+  for sel of selDatas
+    select = form.find(sel)
+    coll = $(el).data(selDatas[sel])[$(el).val()]
+    console.log sel, coll
+    select.find("option[value!='']").remove()
+    select = form.find(sel)
+    for id of coll
+      select.append("<option value=#{id}>#{coll[id]}</option>")
+  console.log "change category to", $(el).val()
 
-  root.test = () ->
-    console.log "test only!"
+$ ->
+  console.log "product start"
+  $("select#product_color").simplecolorpicker({picker: true})
 

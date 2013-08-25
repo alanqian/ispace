@@ -59,7 +59,11 @@ class ProductsController < ApplicationController
   # GET /products/new
   def new
     @product = Product.new(category_id: params[:category])
-    render 'new', locals: { categories: Category.all }
+    render 'new', locals: {
+      categories_all: Category.all,
+      brands_all: Brand.select("category_id, id, name"),
+      mfrs_all: Manufacturer.select("category_id, id, name")
+    }
   end
 
   # GET /products/1/edit
