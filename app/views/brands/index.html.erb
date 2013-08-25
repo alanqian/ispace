@@ -17,13 +17,13 @@
     <table id="brands-table" data-form="#brands-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th data-input="brand[name]"><%= t("activerecord.attributes.brand.name") %></th>
-          <th data-select="brand[color]"><%= t("dict.color") %></th>
+          <th data-input="brand[name]"><%=tf :name %></th>
+          <th data-select="brand[color]"><%=tf :color %></th>
         </tr>
       </thead>
       <tbody>
         <% @brands.each do |brand| %>
-          <%= render 'row', brand: brand %>
+          <%= render 'item', brand: brand %>
         <% end %>
       </tbody>
     </table>

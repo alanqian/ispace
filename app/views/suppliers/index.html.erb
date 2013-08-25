@@ -18,14 +18,14 @@
     <table id="suppliers-table" data-form="#suppliers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th class="name" data-input="supplier[name]"><%= t("activerecord.attributes.supplier.name") %></th>
-          <th class="color" data-select="supplier[color]"><%= t("dict.color") %></th>
-          <th class="desc" data-input="supplier[desc]"><%= t("dict.desc") %></th>
+          <th class="name" data-input="supplier[name]"><%=tf :name %></th>
+          <th class="color" data-select="supplier[color]"><%=tf :color %></th>
+          <th class="desc" data-input="supplier[desc]"><%=tf :desc %></th>
         </tr>
       </thead>
       <tbody>
         <% @suppliers.each do |supplier| %>
-          <%= render 'row', supplier: supplier %>
+          <%= render 'item', supplier: supplier %>
         <% end %>
       </tbody>
     </table>

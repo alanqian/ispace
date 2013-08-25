@@ -1,6 +1,6 @@
   # replace the modified record
   id = <%= @manufacturer.id %>
-  new_tr = "<%=j render partial: 'row', locals: { manufacturer: @manufacturer } %>"
+  new_tr = "<%=j render partial: 'item', locals: { manufacturer: @manufacturer } %>"
   tr = $("#manufacturers-list tr[data-id=#{id}]")
   bgColor = tr.css("background-color")
   tr.replaceWith(new_tr)

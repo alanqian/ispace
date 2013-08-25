@@ -18,14 +18,14 @@
     <table id="manufacturers-table" data-form="#manufacturers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th class="name" data-input="manufacturer[name]"><%= t("activerecord.attributes.manufacturer.name") %></th>
-          <th class="color" data-select="manufacturer[color]"><%= t("dict.color") %></th>
-          <th class="desc" data-input="manufacturer[desc]"><%= t("dict.desc") %></th>
+          <th class="name" data-input="manufacturer[name]"><%=tf :name %></th>
+          <th class="color" data-select="manufacturer[color]"><%=tf :color %></th>
+          <th class="desc" data-input="manufacturer[desc]"><%=tf :desc %></th>
         </tr>
       </thead>
       <tbody>
         <% @manufacturers.each do |manufacturer| %>
-          <%= render 'row', manufacturer: manufacturer %>
+          <%= render 'item', manufacturer: manufacturer %>
         <% end %>
       </tbody>
     </table>
