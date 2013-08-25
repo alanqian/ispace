@@ -30,7 +30,25 @@ class ProductsController < ApplicationController
   def index
     @store_id = 1
     @user_id = 1
-    @products = Product.all
+    category_id = params[:category]
+    if category_id
+      @products = Product.where([
+        "category_id=?", category_id])
+      product_new = Product.new(category_id: category_id)
+      brands_all = Brand.where(category_id: category_id)
+      mfrs_all = Manufacturer.where(category_id: category_id)
+    else
+      @products = Product.all
+      product_new = Product.new(category_id: category_id)
+      brands_all = Brand.all
+      mfrs_all = Manufacturer.all
+    end
+    render 'index', locals: {
+      categories_all: Category.all,
+      brands_all: brands_all,
+      mfrs_all: mfrs_all,
+      product_new: product_new,
+    }
   end
 
   # GET /products/1
@@ -40,7 +58,8 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    @product = Product.new
+    @product = Product.new(category_id: params[:category])
+    render 'new', locals: { categories: Category.all }
   end
 
   # GET /products/1/edit
@@ -56,9 +75,11 @@ class ProductsController < ApplicationController
       if @product.save
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
         format.json { render action: 'show', status: :created, location: @product }
+        format.js
       else
         format.html { render action: 'new' }
         format.json { render json: @product.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end
@@ -70,9 +91,17 @@ class ProductsController < ApplicationController
       if @product.update(product_params)
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
         format.json { head :no_content }
+        format.js {
+          @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+          @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+        }
       else
         format.html { render action: 'edit' }
         format.json { render json: @product.errors, status: :unprocessable_entity }
+        format.js {
+          @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+          @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+        }
       end
     end
   end

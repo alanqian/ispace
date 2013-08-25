@@ -15,7 +15,7 @@ class CreateProducts < ActiveRecord::Migration
       t.string :price_level
       t.string :size_name
       t.string :case_pack_name
-      t.string :bar_code
+      t.string :barcode
       t.string :color
       t.datetime :discard_from
       t.integer :discard_by

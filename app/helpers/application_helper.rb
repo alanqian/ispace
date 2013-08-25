@@ -17,4 +17,8 @@ module ApplicationHelper
   def color_tag(color)
     content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
   end
+
+  def rel_hash(rel_array, key, value)
+    return Hash[* rel_array.map{|r| [r[key], r[value]]}.flatten]
+  end
 end

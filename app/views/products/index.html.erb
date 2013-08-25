@@ -1,73 +1,71 @@
-<div id="side">
-  <ul id="navibar">
-    <li>
-      <a href="#">Product Data</a>
-      <ul>
-        <li><%= link_to 'Brands', brands_path, remote: false %></li>
-        <li><%= link_to 'Manufacturers', manufacturers_path, remote: false %></li>
-        <li><%= link_to 'Suppliers', suppliers_path, remote: false %></li>
-        <li><%= link_to 'Products', products_path, remote: false %></li>
-        <li><%= link_to 'Merchandises', merchandises_path, remote: false %></li>
-      </ul>
-    </li>
-    <li><%= link_to 'Imports', import_sheets_path %></li>
-    <li><%= link_to 'Merchandise Metrics', "#" %></li>
-  </ul>
-</div>
+<h1>Listing products</h1>
 
-<div id="main">
-  <div id="data-client">
-    <h1>Listing products</h1>
-    <table>
+<div id="products-list">
+  <%= simple_form_for(product_new, method: "patch", remote: true,
+                      url: "/products/2",
+                      data: { url: product_path(product_new) },
+                      html: { id: "products-form", class: "inplace", },
+                     ) do |f| %>
+    <div class="inputs">
+      <%= f.input :code %>
+      <%= f.input :brand_id, collection: brands_all %>
+      <%= f.input :name %>
+      <%= f.input :height %>
+      <%= f.input :width %>
+      <%= f.input :depth %>
+      <%= f.input :weight %>
+      <%= f.input :price_level, collection: t("dict.prices") %>
+      <%= f.input :size_name %>
+      <%= f.input :case_pack_name %>
+      <%= f.input :barcode %>
+      <% def_color = t("dict.colors.default") %>
+      <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
+      <%= f.input :mfr_id, collection: mfrs_all %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+    <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th>Category</th>
-          <th>Brand</th>
-          <th>Mfr</th>
-          <th>User</th>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Height</th>
-          <th>Width</th>
-          <th>Depth</th>
-          <th>Weight</th>
-          <th>Price level</th>
-          <th>Size name</th>
-          <th>Case pack name</th>
-          <th>Bar code</th>
-          <th>Color</th>
-          <th></th>
-          <th></th>
-          <th></th>
+          <th data-input="product[code]"><%=tf :code %></th>
+          <th data-select="product[brand_id]"><%=tf :brand %></th>
+          <th data-input="product[name]"><%=tf :name %></th>
+          <th data-select="product[color]"><%=tf :color %></th>
+          <th data-input="product[height]"><%=tf :height %></th>
+          <th data-input="product[width]"><%=tf :width %></th>
+          <th data-input="product[depth]"><%=tf :depth %></th>
+          <th data-input="product[weight]"><%=tf :weight %></th>
+          <th data-select="product[price_level]"><%=tf :price_level %></th>
+          <th data-input="product[size_name]"><%=tf :size_name %></th>
+          <th data-input="product[case_pack_name]"><%=tf :case_pack_name %></th>
+          <th data-input="product[barcode]"><%=tf :barcode %></th>
+          <th data-select="product[mfr_id]"><%=tf :mfr %></th>
         </tr>
       </thead>
       <tbody>
         <% @products.each do |product| %>
-          <tr>
-            <td><%= product.category_id %></td>
-            <td><%= product.brand_id %></td>
-            <td><%= product.mfr_id %></td>
-            <td><%= product.user_id %></td>
-            <td><%= product.id %></td>
-            <td><%= product.name %></td>
-            <td><%= product.height %></td>
-            <td><%= product.width %></td>
-            <td><%= product.depth %></td>
-            <td><%= product.weight %></td>
-            <td><%= product.price_level %></td>
-            <td><%= product.size_name %></td>
-            <td><%= product.case_pack_name %></td>
-            <td><%= product.bar_code %></td>
-            <td><%= product.color %></td>
-            <td><%= link_to 'Show', product %></td>
-            <td><%= link_to 'Edit', edit_product_path(product) %></td>
-            <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-          </tr>
+          <%= render 'item', product: product,
+            brands_hash: rel_hash(brands_all, :id, :name),
+            mfrs_hash: rel_hash(mfrs_all, :id, :name) %>
         <% end %>
       </tbody>
     </table>
-  </div>
-  <hr/>
+  <% end %>
 </div>
+
+<div id="dataTable-filter" class="template">
+  <%= simple_form_for(product_new, remote:true,
+                      html: { id: "products-choose-category" }) do |f| %>
+    <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
+      label: "",
+      input_html: {
+        data: { url: products_path(category: "") },
+        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
+    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+  <% end %>
+</div>
+
+<hr/>
 
 <%= link_to 'New Product', new_product_path %>

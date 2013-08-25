@@ -29,7 +29,7 @@ en:
       brand: "品牌"
       supplier: "供应商"
       manufacturer: "生产商"
-      product: "产品"
+      product: "单品"
       merchandise: "商品"
     attributes:
       user:
@@ -40,6 +40,15 @@ en:
         name: "供应商名称"
       manufacturer:
         name:  "生产商名称"
+      product:
+        barcode: "条码"
+        mfr: "生产商"
+        code: "编码"
+        id: "编码"
+        name: "品名"
+        price_level: "价格带"
+        size_name: "规格"
+        case_pack_name: "包装"
     errors:
       models:
         user:
@@ -66,6 +75,10 @@ en:
       purple:      '#dbadff'
       gray:        '#e1e1e1'
       white:       '#ffffff'
+    prices:
+      a: "高"
+      b: "中"
+      c: "低"
     category: "品类"
     desc: "备注"
     color: "颜色"
@@ -73,6 +86,7 @@ en:
     width: "宽度"
     depth: "深度"
     weight: "重量"
+    brand: "品牌"
     #######################################
     plan: "规划"
     plan_set: "规划组"
