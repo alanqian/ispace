@@ -683,6 +683,14 @@ root.onClickSelectOne = (e, el) ->
     $(select_all).prop("checked", false)
 
 root.dataTableUtil =
+  getSelection: (table, inputName) ->
+    sels = []
+    $(table).find("input[type='checkbox'][name='#{inputName}']").each (index,el) ->
+      if $(el).prop("checked")
+        sels.push $(el).val()
+      return true
+    sels
+
   getOpt: (table) ->
     opt = @defaultOpt
     console.log opt
