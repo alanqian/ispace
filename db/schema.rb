@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130724092508) do
+ActiveRecord::Schema.define(version: 20130826023421) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.boolean  "new_product"
     t.boolean  "on_promotion"
     t.boolean  "force_on_shelf"
-    t.boolean  "forbid_on_shelf"
+    t.boolean  "force_off_shelf"
     t.integer  "max_facing"
     t.integer  "min_facing"
     t.integer  "rcmd_facing"
@@ -222,12 +222,17 @@ ActiveRecord::Schema.define(version: 20130724092508) do
     t.integer  "discard_by"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "supplier_id"
+    t.integer  "sale_type",                               default: 1
+    t.boolean  "new_product",                             default: false
+    t.boolean  "on_promotion",                            default: false
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
   add_index "products", ["discard_from"], name: "index_products_on_discard_from", using: :btree
   add_index "products", ["import_id"], name: "index_products_on_import_id", using: :btree
   add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", using: :btree
+  add_index "products", ["supplier_id"], name: "by_supplier", using: :btree
 
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
