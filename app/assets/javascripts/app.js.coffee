@@ -33,21 +33,23 @@ root.mapUtil =
     self = @
     $('td.mapping-input').each (idx) ->
       self.clearToValue $(this).parent()
+      return true
     $('.mapping-to-fields li').each (idx) ->
       self.uncheckToElement this
+      return true
 
     # set auto mappings
     $('td.mapping-input').each (idx) ->
       name = $(this).data('field')
       to = mapping[name]
       console.log "enum mapping-input td,", name, to
-      return unless to
-
-      tr = $(this).parent()
-      elTo = $("li[data-field*='#{to}']").get(0)
-      if tr && elTo
-        self.setActiveRow tr
-        self.clickToElement elTo
+      if to
+        tr = $(this).parent()
+        elTo = $("li[data-field*='#{to}']").get(0)
+        if tr && elTo
+          self.setActiveRow tr
+          self.clickToElement elTo
+      return true
 
   setActiveRow: (tr) ->
     if @activeRow != null
@@ -337,7 +339,9 @@ class InplaceEditor
   debug: false
   table: null
   inputs: null
+  noinputs: []
   form: null
+  formAction: null
   div: null
   url: null
   activeRow: null
@@ -345,13 +349,18 @@ class InplaceEditor
   init: (table) ->
     self = @
     @form = $(table).data("form")
+    @formAction = $(@form).attr("action")
     @div = $(".inputs", @form)
     @url = $(@form).data("url")
     @inputs = []
+    @noinputs = []
     $("thead tr th", table).each (index, th) ->
       # input = $("input[name='#{el}'] ")
       sel = null
-      if sel = $(th).data("input")
+      if $(th).data("noinput")
+        self.inputs.push undefined
+        self.noinputs.push index
+      else if sel = $(th).data("input")
         self.inputs.push "input[name='#{sel}']"
       else if sel = $(th).data("select")
         self.inputs.push "select[name='#{sel}']"
@@ -359,12 +368,14 @@ class InplaceEditor
         self.inputs.push undefined
       if @debug
         console.log @inputs
+      return true
 
     @table = table
 
     # td.onclick handler
     $(table).on "click", "tbody tr td", (event) ->
-      self.bind($(this).parent(), this, event.target)
+      unless self.isNoinputTD(this)
+        self.bind($(this).parent(), this, event.target)
 
     return self
 
@@ -384,9 +395,15 @@ class InplaceEditor
 
   inputIntoTd: (input, td) ->
     # modify input size, and move into td
-    if input.attr("type") == "text"
-      input.css("width", "98%")
+    console.log "inputIntoTd,", input[0], td[0]
+    cx = td.width() - (input.outerWidth() - input.width())
+    if input.attr("type") == "text" || input.attr("type") == "number"
+      input.attr("size", 1)
+      input.css("width", "#{cx}px")
       input.css("height", "99%")
+    if input.prop("tagName") == "SELECT"
+      input.css("width", "#{cx}px")
+
     td.wrapInner("<span class='hide'>")
     input = input.appendTo(td)
     # patch for jquery simplecolorpicker
@@ -469,7 +486,12 @@ class InplaceEditor
       console.log "ajax submit ", $(@form).attr("action")
       $(@form).submit()
 
+    $(@form).attr("action", @formAction)
     @activeRow = null # reset active row
+
+  isNoinputTD: (el) ->
+    tdIndex = $(el).parent().children().index(el)
+    return @noinputs.indexOf(tdIndex) >= 0
 
   bind: (tr, td, target) ->
     self = @
@@ -549,6 +571,7 @@ copyColsWidth = (src, dest) ->
   ths = $("th", dest)
   $("th", src).each (index, e) ->
     ths.eq(index).width $(e).width()
+    return true
 
 root.onDataTableResizing = (e) ->
   table = $(e.currentTarget)
@@ -585,17 +608,19 @@ root.onDataTableResized = (e) ->
     onDrag: onDataTableResizing
 
 root.setSheetUI = () ->
-  # shrink table 1px per column for colResizable
-  $("table.resizable").each (index,e) ->
-    cols = $("thead>tr:first>th", e).length
-    $(e).width($(e).width() - cols)
+  if false # disable resizable plugin
+    # shrink table 1px per column for colResizable
+    $("table.resizable").each (index,e) ->
+      cols = $("thead>tr:first>th", e).length
+      $(e).width($(e).width() - cols)
+      return true
 
-  $("table.resizable").colResizable
-    liveDrag: true
-    gripInnerHtml: "<div class='grip'></div>"
-    draggingClass: "dragging"
-    onResize: onDataTableResized
-    onDrag: onDataTableResizing
+    $("table.resizable").colResizable
+      liveDrag: true
+      gripInnerHtml: "<div class='grip'></div>"
+      draggingClass: "dragging"
+      onResize: onDataTableResized
+      onDrag: onDataTableResizing
 
   $("div.tabs").tabs(
     activate: (event, ui) ->
@@ -625,6 +650,7 @@ root.setInplaceEditUI = () ->
     editor.init(table)
     table.editor = editor
     root.editor = editor # for debug only
+    return true
 
 # for dataTable's category select elements
 root.onDataTableCategoryChange = (event, el)->
@@ -632,20 +658,25 @@ root.onDataTableCategoryChange = (event, el)->
   if $(el).val() != ""
     window.location = $(el).data("url") + $(el).val()
 
-$ ->
-  console.log "loading common components..."
-  # $.ajaxSettings.dataType = "json"
-  $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
-  $("table.dataTable").dataTable
-    aaSorting: [[ 4, "desc" ]]
+root.dataTableUtil =
+  getOpt: (table) ->
+    opt = @defaultOpt
+    console.log opt
+    if $(table).data("szerorecords")
+      opt.oLanguage.sZeroRecords = $(table).data("szerorecords")
+    if $("table.dataTable").data("sinfoempty")
+      opt.oLanguage.sInfoEmpty = $("table.dataTable").data("sinfoempty")
+    opt.aoColumns = @aoColumns(table)
+    opt
+
+  defaultOpt:
     bJQueryUI: true
+    bAutoWidth: true
     bPaginate: false
     iDisplayLength: -1
     bLengthChange: false
     bScrollAutoCss: true
-    sScrollY: "100px"
-    # "aLengthMenu": [[5, 10, 15, 25, 50, -1], [5, 10, 15, 25, 50, "All"]]
-    #"sScrollXInner": "#{tableWidth}px"
+    sScrollY: "300px"
     #"sScrollY": calcDataTableHeight(), don't use, it will split to two tables
     #"sPaginationType": "full_numbers"
     # length-change, info, pagination, filtering input
@@ -658,7 +689,7 @@ $ ->
     oLanguage:
       sProcessing:   "处理中..."
       sLengthMenu:   "每页显示 _MENU_ 条，"
-      sZeroRecords:  $("table.dataTable").data("szerorecords") || "没有匹配结果"
+      sZeroRecords:  "没有匹配结果"
       # sInfo:         "_START_-_END_，共 _TOTAL_ 条"
       sInfo:         "共_TOTAL_条"
       sInfoEmpty:    $("table.dataTable").data("sinfoempty") || "无结果，请重新搜索"
@@ -671,6 +702,46 @@ $ ->
         sPrevious: "上页"
         sNext:     "下页"
         sLast:     "末页"
+  sortsOpt:
+    a: ["asc", "desc"]
+    d: ["desc", "asc"]
+    A: ["asc" ]
+    D: ["desc" ]
+  aoColumns: (table) ->
+    self = @
+    opts = []
+    $(table).find(">thead>tr>th").each (index, th) ->
+      prop = {}
+      # sort, no-sort
+      if $(th).data("no-sort")
+        prop.bSortable = false
+      else if $(th).data("sort") # "a", "d", "A", "D"
+        prop.asSorting = self.sortsOpt[$(th).data("sort")]
+      else
+        prop.asSorting = self.sortsOpt["a"]
+
+      # searchable
+      if $(th).data("no-search")
+        prop.bSearchable = false
+      else
+        prop.bSearchable = true
+
+      # visible
+      if $(th).data("no-show")
+        prop.bVisible = false
+      else
+        prop.bVisible = true
+      opts.push prop
+      return true
+    return opts
+
+$ ->
+  console.log "loading common components..."
+  # $.ajaxSettings.dataType = "json"
+  $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
+  $("table.dataTable").each (index, table) ->
+    $(table).dataTable dataTableUtil.getOpt(table)
+    return true
 
   # update dataTable filter: custom div inject to dataTable
   $("#dataTable-filter").children().appendTo(".dataTables_wrapper .top #data_filter")
