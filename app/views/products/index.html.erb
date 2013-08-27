@@ -1,8 +1,39 @@
 <h1>Listing products</h1>
 
+<!--
+<table style="background-color: blue; width: 100%;" border=1 cellpadding="0" cellspacing="0">
+  <tr>
+    <td style="background-color: red; padding: 3px;">
+      <div style="margin-right: 1px;padding-right: 1px;">
+          <input type="text" style="width:100%;">
+      </div>
+    </td>
+    <td style="background-color: purple;   padding: 3px;">
+      <div style="margin-right: 3px;">
+        <div style="padding-right: 3px;">
+          <input type="text" style="width:100%;">
+        </div>
+      </div>
+    </td>
+    <td style="background-color: green;   padding: 3px;">
+      <div style="margin-right: 3px;">
+        <div style="padding-right: 3px;">
+          <input type="text" style="width:100%;">
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td width=100px>1</td>
+    <td width=200px>3</td>
+    <td width=300px>5</td>
+  </tr>
+</table>
+-->
+
 <div id="products-list">
-  <%= simple_form_for(product_new, method: "patch", remote: true,
-                      url: "/products/2",
+  <%= simple_form_for(product_new, method: "patch", remote: false,
+                      # url: "/products/2",
                       data: { url: product_path(product_new) },
                       html: { id: "products-form", class: "inplace", },
                      ) do |f| %>
@@ -20,18 +51,18 @@
       <%= f.input :barcode %>
       <% def_color = t("dict.colors.default") %>
       <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
+      <%= f.input :supplier_id, collection: suppliers_all %>
       <%= f.input :mfr_id, collection: mfrs_all %>
-    </div>
-    <div class="actions">
-      <%= f.submit %>
     </div>
     <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
+          <th data-noinput="1" data-no-sort="1"><%= check_box_tag "SELECT_ALL", "1", false, data: { target: 'products[]' }, onclick: "javascript: onClickSelectAll(event, this)" %></th>
+          <th data-noinput="1" data-no-sort="1"><%=tf :status %></th>
           <th data-input="product[code]"><%=tf :code %></th>
           <th data-select="product[brand_id]"><%=tf :brand %></th>
           <th data-input="product[name]"><%=tf :name %></th>
-          <th data-select="product[color]"><%=tf :color %></th>
+          <th data-select="product[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
           <th data-input="product[height]"><%=tf :height %></th>
           <th data-input="product[width]"><%=tf :width %></th>
           <th data-input="product[depth]"><%=tf :depth %></th>
@@ -40,6 +71,7 @@
           <th data-input="product[size_name]"><%=tf :size_name %></th>
           <th data-input="product[case_pack_name]"><%=tf :case_pack_name %></th>
           <th data-input="product[barcode]"><%=tf :barcode %></th>
+          <th data-select="product[supplier_id]"><%=tf :supplier %></th>
           <th data-select="product[mfr_id]"><%=tf :mfr %></th>
         </tr>
       </thead>
@@ -47,22 +79,25 @@
         <% @products.each do |product| %>
           <%= render 'item', product: product,
             brands_hash: rel_hash(brands_all, :id, :name),
+            suppliers_hash: rel_hash(suppliers_all, :id, :name),
             mfrs_hash: rel_hash(mfrs_all, :id, :name) %>
         <% end %>
       </tbody>
     </table>
-  <% end %>
-</div>
-
-<div id="dataTable-filter" class="template">
-  <%= simple_form_for(product_new, remote:true,
-                      html: { id: "products-choose-category" }) do |f| %>
-    <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
-      label: "",
-      input_html: {
-        data: { url: products_path(category: "") },
-        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
-    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+    <div id="dataTable-filter" class="template">
+      <%= simple_form_for(product_new, remote:true,
+                          html: { id: "products-choose-category" }) do |ff| %>
+        <%= ff.input :category_id, collection: categories_all, prompt: "选择品类",
+          label: "",
+          input_html: {
+            data: { url: products_path(category: "") },
+            onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
+        <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+      <% end %>
+      <div class="action">
+        <%= f.submit "Setup..." %>
+      </div>
+    </div>
   <% end %>
 </div>
 

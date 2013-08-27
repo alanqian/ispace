@@ -42,6 +42,7 @@ en:
         name:  "生产商名称"
       product:
         barcode: "条码"
+        supplier: "供应商"
         mfr: "生产商"
         code: "编码"
         id: "编码"
@@ -57,6 +58,7 @@ en:
         brand_id: "品牌"
         mfr_id: "生产商"
         category_id: "品类"
+        status: "销售"
     errors:
       models:
         user:
@@ -91,6 +93,8 @@ en:
       "必卖品": 2
       "可卖品": 1
       "下架商品": 0
+    new_product: "新"
+    on_promotion: "促"
     category: "品类"
     desc: "备注"
     color: "颜色"

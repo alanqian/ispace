@@ -1,7 +1,7 @@
   # replace the modified record
   id = <%= @product.id %>
   new_tr = "<%=j render partial: 'item', locals: { product: @product,
-    brands_hash: @brands_hash, mfrs_hash: @mfrs_hash } %>"
+    brands_hash: @brands_hash, suppliers_hash: @suppliers_hash, mfrs_hash: @mfrs_hash } %>"
   tr = $("#products-list tr[data-id=#{id}]")
   bgColor = tr.css("background-color")
   tr.replaceWith(new_tr)

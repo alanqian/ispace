@@ -343,6 +343,17 @@ table.no-wrap {
 }
 
 // for dataTable
+table.dataTable {
+  td {
+    input[type="text"] {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-box-sizing:border-box;
+      -moz-box-sizing: border-box;
+    }
+  }
+}
 
 div.dataTables_wrapper {
 
@@ -356,6 +367,12 @@ div.dataTables_wrapper {
       float: left;
       padding-top: 0;
       //background-color: red;
+      div {
+        display: inline-block;
+      }
+      div.input {
+        float: left;
+      }
     }
 
     .dataTables_info {

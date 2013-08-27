@@ -36,17 +36,20 @@ class ProductsController < ApplicationController
         "category_id=?", category_id])
       product_new = Product.new(category_id: category_id)
       brands_all = Brand.where(category_id: category_id)
+      suppliers_all = Supplier.where(category_id: category_id)
       mfrs_all = Manufacturer.where(category_id: category_id)
     else
       @products = Product.all
       product_new = Product.new(category_id: category_id)
       brands_all = Brand.all
+      suppliers_all = Supplier.all
       mfrs_all = Manufacturer.all
     end
     render 'index', locals: {
       categories_all: Category.all,
       brands_all: brands_all,
       mfrs_all: mfrs_all,
+      suppliers_all: suppliers_all,
       product_new: product_new,
     }
   end
@@ -62,6 +65,7 @@ class ProductsController < ApplicationController
     render 'new', locals: {
       categories_all: Category.all,
       brands_all: Brand.select("category_id, id, name"),
+      suppliers_all: Supplier.select("category_id, id, name"),
       mfrs_all: Manufacturer.select("category_id, id, name")
     }
   end
@@ -88,6 +92,13 @@ class ProductsController < ApplicationController
     end
   end
 
+  # PATCH/PUT /products/
+  def update_ex
+    products = params[:products]
+    logger.debug "#{products.class}, #{products}, #{product_attr_params}"
+    Product.where(code: products).update_all(product_attr_params)
+  end
+
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json
   def update
@@ -97,6 +108,7 @@ class ProductsController < ApplicationController
         format.json { head :no_content }
         format.js {
           @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+          @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
           @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
         }
       else
@@ -104,6 +116,7 @@ class ProductsController < ApplicationController
         format.json { render json: @product.errors, status: :unprocessable_entity }
         format.js {
           @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+          @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
           @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
         }
       end
@@ -128,6 +141,10 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:category_id, :brand_id, :mfr_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :bar_code, :color)
+      params.require(:product).permit(:category_id, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :bar_code, :color)
+    end
+
+    def product_attr_params
+      params.require(:product).permit(:sale_type, :new_product, :on_promotion)
     end
 end
