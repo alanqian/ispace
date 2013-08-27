@@ -658,6 +658,30 @@ root.onDataTableCategoryChange = (event, el)->
   if $(el).val() != ""
     window.location = $(el).data("url") + $(el).val()
 
+root.onClickSelectAll = (e, el) ->
+  target = $(el).data("target")
+  if target
+    console.log "selectAll:", $(el).prop("checked")
+    if $(el).prop("checked")
+      old_checks = {}
+      $("input[name='#{target}']").each (index, el) ->
+        old_checks[$(el).attr("id")] = $(el).prop("checked")
+        return true
+      $(el).data("old_checks", old_checks)
+      $("input[name='#{target}']").prop("checked", true)
+    else
+      old_checks = $(el).data("old_checks")
+      if old_checks
+        $("input[name='#{target}']").each (index, el) ->
+          id = $(el).attr("id")
+          $(el).prop("checked", old_checks[id]) if old_checks.hasOwnProperty(id)
+      $(el).removeData("old_checks")
+
+root.onClickSelectOne = (e, el) ->
+  select_all = $(el).data("select-all")
+  if select_all && !$(el).prop("checked")
+    $(select_all).prop("checked", false)
+
 root.dataTableUtil =
   getOpt: (table) ->
     opt = @defaultOpt

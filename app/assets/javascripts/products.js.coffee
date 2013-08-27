@@ -20,5 +20,5 @@ root.onProductCategoryChange = (event, el) ->
 
 $ ->
   console.log "product start"
-  $("select#product_color").simplecolorpicker({picker: true})
+  $("form#new_product select#product_color").simplecolorpicker({picker: true})
 
