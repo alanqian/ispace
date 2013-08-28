@@ -335,6 +335,43 @@ root.wizardProc = (jq_sel) ->
       console.log "close wizard dialog, then destroy"
       $("div#import-wizard").dialog('destroy')
 
+root.refreshDataTr = (trSel, html, highlightColor) ->
+  tr = $(trSel)
+  clazz = tr.attr("class")
+  bgColor = tr.css("background-color")
+  tr.replaceWith(html)
+  tr = $(trSel).attr("class", clazz)
+
+  if highlightColor
+    # highlight the modified row
+    tr.css({'background-color': highlightColor}).animate({'background-color': bgColor}, 1200)
+
+    # remove the background-color style
+    clearStyle = () ->
+      $(trSel).css({'background-color': ''})
+    setTimeout clearStyle, 1203
+
+root.refreshDataTrs = (trSel, htmlDict, highlightColor) ->
+  for id, html of htmlDict
+    # replace the modified record
+    sel = trSel.replace("{id}", id)
+    tr = $(sel)
+    clazz = tr.attr("class")
+    bgColor = tr.css("background-color")
+    tr.replaceWith(html)
+    tr = $(sel).attr("class", clazz)
+    # highlight the modified record
+    if highlightColor
+      tr.css({'background-color': 'yellow'}).animate({'background-color': bgColor}, 1200)
+
+  if highlightColor
+    # remove the background-color style
+    clearStyle = () ->
+      for id,_ of htmlDict
+        sel = trSel.replace("{id}", id)
+        $(sel).css({'background-color': ''})
+    setTimeout clearStyle, 1203
+
 class InplaceEditor
   debug: false
   table: null

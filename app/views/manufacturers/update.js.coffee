@@ -1,14 +1,13 @@
   # replace the modified record
   id = <%= @manufacturer.id %>
   new_tr = "<%=j render partial: 'item', locals: { manufacturer: @manufacturer } %>"
-  tr = $("#manufacturers-list tr[data-id=#{id}]")
-  bgColor = tr.css("background-color")
-  tr.replaceWith(new_tr)
-  tr = $("#manufacturers-list tr[data-id=#{id}]")
+  sel = "#manufacturers-list tr[data-id=#{id}]"
 
 <% if @manufacturer.errors.any? %>
   # show errors
+  console.log "updating error!"
+  refreshDataTr sel, new_tr, 'red'
 <% else %>
-  # highlight the modified record
-  tr.css({'background-color': 'yellow'}).animate({'background-color': bgColor}, 1500)
+  console.log "update ok."
+  refreshDataTr sel, new_tr, 'green'
 <% end %>
