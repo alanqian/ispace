@@ -2,7 +2,6 @@
 
 <div id="manufacturers-list">
   <%= simple_form_for(manufacturer_new, method: "patch", remote: true,
-                      url: "/manufacturers/2",
                       data: { url: manufacturer_path(manufacturer_new) },
                       html: { id: "manufacturers-form", class: "inplace", },
                      ) do |f| %>
@@ -19,7 +18,7 @@
       <thead>
         <tr>
           <th class="name" data-input="manufacturer[name]"><%=tf :name %></th>
-          <th class="color" data-select="manufacturer[color]"><%=tf :color %></th>
+          <th class="color" data-select="manufacturer[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
           <th class="desc" data-input="manufacturer[desc]"><%=tf :desc %></th>
         </tr>
       </thead>
@@ -34,6 +33,7 @@
 
 <div id="dataTable-filter" class="template">
   <%= simple_form_for(manufacturer_new, remote:true,
+                      url: "#",
                       html: { id: "manufacturers-choose-category" }) do |f| %>
     <%= f.input :category_id, collection: categories, prompt: "选择品类",
       label: "",

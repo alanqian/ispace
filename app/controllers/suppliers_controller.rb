@@ -20,15 +20,10 @@ class SuppliersController < ApplicationController
   # GET /suppliers
   # GET /suppliers.json
   def index
-    category_id = params[:category]
-    if category_id
-      @suppliers = Supplier.where([
-        "category_id=?", category_id])
-      supplier_new = Supplier.new(category_id: category_id)
-    else
-      @suppliers = []
-      supplier_new = Supplier.new()
-    end
+    category_id = params[:category] || Category.default_id
+    @suppliers = Supplier.where([
+      "category_id=?", category_id])
+    supplier_new = Supplier.new(category_id: category_id)
     render 'index', locals: { categories: Category.all, supplier_new: supplier_new }
   end
 
