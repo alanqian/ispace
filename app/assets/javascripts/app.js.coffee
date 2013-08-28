@@ -400,7 +400,6 @@ class InplaceEditor
     if input.attr("type") == "text" || input.attr("type") == "number"
       input.attr("size", 1)
       input.css("width", "#{cx}px")
-      input.css("height", "99%")
     if input.prop("tagName") == "SELECT"
       input.css("width", "#{cx}px")
 
