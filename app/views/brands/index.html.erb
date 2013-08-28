@@ -7,8 +7,7 @@
                      ) do |f| %>
     <div class="inputs">
       <%= f.input :name %>
-      <% def_color = t("dict.colors.default") %>
-      <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
+      <%= f.input :color, as: :color %>
     </div>
     <div class="actions">
       <%= f.submit %>

@@ -18,8 +18,7 @@
       <%= f.input :size_name %>
       <%= f.input :case_pack_name %>
       <%= f.input :barcode %>
-      <% def_color = t("dict.colors.default") %>
-      <%= f.input :color, collection: t("dict.colors"), selected: def_color, input_html: { class: 'colorpicker' } %>
+      <%= f.input :color, as: :color %>
       <%= f.input :supplier_id, collection: suppliers_all %>
       <%= f.input :mfr_id, collection: mfrs_all %>
     </div>
