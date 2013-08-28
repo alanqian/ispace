@@ -54,17 +54,15 @@
       </tbody>
     </table>
     <div id="dataTable-filter">
-      <%= simple_form_for(product_new, remote:true,
-                          html: { id: "products-choose-category" }) do |ff| %>
-        <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
-        <%= ff.input :category_id, collection: categories_all, prompt: "选择品类",
+      <div id="products-choose-category" >
+        <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
           label: "",
           input_html: {
             data: { url: products_path(category: "") },
             onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
-        <%= ff.submit "Sales...",
+        <%= f.submit "Sales...",
             onclick: "javascript: onClickSales(event, this);" %>
-      <% end %>
+      </div>
       <div id="setup-place"></div>
     </div>
   <% end %>
