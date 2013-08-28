@@ -30,21 +30,14 @@ class ProductsController < ApplicationController
   def index
     @store_id = 1
     @user_id = 1
-    category_id = params[:category]
-    if category_id
-      @products = Product.where([
-        "category_id=?", category_id])
-      product_new = Product.new(category_id: category_id)
-      brands_all = Brand.where(category_id: category_id)
-      suppliers_all = Supplier.where(category_id: category_id)
-      mfrs_all = Manufacturer.where(category_id: category_id)
-    else
-      @products = Product.all
-      product_new = Product.new(category_id: category_id)
-      brands_all = Brand.all
-      suppliers_all = Supplier.all
-      mfrs_all = Manufacturer.all
-    end
+    category_id = params[:category] || Category.default_id
+
+    @products = Product.where(["category_id=?", category_id])
+    product_new = Product.new(category_id: category_id)
+    brands_all = Brand.where(category_id: category_id)
+    suppliers_all = Supplier.where(category_id: category_id)
+    mfrs_all = Manufacturer.where(category_id: category_id)
+
     render 'index', locals: {
       categories_all: Category.all,
       brands_all: brands_all,
@@ -94,9 +87,26 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/
   def update_ex
-    products = params[:products]
-    logger.debug "#{products.class}, #{products}, #{product_attr_params}"
-    Product.where(code: products).update_all(product_attr_params)
+    @products = params[:products]
+    if @products.any?
+      logger.debug "#{@products}, #{product_attr_params}"
+      products = Product.where(code: @products).update_all(product_attr_params)
+      respond_to do |format|
+        format.html {
+          redirect_to products_url, notice:
+            '#{products.size} products were successfully updated.'
+        }
+        format.js {
+          set_products_ex_js
+        }
+      end
+    else
+      logger.error "no product has been selected!"
+      respond_to do |format|
+        format.html { redirect_to products_url, notice: 'No product has been selected!' }
+        format.js
+      end
+    end
   end
 
   # PATCH/PUT /products/1
@@ -107,17 +117,15 @@ class ProductsController < ApplicationController
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
         format.json { head :no_content }
         format.js {
-          @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
-          @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
-          @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+          logger.debug "updated, ctg:#{@product.category_id}, brand: #{@product.brand_id}"
+          set_product_update_js
         }
       else
         format.html { render action: 'edit' }
         format.json { render json: @product.errors, status: :unprocessable_entity }
         format.js {
-          @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
-          @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
-          @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+          set_product_update_js
+          logger.debug "update failed, ctg:#{@product.category_id}, brand: #{@product.brand_id}"
         }
       end
     end
@@ -139,9 +147,23 @@ class ProductsController < ApplicationController
       @product = Product.find(params[:id])
     end
 
+    def set_products_ex_js
+      @product = Product.find(@products.first)
+      @products_hash = Hash[Product.where(code: @products).map {|r| [r.id, r]} ]
+      @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+      @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
+      @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+    end
+
+    def set_product_update_js
+      @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
+      @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
+      @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:category_id, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :bar_code, :color)
+      params.require(:product).permit(:category_id, :code, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :barcode, :color)
     end
 
     def product_attr_params

@@ -1,38 +1,7 @@
 <h1>Listing products</h1>
 
-<!--
-<table style="background-color: blue; width: 100%;" border=1 cellpadding="0" cellspacing="0">
-  <tr>
-    <td style="background-color: red; padding: 3px;">
-      <div style="margin-right: 1px;padding-right: 1px;">
-          <input type="text" style="width:100%;">
-      </div>
-    </td>
-    <td style="background-color: purple;   padding: 3px;">
-      <div style="margin-right: 3px;">
-        <div style="padding-right: 3px;">
-          <input type="text" style="width:100%;">
-        </div>
-      </div>
-    </td>
-    <td style="background-color: green;   padding: 3px;">
-      <div style="margin-right: 3px;">
-        <div style="padding-right: 3px;">
-          <input type="text" style="width:100%;">
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td width=100px>1</td>
-    <td width=200px>3</td>
-    <td width=300px>5</td>
-  </tr>
-</table>
--->
-
 <div id="products-list">
-  <%= simple_form_for(product_new, method: "patch", remote: false,
+  <%= simple_form_for(product_new, method: "patch", remote: true,
                       # url: "/products/2",
                       data: { url: product_path(product_new) },
                       html: { id: "products-form", class: "inplace", },
@@ -84,23 +53,28 @@
         <% end %>
       </tbody>
     </table>
-    <div id="dataTable-filter" class="template">
+    <div id="dataTable-filter">
       <%= simple_form_for(product_new, remote:true,
                           html: { id: "products-choose-category" }) do |ff| %>
+        <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
         <%= ff.input :category_id, collection: categories_all, prompt: "选择品类",
           label: "",
           input_html: {
             data: { url: products_path(category: "") },
             onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
-        <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+        <%= ff.submit "Sales...",
+            onclick: "javascript: onClickSales(event, this);" %>
       <% end %>
-      <div class="action">
-        <%= f.submit "Setup..." %>
-      </div>
+      <div id="setup-place"></div>
     </div>
   <% end %>
+</div>
+
+<div class="setup-container">
+  <%= render 'sale_type', product_new: product_new, detail_type: true %>
 </div>
 
 <hr/>
 
 <%= link_to 'New Product', new_product_path %>
+

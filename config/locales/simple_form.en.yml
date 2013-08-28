@@ -32,6 +32,10 @@ en:
 
       brand:
 
+      product:
+        new_product: "新品"
+        on_promotion: "促销"
+
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:

@@ -542,6 +542,30 @@ div.tabs-bottom {
   }
 }
 
+div.setup-container {
+  position: relative;
+  display: block;
+
+  div.float-form {
+    position: absolute;
+    display: block;
+    width: 16em;
+    background: #eeeeee;
+    border: 1px solid black;
+    padding: 4px 6px;
+    z-index: 100;
+    top: 0.5em;
+    left: -1.2em;
+
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    box-shadow: 2px 2px 6px #666;
+    -webkit-box-shadow: 2px 2px 6px #666;
+    -moz-box-shadow: 2px 2px 6px #666;
+  }
+}
+
 .locale {
   float: right;
   margin: -0.25em 0.1em;
