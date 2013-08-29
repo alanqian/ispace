@@ -14,7 +14,7 @@ one:
   price_level: MyString
   size_name: MyString
   case_pack_name: MyString
-  bar_code: MyString
+  barcode: MyString
   color: MyString
 
 two:
@@ -31,5 +31,5 @@ two:
   price_level: MyString
   size_name: MyString
   case_pack_name: MyString
-  bar_code: MyString
+  barcode: MyString
   color: MyString

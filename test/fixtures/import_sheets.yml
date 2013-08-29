@@ -8,7 +8,6 @@ one:
   comment: MyString
   ext: MyString
   sheets:
-  selected: MyString
   mapping:
 
 two:
@@ -17,7 +16,6 @@ two:
   step: 1
   comment: MyString
   filename: MyString
-  sheets:
   ext: MyString
-  selected: MyString
+  sheets:
   mapping:

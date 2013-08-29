@@ -9,7 +9,7 @@ one:
   new_product: false
   on_promotion: false
   force_on_shelf: false
-  forbid_on_shelf: false
+  force_off_shelf: false
   max_facing: 1
   min_facing: 1
   rcmd_facing: 1
@@ -31,7 +31,7 @@ two:
   new_product: false
   on_promotion: false
   force_on_shelf: false
-  forbid_on_shelf: false
+  force_off_shelf: false
   max_facing: 1
   min_facing: 1
   rcmd_facing: 1
