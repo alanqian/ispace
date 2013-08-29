@@ -394,13 +394,11 @@ class InplaceEditor
     $("thead tr th", table).each (index, th) ->
       # input = $("input[name='#{el}'] ")
       sel = null
-      if $(th).data("noinput")
+      if $(th).data("no-input")
         self.inputs.push undefined
         self.noinputs.push index
       else if sel = $(th).data("input")
-        self.inputs.push "input[name='#{sel}']"
-      else if sel = $(th).data("select")
-        self.inputs.push "select[name='#{sel}']"
+        self.inputs.push ":input[name='#{sel}']"
       else
         self.inputs.push undefined
       if @debug

@@ -25,22 +25,22 @@
     <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th data-noinput="1" data-no-sort="1"><%= check_box_tag "SELECT_ALL", "1", false, data: { target: 'products[]' }, onclick: "javascript: onClickSelectAll(event, this)" %></th>
-          <th data-noinput="1" data-no-sort="1"><%=tf :status %></th>
+          <th data-no-input="1" data-no-sort="1"><%= check_box_tag "SELECT_ALL", "1", false, data: { target: 'products[]' }, onclick: "javascript: onClickSelectAll(event, this)" %></th>
+          <th data-no-input="1" data-no-sort="1"><%=tf :status %></th>
           <th data-input="product[code]"><%=tf :code %></th>
-          <th data-select="product[brand_id]"><%=tf :brand %></th>
+          <th data-input="product[brand_id]"><%=tf :brand %></th>
           <th data-input="product[name]"><%=tf :name %></th>
-          <th data-select="product[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
+          <th data-input="product[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
           <th data-input="product[height]"><%=tf :height %></th>
           <th data-input="product[width]"><%=tf :width %></th>
           <th data-input="product[depth]"><%=tf :depth %></th>
           <th data-input="product[weight]"><%=tf :weight %></th>
-          <th data-select="product[price_level]"><%=tf :price_level %></th>
+          <th data-input="product[price_level]"><%=tf :price_level %></th>
           <th data-input="product[size_name]"><%=tf :size_name %></th>
           <th data-input="product[case_pack_name]"><%=tf :case_pack_name %></th>
           <th data-input="product[barcode]"><%=tf :barcode %></th>
-          <th data-select="product[supplier_id]"><%=tf :supplier %></th>
-          <th data-select="product[mfr_id]"><%=tf :mfr %></th>
+          <th data-input="product[supplier_id]"><%=tf :supplier %></th>
+          <th data-input="product[mfr_id]"><%=tf :mfr %></th>
         </tr>
       </thead>
       <tbody>
