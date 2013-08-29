@@ -1,8 +1,5 @@
 <tr data-id="<%= product.id %>">
-  <td><%= check_box_tag "products[]", product.code, false,
-    id: "product_#{product.code}",
-    onclick: "javscript:onClickSelectOne(event, this)",
-    data: { select_all: "#SELECT_ALL" } %></td>
+  <td><%= select_one_check product.code, "products[]" %></td>
   <td><%= sales_status(product) %></td>
   <td><%= product.code %></td>
   <td data-val="<%= product.brand_id %>"><%= brands_hash[product.brand_id] %></td>

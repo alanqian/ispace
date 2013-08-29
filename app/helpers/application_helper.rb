@@ -30,4 +30,51 @@ module ApplicationHelper
     end
     hash
   end
+
+  def select_one_check(id, sel_target, opts = {})
+    opts[:onclick] ||= "javascript: onClickSelectOne(event, this);"
+    opts[:data] ||= {}
+    opts[:id] ||= "#{sel_target.gsub(/s?\[\]/, "_")}#{id}"
+    opts[:data][:select_all] ||= "#SELECT_ALL"
+    check_box_tag(sel_target, id, false, opts)
+  end
+
+  def select_all_check(sel_target, opts = {})
+    opts[:onclick] ||= "javascript: onClickSelectAll(event, this);"
+    opts[:data] ||= {}
+    opts[:data][:target] ||= sel_target
+    check_box_tag(:SELECT_ALL, "1", false, opts)
+  end
+
+  # :field                w/ default input, sort, search
+  #       <th data-input="product[code]"><%=tf :code %></th>
+  #  value                input:nil, w/ default sort, search
+  #       <th data-noinput="1" data-no-sort="1" data-no-search="1"><%=tf "status" %></th>
+  # :select_all, target, opts   no-input, no-sort, no-search
+  #       <th data-noinput="1" data-no-sort="1"><%= select_all_check 'products[]', opts %></th>
+  # :field,  input:?, sort:"d|a|false", search:false
+  #       see :field
+  #  value,  input:?, sort:, search:, show:
+  #       see :field
+  def data_th_list(object_sym, data_array)
+    object = object_sym.to_s.downcase
+    data_array.each do |col|
+      if col.is_a?(Array)
+        # w/ opts
+        field = col[0]
+        opts = col[1]
+        if col == :select_all
+          opts = { no_sort: "1", no_search: "1"}
+        end
+      else
+        # w/o opts
+        field = col
+        if col.is_a?(Symbol)
+          opts = { input: ""}
+        else
+          opts = { no_sort: "1", no_search: "1"}
+        end
+      end
+    end
+  end
 end

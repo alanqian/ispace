@@ -25,7 +25,7 @@
     <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th data-no-input="1" data-no-sort="1"><%= check_box_tag "SELECT_ALL", "1", false, data: { target: 'products[]' }, onclick: "javascript: onClickSelectAll(event, this)" %></th>
+          <th data-no-input="1" data-no-sort="1"><%= select_all_check 'products[]' %></th>
           <th data-no-input="1" data-no-sort="1"><%=tf :status %></th>
           <th data-input="product[code]"><%=tf :code %></th>
           <th data-input="product[brand_id]"><%=tf :brand %></th>
