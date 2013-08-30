@@ -5,7 +5,7 @@ class CreateCategories < ActiveRecord::Migration
       t.string :desc
 
       t.timestamps
+      t.index :name, unique: true
     end
-    execute "ALTER TABLE categories ADD PRIMARY KEY (name);"
   end
 end

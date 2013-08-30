@@ -21,11 +21,11 @@ class CreateProducts < ActiveRecord::Migration
       t.integer :discard_by
 
       t.timestamps
+      t.index :code, unique: true
       t.index [:name, :category_id], unique: false
       t.index :import_id, unique: false
       t.index :category_id
       t.index :discard_from, unique: false
     end
-    execute "ALTER TABLE products ADD PRIMARY KEY (code);"
   end
 end

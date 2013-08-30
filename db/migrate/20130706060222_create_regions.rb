@@ -6,9 +6,8 @@ class CreateRegions < ActiveRecord::Migration
       t.string :desc
 
       t.timestamps
-
+      t.index :code, unique: true
       t.index :name
     end
-    execute "ALTER TABLE regions ADD PRIMARY KEY (code);"
   end
 end

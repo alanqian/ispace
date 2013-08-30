@@ -49,11 +49,14 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   add_index "brands", ["import_id"], name: "index_brands_on_import_id", using: :btree
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
-  create_table "categories", primary_key: "name", force: true do |t|
+  create_table "categories", id: false, force: true do |t|
+    t.string   "name",       null: false
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
 
   create_table "fixture_items", force: true do |t|
     t.integer  "fixture_id"
@@ -202,7 +205,8 @@ ActiveRecord::Schema.define(version: 20130826023421) do
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
-  create_table "products", primary_key: "code", force: true do |t|
+  create_table "products", id: false, force: true do |t|
+    t.string   "code",                                                    null: false
     t.string   "category_id"
     t.integer  "brand_id"
     t.integer  "mfr_id"
@@ -229,6 +233,7 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
+  add_index "products", ["code"], name: "index_products_on_code", unique: true, using: :btree
   add_index "products", ["discard_from"], name: "index_products_on_discard_from", using: :btree
   add_index "products", ["import_id"], name: "index_products_on_import_id", using: :btree
   add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", using: :btree
@@ -252,13 +257,15 @@ ActiveRecord::Schema.define(version: 20130826023421) do
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
 
-  create_table "regions", primary_key: "code", force: true do |t|
+  create_table "regions", id: false, force: true do |t|
+    t.string   "code",       null: false
     t.string   "name",       null: false
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
 
   create_table "stores", force: true do |t|
