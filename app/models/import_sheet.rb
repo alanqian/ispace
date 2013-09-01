@@ -175,6 +175,7 @@ class ImportSheet < ActiveRecord::Base
           mfr_id: params[:manufacturer][:id],
           user_id: self.user_id,
           import_id: self.id,
+          supplier_id: params[:supplier][:id],
         })
         strip_dot_zero(params, :product)
 
@@ -410,6 +411,9 @@ class ImportSheet < ActiveRecord::Base
       case_pack_name: "包装",
       bar_code: "条形码",
       color: "颜色",
+      sale_type: "商品类型",
+      new_product: "新品",
+      on_promotion: "促销",
     },
 
     brand: {
@@ -418,10 +422,8 @@ class ImportSheet < ActiveRecord::Base
 
     merchandise: {
       price: "价格",
-      new_product: "新品",
-      on_promotion: "促销",
       force_on_shelf: "强制上架",
-      forbid_on_shelf: "强制下架",
+      force_off_shelf: "强制下架",
       max_facing: "最大排面数",
       min_facing: "最小排面数",
       rcmd_facing: "推荐排面数",
