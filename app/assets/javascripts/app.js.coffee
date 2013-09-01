@@ -743,6 +743,8 @@ root.dataTableUtil =
     bLengthChange: false
     bScrollAutoCss: true
     sScrollY: "300px"
+    sScrollX: "100%"
+    bScrollCollapse: true
     #"sScrollY": calcDataTableHeight(), don't use, it will split to two tables
     #"sPaginationType": "full_numbers"
     # length-change, info, pagination, filtering input
@@ -806,7 +808,16 @@ $ ->
   # $.ajaxSettings.dataType = "json"
   $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
   $("table.dataTable").each (index, table) ->
-    $(table).dataTable dataTableUtil.getOpt(table)
+    oTable = $(table).dataTable dataTableUtil.getOpt(table)
+    $(table).data("dataTable", oTable)
+    if oTable.length > 0
+      oTable.fnAdjustColumnSizing()
+    fixedColumns = $(table).data("left-columns")
+    if fixedColumns && fixedColumns > 0
+      new FixedColumns(oTable,
+        iLeftColumns: fixedColumns,
+        iLeftWidth: $(table).data("left-width")
+      )
     return true
 
   # update dataTable filter: custom div inject to dataTable
