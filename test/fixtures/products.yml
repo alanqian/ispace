@@ -1,35 +1,65 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  category_id: ctg
+  category_id: ctg1
   brand_id: 12
   mfr_id: 1
   user_id: 1
-  code: C22222
+  code: c111111
   name: product1
   height: 9.99
   width: 9.99
   depth: 9.99
   weight: 9.99
-  price_level: MyString
-  size_name: MyString
-  case_pack_name: MyString
-  barcode: MyString
-  color: MyString
+  price_level: A
+  size_name: 180g
+  case_pack_name: 100g
+  barcode: 182-122-44579
+  color: "#111111"
+  supplier_id: 12
+  sale_type: 1
+  new_product: true
+  on_promotion: true
+
 
 two:
-  category_id: ctg
+  category_id: ctg1
   brand_id: 11
   mfr_id: 1
   user_id: 1
-  code: C21234
+  code: C111112
   name: product2
   height: 9.99
   width: 9.99
   depth: 9.99
   weight: 9.99
-  price_level: MyString
-  size_name: MyString
-  case_pack_name: MyString
-  barcode: MyString
-  color: MyString
+  price_level: A
+  size_name: 180g
+  case_pack_name: 100g
+  barcode: 182-122-44579
+  color: "#222222"
+  supplier_id: 12
+  sale_type: 1
+  new_product: false
+  on_promotion: true
+
+new:
+  category_id: ctg1
+  brand_id: 11
+  mfr_id: 1
+  user_id: 1
+  code: N00001
+  name: product_new
+  height: 9.99
+  width: 9.99
+  depth: 9.99
+  weight: 9.99
+  price_level: B
+  size_name: 180g
+  case_pack_name: 100g
+  barcode: 182-122-44579
+  color: "#222222"
+  supplier_id: 12
+  sale_type: 1
+  new_product: true
+  on_promotion: true

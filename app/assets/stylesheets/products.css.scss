@@ -2,6 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+//>> BEGIN test
+div#products-list {
+  display: block;
+  width: 1000px;
+  table#products-table {
+    width: 1000px;
+
+    td {
+      max-width: 10em;
+    }
+  }
+}
+//>> END test
+
 #product-tabs {
   .ui-widget-header {
     height:13px;

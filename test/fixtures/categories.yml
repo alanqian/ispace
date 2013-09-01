@@ -2,8 +2,8 @@
 
 one:
   name: ctg1
-  desc: MyString
+  desc: Category1
 
 two:
   name: ctg2
-  desc: MyString
+  desc: Category2

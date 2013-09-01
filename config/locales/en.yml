@@ -90,9 +90,9 @@ en:
       "中": "b"
       "低": "c"
     sale_type:
-      2: "必卖品"
+      0: "必卖品"
       1: "可卖品"
-      0: "下架商品"
+      2: "下架商品"
     new_product: "新"
     on_promotion: "促"
     category: "品类"

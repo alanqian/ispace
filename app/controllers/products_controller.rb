@@ -65,6 +65,12 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
+    render 'edit', locals: {
+      categories_all: Category.all,
+      brands_all: Brand.select("category_id, id, name"),
+      suppliers_all: Supplier.select("category_id, id, name"),
+      mfrs_all: Manufacturer.select("category_id, id, name")
+    }
   end
 
   # POST /products

@@ -25,22 +25,15 @@
     <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th data-no-input="1" data-no-sort="1"><%= select_all_check 'products[]' %></th>
-          <th data-no-input="1" data-no-sort="1"><%=tf :status %></th>
-          <th data-input="product[code]"><%=tf :code %></th>
-          <th data-input="product[brand_id]"><%=tf :brand %></th>
-          <th data-input="product[name]"><%=tf :name %></th>
-          <th data-input="product[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
-          <th data-input="product[height]"><%=tf :height %></th>
-          <th data-input="product[width]"><%=tf :width %></th>
-          <th data-input="product[depth]"><%=tf :depth %></th>
-          <th data-input="product[weight]"><%=tf :weight %></th>
-          <th data-input="product[price_level]"><%=tf :price_level %></th>
-          <th data-input="product[size_name]"><%=tf :size_name %></th>
-          <th data-input="product[case_pack_name]"><%=tf :case_pack_name %></th>
-          <th data-input="product[barcode]"><%=tf :barcode %></th>
-          <th data-input="product[supplier_id]"><%=tf :supplier %></th>
-          <th data-input="product[mfr_id]"><%=tf :mfr %></th>
+          <%= data_th_list(:product,
+            [:select_all, "products[]"],
+            [:status, input: false, sort: false],
+            :code,
+            :brand_id,
+            :name,
+            [:color, sort: false, search: false],
+            :height, :width, :depth, :weight, :price_level,
+            :size_name, :case_pack_name, :barcode, :supplier_id, :mfr_id) %>
         </tr>
       </thead>
       <tbody>

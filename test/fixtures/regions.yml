@@ -1,11 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  code: MyString
-  name: MyString
-  desc: MyString
+  code: "cn"
+  name: "中国"
+  desc: "中国总部"
 
 two:
-  code: MyString
-  name: MyString
-  desc: MyString
+  code: "cn.north"
+  name: "华北区"
+  desc: "华北区，含内蒙"
+
+three:
+  code: "cn.north.bj"
+  name: "北京"
+  desc: "北京，含各郊县"

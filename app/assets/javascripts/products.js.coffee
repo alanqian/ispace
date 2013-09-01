@@ -5,9 +5,7 @@ root = exports ? this
 
 root.onProductCategoryChange = (event, el) ->
   form = $(el).closest("form.product")
-  selDatas =
-    "select#product_brand_id": "brand-id",
-    "select#product_mfr_id": "mfr-id",
+  selDatas = $(el).data("selects")
   for sel of selDatas
     select = form.find(sel)
     coll = $(el).data(selDatas[sel])[$(el).val()]

@@ -1,18 +1,16 @@
+
 <tr data-id="<%= product.id %>">
-  <td><%= select_one_check product.code, "products[]" %></td>
-  <td><%= sales_status(product) %></td>
-  <td><%= product.code %></td>
-  <td data-val="<%= product.brand_id %>"><%= brands_hash[product.brand_id] %></td>
-  <td><%= product.name %></td>
-  <td data-val="<%= product.color %>"><%= color_tag product.color %></td>
-  <td><%= product.height %></td>
-  <td><%= product.width %></td>
-  <td><%= product.depth %></td>
-  <td><%= product.weight %></td>
-  <td data-val="<%= product.price_level %>"><%= t("dict.prices").invert()[product.price_level] %></td>
-  <td><%= product.size_name %></td>
-  <td><%= product.case_pack_name %></td>
-  <td><%= product.barcode %></td>
-  <td data-val="<%= product.supplier_id %>"><%= suppliers_hash[product.supplier_id] %></td>
-  <td data-val="<%= product.mfr_id %>"><%= mfrs_hash[product.mfr_id] %></td>
+  <%= data_td_list product,
+    [:select_one, :code, "products[]"],
+    sales_status(product),
+    :code,
+    [:brand_id, collection: brands_hash],
+    :name,
+    [:color, color_tag(product.color)],
+    :height, :width, :depth, :weight,
+    [:price_level, collection: t("dict.colors").invert()],
+    :size_name, :case_pack_name, :barcode,
+    [:supplier_id, collection: suppliers_hash],
+    [:mfr_id, collection: mfrs_hash]
+  %>
 </tr>
