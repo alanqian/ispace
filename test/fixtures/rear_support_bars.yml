@@ -2,24 +2,26 @@
 
 one:
   bay_id: 1
-  level: 1
-  name: MyString
+  name: bar1
   height: 9.99
   bar_depth: 9.99
   bar_thick: 9.99
   from_back: 9.99
   hook_length: 9.99
+  from_base: 2.22
   notch_num: 1
   color: MyString
+  bar_slope: 20.0
 
 two:
   bay_id: 1
-  level: 1
-  name: MyString
+  name: bar2
   height: 9.99
   bar_depth: 9.99
   bar_thick: 9.99
   from_back: 9.99
   hook_length: 9.99
+  from_base: 2.22
   notch_num: 1
   color: MyString
+  bar_slope: 30.0

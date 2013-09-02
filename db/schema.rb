@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130710030620) do
+ActiveRecord::Schema.define(version: 20130826023421) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -34,11 +34,29 @@ ActiveRecord::Schema.define(version: 20130710030620) do
     t.decimal  "cube",          precision: 10, scale: 0
   end
 
-  create_table "categories", force: true do |t|
+  create_table "brands", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "color"
+    t.integer  "import_id",    default: -1
+    t.datetime "discard_from"
+    t.integer  "discard_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "brands", ["discard_from"], name: "index_brands_on_discard_from", using: :btree
+  add_index "brands", ["import_id"], name: "index_brands_on_import_id", using: :btree
+  add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
+
+  create_table "categories", id: false, force: true do |t|
+    t.string   "name",       null: false
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
 
   create_table "fixture_items", force: true do |t|
     t.integer  "fixture_id"
@@ -82,6 +100,72 @@ ActiveRecord::Schema.define(version: 20130710030620) do
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
 
+  create_table "import_sheets", force: true do |t|
+    t.string   "comment"
+    t.string   "filename"
+    t.string   "ext"
+    t.text     "sheets",      limit: 2147483647
+    t.string   "sel_sheets"
+    t.string   "category_id"
+    t.text     "mapping",     limit: 16777215
+    t.string   "imported"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.integer  "step",                           default: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "manufacturers", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "desc"
+    t.string   "color"
+    t.integer  "import_id",    default: -1
+    t.datetime "discard_from"
+    t.integer  "discard_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "manufacturers", ["discard_from"], name: "index_manufacturers_on_discard_from", using: :btree
+  add_index "manufacturers", ["import_id"], name: "index_manufacturers_on_import_id", using: :btree
+  add_index "manufacturers", ["name", "category_id"], name: "index_manufacturers_on_name_and_category_id", unique: true, using: :btree
+
+  create_table "merchandises", force: true do |t|
+    t.string   "product_id"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.integer  "import_id",                                default: -1
+    t.integer  "supplier_id"
+    t.decimal  "price",           precision: 10, scale: 0
+    t.boolean  "new_product"
+    t.boolean  "on_promotion"
+    t.boolean  "force_on_shelf"
+    t.boolean  "force_off_shelf"
+    t.integer  "max_facing"
+    t.integer  "min_facing"
+    t.integer  "rcmd_facing"
+    t.integer  "volume"
+    t.integer  "vulume_rank"
+    t.decimal  "value",           precision: 10, scale: 0
+    t.integer  "value_rank"
+    t.decimal  "profit",          precision: 10, scale: 0
+    t.integer  "profit_rank"
+    t.decimal  "psi",             precision: 10, scale: 0
+    t.decimal  "psi_rank",        precision: 10, scale: 0
+    t.datetime "discard_from"
+    t.integer  "discard_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "merchandises", ["discard_from"], name: "index_merchandises_on_discard_from", using: :btree
+  add_index "merchandises", ["import_id"], name: "index_merchandises_on_import_id", using: :btree
+  add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
+  add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
+  add_index "merchandises", ["supplier_id"], name: "index_merchandises_on_supplier_id", using: :btree
+
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -121,6 +205,40 @@ ActiveRecord::Schema.define(version: 20130710030620) do
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
+  create_table "products", id: false, force: true do |t|
+    t.string   "code",                                                    null: false
+    t.string   "category_id"
+    t.integer  "brand_id"
+    t.integer  "mfr_id"
+    t.integer  "user_id"
+    t.integer  "import_id",                               default: -1
+    t.string   "name"
+    t.decimal  "height",         precision: 10, scale: 0
+    t.decimal  "width",          precision: 10, scale: 0
+    t.decimal  "depth",          precision: 10, scale: 0
+    t.decimal  "weight",         precision: 10, scale: 0
+    t.string   "price_level"
+    t.string   "size_name"
+    t.string   "case_pack_name"
+    t.string   "barcode"
+    t.string   "color"
+    t.datetime "discard_from"
+    t.integer  "discard_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "supplier_id"
+    t.integer  "sale_type",                               default: 1
+    t.boolean  "new_product",                             default: false
+    t.boolean  "on_promotion",                            default: false
+  end
+
+  add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
+  add_index "products", ["code"], name: "index_products_on_code", unique: true, using: :btree
+  add_index "products", ["discard_from"], name: "index_products_on_discard_from", using: :btree
+  add_index "products", ["import_id"], name: "index_products_on_import_id", using: :btree
+  add_index "products", ["name", "category_id"], name: "index_products_on_name_and_category_id", using: :btree
+  add_index "products", ["supplier_id"], name: "by_supplier", using: :btree
+
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -139,13 +257,15 @@ ActiveRecord::Schema.define(version: 20130710030620) do
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
 
-  create_table "regions", force: true do |t|
+  create_table "regions", id: false, force: true do |t|
+    t.string   "code",       null: false
     t.string   "name",       null: false
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
 
   create_table "stores", force: true do |t|
@@ -158,5 +278,21 @@ ActiveRecord::Schema.define(version: 20130710030620) do
 
   add_index "stores", ["name"], name: "index_stores_on_name", using: :btree
   add_index "stores", ["region_id"], name: "index_stores_on_region_id", using: :btree
+
+  create_table "suppliers", force: true do |t|
+    t.string   "name"
+    t.string   "category_id"
+    t.string   "desc"
+    t.string   "color"
+    t.integer  "import_id",    default: -1
+    t.datetime "discard_from"
+    t.integer  "discard_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "suppliers", ["discard_from"], name: "index_suppliers_on_discard_from", using: :btree
+  add_index "suppliers", ["import_id"], name: "index_suppliers_on_import_id", using: :btree
+  add_index "suppliers", ["name", "category_id"], name: "index_suppliers_on_name_and_category_id", unique: true, using: :btree
 
 end

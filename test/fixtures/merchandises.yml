@@ -1,0 +1,45 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product_id: MyString
+  store_id: 1
+  user_id: 1
+  supplier_id: 1
+  price: 9.99
+  new_product: false
+  on_promotion: false
+  force_on_shelf: false
+  force_off_shelf: false
+  max_facing: 1
+  min_facing: 1
+  rcmd_facing: 1
+  volume: 1
+  vulume_rank: 1
+  value: 9.99
+  value_rank: 1
+  profit: 9.99
+  profit_rank: 1
+  psi: 9.99
+  psi_rank: 9.99
+
+two:
+  product_id: MyString
+  store_id: 1
+  user_id: 1
+  supplier_id: 1
+  price: 9.99
+  new_product: false
+  on_promotion: false
+  force_on_shelf: false
+  force_off_shelf: false
+  max_facing: 1
+  min_facing: 1
+  rcmd_facing: 1
+  volume: 1
+  vulume_rank: 1
+  value: 9.99
+  value_rank: 1
+  profit: 9.99
+  profit_rank: 1
+  psi: 9.99
+  psi_rank: 9.99

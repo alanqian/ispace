@@ -1,0 +1,18 @@
+<h1>Editing import_sheet</h1>
+<p>test: <%= @test %></p>
+
+<div id="container">
+<% if @test == "mapFields" %>
+  <%= render 'map_fields', import_sheet: @import_sheet, to_fields: ImportSheet.mapping_fields, auto_mapping: ImportSheet.auto_mapping %>
+<% else %>
+  <% if @test == "chooseSheets" %>
+    <%= render 'choose_sheets', import_sheet: @import_sheet, categories: Category.all %>
+  <% else %>
+    <%= render 'form' %>
+  <% end %>
+<% end %>
+</div>
+
+<%= link_to 'Show', @import_sheet %> |
+<%= link_to 'Back', import_sheets_path %>
+

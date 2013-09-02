@@ -1,0 +1,70 @@
+<h1>Listing products</h1>
+
+<div id="products-list">
+  <%= simple_form_for(product_new, method: "patch", remote: true,
+                      # url: "/products/2",
+                      data: { url: product_path(product_new) },
+                      html: { id: "products-form", class: "inplace", },
+                     ) do |f| %>
+    <div class="inputs">
+      <%= f.input :code %>
+      <%= f.input :brand_id, collection: brands_all %>
+      <%= f.input :name %>
+      <%= f.input :height %>
+      <%= f.input :width %>
+      <%= f.input :depth %>
+      <%= f.input :weight %>
+      <%= f.input :price_level, collection: t("dict.prices") %>
+      <%= f.input :size_name %>
+      <%= f.input :case_pack_name %>
+      <%= f.input :barcode %>
+      <%= f.input :color, as: :color %>
+      <%= f.input :supplier_id, collection: suppliers_all %>
+      <%= f.input :mfr_id, collection: mfrs_all %>
+    </div>
+    <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <%= data_th_list(:product,
+            [:select_all, "products[]"],
+            [:status, input: false, sort: false],
+            :code,
+            :brand_id,
+            :name,
+            [:color, sort: false, search: false],
+            :height, :width, :depth, :weight, :price_level,
+            :size_name, :case_pack_name, :barcode, :supplier_id, :mfr_id) %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <%= render 'item', product: product,
+            brands_hash: rel_hash(brands_all, :id, :name),
+            suppliers_hash: rel_hash(suppliers_all, :id, :name),
+            mfrs_hash: rel_hash(mfrs_all, :id, :name) %>
+        <% end %>
+      </tbody>
+    </table>
+    <div id="dataTable-filter">
+      <div id="products-choose-category" >
+        <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
+          label: "",
+          input_html: {
+            data: { url: products_path(category: "") },
+            onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
+        <%= f.submit "Sales...",
+            onclick: "javascript: onClickSales(event, this);" %>
+      </div>
+      <div id="setup-place"></div>
+    </div>
+  <% end %>
+</div>
+
+<div class="setup-container">
+  <%= render 'sale_type', product_new: product_new, detail_type: true %>
+</div>
+
+<hr/>
+
+<%= link_to 'New Product', new_product_path %>
+

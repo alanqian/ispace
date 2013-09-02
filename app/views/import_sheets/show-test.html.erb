@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Store:</strong>
+  <%= @import_sheet.store_id %>
+</p>
+<p>
+  <strong>User:</strong>
+  <%= @import_sheet.user_id %>
+</p>
+<p>
+  <strong>Step:</strong>
+  <%= @import_sheet.step %>
+</p>
+<p>
+  <strong>Filename:</strong>
+  <%= @import_sheet.filename %>
+</p>
+<p>
+  <strong>Comment:</strong>
+  <%= @import_sheet.comment %>
+</p>
+<p>
+  <strong>Ext:</strong>
+  <%= @import_sheet.ext %>
+</p>
+<p>
+  <strong>sel_sheets:</strong>
+  <%= @import_sheet.sel_sheets %>
+</p>
+<p>
+  <strong>Category:</strong>
+  <%= @import_sheet.category_id %>
+</p>
+<p>
+  <strong>Mapping:</strong>
+  <%= @import_sheet.mapping %>
+</p>
+<p>
+  <strong>Step:</strong>
+  <%= @import_sheet.step %>
+</p>
+<hr/>
+<%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
+<%= link_to 'Back', import_sheets_path(test: "1") %>
+<hr/>
+<p>
+  <strong>Sheets:</strong>
+  <%= @import_sheet.sheets %>
+</p>

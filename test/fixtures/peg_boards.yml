@@ -2,7 +2,6 @@
 
 one:
   bay_id: 1
-  level: 1
   name: MyString
   height: 9.99
   depth: 9.99
@@ -10,12 +9,12 @@ one:
   horz_space: 9.99
   vert_start: 9.99
   horz_start: 9.99
+  from_base: 3.22
   notch_num: 1
   color: MyString
 
 two:
   bay_id: 1
-  level: 1
   name: MyString
   height: 9.99
   depth: 9.99
@@ -23,5 +22,6 @@ two:
   horz_space: 9.99
   vert_start: 9.99
   horz_start: 9.99
+  from_base: 3.22
   notch_num: 1
   color: MyString

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: mfr1
+  category_id: MyString
+  desc: MyString
+  color: MyString
+
+two:
+  name: mfr2
+  category_id: MyString
+  desc: MyString
+  color: MyString

@@ -2,28 +2,32 @@
 
 one:
   bay_id: 1
-  level: 1
   name: MyString
   height: 9.99
+  width: 110
   depth: 9.99
   thick: 9.99
   slope: 9.99
   riser: 9.99
+  from_base: 0
   notch_num: 1
   color: MyString
   from_back: 9.99
   finger_space: 9.99
+  x_position: 0.0
 
 two:
   bay_id: 1
-  level: 1
-  name: MyString
+  name: MyString2
   height: 9.99
+  width: 110
   depth: 9.99
   thick: 9.99
   slope: 9.99
   riser: 9.99
+  from_base: 0
   notch_num: 1
   color: MyString
   from_back: 9.99
   finger_space: 9.99
+  x_position: 0.0

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: 天津日用品商贸公司
+  category_id: 牙膏
+  desc: MyString
+  color: MyString
+
+two:
+  name: 天津日用品商贸公司北京分公司
+  category_id: 牙膏
+  desc: MyString
+  color: MyString

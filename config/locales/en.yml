@@ -20,9 +20,90 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
+  # In the model user.rb define the validation
+  #   validates :email, :presence => true
+  activerecord:
+    models:
+      user: "Customer"
+      brand: "品牌"
+      supplier: "供应商"
+      manufacturer: "生产商"
+      product: "单品"
+      merchandise: "商品"
+    attributes:
+      user:
+        email: "E-mail address"
+      brand:
+        name: "品牌名"
+      supplier:
+        name: "供应商名称"
+      manufacturer:
+        name:  "生产商名称"
+      product:
+        barcode: "条码"
+        supplier: "供应商"
+        mfr: "生产商"
+        code: "编码"
+        id: "编码"
+        name: "品名"
+        price_level: "价格带"
+        size_name: "规格"
+        case_pack_name: "包装"
+        color: "颜色"
+        height: "高度"
+        width: "宽度"
+        depth: "深度"
+        weight: "重量"
+        brand_id: "品牌"
+        mfr_id: "生产商"
+        category_id: "品类"
+        status: "销售"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "is required"
+
+  import_sheet:
+    comment: "write comment for this upload file, please"
 
   dict:
+    colors:
+      default:     '#EEEEEE'
+      green:       '#7bd148'
+      bold_blue:   '#5484ed'
+      blue:        '#a4bdfc'
+      turquoise:   '#46d6db'
+      light_green: '#7ae7bf'
+      bold_green:  '#51b749'
+      yellow:      '#fbd75b'
+      orange:      '#ffb878'
+      red:         '#ff887c'
+      bold_red:    '#dc2127'
+      purple:      '#dbadff'
+      gray:        '#e1e1e1'
+      white:       '#ffffff'
+    prices:
+      "高": "a"
+      "中": "b"
+      "低": "c"
+    sale_type:
+      0: "必卖品"
+      1: "可卖品"
+      2: "下架商品"
+    new_product: "新"
+    on_promotion: "促"
+    category: "品类"
+    desc: "备注"
+    color: "颜色"
+    height: "高度"
+    width: "宽度"
+    depth: "深度"
+    weight: "重量"
+    brand: "品牌"
+    #######################################
     plan: "规划"
     plan_set: "规划组"
     fixture: "货架"

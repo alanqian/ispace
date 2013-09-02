@@ -1,9 +1,16 @@
 Ispace::Application.routes.draw do
+  get "sales/" => 'sales#index'
+
+  resources :brands
+  resources :suppliers
+  resources :manufacturers
+  resources :merchandises
+  resources :products
+  patch "products/" => "products#update_ex"
+  resources :import_sheets
 
   resources :fixtures
-
   resources :stores
-
   resources :regions
 
   # removed resources

@@ -1,0 +1,22 @@
+<div id="side">
+  <ul id="navibar">
+    <li>
+      <a href="#">Product Data</a>
+      <ul>
+        <li><%= link_to 'Brands', brands_path, remote: false %></li>
+        <li><%= link_to 'Manufacturers', manufacturers_path, remote: false %></li>
+        <li><%= link_to 'Suppliers', suppliers_path, remote: false %></li>
+        <li><%= link_to 'Products', products_path, remote: false %></li>
+        <li><%= link_to 'Merchandises', merchandises_path, remote: false %></li>
+      </ul>
+    </li>
+    <li><%= link_to 'Imports', import_sheets_path %></li>
+    <li><%= link_to 'Merchandise Metrics', "#" %></li>
+  </ul>
+</div>
+
+<div id="main">
+  <div id="data-client">
+  </div>
+  <hr/>
+</div>

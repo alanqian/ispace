@@ -20,6 +20,7 @@
 *.sassc
 .sass-cache
 /public/system/*
+/public/sheets/*
 rerun.txt
 pickle-email-*.html
 
@@ -29,3 +30,6 @@ capybara-*.html
 /coverage/
 /spec/tmp/*
 *.orig
+
+# ignore eclipse file
+.project

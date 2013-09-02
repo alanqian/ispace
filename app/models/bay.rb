@@ -52,7 +52,11 @@ class Bay < ActiveRecord::Base
   # take_off_height = base_height + MAX(from_base + height)
   def takeoff_height
     top_shelf = open_shelves.order('from_base desc').first
-    base_height + top_shelf.from_base + top_shelf.height
+    if top_shelf
+      return base_height + top_shelf.from_base + top_shelf.height
+    else
+      return base_height
+    end
   end
 
   # fake attr writer

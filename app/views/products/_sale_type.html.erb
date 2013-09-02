@@ -1,0 +1,17 @@
+<div id="products-setup" class="float-form">
+  <%= simple_form_for(product_new, method: "patch", remote: true,
+                      html: { id: "products-setup-form" }) do |f| %>
+    <div class="inputs">
+      <%= token_tag %>
+      <%= f.collection_radio_buttons :sale_type, t("dict.sale_type"), :first, :last %>
+      <% if detail_type %>
+        <%= f.input :new_product %>
+        <%= f.input :on_promotion %>
+      <% end %>
+    </div>
+    <div class="actions">
+      <%= f.submit "设置" %>
+      <%= f.submit "取消", onclick: "javascript: onCancelSetup(event, this);return false" %>
+    </div>
+  <% end %>
+</div>

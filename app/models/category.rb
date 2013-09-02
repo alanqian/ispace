@@ -1,8 +1,12 @@
 class Category < ActiveRecord::Base
-  self.primary_key = 'id'
-  validates :id, presence: true
-  validates :id, uniqueness: true
+  self.primary_key = "name"
+  validates :name, presence: true
+  validates :name, uniqueness: true
   before_destroy :ensure_not_referenced
+
+  def self.default_id
+    self.all().first.id
+  end
 
   private
   def ensure_not_referenced

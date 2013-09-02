@@ -13,5 +13,8 @@
 //= require jquery
 //= require jquery.ui.all
 //= require jquery_ujs
+//= require jquery.remotipart
 //= require splitter-152.js
-//= require turbolinks
+//= require jquery.dataTables.js
+//= require colResizable-1.3.source.js
+//= require jquery.simplecolorpicker.js

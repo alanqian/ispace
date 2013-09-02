@@ -1,0 +1,9 @@
+<h1>Editing product</h1>
+
+<%= render 'form', categories_all: categories_all,
+            brands_all: brands_all,
+            suppliers_all: suppliers_all,
+            mfrs_all: mfrs_all %>
+
+<%= link_to 'Show', @product %> |
+<%= link_to 'Back', products_path %>

@@ -1,0 +1,50 @@
+<h1>Listing import_sheets(test only)</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Store</th>
+      <th>User</th>
+      <th>Filename</th>
+      <th>Comment</th>
+      <th>Sheets</th>
+      <th>Sel_sheets</th>
+      <th>Category</th>
+      <th>Mapping</th>
+      <th>Imported</th>
+      <th>Step</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @import_sheets.each do |import_sheet| %>
+      <tr>
+        <td><%= import_sheet.store_id %></td>
+        <td><%= import_sheet.user_id %></td>
+        <td><%= import_sheet.filename %></td>
+        <td><%= import_sheet.comment %></td>
+        <td><%= import_sheet.sheets.map { |el| el[:name] } %></td>
+        <td><%= import_sheet.sel_sheets %></td>
+        <td><%= import_sheet.category_id %></td>
+        <td><%= truncate(import_sheet.mapping.to_s, length: 20) %></td>
+        <td><%= truncate(import_sheet.imported.to_s, length: 20) %></td>
+        <td><%= import_sheet.step %></td>
+        <td><%= link_to 'Choose', edit_import_sheet_path(import_sheet, test: "chooseSheets") %></td>
+        <td><%= link_to 'Map', edit_import_sheet_path(import_sheet, test: "mapFields") %></td>
+        <td><%= link_to 'Show', import_sheet %></td>
+        <td><%= link_to 'Edit', edit_import_sheet_path(import_sheet) %></td>
+        <td><%= link_to 'Destroy', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Import sheet', new_import_sheet_path %>
+

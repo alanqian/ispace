@@ -1,0 +1,19 @@
+<div id="import-wizard" title="导入商品：上传文件...1/3">
+<%= simple_form_for(import_sheet, remote: true) do |f| %>
+  <%= f.error_notification %>
+  <%= token_tag %>
+
+  <div class="inputs upload">
+    <%= f.hidden_field :store_id %>
+    <%= f.hidden_field :user_id %>
+    <%= f.label :upload_sheet %> <!-- "请上传商品信息的电子表文件(xls,xlsx,csv)" -->
+    <%= f.file_field :upload_sheet %>
+    <%= f.input :comment, input_html: { size: 22, title: t("import_sheet.comment") } %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
+    <%= f.submit "下一步", data: { "wizard-action" => "next" } %>
+  </div>
+<% end %>
+</div>
