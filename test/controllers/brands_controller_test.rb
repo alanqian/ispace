@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class BrandsControllerTest < ActionController::TestCase
+  fixtures :brands, :categories
+
   setup do
     @brand = brands(:one)
   end
@@ -17,11 +19,13 @@ class BrandsControllerTest < ActionController::TestCase
   end
 
   test "should create brand" do
+    params = @brand.to_new_params
+    params["name"] = "brand_new"
     assert_difference('Brand.count') do
-      post :create, brand: { category_id: @brand.category_id, color: @brand.color, name: @brand.name }
+      post :create, brand: params
     end
-
-    assert_redirected_to brand_path(assigns(:brand))
+    # assert_redirected_to brand_path(assigns(:brand))
+    assert_redirected_to brands_path(category: @brand.category_id)
   end
 
   test "should show brand" do
