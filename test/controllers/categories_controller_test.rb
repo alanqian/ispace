@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class CategoriesControllerTest < ActionController::TestCase
+  fixtures :categories
+
   setup do
     @category = categories(:one)
   end
@@ -18,7 +20,9 @@ class CategoriesControllerTest < ActionController::TestCase
 
   test "should create category" do
     assert_difference('Category.count') do
-      post :create, category: { desc: @category.desc, id: @category.id }
+      params = @category.to_new_params
+      params["name"] = "ctg_new"
+      post :create, category: params
     end
 
     assert_redirected_to category_path(assigns(:category))
