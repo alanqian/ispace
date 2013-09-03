@@ -31,11 +31,11 @@ root.addElement = (event, el, isChest) ->
     $("#accordion").accordion("option", "active")
   dataId = $(el).attr "data-id"
   console.log "data-id:", dataId
-  console.log "maxElems:", window.bay.maxElems
+  console.log "maxElems:", root.bay.maxElems
   tmpl = $(dataId)
 
   re = new RegExp(tmpl.data("id"), "g")
-  fieldId = (window.bay.newIndex + 10).toString()
+  fieldId = (root.bay.newIndex + 33330).toString()
   console.log re
   console.log "fieldId:", fieldId
   src = $(tmpl).html().replace("\\n", "").replace(re, fieldId)
@@ -48,9 +48,9 @@ root.addElement = (event, el, isChest) ->
 
   # assume first input is element name
   nameElem = $("#accordion h3 input").first()
-  nameElem.val(nameElem.val() + window.bay.newIndex) if nameElem
+  nameElem.val(nameElem.val() + root.bay.newIndex) if nameElem
 
-  window.bay.newIndex += 1
+  root.bay.newIndex += 1
   return false
 
 root.test = () ->
@@ -135,9 +135,9 @@ input2json = (obName, selector) ->
   return data
 
 
-sortByFromBase = (a, b) ->
-  va = parseFloat($(a).find(".elem_from_base")[0].value) || 0.0
-  vb = parseFloat($(b).find(".elem_from_base")[0].value) || 0.0
+sortByChildElem = (a, b) ->
+  va = parseFloat($(a).find(".elem_sort_by")[0].value) || 0.0
+  vb = parseFloat($(b).find(".elem_sort_by")[0].value) || 0.0
   # console.log "sort:", va, vb
   return vb - va
 
@@ -147,10 +147,21 @@ $ ->
   $("div .elem_inputs").css({"background-color":"#88ff88"})
 
   count = $("div .elem_inputs").length
-  $("div .elem_inputs").sort(sortByFromBase).children().appendTo("#accordion")
+  $("div .elem_inputs").sort(sortByChildElem).children().appendTo("#accordion")
   $("#accordion").accordion({active: -1, heightStyle: "content" })
 
-  window.bay =
+  updateElementsLevel = () ->
+    elems = $("#accordion h3")
+    level = elems.length
+    # levels is top-down, desc
+    elems.each (index, h3) ->
+      input = $("input[type=hidden][name$='[level]']", h3)
+      console.log h3, input
+      input.val(level)
+      level--
+      true
+
+  root.bay =
     newIndex: count + 1
     active: count - 1
     use_notch: -> $("#bay_use_notch").is(":checked")
@@ -161,9 +172,9 @@ $ ->
       notch_1st = @notch_1st()
       return if notch_spacing < 0.5 || notch_1st < 0.5
 
-      notch_nums = $("#accordion .elem_notch_num").map () -> parseInt $(this).val()
+      notch_nums = $("#accordion input[name$='[notch_num]']").map () -> parseInt $(this).val()
       # console.log "notches_to: ", notch_nums.get()
-      $("#accordion .elem_from_base").each (i, el) =>
+      $("#accordion input[name$='[from_base]']").each (i, el) =>
         $(el).val (notch_nums.get(i) - 1) * notch_spacing + notch_1st
       # console.log "end of notches_to"
 
@@ -172,25 +183,25 @@ $ ->
       notch_1st = @notch_1st()
       return if notch_spacing < 0.5 || notch_1st < 0.5
 
-      from_bases = $("#accordion .elem_from_base").map () -> parseFloat $(this).val()
+      from_bases = $("#accordion input[name$='[from_base]']").map () -> parseFloat $(this).val()
       # console.log "to_notches: ", from_bases.get()
-      $("#accordion .elem_notch_num").each (i, el) =>
+      $("#accordion input[name$='[notch_num]']").each (i, el) =>
         $(el).val Math.floor((from_bases.get(i) - notch_1st) / notch_spacing) + 1
       # console.log "end of to_notches"
 
   updateNotchInputView = (use_notch) ->
     if use_notch
-      window.bay.to_notches()
-      $(".elem_notch_num").parent().show()
-      $(".elem_from_base").parent().hide()
-      $(".elem_from_base").removeAttr("required")
+      root.bay.to_notches()
+      $("input[name$='[notch_num]']").parent().show()
+      $("input[name$='[from_base]']").parent().hide()
+      $("input[name$='[from_base]']").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", false)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 1)
     else
-      window.bay.notches_to()
-      $(".elem_from_base").parent().show()
-      $(".elem_notch_num").parent().hide()
-      $(".elem_notch_num").removeAttr("required")
+      root.bay.notches_to()
+      $("input[name$='[from_base]']").parent().show()
+      $("input[name$='[notch_num]']").parent().hide()
+      $("input[name$='[notch_num]']").removeAttr("required")
       $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", true)
       $("#bay_notch_1st, #bay_notch_spacing").prev().fadeTo(10, 0.5)
 
@@ -202,6 +213,19 @@ $ ->
   $("#bay_use_notch").change (ev) ->
     console.log "use notch changed!", $(this).is(":checked")
     updateNotchInputView $(this).is(":checked")
+
+  $("form.simple_form.bay").submit () ->
+    console.log "update notch_num/from_base, use_notch:", $("#bay_use_notch").is(":checked")
+    if $("#bay_use_notch").is(":checked")
+      # update from_base
+      root.bay.notches_to()
+    else
+      # always let browser send notch_* parameter, and update notch_num as well
+      $("#bay_notch_1st, #bay_notch_spacing").prop("disabled", false)
+      root.bay.to_notches()
+    updateElementsLevel()
+    # TODO: check notch_nums and from_base of each level
+    return true
 
   console.log "bay editor loaded..."
 

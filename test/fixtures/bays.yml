@@ -11,7 +11,7 @@ one:
   base_height: 9.99
   base_width: 9.99
   base_depth: 9.99
-  base_color: 9.99
+  base_color: "#000000"
   elem_type: 1
   elem_count: 1
 
@@ -26,6 +26,6 @@ two:
   base_height: 9.99
   base_width: 9.99
   base_depth: 9.99
-  base_color: 9.99
+  base_color: "#000000"
   elem_type: 1
   elem_count: 1

@@ -35,8 +35,13 @@ class BaysController < ApplicationController
       if @bay.save
         format.html { redirect_to @bay, notice: 'Bay was successfully created.' }
         format.json { render action: 'show', status: :created, location: @bay }
+        #format.json { render json: @bay, methods: [:open_shelves, :peg_boards, :freezer_chests, :rear_support_bars,] }
       else
-        format.html { render action: 'new' }
+        logger.error "create failed, #{@bay.errors.to_json}"
+        format.html {
+          set_extra
+          render action: 'new'
+        }
         format.json { render json: @bay.errors, status: :unprocessable_entity }
       end
     end
@@ -50,7 +55,11 @@ class BaysController < ApplicationController
         format.html { redirect_to @bay, notice: 'Bay was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        logger.error "update failed, #{@bay.errors.to_json}"
+        format.html {
+          set_extra
+          render action: 'edit'
+        }
         format.json { render json: @bay.errors, status: :unprocessable_entity }
       end
     end
@@ -90,12 +99,14 @@ class BaysController < ApplicationController
       linear = 0.0
       area = 0.0
       cube = 0.0
-      bay_params[:open_shelves_attributes].each do |_, el|
-        if el[:_destroy] == "false"
-          width, height, depth = [:width, :height, :depth].map { |f| el[f].to_f }
-          linear += width
-          area += width * height
-          cube += width * height * depth
+      if bay_params.has_key?(:open_shelves_attributes)
+        bay_params[:open_shelves_attributes].each do |_, el|
+          if el[:_destroy] == "false"
+            width, height, depth = [:width, :height, :depth].map { |f| el[f].to_f }
+            linear += width
+            area += width * height
+            cube += width * height * depth
+          end
         end
       end
       bay_params[:linear] = linear
@@ -106,21 +117,23 @@ class BaysController < ApplicationController
 
     def normalize_params(bay_params)
       # NOTE: all values in bay_params is String
+      elem_exists = lambda { |pair| pair[1][:_destroy] == "false" }
+
       if bay_params.permitted?
         # update elem_type, elem_count correctly
-        elem_exists = lambda { |pair| pair[1][:_destroy] == "false" }
-        attrs = bay_params[:open_shelves_attributes]
-        bay_params[:elem_type] = 1 # TODO: check mixed type
-        bay_params[:elem_count] = attrs.count(&elem_exists)
-
-        # update from_base if use_notch
-        if bay_params[:use_notch] == "1"
-          notch_spacing = bay_params[:notch_spacing].to_f || 1.0
-          notch_1st = bay_params[:notch_1st].to_f || 1.0
-          attrs.each do |_, el|
-            el[:from_base] = notch_1st +
-              notch_spacing * (el[:notch_num].to_i - 1)
+        elem_type = 0
+        bay_params[:elem_type] = 0 # TODO: check mixed type
+        bay_params[:elem_count] = 0
+        notch_spacing = bay_params[:notch_spacing].to_f || 1.0
+        notch_1st = bay_params[:notch_1st].to_f || 1.0
+        [:open_shelves_attributes, :peg_boards_attributes, :freezer_chests_attributes,
+          :rear_support_bars_attributes].each do |nested|
+          attrs = bay_params[nested]
+          if attrs
+            bay_params[:elem_type] |= (1 << elem_type)
+            bay_params[:elem_count] += attrs.count(&elem_exists)
           end
+          elem_type += 1
         end
       end
       bay_params
@@ -134,9 +147,23 @@ class BaysController < ApplicationController
         :base_height, :base_width, :base_depth, :base_color,
         :takeoff_height, :elem_type, :elem_count,
         :show_peg_holes,
-        open_shelves_attributes: [:_destroy, :id, :bay_id, :name, :height, :width, :depth, :thick,
+        open_shelves_attributes: [:_destroy, :id, :name, :level,
+          :height, :width, :depth, :thick,
           :slope, :riser, :notch_num, :from_base, :color, :from_back,
-          :finger_space, :x_position ])
+          :finger_space, :x_position, ],
+        peg_boards_attributes: [:_destroy, :id, :name, :level,
+          :height, :depth,
+          :vert_space, :horz_space, :vert_start, :horz_start,
+          :notch_num, :from_base, :color,],
+        freezer_chests_attributes: [:_destroy, :id, :name, :level,
+          :height, :depth, :wall_thick,
+          :inside_height, :merch_height,
+          :color, ],
+        rear_support_bars_attributes: [:_destroy, :id, :name, :level,
+          :height, :bar_depth, :bar_thick,
+          :from_back, :hook_length,
+          :notch_num, :from_base, :color, :bar_slope, ],
+      )
     end
 
     def set_expires
@@ -144,4 +171,4 @@ class BaysController < ApplicationController
     end
 end
 
-
+__END__

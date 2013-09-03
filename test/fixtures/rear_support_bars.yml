@@ -2,7 +2,7 @@
 
 one:
   bay_id: 1
-  name: bar1
+  name: rear_support_bar1
   height: 9.99
   bar_depth: 9.99
   bar_thick: 9.99
@@ -10,12 +10,12 @@ one:
   hook_length: 9.99
   from_base: 2.22
   notch_num: 1
-  color: MyString
+  color: "#000000"
   bar_slope: 20.0
 
 two:
   bay_id: 1
-  name: bar2
+  name: rear_support_bar2
   height: 9.99
   bar_depth: 9.99
   bar_thick: 9.99
@@ -23,5 +23,5 @@ two:
   hook_length: 9.99
   from_base: 2.22
   notch_num: 1
-  color: MyString
+  color: "#000000"
   bar_slope: 30.0

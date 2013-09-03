@@ -19,10 +19,9 @@ class RearSupportBar < ActiveRecord::Base
     numericality: { greater_than_or_equal_to: 0.0 }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first
-    if r
-      r.bay_id = bay.id
-    end
+    r = self.where(bay_id: -1).first || self.new
+    r.id = nil
+    r.bay_id = bay.id
     r
   end
 end

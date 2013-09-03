@@ -17,11 +17,10 @@ class PegBoard < ActiveRecord::Base
     message: 'color' }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first
-    if r
-      r.bay_id = bay.id
-      r.height = bay.back_height
-    end
+    r = self.where(bay_id: -1).first || self.new
+    r.id = nil
+    r.bay_id = bay.id
+    r.height = bay.back_height
     r
   end
 end
