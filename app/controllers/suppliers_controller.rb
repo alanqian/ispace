@@ -40,6 +40,7 @@ class SuppliersController < ApplicationController
 
   # GET /suppliers/1/edit
   def edit
+    render 'edit', locals: { categories: Category.all }
   end
 
   # POST /suppliers

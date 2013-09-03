@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class SuppliersControllerTest < ActionController::TestCase
+  fixtures :suppliers, :categories
+
   setup do
     @supplier = suppliers(:one)
   end
@@ -18,10 +20,15 @@ class SuppliersControllerTest < ActionController::TestCase
 
   test "should create supplier" do
     assert_difference('Supplier.count') do
-      post :create, supplier: { category_id: @supplier.category_id, color: @supplier.color, desc: @supplier.desc, name: @supplier.name }
+      post :create, supplier: {
+        category_id: @supplier.category_id,
+        color: @supplier.color,
+        desc: @supplier.desc,
+        name: "must be another name with same category id"}
     end
 
-    assert_redirected_to supplier_path(assigns(:supplier))
+    # assert_redirected_to supplier_path(assigns(:supplier))
+    assert_redirected_to suppliers_url(category: @supplier.category_id)
   end
 
   test "should show supplier" do
