@@ -1,7 +1,11 @@
 require 'test_helper'
 
 class FixturesControllerTest < ActionController::TestCase
+  fixtures :fixtures, :categories
+  fixtures :bays
+
   setup do
+    @logger = Rails.logger
     @fixture = fixtures(:one)
   end
 
@@ -18,10 +22,10 @@ class FixturesControllerTest < ActionController::TestCase
 
   test "should create fixture" do
     assert_difference('Fixture.count') do
-      post :create, fixture: { area: @fixture.area, category_id: @fixture.category_id, cube: @fixture.cube, flow_l2r: @fixture.flow_l2r, linear: @fixture.linear, name: @fixture.name, run: @fixture.run, store_id: @fixture.store_id, user_id: @fixture.user_id }
+      post :create, fixture: @fixture.to_new_params
     end
 
-    assert_redirected_to fixture_path(assigns(:fixture))
+    assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
   end
 
   test "should show fixture" do
@@ -35,8 +39,9 @@ class FixturesControllerTest < ActionController::TestCase
   end
 
   test "should update fixture" do
-    patch :update, id: @fixture, fixture: { area: @fixture.area, category_id: @fixture.category_id, cube: @fixture.cube, flow_l2r: @fixture.flow_l2r, linear: @fixture.linear, name: @fixture.name, run: @fixture.run, store_id: @fixture.store_id, user_id: @fixture.user_id }
-    assert_redirected_to fixture_path(assigns(:fixture))
+    patch :update, id: @fixture, fixture: fixtures(:two).to_new_params
+    f = assigns(:fixture)
+    assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
   end
 
   test "should destroy fixture" do

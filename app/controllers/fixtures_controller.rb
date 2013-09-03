@@ -80,7 +80,7 @@ class FixturesController < ApplicationController
 
     def set_aux
       # load categories
-      @categories = Category.select("id").map { |ar| ar.id }
+      @categories = Category.select("name").map { |ar| ar.name }
 
       # load all bays: id => name, run, liear, area, cube
       @bays = Bay.all
@@ -93,7 +93,7 @@ class FixturesController < ApplicationController
     def fixture_params
       params.require(:fixture).permit(
         :name, :store_id, :user_id, :category_id,
-        :run, :linear, :area, :cube, :flow_l2r,
+        :flow_l2r,
         fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
     end
 end
