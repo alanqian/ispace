@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130826023421) do
+ActiveRecord::Schema.define(version: 20130903031603) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -88,14 +88,15 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   create_table "freezer_chests", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",        precision: 6, scale: 1, null: false
-    t.decimal  "depth",         precision: 6, scale: 1, null: false
-    t.decimal  "wall_thick",    precision: 6, scale: 1, null: false
-    t.decimal  "inside_height", precision: 6, scale: 1, null: false
-    t.decimal  "merch_height",  precision: 6, scale: 1, null: false
+    t.decimal  "height",        precision: 6, scale: 1,             null: false
+    t.decimal  "depth",         precision: 6, scale: 1,             null: false
+    t.decimal  "wall_thick",    precision: 6, scale: 1,             null: false
+    t.decimal  "inside_height", precision: 6, scale: 1,             null: false
+    t.decimal  "merch_height",  precision: 6, scale: 1,             null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "level",                                 default: 0, null: false
   end
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
@@ -169,20 +170,21 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",       precision: 6, scale: 1, null: false
-    t.decimal  "width",        precision: 6, scale: 1, null: false
-    t.decimal  "depth",        precision: 6, scale: 1, null: false
-    t.decimal  "thick",        precision: 6, scale: 1, null: false
-    t.decimal  "slope",        precision: 4, scale: 1, null: false
-    t.decimal  "riser",        precision: 6, scale: 1, null: false
+    t.decimal  "height",       precision: 6, scale: 1,             null: false
+    t.decimal  "width",        precision: 6, scale: 1,             null: false
+    t.decimal  "depth",        precision: 6, scale: 1,             null: false
+    t.decimal  "thick",        precision: 6, scale: 1,             null: false
+    t.decimal  "slope",        precision: 4, scale: 1,             null: false
+    t.decimal  "riser",        precision: 6, scale: 1,             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",    precision: 6, scale: 1, null: false
+    t.decimal  "from_base",    precision: 6, scale: 1,             null: false
     t.string   "color"
-    t.decimal  "from_back",    precision: 6, scale: 1, null: false
-    t.decimal  "finger_space", precision: 6, scale: 1, null: false
-    t.decimal  "x_position",   precision: 6, scale: 1, null: false
+    t.decimal  "from_back",    precision: 6, scale: 1,             null: false
+    t.decimal  "finger_space", precision: 6, scale: 1,             null: false
+    t.decimal  "x_position",   precision: 6, scale: 1,             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "level",                                default: 0, null: false
   end
 
   add_index "open_shelves", ["bay_id"], name: "index_open_shelves_on_bay_id", using: :btree
@@ -190,17 +192,18 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   create_table "peg_boards", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",     precision: 6, scale: 1, null: false
-    t.decimal  "depth",      precision: 6, scale: 1, null: false
-    t.decimal  "vert_space", precision: 6, scale: 1, null: false
-    t.decimal  "horz_space", precision: 6, scale: 1, null: false
-    t.decimal  "vert_start", precision: 6, scale: 1, null: false
-    t.decimal  "horz_start", precision: 6, scale: 1, null: false
+    t.decimal  "height",     precision: 6, scale: 1,             null: false
+    t.decimal  "depth",      precision: 6, scale: 1,             null: false
+    t.decimal  "vert_space", precision: 6, scale: 1,             null: false
+    t.decimal  "horz_space", precision: 6, scale: 1,             null: false
+    t.decimal  "vert_start", precision: 6, scale: 1,             null: false
+    t.decimal  "horz_start", precision: 6, scale: 1,             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",  precision: 6, scale: 1, null: false
+    t.decimal  "from_base",  precision: 6, scale: 1,             null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "level",                              default: 0, null: false
   end
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
@@ -242,17 +245,18 @@ ActiveRecord::Schema.define(version: 20130826023421) do
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",      precision: 6, scale: 1, null: false
-    t.decimal  "bar_depth",   precision: 6, scale: 1, null: false
-    t.decimal  "bar_thick",   precision: 6, scale: 1, null: false
-    t.decimal  "from_back",   precision: 6, scale: 1, null: false
-    t.decimal  "hook_length", precision: 6, scale: 1, null: false
+    t.decimal  "height",      precision: 6, scale: 1,             null: false
+    t.decimal  "bar_depth",   precision: 6, scale: 1,             null: false
+    t.decimal  "bar_thick",   precision: 6, scale: 1,             null: false
+    t.decimal  "from_back",   precision: 6, scale: 1,             null: false
+    t.decimal  "hook_length", precision: 6, scale: 1,             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",   precision: 6, scale: 1, null: false
+    t.decimal  "from_base",   precision: 6, scale: 1,             null: false
     t.string   "color"
-    t.decimal  "bar_slope",   precision: 4, scale: 1, null: false
+    t.decimal  "bar_slope",   precision: 4, scale: 1,             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "level",                               default: 0, null: false
   end
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree

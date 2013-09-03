@@ -103,6 +103,11 @@ en:
     depth: "深度"
     weight: "重量"
     brand: "品牌"
+    removeOpenShelf: "从货备中删除本层隔板"
+    removePegboard: "从货备中删除本层钉板"
+    removeFreezerChest: "从货备中删除冷冻柜"
+    removeRearSupportBar: "从货备中删除本层悬挂条"
+    removeHeap: "删除堆头"
     #######################################
     plan: "规划"
     plan_set: "规划组"

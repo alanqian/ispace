@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RegionsControllerTest < ActionController::TestCase
+  fixtures :regions
+
   setup do
     @region = regions(:one)
   end
@@ -18,7 +20,7 @@ class RegionsControllerTest < ActionController::TestCase
 
   test "should create region" do
     assert_difference('Region.count') do
-      post :create, region: { desc: @region.desc, id: @region.id, name: @region.name }
+      post :create, region: { desc: @region.desc, code: 'new.region.code', name: @region.name }
     end
 
     assert_redirected_to region_path(assigns(:region))

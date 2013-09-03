@@ -7,3 +7,7 @@ one:
 two:
   name: ctg2
   desc: Category2
+
+three:
+  name: 牙膏
+  desc: toothpaste

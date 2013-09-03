@@ -39,16 +39,16 @@
         </div>
       <% end %>
     <% end %>
-  </div>
 
-  <div id="dummy">
-    <%= ["open_shelf", "peg_board", "freezer_chest", "rear_support_bar"].each do |elem| %>
-      <%= f.simple_fields_for elem.pluralize.to_sym do |builder| %>
-        <div class="elem_inputs">
-          <%= render "#{elem}_fields", f: builder %>
-        </div>
+    <div id="dummy">
+      <% ["open_shelf", "peg_board", "freezer_chest", "rear_support_bar"].each do |elem| %>
+        <%= f.simple_fields_for elem.pluralize.to_sym do |builder| %>
+          <div class="elem_inputs">
+            <%= render "#{elem}_fields", f: builder %>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 
   <div class="actions">

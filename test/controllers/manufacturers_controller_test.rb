@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ManufacturersControllerTest < ActionController::TestCase
+  fixtures :manufacturers, :categories
+
   setup do
     @manufacturer = manufacturers(:one)
   end
@@ -18,10 +20,13 @@ class ManufacturersControllerTest < ActionController::TestCase
 
   test "should create manufacturer" do
     assert_difference('Manufacturer.count') do
-      post :create, manufacturer: { category_id: @manufacturer.category_id, color: @manufacturer.color, desc: @manufacturer.desc, name: @manufacturer.name }
+      params = @manufacturer.to_new_params
+      params["name"] = "new_manufacturer"
+      post :create, manufacturer: params
     end
 
-    assert_redirected_to manufacturer_path(assigns(:manufacturer))
+    assert_redirected_to manufacturers_url(category: @manufacturer.category_id)
+    # assert_redirected_to manufacturer_path(assigns(:manufacturer))
   end
 
   test "should show manufacturer" do

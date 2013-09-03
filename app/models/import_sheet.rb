@@ -26,6 +26,7 @@ class ImportSheet < ActiveRecord::Base
     super(sel)
     logger.debug "assigned, sel_sheets=#{sel_sheets} category_id=#{category_id}"
     if self.category_id.present?
+      logger.debug "sel_sheets: #{self.sel_sheets}, #{self.sheets}"
       self.sel_sheets.each do |id|
         self.sheets[id][:category_id] = self.category_id
       end

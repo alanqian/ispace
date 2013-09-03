@@ -63,6 +63,7 @@ OpenShelf.create(
   from_back: 0.0,
   finger_space: 0.0,
   x_position: 0.0,
+  level: -1,
 )
 PegBoard.create(
   bay_id: -1,
@@ -76,6 +77,7 @@ PegBoard.create(
   notch_num: 1,
   from_base: 1.0,
   color: '#dfdfdf',
+  level: -1,
 )
 FreezerChest.create(
   bay_id: -1,
@@ -86,6 +88,7 @@ FreezerChest.create(
   inside_height: 80.0,
   merch_height: 70.0,
   color: '#ffff',
+  level: -1,
 )
 RearSupportBar.create(
   bay_id: -1,
@@ -99,6 +102,7 @@ RearSupportBar.create(
   from_base: 80.0,
   color: '#ff007f',
   bar_slope: 0.0,
+  level: -1,
 )
 
 
@@ -140,6 +144,7 @@ level = 1
     from_back: 0.0,
     finger_space: 0.0,
     x_position: 0.0,
+    level: level,
   )
   level += 1
 end
@@ -179,6 +184,7 @@ level = 1
     from_back: 0.0,
     finger_space: 0.0,
     x_position: 0.0,
+    level: level
   )
   level += 1
 end
@@ -216,6 +222,7 @@ level = 1
     from_back: 0.0,
     finger_space: 0.0,
     x_position: 0.0,
+    level: level
   )
   level += 1
 end
@@ -253,6 +260,7 @@ level = 1
     from_back: 0.0,
     finger_space: 0.0,
     x_position: 0.0,
+    level: level,
   )
   level += 1
 end
@@ -290,6 +298,7 @@ OpenShelf.create(
   from_back: 0.0,
   finger_space: 0.0,
   x_position: 0.0,
+  level: level
 )
 level += 1
 # ???: some errors in peg board
@@ -305,24 +314,25 @@ PegBoard.create(
   notch_num: 9,
   from_base: bay.notch_to(9),
   color: '#dfdfdf',
+  level: level,
 )
 bay.recalc_space
 
 # hanging bars
 bay = Bay.create(
-    name: 'Hanging bars',
-    back_height: 200.0,
-    back_width: 133.0,
-    back_thick: 4.0,
-    back_color: '#ffffff',
-    notch_spacing: 4.0,
-    notch_1st: 4.0,
-    base_height: 10.0,
-    base_width: 120.0,
-    base_depth: 40.0,
-    base_color: '#101010',
-    elem_type: 0,
-    elem_count: 4
+  name: 'Hanging bars',
+  back_height: 200.0,
+  back_width: 133.0,
+  back_thick: 4.0,
+  back_color: '#ffffff',
+  notch_spacing: 4.0,
+  notch_1st: 4.0,
+  base_height: 10.0,
+  base_width: 120.0,
+  base_depth: 40.0,
+  base_color: '#101010',
+  elem_type: 0,
+  elem_count: 4,
 )
 level = 1
 OpenShelf.create(
@@ -340,12 +350,13 @@ OpenShelf.create(
   from_back: 0.0,
   finger_space: 0.0,
   x_position: 0.0,
+  level: level,
 )
 [[30.0, 45.0, 20], [80.0, 0.0, 30], [30, 0.0, 40]].each do |height, from_back, notch_num|
   level += 1
   RearSupportBar.create(
     bay_id: bay.id,
-    name: "Bar #{level-1}",
+    name: "Bar #{level}",
     height: height,
     bar_depth: 4.0,
     bar_thick: 4.0,
@@ -355,6 +366,7 @@ OpenShelf.create(
     from_base: bay.notch_to(notch_num),
     color: '#ff007f',
     bar_slope: 0.0,
+    level: level,
   )
 end
 bay.recalc_space
@@ -384,6 +396,7 @@ FreezerChest.create(
   inside_height: 80.0,
   merch_height: 70.0,
   color: '#ffff',
+  level: 1,
 )
 [[1, 31, 48.0], [2, 43, 0.0]].each do |level, notch_num, from_back|
   OpenShelf.create(
@@ -401,6 +414,7 @@ FreezerChest.create(
     from_back: from_back,
     finger_space: 0.0,
     x_position: 0.0,
+    level: level,
   )
 end
 bay.recalc_space

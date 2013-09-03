@@ -17,8 +17,9 @@ class FreezerChest < ActiveRecord::Base
   end
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first
-    r.bay_id = bay.id if r
+    r = self.where(bay_id: -1).first || self.new
+    r.id = nil
+    r.bay_id = bay.id
     r
   end
 end
