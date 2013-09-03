@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class StoresControllerTest < ActionController::TestCase
+  fixtures :stores
+
   setup do
     @store = stores(:one)
   end
