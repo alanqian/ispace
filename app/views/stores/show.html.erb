@@ -6,13 +6,33 @@
 </p>
 
 <p>
+  <strong>Code:</strong>
+  <%= @store.code %>
+</p>
+
+<p>
   <strong>Name:</strong>
   <%= @store.name %>
 </p>
 
 <p>
-  <strong>Desc:</strong>
-  <%= @store.desc %>
+  <strong>Refer Store:</strong>
+  <%= @store.ref_store_id %>
+</p>
+
+<p>
+  <strong>Area:</strong>
+  <%= @store.area %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @store.location %>
+</p>
+
+<p>
+  <strong>Memo:</strong>
+  <%= @store.memo %>
 </p>
 
 <%= link_to 'Edit', edit_store_path(@store) %> |

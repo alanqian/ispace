@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907033727) do
+ActiveRecord::Schema.define(version: 20130907040346) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -279,14 +279,23 @@ ActiveRecord::Schema.define(version: 20130907033727) do
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
 
   create_table "stores", force: true do |t|
-    t.string   "region_id",  null: false
+    t.string   "region_id",                            null: false
     t.string   "name"
-    t.string   "desc"
+    t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",         limit: 48
+    t.integer  "ref_store_id"
+    t.integer  "area"
+    t.string   "location",     limit: 32
+    t.integer  "import_id",               default: -1
   end
 
+  add_index "stores", ["area"], name: "index_stores_on_area", using: :btree
+  add_index "stores", ["code"], name: "index_stores_on_code", unique: true, using: :btree
+  add_index "stores", ["location"], name: "index_stores_on_location", using: :btree
   add_index "stores", ["name"], name: "index_stores_on_name", using: :btree
+  add_index "stores", ["ref_store_id"], name: "index_stores_on_ref_store_id", using: :btree
   add_index "stores", ["region_id"], name: "index_stores_on_region_id", using: :btree
 
   create_table "suppliers", force: true do |t|

@@ -39,22 +39,33 @@ Store.delete_all
 
 Region.create(code: "cn",
               name: "中国",
-              desc: "中国总部")
+              consume_type: "B",
+              memo: "中国总部")
 
 Region.create(code: "cn.north",
               name: "华北区",
-              desc: "华北区，含内蒙")
+              consume_type: "B",
+              memo: "华北区，含内蒙")
 
 Region.create(code: "cn.north.bj",
               name: "北京",
-              desc: "北京，含各郊县")
+              consume_type: "A+",
+              memo: "北京，含各郊县")
 
 Store.create(region_id: "cn.north.bj",
              name: "12号店",
-             desc: "牡丹园，tel: 81231234")
+             code: "001",
+             area: 60,
+             location: "市区",
+             memo: "牡丹园，tel: 81231234")
 Store.create(region_id: "cn.north.bj",
              name: "18号店",
-             desc: "亚运村，tel: 81231234")
+             code: "002",
+             area: 120,
+             location: "市区",
+             memo: "亚运村，tel: 81231234")
+
+__END__
 
 #####################################################################
 # bay data
