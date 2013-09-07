@@ -452,13 +452,12 @@ bay.recalc_space
 # fixtrue data
 Fixture.delete_all
 FixtureItem.delete_all
-store = Store.all.first
 
 fixtures = []
 ["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
   fixtures.push Fixture.create(
     name: name,
-    store_id: store.id,
+    code: name[0..4]
     user_id: 0,
     category_id: "牙膏",
     flow_l2r: true,

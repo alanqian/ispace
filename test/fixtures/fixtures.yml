@@ -2,14 +2,14 @@
 
 one:
   name: fixture1
-  store_id: 1
+  code: "111"
   user_id: 1
   category_id: ctg1
   flow_l2r: false
 
 two:
-  name: fixture1
-  store_id: 1
+  name: fixture2
+  code: "222"
   user_id: 1
   category_id: ctg2
   flow_l2r: false

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907040346) do
+ActiveRecord::Schema.define(version: 20130907065012) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -77,15 +77,16 @@ ActiveRecord::Schema.define(version: 20130907040346) do
 
   create_table "fixtures", force: true do |t|
     t.string   "name"
-    t.integer  "store_id"
     t.integer  "user_id"
     t.string   "category_id"
     t.boolean  "flow_l2r"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",        limit: 48, default: "", null: false
   end
 
   add_index "fixtures", ["category_id"], name: "index_fixtures_on_category_id", using: :btree
+  add_index "fixtures", ["code"], name: "index_fixtures_on_code", using: :btree
   add_index "fixtures", ["name"], name: "index_fixtures_on_name", using: :btree
   add_index "fixtures", ["user_id"], name: "index_fixtures_on_user_id", using: :btree
 
