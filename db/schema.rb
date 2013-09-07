@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130903031603) do
+ActiveRecord::Schema.define(version: 20130907024459) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -50,13 +50,17 @@ ActiveRecord::Schema.define(version: 20130903031603) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",       null: false
-    t.string   "desc"
+    t.string   "name",                  null: false
+    t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",       limit: 32, null: false
+    t.string   "parent_id",  limit: 32
   end
 
+  add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
   add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
+  add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
 
   create_table "fixture_items", force: true do |t|
     t.integer  "fixture_id"

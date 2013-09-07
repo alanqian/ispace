@@ -21,6 +21,7 @@ class CategoriesControllerTest < ActionController::TestCase
   test "should create category" do
     assert_difference('Category.count') do
       params = @category.to_new_params
+      params["code"] = "n01011"
       params["name"] = "ctg_new"
       post :create, category: params
     end
@@ -39,7 +40,9 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
   test "should update category" do
-    patch :update, id: @category, category: { desc: @category.desc, id: @category.id }
+    params = @category.to_new_params
+    params[:name] = "new_name"
+    patch :update, id: @category, category: params
     assert_redirected_to category_path(assigns(:category))
   end
 

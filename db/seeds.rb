@@ -11,10 +11,28 @@
 # basic admin data
 
 Category.delete_all
-Category.create(name: '牙膏',
-                desc: %{各种品类的牙膏，含特种牙膏})
-Category.create(name: '饮料',
-                desc: %{可乐、纯净水、矿泉水等})
+Category.create(
+  code: "1",
+  name: '百货',
+  memo: %{百货})
+
+Category.create(
+  code: "101",
+  parent_id: "1",
+  name: '日用百货',
+  memo: %{日用品})
+
+Category.create(
+  code: '10101',
+  parent_id: "101",
+  name: '牙膏',
+  memo: %{各种品类的牙膏，含特种牙膏})
+
+Category.create(
+  code: '10102',
+  parent_id: "101",
+  name: '纸巾',
+  memo: '')
 
 Region.delete_all
 Store.delete_all

@@ -1,13 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  code: 10103
   name: ctg1
-  desc: Category1
+  parent_id: 101
+  memo: Category1
 
 two:
+  code: 10104
   name: ctg2
-  desc: Category2
+  parent_id: 101
+  memo: Category2
 
 three:
+  code: 20204
   name: 牙膏
-  desc: toothpaste
+  parent_id: 202
+  memo: toothpaste

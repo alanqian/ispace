@@ -1,13 +1,23 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>name:</strong>
+  <strong>Code:</strong>
+  <%= @category.code %>
+</p>
+
+<p>
+  <strong>Name:</strong>
   <%= @category.name %>
 </p>
 
 <p>
-  <strong>Desc:</strong>
-  <%= @category.desc %>
+  <strong>Parent:</strong>
+  <%= @category.parent_id %>
+</p>
+
+<p>
+  <strong>Memo:</strong>
+  <%= @category.memo %>
 </p>
 
 <%= link_to 'Edit', edit_category_path(@category) %> |

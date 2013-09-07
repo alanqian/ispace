@@ -1,12 +1,20 @@
 class Category < ActiveRecord::Base
-  self.primary_key = "name"
-  validates :name, presence: true
-  validates :name, uniqueness: true
+  self.primary_key = "code"
+  validates :code, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true
   before_destroy :ensure_not_referenced
 
   def self.default_id
-    self.all().first.id
+    first = self.all().first
+    if first
+      first.id
+    else
+      "categories-is-empty!"
+    end
   end
+
+  #TODO: validate parent_id
+  # validates_associated :parent_id, if: "code.length<3"
 
   private
   def ensure_not_referenced

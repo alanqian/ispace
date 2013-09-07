@@ -22,9 +22,10 @@
 en:
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
-  #   validates :email, :presence => true
+  #   validates :email, :presence: true
   activerecord:
     models:
+      category: "品类"
       user: "Customer"
       brand: "品牌"
       supplier: "供应商"
@@ -32,6 +33,11 @@ en:
       product: "单品"
       merchandise: "商品"
     attributes:
+      category:
+        code: 品类编码
+        name: 品类名称
+        parent_id: 上级品类
+        memo: 备注
       user:
         email: "E-mail address"
       brand:
@@ -133,4 +139,68 @@ en:
     edit:
       id: "品类"
       desc: "备注"
+  field_mappings:
+    import_stores:
+      region:
+        name: 区域
+        market: 区域市场类型
+        memo: 区域备注
+      store:
+        code: 门店代码
+        name: 门店名称
+        location: 门店地段
+        area: 门店面积
+        memo: 门店备注
+      user:
+        name: 用户名
+        email: 用户邮箱
+        tel: 用户电话
+        memo: 用户备注
+    import_products:
+      product:
+        code: "商品标识"
+        name: "商品名称"
+        height: "高度"
+        width: "宽度"
+        depth: "深度"
+        weight: "重量"
+        price_level: "价格带"
+        size_name: "规格(大小)"
+        case_pack_name: "包装"
+        barcode: "条形码"
+        color: "颜色"
+        sale_type: "商品类型"
+        new_product: "新品"
+        on_promotion: "促销"
+      brand:
+        name: "品牌"
+      supplier:
+        name: "供应商"
+      manufacturer:
+        name: "生产商"
+      _custom:
+        # customized mapping add here
+        "名称": "product.name"
+        "大小": "product.size_name"
+      _required:
+        "product.code": "产品标识"
+        "product.name": "产品名称"
+        "product.height": "高度"
+        "product.width": "宽度"
+        "product.depth": "深度"
+    import_sales:
+      product:
+        code: "商品标识"
+        name: "商品名称"
+      merchandise:
+        facing: "排面数"
+        price: "价格"
+        volume: "销售速度"
+        volume_rank: "销售速度排名"
+        value: "销售额"
+        value_rank: "销售额排名"
+        margin: "利润"
+        margin_rank: "利润排名"
+        psi: "PSI"
+        psi_rank: "PSI排名"
 
