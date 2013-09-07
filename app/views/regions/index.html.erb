@@ -5,6 +5,7 @@
     <tr>
       <th>Id</th>
       <th>Name</th>
+      <th>Consume Type</th>
       <th>Desc</th>
       <th></th>
       <th></th>
@@ -17,7 +18,8 @@
       <tr>
         <td><%= region.id %></td>
         <td><%= region.name %></td>
-        <td><%= region.desc %></td>
+        <td><%= region.consume_type %></td>
+        <td><%= region.memo %></td>
         <td><%= link_to 'Show', region %></td>
         <td><%= link_to 'Edit', edit_region_path(region) %></td>
         <td><%= link_to 'Destroy', region, method: :delete, data: { confirm: 'Are you sure?' } %></td>

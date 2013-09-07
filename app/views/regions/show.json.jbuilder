@@ -1,1 +1,1 @@
-json.extract! @region, :id, :name, :desc, :created_at, :updated_at
+json.extract! @region, :code, :name, :consume_type, :memo, :created_at, :updated_at

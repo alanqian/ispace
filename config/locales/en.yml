@@ -143,7 +143,7 @@ en:
     import_stores:
       region:
         name: 区域
-        market: 区域市场类型
+        consume_type: 区域消费类型
         memo: 区域备注
       store:
         code: 门店代码
