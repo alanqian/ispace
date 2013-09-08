@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907072525) do
+ActiveRecord::Schema.define(version: 20130908034416) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -138,32 +138,6 @@ ActiveRecord::Schema.define(version: 20130907072525) do
   add_index "manufacturers", ["import_id"], name: "index_manufacturers_on_import_id", using: :btree
   add_index "manufacturers", ["name", "category_id"], name: "index_manufacturers_on_name_and_category_id", unique: true, using: :btree
 
-  create_table "merchandises", force: true do |t|
-    t.string   "product_id"
-    t.integer  "store_id"
-    t.integer  "user_id"
-    t.integer  "import_id",                            default: -1
-    t.decimal  "price",       precision: 10, scale: 2
-    t.integer  "facing"
-    t.decimal  "run",         precision: 10, scale: 2
-    t.integer  "volume"
-    t.integer  "volume_rank"
-    t.decimal  "value",       precision: 10, scale: 0
-    t.integer  "value_rank"
-    t.float    "margin"
-    t.integer  "margin_rank"
-    t.decimal  "psi",         precision: 7,  scale: 3
-    t.integer  "psi_rank"
-    t.integer  "psi_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "merchandises", ["import_id"], name: "index_merchandises_on_import_id", using: :btree
-  add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
-  add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
-  add_index "merchandises", ["updated_at"], name: "index_merchandises_on_updated_at", using: :btree
-
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
@@ -270,6 +244,41 @@ ActiveRecord::Schema.define(version: 20130907072525) do
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
   add_index "regions", ["consume_type"], name: "index_regions_on_consume_type", using: :btree
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
+
+  create_table "sales", force: true do |t|
+    t.string   "product_id",                                        null: false
+    t.integer  "store_id"
+    t.integer  "num_stores",                           default: 1
+    t.integer  "user_id"
+    t.integer  "import_id",                            default: -1
+    t.decimal  "price",       precision: 10, scale: 2
+    t.integer  "facing"
+    t.decimal  "run",         precision: 10, scale: 2
+    t.integer  "volume"
+    t.integer  "volume_rank"
+    t.decimal  "value",       precision: 10, scale: 0
+    t.integer  "value_rank"
+    t.decimal  "margin",      precision: 10, scale: 0
+    t.integer  "margin_rank"
+    t.decimal  "psi",         precision: 7,  scale: 3
+    t.integer  "psi_rank"
+    t.integer  "psi_rule_id"
+    t.integer  "rcmd_facing"
+    t.integer  "job_id",                               default: -1
+    t.text     "detail"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sales", ["ended_at"], name: "index_sales_on_ended_at", using: :btree
+  add_index "sales", ["import_id"], name: "index_sales_on_import_id", using: :btree
+  add_index "sales", ["job_id"], name: "index_sales_on_job_id", using: :btree
+  add_index "sales", ["product_id"], name: "index_sales_on_product_id", using: :btree
+  add_index "sales", ["started_at"], name: "index_sales_on_started_at", using: :btree
+  add_index "sales", ["store_id"], name: "index_sales_on_store_id", using: :btree
+  add_index "sales", ["updated_at"], name: "index_sales_on_updated_at", using: :btree
 
   create_table "stores", force: true do |t|
     t.string   "region_id",                            null: false

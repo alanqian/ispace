@@ -1,22 +1,67 @@
-<div id="side">
-  <ul id="navibar">
-    <li>
-      <a href="#">Product Data</a>
-      <ul>
-        <li><%= link_to 'Brands', brands_path, remote: false %></li>
-        <li><%= link_to 'Manufacturers', manufacturers_path, remote: false %></li>
-        <li><%= link_to 'Suppliers', suppliers_path, remote: false %></li>
-        <li><%= link_to 'Products', products_path, remote: false %></li>
-        <li><%= link_to 'Merchandises', merchandises_path, remote: false %></li>
-      </ul>
-    </li>
-    <li><%= link_to 'Imports', import_sheets_path %></li>
-    <li><%= link_to 'Merchandise Metrics', "#" %></li>
-  </ul>
-</div>
+<h1>Listing sales</h1>
 
-<div id="main">
-  <div id="data-client">
-  </div>
-  <hr/>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Store</th>
+      <th>Num stores</th>
+      <th>User</th>
+      <th>Import</th>
+      <th>Price</th>
+      <th>Facing</th>
+      <th>Run</th>
+      <th>Volume</th>
+      <th>Volume rank</th>
+      <th>Value</th>
+      <th>Value rank</th>
+      <th>Margin</th>
+      <th>Margin rank</th>
+      <th>Psi</th>
+      <th>Psi rank</th>
+      <th>Psi rule</th>
+      <th>Rcmd facing</th>
+      <th>Detail</th>
+      <th>Started at</th>
+      <th>Ended at</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sales.each do |sale| %>
+      <tr>
+        <td><%= sale.product_id %></td>
+        <td><%= sale.store_id %></td>
+        <td><%= sale.num_stores %></td>
+        <td><%= sale.user_id %></td>
+        <td><%= sale.import_id %></td>
+        <td><%= sale.price %></td>
+        <td><%= sale.facing %></td>
+        <td><%= sale.run %></td>
+        <td><%= sale.volume %></td>
+        <td><%= sale.volume_rank %></td>
+        <td><%= sale.value %></td>
+        <td><%= sale.value_rank %></td>
+        <td><%= sale.margin %></td>
+        <td><%= sale.margin_rank %></td>
+        <td><%= sale.psi %></td>
+        <td><%= sale.psi_rank %></td>
+        <td><%= sale.psi_rule_id %></td>
+        <td><%= sale.rcmd_facing %></td>
+        <td><%= sale.detail %></td>
+        <td><%= sale.started_at %></td>
+        <td><%= sale.ended_at %></td>
+        <td><%= link_to 'Show', sale %></td>
+        <td><%= link_to 'Edit', edit_sale_path(sale) %></td>
+        <td><%= link_to 'Destroy', sale, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sale', new_sale_path %>
