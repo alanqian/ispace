@@ -4,7 +4,6 @@ Ispace::Application.routes.draw do
   resources :brands
   resources :suppliers
   resources :manufacturers
-  resources :merchandises
   resources :products
   patch "products/" => "products#update_ex"
   resources :import_sheets
