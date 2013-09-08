@@ -1,4 +1,6 @@
 Ispace::Application.routes.draw do
+  resources :sales
+
   get "mdses/" => "mdses#index"
 
   resources :brands

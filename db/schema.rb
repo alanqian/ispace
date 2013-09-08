@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907072525) do
+ActiveRecord::Schema.define(version: 20130908033420) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -270,6 +270,33 @@ ActiveRecord::Schema.define(version: 20130907072525) do
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
   add_index "regions", ["consume_type"], name: "index_regions_on_consume_type", using: :btree
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
+
+  create_table "sales", force: true do |t|
+    t.string   "product_id",                                        null: false
+    t.integer  "store_id"
+    t.integer  "num_stores",                           default: 1
+    t.integer  "user_id"
+    t.integer  "import_id",                            default: -1
+    t.decimal  "price",       precision: 10, scale: 2
+    t.integer  "facing"
+    t.decimal  "run",         precision: 10, scale: 2
+    t.integer  "volume"
+    t.integer  "volume_rank"
+    t.decimal  "value",       precision: 10, scale: 0
+    t.integer  "value_rank"
+    t.decimal  "margin",      precision: 10, scale: 0
+    t.integer  "margin_rank"
+    t.decimal  "psi",         precision: 7,  scale: 3
+    t.integer  "psi_rank"
+    t.integer  "psi_rule_id"
+    t.integer  "rcmd_facing"
+    t.integer  "job_id",                               default: -1
+    t.text     "detail"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "stores", force: true do |t|
     t.string   "region_id",                            null: false
