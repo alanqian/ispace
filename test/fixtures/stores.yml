@@ -3,9 +3,9 @@
 one:
   region_id: MyString
   name: MyString
-  desc: MyString
+  memo: MyString
 
 two:
   region_id: MyString
   name: MyString
-  desc: MyString
+  memo: MyString

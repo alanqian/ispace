@@ -11,32 +11,61 @@
 # basic admin data
 
 Category.delete_all
-Category.create(name: '牙膏',
-                desc: %{各种品类的牙膏，含特种牙膏})
-Category.create(name: '饮料',
-                desc: %{可乐、纯净水、矿泉水等})
+Category.create(
+  code: "1",
+  name: '百货',
+  memo: %{百货})
+
+Category.create(
+  code: "101",
+  parent_id: "1",
+  name: '日用百货',
+  memo: %{日用品})
+
+Category.create(
+  code: '10101',
+  parent_id: "101",
+  name: '牙膏',
+  memo: %{各种品类的牙膏，含特种牙膏})
+
+Category.create(
+  code: '10102',
+  parent_id: "101",
+  name: '纸巾',
+  memo: '')
 
 Region.delete_all
 Store.delete_all
 
 Region.create(code: "cn",
               name: "中国",
-              desc: "中国总部")
+              consume_type: "B",
+              memo: "中国总部")
 
 Region.create(code: "cn.north",
               name: "华北区",
-              desc: "华北区，含内蒙")
+              consume_type: "B",
+              memo: "华北区，含内蒙")
 
 Region.create(code: "cn.north.bj",
               name: "北京",
-              desc: "北京，含各郊县")
+              consume_type: "A+",
+              memo: "北京，含各郊县")
 
 Store.create(region_id: "cn.north.bj",
              name: "12号店",
-             desc: "牡丹园，tel: 81231234")
+             code: "001",
+             area: 60,
+             location: "市区",
+             memo: "牡丹园，tel: 81231234")
 Store.create(region_id: "cn.north.bj",
              name: "18号店",
-             desc: "亚运村，tel: 81231234")
+             code: "002",
+             area: 120,
+             location: "市区",
+             memo: "亚运村，tel: 81231234")
+
+__END__
 
 #####################################################################
 # bay data
@@ -423,13 +452,12 @@ bay.recalc_space
 # fixtrue data
 Fixture.delete_all
 FixtureItem.delete_all
-store = Store.all.first
 
 fixtures = []
 ["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
   fixtures.push Fixture.create(
     name: name,
-    store_id: store.id,
+    code: name[0..4]
     user_id: 0,
     category_id: "牙膏",
     flow_l2r: true,

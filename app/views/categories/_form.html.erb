@@ -1,7 +1,9 @@
 <%= simple_form_for(@category) do |f| %>
   <% field_set_tag "Basic" do %>
+    <%= f.input :code %>
     <%= f.input :name %>
-    <%= f.input :desc %>
+    <%= f.input :parent_id %>
+    <%= f.input :memo %>
     <%= f.button :submit %>
   <% end %>
 <% end %>

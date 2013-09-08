@@ -3,8 +3,10 @@
 <table>
   <thead>
     <tr>
-      <th><%= t(".id") %></th>
-      <th>备注</th>
+      <th><%= t(".code") %></th>
+      <th><%= t(".name") %></th>
+      <th><%= t(".parent_id") %></th>
+      <th><%= t(".memo") %></th>
       <th></th>
       <th></th>
       <th></th>
@@ -14,8 +16,10 @@
   <tbody>
     <% @categories.each do |category| %>
       <tr>
-        <td><%= category.id %></td>
-        <td><%= category.desc %></td>
+        <td><%= category.code %></td>
+        <td><%= category.name %></td>
+        <td><%= category.parent_id %></td>
+        <td><%= category.memo %></td>
         <br>
         <td><%= link_to 'Show', category %></td>
         <td><%= link_to 'Edit', edit_category_path(category) %></td>

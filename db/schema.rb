@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130903031603) do
+ActiveRecord::Schema.define(version: 20130907072525) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -50,13 +50,17 @@ ActiveRecord::Schema.define(version: 20130903031603) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",       null: false
-    t.string   "desc"
+    t.string   "name",                  null: false
+    t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",       limit: 32, null: false
+    t.string   "parent_id",  limit: 32
   end
 
+  add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
   add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
+  add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
 
   create_table "fixture_items", force: true do |t|
     t.integer  "fixture_id"
@@ -73,15 +77,16 @@ ActiveRecord::Schema.define(version: 20130903031603) do
 
   create_table "fixtures", force: true do |t|
     t.string   "name"
-    t.integer  "store_id"
     t.integer  "user_id"
     t.string   "category_id"
     t.boolean  "flow_l2r"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",        limit: 48, default: "", null: false
   end
 
   add_index "fixtures", ["category_id"], name: "index_fixtures_on_category_id", using: :btree
+  add_index "fixtures", ["code"], name: "index_fixtures_on_code", using: :btree
   add_index "fixtures", ["name"], name: "index_fixtures_on_name", using: :btree
   add_index "fixtures", ["user_id"], name: "index_fixtures_on_user_id", using: :btree
 
@@ -137,35 +142,27 @@ ActiveRecord::Schema.define(version: 20130903031603) do
     t.string   "product_id"
     t.integer  "store_id"
     t.integer  "user_id"
-    t.integer  "import_id",                                default: -1
-    t.integer  "supplier_id"
-    t.decimal  "price",           precision: 10, scale: 0
-    t.boolean  "new_product"
-    t.boolean  "on_promotion"
-    t.boolean  "force_on_shelf"
-    t.boolean  "force_off_shelf"
-    t.integer  "max_facing"
-    t.integer  "min_facing"
-    t.integer  "rcmd_facing"
+    t.integer  "import_id",                            default: -1
+    t.decimal  "price",       precision: 10, scale: 2
+    t.integer  "facing"
+    t.decimal  "run",         precision: 10, scale: 2
     t.integer  "volume"
-    t.integer  "vulume_rank"
-    t.decimal  "value",           precision: 10, scale: 0
+    t.integer  "volume_rank"
+    t.decimal  "value",       precision: 10, scale: 0
     t.integer  "value_rank"
-    t.decimal  "profit",          precision: 10, scale: 0
-    t.integer  "profit_rank"
-    t.decimal  "psi",             precision: 10, scale: 0
-    t.decimal  "psi_rank",        precision: 10, scale: 0
-    t.datetime "discard_from"
-    t.integer  "discard_by"
+    t.float    "margin"
+    t.integer  "margin_rank"
+    t.decimal  "psi",         precision: 7,  scale: 3
+    t.integer  "psi_rank"
+    t.integer  "psi_by"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "merchandises", ["discard_from"], name: "index_merchandises_on_discard_from", using: :btree
   add_index "merchandises", ["import_id"], name: "index_merchandises_on_import_id", using: :btree
   add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
   add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
-  add_index "merchandises", ["supplier_id"], name: "index_merchandises_on_supplier_id", using: :btree
+  add_index "merchandises", ["updated_at"], name: "index_merchandises_on_updated_at", using: :btree
 
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
@@ -262,25 +259,36 @@ ActiveRecord::Schema.define(version: 20130903031603) do
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
 
   create_table "regions", id: false, force: true do |t|
-    t.string   "code",       null: false
-    t.string   "name",       null: false
-    t.string   "desc"
+    t.string   "code",                                  null: false
+    t.string   "name",                                  null: false
+    t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "consume_type", limit: 32, default: "B", null: false
   end
 
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
+  add_index "regions", ["consume_type"], name: "index_regions_on_consume_type", using: :btree
   add_index "regions", ["name"], name: "index_regions_on_name", using: :btree
 
   create_table "stores", force: true do |t|
-    t.string   "region_id",  null: false
+    t.string   "region_id",                            null: false
     t.string   "name"
-    t.string   "desc"
+    t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",         limit: 48
+    t.integer  "ref_store_id"
+    t.integer  "area"
+    t.string   "location",     limit: 32
+    t.integer  "import_id",               default: -1
   end
 
+  add_index "stores", ["area"], name: "index_stores_on_area", using: :btree
+  add_index "stores", ["code"], name: "index_stores_on_code", unique: true, using: :btree
+  add_index "stores", ["location"], name: "index_stores_on_location", using: :btree
   add_index "stores", ["name"], name: "index_stores_on_name", using: :btree
+  add_index "stores", ["ref_store_id"], name: "index_stores_on_ref_store_id", using: :btree
   add_index "stores", ["region_id"], name: "index_stores_on_region_id", using: :btree
 
   create_table "suppliers", force: true do |t|

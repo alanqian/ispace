@@ -69,6 +69,6 @@ class MerchandisesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def merchandise_params
-      params.require(:merchandise).permit(:product_id, :store_id, :user_id, :supplier_id, :price, :new_product, :on_promotion, :force_on_shelf, :forbid_on_shelf, :max_facing, :min_facing, :rcmd_facing, :volume, :vulume_rank, :value, :value_rank, :profit, :profit_rank, :psi, :psi_rank)
+      params.require(:merchandise).permit(:product_id, :store_id, :user_id, :price, :facing, :run, :volume, :volume_rank, :value, :value_rank, :margin, :margin_rank, :psi, :psi_rank, :psi_by)
     end
 end

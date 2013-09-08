@@ -92,7 +92,7 @@ class FixturesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def fixture_params
       params.require(:fixture).permit(
-        :name, :store_id, :user_id, :category_id,
+        :name, :code, :user_id, :category_id,
         :flow_l2r,
         fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
     end

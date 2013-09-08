@@ -20,7 +20,7 @@ class RegionsControllerTest < ActionController::TestCase
 
   test "should create region" do
     assert_difference('Region.count') do
-      post :create, region: { desc: @region.desc, code: 'new.region.code', name: @region.name }
+      post :create, region: { memo: @region.memo, code: 'new.region.code', consume_type: "A-", name: @region.name }
     end
 
     assert_redirected_to region_path(assigns(:region))
@@ -37,7 +37,7 @@ class RegionsControllerTest < ActionController::TestCase
   end
 
   test "should update region" do
-    patch :update, id: @region, region: { desc: @region.desc, id: @region.id, name: @region.name }
+    patch :update, id: @region, region: { memo: @region.memo, id: @region.id, name: @region.name, consume_type: "A-" }
     assert_redirected_to region_path(assigns(:region))
   end
 
