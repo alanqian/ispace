@@ -1,9 +1,8 @@
-class CreateSales < ActiveRecord::Migration
+class CreateMerchandises < ActiveRecord::Migration
   def up
-    create_table :sales do |t|
-      t.string :product_id, null:false
+    create_table :merchandises do |t|
+      t.string :product_id
       t.integer :store_id
-      t.integer :num_stores, default: 1
       t.integer :user_id
       t.integer :import_id, default: -1
       t.decimal :price, precision: 10, scale: 2
@@ -13,29 +12,21 @@ class CreateSales < ActiveRecord::Migration
       t.integer :volume_rank
       t.decimal :value
       t.integer :value_rank
-      t.decimal :margin
+      t.float :margin
       t.integer :margin_rank
       t.decimal :psi, precision: 7, scale: 3
       t.integer :psi_rank
-      t.integer :psi_rule_id
-      t.integer :rcmd_facing
-      t.integer :job_id, default: -1
-      t.text :detail, limit: 32 * 1024
-      t.datetime :started_at
-      t.datetime :ended_at
+      t.integer :psi_by
 
       t.timestamps
       t.index [:store_id]
       t.index [:product_id]
       t.index [:import_id]
-      t.index [:job_id]
-      t.index [:started_at]
-      t.index [:ended_at]
       t.index [:updated_at]
     end
   end
 
   def down
-    drop_table :sales
+    drop_table :merchandises
   end
 end
