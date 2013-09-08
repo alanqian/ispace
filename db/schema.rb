@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907065012) do
+ActiveRecord::Schema.define(version: 20130907072525) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -142,35 +142,27 @@ ActiveRecord::Schema.define(version: 20130907065012) do
     t.string   "product_id"
     t.integer  "store_id"
     t.integer  "user_id"
-    t.integer  "import_id",                                default: -1
-    t.integer  "supplier_id"
-    t.decimal  "price",           precision: 10, scale: 0
-    t.boolean  "new_product"
-    t.boolean  "on_promotion"
-    t.boolean  "force_on_shelf"
-    t.boolean  "force_off_shelf"
-    t.integer  "max_facing"
-    t.integer  "min_facing"
-    t.integer  "rcmd_facing"
+    t.integer  "import_id",                            default: -1
+    t.decimal  "price",       precision: 10, scale: 2
+    t.integer  "facing"
+    t.decimal  "run",         precision: 10, scale: 2
     t.integer  "volume"
-    t.integer  "vulume_rank"
-    t.decimal  "value",           precision: 10, scale: 0
+    t.integer  "volume_rank"
+    t.decimal  "value",       precision: 10, scale: 0
     t.integer  "value_rank"
-    t.decimal  "profit",          precision: 10, scale: 0
-    t.integer  "profit_rank"
-    t.decimal  "psi",             precision: 10, scale: 0
-    t.decimal  "psi_rank",        precision: 10, scale: 0
-    t.datetime "discard_from"
-    t.integer  "discard_by"
+    t.float    "margin"
+    t.integer  "margin_rank"
+    t.decimal  "psi",         precision: 7,  scale: 3
+    t.integer  "psi_rank"
+    t.integer  "psi_by"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "merchandises", ["discard_from"], name: "index_merchandises_on_discard_from", using: :btree
   add_index "merchandises", ["import_id"], name: "index_merchandises_on_import_id", using: :btree
   add_index "merchandises", ["product_id"], name: "index_merchandises_on_product_id", using: :btree
   add_index "merchandises", ["store_id"], name: "index_merchandises_on_store_id", using: :btree
-  add_index "merchandises", ["supplier_id"], name: "index_merchandises_on_supplier_id", using: :btree
+  add_index "merchandises", ["updated_at"], name: "index_merchandises_on_updated_at", using: :btree
 
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"

@@ -16,48 +16,18 @@
 </p>
 
 <p>
-  <strong>Supplier:</strong>
-  <%= @merchandise.supplier_id %>
-</p>
-
-<p>
   <strong>Price:</strong>
   <%= @merchandise.price %>
 </p>
 
 <p>
-  <strong>New product:</strong>
-  <%= @merchandise.new_product %>
+  <strong>Facing:</strong>
+  <%= @merchandise.facing %>
 </p>
 
 <p>
-  <strong>On promotion:</strong>
-  <%= @merchandise.on_promotion %>
-</p>
-
-<p>
-  <strong>Force on shelf:</strong>
-  <%= @merchandise.force_on_shelf %>
-</p>
-
-<p>
-  <strong>Force off shelf:</strong>
-  <%= @merchandise.force_off_shelf %>
-</p>
-
-<p>
-  <strong>Max facing:</strong>
-  <%= @merchandise.max_facing %>
-</p>
-
-<p>
-  <strong>Min facing:</strong>
-  <%= @merchandise.min_facing %>
-</p>
-
-<p>
-  <strong>Rcmd facing:</strong>
-  <%= @merchandise.rcmd_facing %>
+  <strong>Run:</strong>
+  <%= @merchandise.run %>
 </p>
 
 <p>
@@ -66,8 +36,8 @@
 </p>
 
 <p>
-  <strong>Vulume rank:</strong>
-  <%= @merchandise.vulume_rank %>
+  <strong>Volume rank:</strong>
+  <%= @merchandise.volume_rank %>
 </p>
 
 <p>
@@ -81,13 +51,13 @@
 </p>
 
 <p>
-  <strong>Profit:</strong>
-  <%= @merchandise.profit %>
+  <strong>Margin:</strong>
+  <%= @merchandise.margin %>
 </p>
 
 <p>
-  <strong>Profit rank:</strong>
-  <%= @merchandise.profit_rank %>
+  <strong>Margin rank:</strong>
+  <%= @merchandise.margin_rank %>
 </p>
 
 <p>
@@ -98,6 +68,11 @@
 <p>
   <strong>Psi rank:</strong>
   <%= @merchandise.psi_rank %>
+</p>
+
+<p>
+  <strong>Psi by:</strong>
+  <%= @merchandise.psi_by %>
 </p>
 
 <%= link_to 'Edit', edit_merchandise_path(@merchandise) %> |
