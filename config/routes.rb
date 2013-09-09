@@ -1,4 +1,5 @@
 Ispace::Application.routes.draw do
+  devise_for :users
   resources :sales
 
   get "mdses/" => "mdses#index"
