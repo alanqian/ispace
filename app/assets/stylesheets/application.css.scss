@@ -14,8 +14,13 @@
  *= require jquery.simplecolorpicker.css
  *= require jquery.dataTables.css
  *= require demo_table_jui.css
+ *= require bootstrap_and_overrides
  *= require_self
  */
+
+body {
+  padding-top: 60px;
+}
 
 #banner {
   background: #9c9;
