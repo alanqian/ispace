@@ -3,37 +3,25 @@ require 'test_helper'
 
 class ImportSheetTest < ActiveSupport::TestCase
   include ActionDispatch::TestProcess
-  fixtures :import_sheets
 
-  test "upload spreadsheet files: csv,xls,xlsx" do
-    ok = [["test.xls", 3], ["test.csv", 1], ["test.xlsx", 1]]
-    bad = ['test.bad']
-
-    ok.each do |filename, count|
-      import_sheet = upload_file(filename)
-      Rails.logger.debug "test upload ok, file:#{filename}"
-      assert import_sheet.step == 2,
-        "should to step 2, file:#{filename}"
-      assert import_sheet.sheets.count == count,
-        "sheet count error, file:#{filename} count:#{import_sheet.sheets.count} should:#{count}"
-      Rails.logger.debug import_sheet.sheets
-    end
-    bad.each do |filename|
-      import_sheet = upload_file(filename)
-      Rails.logger.debug "test upload bad, file:#{filename}"
-      assert import_sheet.step == 1,
-        "should stay at step 1, file:#{filename}"
-      Rails.logger.debug import_sheet.errors
-    end
+  setup do
+    @logger = Rails.logger
+    @import_sheet = nil
   end
 
-  def upload_file(filename)
-    import_sheet = ImportSheet.new(step: 1)
-    import_sheet.store_id = 1
-    import_sheet.user_id = 1
+  def upload_sheet(filename)
     file = fixture_file_upload("files/#{filename}", nil, true)
     assert file != nil
-    import_sheet.upload_sheet = file
-    return import_sheet
+    @import_sheet.file_upload = file
+    return @import_sheet
+  end
+
+  def dump
+    @logger.debug ">>sheets: #{@import_sheet.sheets.to_s}"
+    @logger.debug ">>mapping: #{@import_sheet.mapping.to_s}"
+    @logger.debug ">>custom: #{@import_sheet.custom.to_s}"
+    @logger.debug ">>imported: #{@import_sheet.imported.to_s}"
+    @logger.debug ">>upload: #{@import_sheet.filename.to_s}"
+    @logger.debug ">>errors: #{@import_sheet.errors.to_json}"
   end
 end

@@ -139,10 +139,11 @@ en:
     edit:
       id: "品类"
       desc: "备注"
-  field_mappings:
+  import_sheets:
     import_stores:
       region:
-        name: 区域
+        code: 区域代码
+        name: 区域名称
         consume_type: 区域消费类型
         memo: 区域备注
       store:
@@ -151,11 +152,27 @@ en:
         location: 门店地段
         area: 门店面积
         memo: 门店备注
-      user:
-        name: 用户名
-        email: 用户邮箱
-        tel: 用户电话
-        memo: 用户备注
+      #user:
+      #  name: 用户名
+      #  email: 用户邮箱
+      #  tel: 用户电话
+      #  memo: 用户备注
+      _required:
+        region.name: 区域
+        region.consume_type: 区域消费类型
+        store.code: 门店代码
+        store.name: 门店名称
+        store.location: 门店地段
+        store.area: 门店面积
+        # user.name: 用户名
+    import_categories:
+      category:
+        code[0]: 大类代码
+        name[0]: 大类名称
+        code[1]: 中类代码
+        name[1]: 中类名称
+        code[2]: 小类代码
+        name[2]: 小类名称
     import_products:
       product:
         code: "商品标识"
@@ -180,6 +197,7 @@ en:
         name: "生产商"
       _custom:
         # customized mapping add here
+        "产品标识": "product.code"
         "名称": "product.name"
         "大小": "product.size_name"
       _required:
@@ -192,15 +210,16 @@ en:
       product:
         code: "商品标识"
         name: "商品名称"
-      merchandise:
+        size_name: "规格(大小)"
+      sale:
         facing: "排面数"
         price: "价格"
         volume: "销售速度"
-        volume_rank: "销售速度排名"
         value: "销售额"
-        value_rank: "销售额排名"
         margin: "利润"
-        margin_rank: "利润排名"
-        psi: "PSI"
-        psi_rank: "PSI排名"
-
+      _custom:
+        # customized mapping add here
+        "产品标识": "product.code"
+        "名称": "product.name"
+        "大小": "product.size_name"
+        "排面": "sale.facing"

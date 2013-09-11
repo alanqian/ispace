@@ -3,304 +3,221 @@ require 'csv'
 require "roo"
 
 class ImportSheet < ActiveRecord::Base
-  validates :upload_sheet, presence: true, on: :create
-  validates :sheets, presence: true, on: :create
-  validates :comment, presence: true, on: :create
-
-  validates :category_id, presence: true, on: :update
-  validate :choose_at_least_one_no_empty_sheets, on: :update, if: "step == 2"
-
-  validate :map_fields_check_requied, on: :update, if: "step == 3"
-
   serialize :sheets, Array
-  serialize :sel_sheets, Array
+  serialize :custom, Hash
   serialize :mapping, Hash
   serialize :imported, Hash
 
-  def sel_sheets=(sel)
-    if sel
-      sel.reject! { |v| v.empty? }
-      sel.map! { |v| v.to_i }
-    end
-    logger.debug "before assign, sel_sheets=#{sel_sheets}"
-    super(sel)
-    logger.debug "assigned, sel_sheets=#{sel_sheets} category_id=#{category_id}"
-    if self.category_id.present?
-      logger.debug "sel_sheets: #{self.sel_sheets}, #{self.sheets}"
-      self.sel_sheets.each do |id|
-        self.sheets[id][:category_id] = self.category_id
-      end
-      logger.debug "sel_sheets/category have been updated to sheets"
-    end
-  end
-
-  def mapping=(param)
-    logger.debug "before assign, mapping:#{self.mapping} param:#{param}"
-    # TODO: strip nil value
-    if param
-      m = param.to_hash.reject { |k,v| v.empty? }
-      super(m)
-      logger.debug "assigned, mapping:#{self.mapping} param:#{m}"
-    else
-      super(param)
-    end
-  end
-
-  def choose_at_least_one_no_empty_sheets
-    logger.debug "validate :choose_at_least_one_no_empty_sheets!"
-    count = sel_sheets.count do |id|
-      id >= 0 && id < self.sheets.size && !self.sheets[id][:empty]
-    end
-    if count > 0
-      return true
-    else
-      self.errors[:sel_sheets] << "请至少选择一个非空的工作表"
-      return false
-    end
-  end
-
-  def map_fields_check_requied
-    logger.debug "validate map_fields_check_requied"
-
-    fields = @@dict[:_required].reject { |k,v| mapping.has_value?(k) }
-    if fields.empty?
-      return true
-    else
-      self.errors[:mapping] << "必须映射下列字段：#{fields.values.join(",")}"
-      return false
-    end
-  end
-
-  before_update do
-    case self.step
-    when 2
-      self.step = 3
-    when 3
-      # TODO: check required fields
-      # ???: step to 0
-      self.step = 4
-    end
-    logger.debug "before_update, #{self.sel_sheets}"
-    logger.debug "before_update, #{self.to_json}"
-  end
+  validates :ob, presence: true
+  validates :_do, presence: true
+  validates :sheets, presence: true, on: :create
+  validates :comment, presence: true, on: :create
+  validates :file_upload, presence: true, on: :create
+  validate :validate_mapping, on: :create, on: :update
 
   # :message => "Please upload csv, xls, xlsx file!"
   # fake method for rails
-  def upload_sheet
+  def file_upload
     self.filename
   end
 
-  def upload_sheet=(sheet_field)
-    logger.debug "upload_sheet, user_id: #{self.user_id}"
-    self.filename = sheet_field.original_filename
-    self.ext = File.extname(base_part_of(self.filename).downcase)
-    self.sheets = load_xls(sheet_field)
+  # 1. load sheets, assign self.filename
+  # 2. set field mapping for this upload
+  # 3. reset imported, and, set other customized stuffs...
+  def file_upload=(upload_field)
+    logger.debug "upload_file, user_id: #{self.user_id}"
+    self.filename = upload_field.original_filename
+    ext = File.extname(base_part_of(self.filename).downcase)
+    self.sheets = self.class.load_xls(upload_field, ext)
     if self.sheets && !self.sheets.empty?
-      # save to local file system, as backup
-      #FileUtils.mkdir_p(File.dirname(local_file))
-      #File.open(local_file, 'wb') { |f| f.write sheet_field.read }
-      self.step = 2
-      logger.debug "upload_sheet ok, filename:#{sheet_field.original_filename}"
+      logger.debug "upload_file ok, filename:#{upload_field.original_filename}"
     end
-  rescue
-    self.errors[:upload_sheet] << "failed to open sheet: #{sheet_field.original_filename}"
-    logger.debug "upload_sheet failed, filename:#{sheet_field.original_filename}"
+    reset_imported
+    set_field_mapping
+    on_upload
+    filename
+  rescue => e
+    logger.warn "exception: #{e.to_s}\n#{e.backtrace.join("\n")}"
+    self.errors[:file_upload] << "failed to open sheet: #{upload_field.original_filename}"
+    logger.debug "file_upload failed, filename:#{upload_field.original_filename}"
+    nil
   end
 
-  def sheet_fields
-    fields = []
-    sheets.each do |sheet|
-      if sheet[:category_id] && !sheet[:empty]
-        fields += sheet[:header].select { |e| e }
-      end
+  def on_upload
+  end
+
+  def validate_mapping
+    if mapping.empty?
+      errors.add :mapping, "no mapping fields found in upload file"
+      return false
+    else
+      return true
     end
-    fields.uniq
   end
 
   # finish the import task
-  def finalize
-    return if mapping.empty?
+  def import
+    return if mapping.empty? || self._do != "import"
 
-    self.imported = {
-      supplier: 0,
-      manufacturer: 0,
-      merchandise: 0,
-      brand: 0,
-      product: 0,
-    }
-    self.sheets.each do |sheet|
-      next if sheet[:empty] || !sheet[:category_id]
-
+    sheets.each do |sheet|
+      if sheet[:empty]
+        logger.debug "skip empty sheet[#{sheet[:id]}]: #{sheet[:name]}"
+        next
+      end
+      if !start_import?(sheet)
+        logger.debug "failed to start import sheet[#{sheet[:id]}]: #{sheet[:name]}"
+        return
+      end
+      next if sheet[:empty] || !start_import?(sheet)
       # get the mapping
       map = []
       sheet[:header].each do |field|
         map.push mapping[field]
       end
 
+      row_index = 1
+      fail_row_index = nil
       sheet[:cells].each do |row|
-        category_id = sheet[:category_id]
-        params = {
-          supplier: {},
-          manufacturer: {},
-          merchandise: {},
-          brand: {},
-          product: {},
-        }
-
+        params = {}
         for i in 0..(map.size-1)
           to_field = map[i]
-          if to_field
-            table, field = to_field.split(".")
-            params[table.to_sym][field.to_sym] = row[i]
-          end
-        end
-        # logger.debug "import ok: #{params.to_json}"
-        [:supplier, :manufacturer, :brand].each do |k|
-          if not params[k].empty?
-            klass = k.to_s.camelize.constantize
-            params[k]["category_id"] = category_id
-            r = klass.where(params[k])
-            if r.empty?
-              params[k][:id] = klass.create(params[k]).id
-              self.imported[k] += 1
+          if to_field && row[i] && (!row[i].kind_of?(String) || !row[i].empty?)
+            # make a patch for roo, for string/integer fields
+            # strip \.0+ for :string & :integer
+            column_type = self.class.map_dict[:_types][to_field]
+            if column_type == :string || column_type == :integer
+              row[i] = row[i].to_s.sub(/\.0+$/, '')
+            end
+
+            # convert non-empty fields to rails style params
+            to_field =~ /([A-Za-z_]+)\.([A-Za-z_]+)(\[(\d+)\])?/
+              table, field, sub = [$1, $2, $4]
+            params[table.to_sym] ||= {}
+            if sub
+              params[table.to_sym][field.to_sym] ||= []
+              params[table.to_sym][field.to_sym][sub.to_i] ||= row[i]
             else
-              params[k][:id] = r.first.id
+              params[table.to_sym][field.to_sym] = row[i]
             end
           end
         end
-
-        # create product
-        params[:product].merge! ({
-          category_id: category_id,
-          brand_id: params[:brand][:id],
-          mfr_id: params[:manufacturer][:id],
-          user_id: self.user_id,
-          import_id: self.id,
-          supplier_id: params[:supplier][:id],
-        })
-        strip_dot_zero(params, :product)
-
-        # logger.debug "import product: #{params[:product].to_json}"
-        r = Product.where({code: params[:product][:code]})
-        if r.empty?
-          params[:product][:id] = Product.create(params[:product]).id
-          self.imported[:product] += 1
+        if !import_row(params, row_index)
+          fail_row_index = row_index
+          break
         else
-          # TODO: update?
-          params[:product][:id] = r.first.id
-        end
-
-        # create merchandise
-        # TODO: rcmd/min/max face
-        params[:merchandise].merge! ({
-          store_id: self.store_id,
-          user_id: self.user_id,
-          product_id: params[:product][:id],
-          supplier_id: params[:supplier][:id],
-          import_id: self.id,
-        })
-        strip_dot_zero(params, :merchandise)
-
-        logger.debug "import merchandise: #{params[:merchandise].to_json}"
-        r = Merchandise.where({product_id: params[:product][:id], import_id:
-                              self.id})
-        if r.empty?
-          mcds = Merchandise.create(params[:merchandise])
-          self.imported[:merchandise] += 1
-          logger.debug "merchandise imported, id:#{mcds.id}"
-        else
-          # TODO: update?
+          row_index += 1
         end
       end
-    end
-    self.step = 0
-    self.save
-  end
-
-  def discard
-    if self.step == 0 && !self.imported.empty?
-      if imported[:brand] > 0
-        Brand.delete_all(["import_id=?", self.id])
-      end
-      if imported[:supplier] > 0
-        Supplier.delete_all(["import_id=?", self.id])
-      end
-      if imported[:manufacturer] > 0
-        Manufacturer.delete_all(["import_id=?", self.id])
-      end
-      if imported[:product] > 0
-        Product.delete_all(["import_id=?", self.id])
-      end
-      if imported[:merchandise] > 0
-        Merchandise.delete_all(["import_id=?", self.id])
-      end
-
-      self.imported.clear
-      self.step = 3
-      self.save
+      return if fail_row_index || !end_import(sheet)
+      self.imported[:rows] += row_index - 1 # ???
     end
   end
 
-  # make a patch for roo, for string fields
-  def strip_dot_zero(params, table)
-    klass = table.to_s.camelize.constantize
-    # logger.debug klass
-    params[table].each do |k, v|
-      # logger.debug "table: #{table}, field:#{k}"
-      column = klass.columns_hash[k.to_s]
-      if column && column.type == :string
-        s = params[table][k].to_s
-        params[table][k] = s.sub(/\.0+/, '')
-      end
-    end
+  def start_import(sheet)
+    logger.debug "start import sheet, id:#{sheet[:id]}, name:#{sheet[:name]}"
   end
 
-  def auto_import_local_file(local_file, comment, ctg_id)
-    # TODO: set store_id, user_id at first
+  def import_row(params, row_index)
+    logger.debug "import row, row:#{row_index}, params:#{params.to_s}"
+    true
+  end
+
+  def end_import(sheet)
+    true
+  end
+
+  def import_local(local_file, comment="import local file")
     # step 1: upload
-    self.comment = comment || "auto import"
-    self.filename = local_file
-    self.step = 1
+    self.comment = comment
     file = File.open(local_file)
     def file.original_filename
       self.path
     end
-    self.upload_sheet = file
+    self.file_upload = file
+    self._do = "upload:local"
+    save!
 
-    # step 2: choose sheets
-    self.category_id = ctg_id
-    sel = self.sheets.select { |sheet| !sheet[:empty] } .map { |sheet| sheet[:id].to_s }
-    self.sel_sheets = sel
-    self.step = 3
-
-    # step 3: map fields
-    map_param = {}
-    auto = self.class.auto_mapping
-    self.sheets.each do |sheet|
-      next if sheet[:empty] || !sheet[:category_id]
-      sheet[:header].each do |field|
-        map_param[field] = auto[field] if auto[field]
-      end
-    end
-    self.mapping = map_param
-    self.step = 4
-
-    # finalize
-    self.finalize
+    # step 2. confirm & import
+    self._do = "import"
+    import
+    save!
     self
   end
 
   private
-  def local_file
-    Ispace::Application.config.sheet_dir + self.filename
-  end
-
   def base_part_of(file_name)
     File.basename(file_name) # .gsub(/[^\w._-]/, '')
   end
 
-  def load_xls(file)
-    xls = self.class.open_spreadsheet(file, self.ext)
+  def reset_imported
+    imported[:count] = {}
+    imported[:rows] = 0
+    imported[:sheets] = []
+    imported[:bad_sheets] = []
+  end
+
+  # check header, empty
+  # set mappings
+  def set_field_mapping
+    self.mapping = {}
+    self.imported[:sheets] = []
+    self.imported[:bad_sheets] = []
+    m = {}
+    sheets.each do |sheet|
+      # skip empty sheet
+      next if sheet[:empty]
+
+      ignore_fields = []
+      ok_fields = []
+      required_set = self.class.map_dict[:_required].dup
+      # logger.debug "required_set: #{required_set.to_json}"
+      dict = self.class.map_dict[:_mapping]
+      col = "A"
+      sheet[:header].each do |col_name|
+        field = dict[col_name]
+        if field
+          ok_fields.push(col_name)
+          required_set.delete field
+          m[col_name] = field
+        else
+          ignore_fields.push([col.dup, col_name])
+        end
+        col.succ!
+      end
+
+      # check required fields, update sheets & bad_sheets
+      ok_fields.uniq!
+      if required_set.any?
+        # logger.debug ">required_set: #{required_set.to_json}"
+        imported[:bad_sheets].push({
+          id: sheet[:id],
+          name: sheet[:name],
+          fields: ok_fields,
+          ignore: ignore_fields,
+          missing: required_set.values
+        })
+        errors[:sheets] << "sheet #{sheet[:name]} missing required fields: #{required_set.values.join(', ')}"
+      else
+        imported[:sheets].push({
+          id: sheet[:id],
+          name: sheet[:name],
+          fields: ok_fields,
+          ignore: ignore_fields,
+        })
+      end
+    end
+
+    if imported[:bad_sheets].empty? && imported[:sheets].any?
+      self.mapping = m
+    end
+    if imported[:sheets].empty?
+      errors[:sheets] << "no valid sheet to import"
+    end
+  end
+
+  def self.load_xls(file, ext)
+    # logger.debug "load_xls, file:#{file}, ext:#{ext}"
+    xls = self.open_spreadsheet(file, ext)
     sheets = []
     id = 0
     xls.sheets.each do |sheet|
@@ -315,7 +232,7 @@ class ImportSheet < ActiveRecord::Base
           name: sheet,
           rows: rows,
           columns: xls.last_column,
-          thead: self.class.sheet_header(xls.last_column),
+          thead: self.sheet_header(xls.last_column),
           header: xls.row(row_1st),
           cells: (row_1st+1).upto(rows).map { |i| xls.row(i) }
         })
@@ -353,102 +270,84 @@ class ImportSheet < ActiveRecord::Base
   end
 
   def self.open_spreadsheet(file, ext)
+    # logger.debug "open_spreadsheet, ext:#{ext}"
     case ext
-    when '.csv' then Roo::Csv.new(file.path)
-    when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
-    when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
-    else raise "Unknown uploaded type: #{file.original_filename}"
+    when '.csv', 'csv'
+      Roo::Csv.new(file.path)
+    when '.xls', 'xls'
+      Roo::Excel.new(file.path, nil, :ignore)
+    when '.xlsx', 'xlsx'
+      Roo::Excelx.new(file.path, nil, :ignore)
+    else
+      raise "Unknown uploaded type: #{file.original_filename}"
     end
+  end
+
+  def self.map_dict
+    nil
   end
 
   # returns hash of name => [value, label]
   def self.auto_mapping
-    @@dict[:_mapping]
+    self.map_dict[:_mapping]
   end
 
   def self.mapping_fields
-    @@dict[:_fields]
+    self.map_dict[:_fields]
   end
 
-  def self.init_dict(dict, init_mapping)
-    def_mapping = {}
+  def self.load_dict(table_name)
+    class_dict = {
+      _mapping: {},
+      _fields: {},
+      _required: {},
+      _types: {},
+    }
+
+    dict = I18n.t("import_sheets.#{table_name}")
+    custom = dict[:_custom]
+    field_mapping = {}
     fields = []
+    types = {}
+
+    # field_mapping: table.field => field_name
     dict.each do |table, map|
-      map.each do |k, v|
-        def_mapping[v] = "#{table}.#{k}"
-        fields.push ["#{table}.#{k}", v]
+      if !table.to_s.start_with?("_")
+        #klass = Kernel.const_get(table.to_s.classify)
+        klass = table.to_s.classify.constantize
+        map.each do |k, v|
+          field = "#{table}.#{k}"
+          unless types[field]
+            column = k.to_s.gsub(/(\[\d+\])+/, '')
+            types[field] = klass.columns_hash[column].type
+          end
+          field_mapping[v] = field
+          fields.push ["#{table}.#{k}", v]
+        end
       end
     end
 
-    init_mapping.each do |k, v|
-      cat, field = v.split(".")
-      label = dict[cat.to_sym][field.to_sym]
-      def_mapping[k] = v
-      fields.push [v, label]
+    # add custom field names to mapping
+    if dict[:_custom]
+      dict[:_custom].each do |k, v|
+        table, field = v.split(".")
+        label = dict[table.to_sym][field.to_sym]
+        field_mapping[k.to_s] = v
+        fields.push [v, label]
+      end
     end
 
-    dict[:_mapping] = def_mapping
-    dict[:_fields] = fields.uniq
-    dict[:_required] = {
-      "product.code" => "产品标识",
-      "product.name" => "产品名称",
-      "product.height" => "高度",
-      "product.width" => "宽度",
-      "product.depth" => "深度",
-    }
-    dict
+    class_dict[:_mapping] = field_mapping
+    class_dict[:_fields] = fields.uniq
+
+    # if no specified, all fields are required
+    r = dict[:_required] || field_mapping.invert
+    class_dict[:_required] = {}
+    r.each { |k,v| class_dict[:_required][k.to_s] = v }
+
+    class_dict[:_types] = types
+    class_dict
   end
-
-  @@dict = self.init_dict({
-    product: {
-      code: "产品标识",
-      name: "产品名称",
-      height: "高度",
-      width: "宽度",
-      depth: "深度",
-      weight: "重量",
-      price_level: "价格带",
-      size_name: "规格(大小)",
-      case_pack_name: "包装",
-      bar_code: "条形码",
-      color: "颜色",
-      sale_type: "商品类型",
-      new_product: "新品",
-      on_promotion: "促销",
-    },
-
-    brand: {
-      name: "品牌",
-    },
-
-    merchandise: {
-      price: "价格",
-      force_on_shelf: "强制上架",
-      force_off_shelf: "强制下架",
-      max_facing: "最大排面数",
-      min_facing: "最小排面数",
-      rcmd_facing: "推荐排面数",
-      volume: "销售速度",
-      vulume_rank: "销售速度排名",
-      value: "销售额",
-      value_rank: "销售额排名",
-      profit: "利润",
-      profit_rank: "利润排名",
-      psi: "PSI",
-      psi_rank: "PSI排名",
-    },
-
-    supplier: {
-      name: "供应商",
-    },
-
-    manufacturer: {
-      name: "生产商",
-    }}, {
-      # customized mapping add here
-      "名称" => "product.name",
-      "大小" => "product.size_name",
-    })
 end
 
 __END__
@@ -547,21 +446,4 @@ if __FILE__ == $0
 end
 
 __END__
-
-field_mapping: {
-  "产品标识" => "product.id",
-  "名称" => "product.name",
-  "宽度" => "product.width",
-  "高度" => "product.height",
-  "深度" => "product.depth",
-  "供应商" => "supplier.name",
-  "大小" => "product.size_name",
-  "品牌" => "brand.name",
-  "利润" => "merchandise.profit",
-  "销售速度" => "merchandise.volume",
-  "销售额" => "merchandise.value",
-  "价格" => "merchandise.price",
-  "价格带" => "merchandise.price_level",
-  "新品" => "merchandise.new_product",
-},
 
