@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  comment: MyString
+  filename: MyString
+  sheets: []
+  custom: {}
+  mapping: {}
+  imported: {}
+  store_id: 1
+  user_id: 1
+  _do: ""
+
+two:
+  comment: MyString
+  filename: MyString
+  sheets: []
+  custom: {}
+  mapping: {}
+  imported: {}
+  store_id: 1
+  user_id: 1
+  _do: ""
