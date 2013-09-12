@@ -1,24 +1,68 @@
-<%= simple_form_for(@import_sheet) do |f| %>
-  <%# = f.error_notification %>
+<% target = import_sheet._target %>
+<% edit_mode = import_sheet.filename && import_sheet.errors.empty? %>
 
-  <%= f.error :base %>
-  <%= f.error :ext %>
+<div id="import-upload" title="<%= t("import_sheet.title.#{target}")%>：上传文件">
+<%= simple_form_for(import_sheet, remote: false) do |f| %>
+  <%= token_tag %>
+  <%#= render 'errors' import_sheet: import_sheet %>
+  <%= f.error_notification %>
 
-  <div class="inputs">
-    <%= f.input :store_id %>
-    <%= f.input :user_id %>
-    <%= f.input :step %>
-    <%= f.input :filename %>
-    <%= f.input :sheets %>
-    <%= f.input :comment %>
-    <%= f.input :ext %>
-    <%= f.input :sel_sheets %>
-    <%= f.input :category_id %>
-    <%= f.input :mapping %>
+  <div class="inputs uploaded">
+    <ul>
+      <% sheets = import_sheet.imported[:sheets] %>
+      <% bad_sheets = import_sheet.imported[:bad_sheets] %>
+      <% if import_sheet.filename %>
+        <li>上传文件：<%= import_sheet.filename %></li>
+      <% end %>
+      <% if sheets %>
+        <% if sheets.any? %>
+          <% names = sheets.map { |s| s[:name] }.join(", ") %>
+          <% fields = sheets.map { |s| s[:fields] }.flatten.uniq.join(", ") %>
+          <% ignores = sheets.map { |s| s[:ignores] }.flatten.uniq.join(", ") %>
+          <li>有效工作表: <%= names %></li>
+          <li>有效字段: <%= fields %></li>
+          <% if !ignores.empty? %>
+            <li>多余字段: <%= ignores %></li>
+          <% end %>
+        <% else %>
+          <li>有效工作表: 无</li>
+        <% end %>
+      <% end %>
+      <% if bad_sheets && bad_sheets.any? %>
+        <% names = bad_sheets.map { |s| s[:name] }.join(", ") %>
+        <% ignores = bad_sheets.map { |s| s[:ignores] }.flatten.uniq.join(", ") %>
+        <% missing = bad_sheets.map { |s| s[:missing] }.flatten.uniq.join(", ") %>
+        <li>无效工作表：<%= names %></li>
+        <% if !ignores.empty? %>
+          <li>多余字段: <%= ignores %></li>
+        <% end %>
+        <li>缺少字段: <%= missing %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="inputs upload">
+    <%= f.hidden_field :store_id %>
+    <%= f.hidden_field :user_id %>
+    <%= f.hidden_field :type %>
+    <%= f.hidden_field :_do, value: "upload" %>
+    <%= f.input :comment, input_html: { size: 22, title: t("import_sheet.comment") } %>
+    <% if edit_mode %>
+      <%= f.input :filename, disabled: true %>
+    <% end %>
+    <%= f.label :file_upload %>
+    <%#= f.label :file_upload, t("import_sheet.file_upload") %> <!-- "请上传商品信息的电子表文件(xls,xlsx,csv)" -->
+    <%= f.file_field :file_upload %>
   </div>
 
   <div class="actions">
-    <%= f.button :submit %>
+    <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
+    <%= f.submit "上传", data: { "wizard-action" => "next" } %>
+    <% if edit_mode %>
+      <%= f.submit "导入", data: { "wizard-action" => "next" } %>
+    <% end %>
   </div>
+
 <% end %>
+</div>
 <!-- <span class="clear"><span> -->

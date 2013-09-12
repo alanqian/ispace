@@ -14,6 +14,7 @@ class ImportSheet < ActiveRecord::Base
   validates :file_upload, presence: true
   validate :validate_mapping
   validate :validate_sheets
+  after_update :import
 
   # fake method for view
   def _target

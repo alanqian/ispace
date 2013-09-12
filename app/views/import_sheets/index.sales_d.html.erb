@@ -10,14 +10,12 @@
 <table>
   <thead>
     <tr>
-      <th>Store</th>
-      <th>User</th>
       <th>Filename</th>
       <th>Comment</th>
-      <th>Type</th>
-      <th>Mapping</th>
-      <th>Imported</th>
-      <th>_do</th>
+      <th>Store</th>
+      <th>User</th>
+      <th>Imported.Sheets</th>
+      <th>Imported.Sales</th>
       <th></th>
       <th></th>
     </tr>
@@ -25,17 +23,17 @@
 
   <tbody>
     <% @import_sheets.each do |import_sheet| %>
+      <% count = import_sheet.imported[:count] %>
+      <% sheets = import_sheet.imported[:sheets].map {|s| s[:name] } %>
       <tr>
-        <td><%= import_sheet.store_id %></td>
-        <td><%= import_sheet.user_id %></td>
         <td><%= import_sheet.filename %></td>
         <td><%= import_sheet.comment %></td>
-        <td><%= import_sheet.type %></td>
-        <td><%= import_sheet.mapping %></td>
-        <td><%= import_sheet.imported %></td>
-        <td><%= import_sheet._do %></td>
+        <td><%= import_sheet.store_id %></td>
+        <td><%= import_sheet.user_id %></td>
+        <td><%= sheets %></td>
+        <td><%= count[:sale] %></td>
         <td><%= link_to 'Show', import_sheet_path(import_sheet, part: "result") %></td>
-        <td><%= link_to 'Destroy', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Discard', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

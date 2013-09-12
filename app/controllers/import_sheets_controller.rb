@@ -1,28 +1,26 @@
 =begin "interfaces of :import_sheet"
 
-1. import_sheets/index
-   list successfully imported spreadsheet files;
-   // filename, comment, updated_at, user_id
-   NOTE: show import button instead of the default new link...
+features:
+a. import_stores
+b. import_categories
+c. import_products
+d. import_sales
 
-2. import wizard(ajax)
-   2.a import_sheets.new?ajax=1
-       -> /create: upload file;
-   2.b import_sheets.edit?ajax=chooseSheets
-       -> /update(step=2): choose sheet;
-   2.c import_sheets.edit?ajax=mapFields
-       -> /update(step=3): set field mapping;
+I. import list: #index, (for products, sales only)
 
-3. 3.a show import details: /show?part=result
-       ONLY show import results, with links to (brands, suppliers, manufactures, products, merchandises);
-             with params: import_id=?
-       TBD: add discard link?
-   3.b show sheet contents: /show?part=sheet
-       ONLY show spreadsheet part of this imported files
+II. steps for import: (for all imports)
 
-4. discard imported
-   import_sheets.destroy  update(step=0): discard imported records
-   TODO: check other related models? such as Plan?
+1. upload xls file: #new -> #create
+   -> ok: redirect to #edit: show import results + preview, -> import or cancel
+      fail: redirect to #new with with preview & errors, -> upload again
+
+2. #edit: import data with preview, -> #update
+   -> ok: show results, #show
+      fail: redirect to #edit: show results and errors
+
+3. #show: show import results, with discard button, display links
+
+III. discard import: #destroy, (for all imports)
 
 =end
 
@@ -32,42 +30,57 @@ class ImportSheetsController < ApplicationController
 
   # GET /import_sheets
   # GET /import_sheets.json
+  # -----------------------------------------
+  # 0. generic index, for test only
+  # 1. import product list, all
+  # 2. import sale list,
+  #    :all for design, :this store for sales
   def index
-    if params[:test]
-      logger.debug "import#static, don't show wizard, #{params[:static]}"
-    end
     store_id = 1
     user_id = 1
+    is_designer_user = params[:_designer]
 
-    if params[:test]
-      @import_sheets = ImportSheet.where([
-        "store_id=? and user_id=?", store_id, user_id])
-      render 'index-test', locals: { test: params[:test] }
+    _do = "import"
+    @t = params[:_t] || "sale"
+    case @t
+    when "sale"
+      # show import sales list
+      if is_designer_user
+        # all recent imports
+        @import_sheets = ImportSale.where(_do: 'import').order(created_at: :desc)
+        render 'index.sales_d'
+      else
+        # imports of his own store
+        @import_sheets = ImportSale.where([
+          "_do=? and store_id=?", _do, store_id]).order(created_at: :desc)
+        render 'index.sales'
+      end
+    when "product"
+      # all recent imported products
+      @import_sheets = ImportProduct.order(created_at: :desc)
+      render 'index.products'
     else
-      @import_sheets = ImportSheet.where([
-        "store_id=? and user_id=? and (step=0 or step=4)", store_id, user_id])
+      # show generic #index page, for debug only
+      @import_sheets = ImportSheet.order(created_at: :desc)
+      render 'index'
     end
   end
 
   # GET /import_sheets/1
   # GET /import_sheets/1.json
+  # -----------------------------------------
+  # show import results: for all imports
   def show
-    case params[:part]
-    when "result"
-      render 'show'
-    when "sheets"
-      render "show-sheet"
-    else
-      render 'show-test'
-    end
   end
 
-  # GET /import_sheets/new
+  # GET /import_sheets/new?_t=xxx
+  # -----------------------------------------
+  # launch upload page: for all imports
   def new
     @store_id = 1
     @user_id = 1
-    @import_sheet = ImportSheet.new(step: 1, store_id: @store_id, user_id: @user_id)
 
+    @import_sheet = new_import_sheet
     respond_to do |format|
       if params[:ajax]
         format.html { render partial: 'upload', locals: { import_sheet: @import_sheet }}
@@ -78,43 +91,28 @@ class ImportSheetsController < ApplicationController
   end
 
   # GET /import_sheets/1/edit
+  # -----------------------------------------
+  # show upload result, then select to import or upload again: for all imports
+  # for all imports
   def edit
-    respond_to do |format|
-      case params[:ajax]
-      when "chooseSheets"
-        @import_sheet.step = 2
-        format.html { render partial: 'choose_sheets', locals: {
-          import_sheet: @import_sheet,
-          categories: Category.all,
-        }}
-      when "mapFields"
-        @import_sheet.step = 3
-        format.html { render partial: 'map_fields', locals: {
-          import_sheet: @import_sheet,
-          to_fields: ImportSheet.mapping_fields,
-          auto_mapping: ImportSheet.auto_mapping,
-        }}
-      else
-        @import_sheet.errors[:base] << "base error of sel_sheets"
-        @import_sheet.errors[:mapping] << "mappings wrong"
-        @test = params[:test]
-        format.html
-      end
-    end
   end
 
   # POST /import_sheets
   # POST /import_sheets.json
+  # -----------------------------------------
+  # create: import:upload, goto #edit if success, #new otherwise
+  # for all imports
   def create
     @import_sheet = ImportSheet.new(import_sheet_params)
 
     respond_to do |format|
       if @import_sheet.save
-        format.html { redirect_to @import_sheet, notice: 'Import sheet was successfully created.' }
+        format.html { redirect_to edit_import_sheet_path(@import_sheet),
+          notice: 'spreadsheet was successfully uploaded.' }
         format.json { render action: 'show', status: :created, location: @import_sheet }
         format.js
       else
-        format.html { render action: 'new', notice: @import_sheet.errors }
+        format.html { render action: 'new', import_sheet: @import_sheet }
         format.json { render json: @import_sheet.errors, status: :unprocessable_entity }
         format.js
       end
@@ -124,35 +122,22 @@ class ImportSheetsController < ApplicationController
   # PATCH/PUT /import_sheets/1
   # PATCH/PUT /import_sheets/1.json
   def update
+    commit = commit_param
     respond_to do |format|
-      if @import_sheet.update(import_sheet_params)
-        format.html { redirect_to @import_sheet, notice: 'Import sheet was successfully updated.' }
-        format.json { head :no_content }
-        format.js do
-          case @import_sheet.step
-          when 3  # sheets updated
-            render "update_sheets"
-          when 4  # mapping updated
-            render "update_mappings"
+      if @import_sheet.update(set_do_param(import_sheet_params))
+        format.html {
+          if commit == :import
+            redirect_to @import_sheet, notice: 'sheet was successfully imported.'
           else
-            logger.debug "updated, but with incorrect step:#{@import_sheet.step}"
-            "internal error, updated with incorrect step:#{@import_sheet.step}"
+            redirect_to edit_import_sheet_path(@import_sheet), notice: 'sheet was successfully uploaded.'
           end
-        end
+        }
+        format.json { head :no_content }
+        format.js
       else
         format.html { render action: 'edit' }
         format.json { render json: @import_sheet.errors, status: :unprocessable_entity }
-        format.js do
-          case @import_sheet.step
-          when 2 # failed to update sheets
-            render "update_sheets"
-          when 3 # failed to update mappings
-            render "update_mappings"
-          else
-            logger.debug "update failed, incorrect step:#{@import_sheet.step}"
-            "internal error, update failed with incorrect step:#{@import_sheet.step}"
-          end
-        end
+        format.js
       end
     end
   end
@@ -164,35 +149,44 @@ class ImportSheetsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to import_sheets_url }
       format.json { head :no_content }
+      format.js
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_import_sheet
+      @t = params[:_t] || "sale"
       @import_sheet = ImportSheet.find(params[:id])
+    end
+
+    def new_import_sheet
+      @t = params[:_t] || "sale"
+      model = "import_#{@t}".classify
+      ImportSheet.new(store_id: @store_id, user_id: @user_id, type: model)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_sheet_params
-      logger.debug "step: #{params[:import_sheet][:step]}"
-      case params[:import_sheet][:step]
-      when 2,"2"
-        logger.debug "choose sheet step"
-        return params.require(:import_sheet).permit(:user_id, :step, :comment, :category_id, :sel_sheets => [])
-      when 3,"3"
-        logger.debug "mapping step, :mapping is whitelist'd"
-        return params.require(:import_sheet).permit(:user_id, :step).tap do |whitelist|
-          whitelist[:mapping] = params[:import_sheet][:mapping]
-        end
-        # logger.debug "whitelist param :mapping, form param: #{prm.to_json}"
-        # return prm
-      else
-        logger.debug "upload step, step:#{params[:import_sheet][:step]}"
-        return params.require(:import_sheet).permit(:store_id, :user_id, :comment, :upload_sheet)
-        # logger.debug "form param: #{prm.to_json}"
-        # return prm
-      end
-      # params.require(:import_sheet).permit(:store_id, :user_id, :filename, :comment, :ext, :upload_sheet)
+      params.require(:import_sheet).permit(:user_id, :store_id, :type, :file_upload, :comment, :_do)
+      #logger.debug "mapping step, :mapping is whitelist'd"
+      #return params.require(:import_sheet).permit(:user_id, :step).tap do |whitelist|
+      #  whitelist[:mapping] = params[:import_sheet][:mapping]
+      #end
     end
+
+    def set_do_param(param)
+      # judge by commit param
+      if commit_param == :import
+        param["_do"] = "import"
+        param.delete "file_upload"
+      end
+      param
+    end
+
+    def commit_param
+      @@commits[params[:commit]]
+    end
+
+    @@commits = I18n.t("dict.commits").invert
 end

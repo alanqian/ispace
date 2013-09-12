@@ -6,10 +6,6 @@ class ImportStore < ImportSheet
       :region => 0,
       :store => 0,
     }
-    @tables = {
-      :region => Region,
-      :store => Store,
-    }
   end
 
   def start_import?(sheet)
@@ -19,6 +15,10 @@ class ImportStore < ImportSheet
     @count = {
       :region => 0,
       :store => 0,
+    }
+    @tables = {
+      :region => Region,
+      :store => Store,
     }
     true
   end

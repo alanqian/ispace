@@ -1,6 +1,5 @@
 class ImportProduct < ImportSheet
   before_destroy :delete_imported
-  after_update :import
   validate :validate_categories
 
   def categories
@@ -23,7 +22,6 @@ class ImportProduct < ImportSheet
         end
       end
     end
-    @imported_cat = {}
     self.imported[:categories] = ctg
     self.imported[:count] = {
       :brand => 0,
@@ -31,13 +29,6 @@ class ImportProduct < ImportSheet
       :supplier => 0,
       :product => 0,
       :category => 0,
-    }
-
-    @tables = {
-      :brand => Brand,
-      :manufacturer => Manufacturer,
-      :supplier => Supplier,
-      :product => Product
     }
   end
 
@@ -76,6 +67,13 @@ class ImportProduct < ImportSheet
       :product => 0,
     }
     @category_id = categories[sheet[:id]]
+    @tables = {
+      :brand => Brand,
+      :manufacturer => Manufacturer,
+      :supplier => Supplier,
+      :product => Product
+    }
+    @imported_cat = {}
     true
   end
 

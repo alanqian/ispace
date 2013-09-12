@@ -24,11 +24,12 @@ en:
       defaults:
 
       import_sheet:
+        file_upload: "上传文件"
+        comment: "备注"
+
         upload_sheet: "Please upload product info file(xls,xlsx,csv):"
         # 请上传商品信息的电子表文件(xls,xlsx,csv)
         filename: "upload spreadsheet file:"
-        comment: ""
-        category_id: "Choose a Category of Product: "
 
       brand:
 

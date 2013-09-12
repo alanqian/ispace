@@ -2,6 +2,9 @@ class ImportCategory < ImportSheet
   before_destroy :delete_imported
 
   def on_upload
+    imported[:count] = {
+      category: [0, 0, 0]
+    }
   end
 
   def start_import?(sheet)
@@ -44,7 +47,7 @@ class ImportCategory < ImportSheet
   end
 
   def delete_imported
-    count = self.imported[:count][:category]
+    count = self.imported[:count][:category].sum
     if count > 0
       Category.delete_all(["import_id=?", self.id])
       logger.debug "discard import Category, import_id:#{id} count:#{count}"

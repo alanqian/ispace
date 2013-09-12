@@ -1,8 +1,8 @@
-<h1>upload product file</h1>
+<h1>generic upload: <%= @import_sheet._target %> </h1>
 
 
 <div id="container">
-<%= render 'upload', import_sheet: @import_sheet %>
+<%= render 'form', import_sheet: @import_sheet %>
 </div>
 
 <%= link_to 'Back', import_sheets_path %>
