@@ -1,0 +1,98 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  comment: import category
+  filename: cat1.xls
+  type: ImportCategory
+  sheets: ["Sheet1"]
+  mapping: {}
+  imported:
+    :count:
+      :category: [0, 0, 0]
+    :rows: 0
+    :sheets:
+    - :id: 0
+      :name: Sheet1
+      :fields:
+      - 大类代码
+      - 大类名称
+      - 中类代码
+      - 中类名称
+      - 小类代码
+      - 小类名称
+      :ignore: []
+      :bad_sheets: []
+  store_id: 1
+  user_id: 1
+  _do: "import"
+
+two:
+  comment: import store
+  filename: store.xls
+  type: ImportStore
+  sheets: ["Sheet1"]
+  mapping: {}
+  imported:
+    :count:
+      :region: 0
+      :store: 0
+    :rows: 0
+    :sheets:
+    - :id: 0
+      :name: Sheet1
+      :fields:
+      - 大类代码
+      - 大类名称
+      :ignore: []
+      :bad_sheets: []
+  store_id: 1
+  user_id: 1
+  _do: "import"
+
+three:
+  comment: import product
+  filename: store.xls
+  type: ImportProduct
+  sheets: ["Sheet1"]
+  mapping: {}
+  imported:
+    :count:
+      :brand: 0
+      :supplier: 0
+      :manufacturer: 0
+      :product: 0
+    :rows: 0
+    :sheets:
+    - :id: 0
+      :name: Sheet1
+      :fields:
+      - 大类代码
+      - 大类名称
+      :ignore: []
+      :bad_sheets: []
+  store_id: 1
+  user_id: 1
+  _do: "import"
+
+four:
+  comment: import sales
+  filename: store.xls
+  type: ImportSale
+  sheets: ["Sheet1"]
+  mapping: {}
+  imported:
+    :count:
+      :sale: 0
+    :rows: 0
+    :sheets:
+    - :id: 0
+      :name: Sheet1
+      :fields:
+      - 大类代码
+      - 大类名称
+      :ignore: []
+      :bad_sheets: []
+  store_id: 1
+  user_id: 1
+  _do: "import"
+

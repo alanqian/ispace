@@ -29,7 +29,7 @@ class ImportSaleTest < ImportSheetTest
 
       upload_sheet(filename)
 
-      assert @import_sheet.errors.any?, "upload bad file #{filename}"
+      assert @import_sheet.imported[:sheets].empty?, "upload bad file #{filename}"
       dump
     end
   end

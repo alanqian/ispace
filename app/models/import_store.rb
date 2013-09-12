@@ -1,18 +1,14 @@
 class ImportStore < ImportSheet
   before_destroy :delete_imported
 
-  def initialize(params_hash = {})
-    @tables = {
-      :region => Region,
-      :store => Store,
-    }
-    super params_hash.merge({ob: "store"})
-  end
-
   def on_upload
     self.imported[:count] = {
       :region => 0,
       :store => 0,
+    }
+    @tables = {
+      :region => Region,
+      :store => Store,
     }
   end
 

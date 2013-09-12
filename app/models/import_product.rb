@@ -1,23 +1,13 @@
 class ImportProduct < ImportSheet
   before_destroy :delete_imported
   after_update :import
-  # validate :validate_categories, on: [:create, :update]
+  validate :validate_categories
 
   def categories
-    custom[:categories]
+    imported[:categories]
   end
 
   def categories=(f)
-  end
-
-  def initialize(params_hash = {})
-    @tables = {
-      :brand => Brand,
-      :manufacturer => Manufacturer,
-      :supplier => Supplier,
-      :product => Product
-    }
-    super params_hash.merge({ob: "product"})
   end
 
   # get categories by sheet name
@@ -26,20 +16,28 @@ class ImportProduct < ImportSheet
     sheets.each do |sheet|
       unless sheet[:empty]
         code = find_category_code(sheet[:name])
-        ctg[sheet[:id]] = code
-        if !code
-          self.errors.add :sheets, "worksheet #{sheet[:id]}: #{sheet[:name]} is not a category"
+        if code
+          ctg[sheet[:id]] = code
+        else
+          # self.errors.add :sheets, "worksheet #{sheet[:id]}: #{sheet[:name]} is not a category"
         end
       end
     end
-    custom[:categories] = ctg
     @imported_cat = {}
+    self.imported[:categories] = ctg
     self.imported[:count] = {
       :brand => 0,
       :manufacturer => 0,
       :supplier => 0,
       :product => 0,
       :category => 0,
+    }
+
+    @tables = {
+      :brand => Brand,
+      :manufacturer => Manufacturer,
+      :supplier => Supplier,
+      :product => Product
     }
   end
 
@@ -49,6 +47,7 @@ class ImportProduct < ImportSheet
     self.sheets.each do |sheet|
       if !sheet[:empty]
         if !valid_category?(sheet[:name])
+          self.errors.add :sheets, "worksheet #{sheet[:id]}: #{sheet[:name]} is not a category"
           ec += 1
         end
       end

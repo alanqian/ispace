@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130909155648) do
+ActiveRecord::Schema.define(version: 20130912035808) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -110,9 +110,8 @@ ActiveRecord::Schema.define(version: 20130909155648) do
   create_table "import_sheets", force: true do |t|
     t.string   "comment"
     t.string   "filename"
-    t.string   "ob",         limit: 48
+    t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
-    t.text     "custom"
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
@@ -122,7 +121,7 @@ ActiveRecord::Schema.define(version: 20130909155648) do
     t.string   "_do",        limit: 48
   end
 
-  add_index "import_sheets", ["ob"], name: "index_import_sheets_on_ob", using: :btree
+  add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
   add_index "import_sheets", ["updated_at"], name: "index_import_sheets_on_updated_at", using: :btree
 
   create_table "manufacturers", force: true do |t|

@@ -1,10 +1,6 @@
 class ImportCategory < ImportSheet
   before_destroy :delete_imported
 
-  def initialize(params_hash = {})
-    super params_hash.merge({ob: "category"})
-  end
-
   def on_upload
   end
 

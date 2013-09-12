@@ -4,43 +4,50 @@ require "roo"
 
 class ImportSheet < ActiveRecord::Base
   serialize :sheets, Array
-  serialize :custom, Hash
   serialize :mapping, Hash
   serialize :imported, Hash
 
-  validates :ob, presence: true
+  validates :type, presence: true
   validates :_do, presence: true
-  validates :sheets, presence: true, on: :create
-  validates :comment, presence: true, on: :create
-  validates :file_upload, presence: true, on: :create
-  validate :validate_mapping, on: :create, on: :update
+  validates :sheets, presence: true
+  validates :comment, presence: true
+  validates :file_upload, presence: true
+  validate :validate_mapping
+  validate :validate_sheets
 
-  # :message => "Please upload csv, xls, xlsx file!"
-  # fake method for rails
+  # fake method for view
+  def _target
+    type.underscore.sub(/^import_/, '')
+  end
+
+  # fake method for view
   def file_upload
     self.filename
   end
+
 
   # 1. load sheets, assign self.filename
   # 2. set field mapping for this upload
   # 3. reset imported, and, set other customized stuffs...
   def file_upload=(upload_field)
     logger.debug "upload_file, user_id: #{self.user_id}"
+    _do = "upload"
+    reset_imported
     self.filename = upload_field.original_filename
     ext = File.extname(base_part_of(self.filename).downcase)
     self.sheets = self.class.load_xls(upload_field, ext)
     if self.sheets && !self.sheets.empty?
       logger.debug "upload_file ok, filename:#{upload_field.original_filename}"
     end
-    reset_imported
     set_field_mapping
     on_upload
-    filename
+    return filename
   rescue => e
     logger.warn "exception: #{e.to_s}\n#{e.backtrace.join("\n")}"
-    self.errors[:file_upload] << "failed to open sheet: #{upload_field.original_filename}"
+    sheets = []
     logger.debug "file_upload failed, filename:#{upload_field.original_filename}"
-    nil
+    _do = "upload:fail"
+    return nil
   end
 
   def on_upload
@@ -53,6 +60,29 @@ class ImportSheet < ActiveRecord::Base
     else
       return true
     end
+  end
+
+  def validate_sheets
+    ec = 0
+    if !sheets || sheets.empty?
+      self.errors[:file_upload] << "failed to open file: #{filename}"
+      ec += 1
+    end
+
+    if !imported[:sheets] || imported[:sheets].empty?
+      errors.add :sheets, "no valid sheet to import data"
+      ec += 1
+
+      imported[:bad_sheets].each do |sheet|
+        fields = sheet[:fields]
+        ignore = sheet[:ignore]
+        missing = sheet[:missing]
+        errors.add :sheets, "bad sheet: sheet(#{sheet[:id]}) `#{sheet[:name]}`:\n" +
+          "fields: #{fields.to_s} ignore: #{ignore.to_s} missing: #{missing.to_s}"
+        ec += 1
+      end
+    end
+    return ec == 0
   end
 
   # finish the import task
@@ -109,7 +139,7 @@ class ImportSheet < ActiveRecord::Base
         end
       end
       return if fail_row_index || !end_import(sheet)
-      self.imported[:rows] += row_index - 1 # ???
+      self.imported[:rows] += row_index - 1
     end
   end
 
@@ -196,7 +226,7 @@ class ImportSheet < ActiveRecord::Base
           ignore: ignore_fields,
           missing: required_set.values
         })
-        errors[:sheets] << "sheet #{sheet[:name]} missing required fields: #{required_set.values.join(', ')}"
+        # errors[:sheets] << "sheet #{sheet[:name]} missing required fields: #{required_set.values.join(', ')}"
       else
         imported[:sheets].push({
           id: sheet[:id],
@@ -211,7 +241,8 @@ class ImportSheet < ActiveRecord::Base
       self.mapping = m
     end
     if imported[:sheets].empty?
-      errors[:sheets] << "no valid sheet to import"
+      # errors[:sheets] << "no valid sheet to import"
+      logger.warn "no valid sheet to import"
     end
   end
 
@@ -305,7 +336,6 @@ class ImportSheet < ActiveRecord::Base
     }
 
     dict = I18n.t("import_sheets.#{table_name}")
-    custom = dict[:_custom]
     field_mapping = {}
     fields = []
     types = {}
@@ -347,6 +377,15 @@ class ImportSheet < ActiveRecord::Base
 
     class_dict[:_types] = types
     class_dict
+  end
+
+  def self.inherited(child)
+    child.instance_eval do
+      def model_name
+        ImportSheet.model_name
+      end
+    end
+    super
   end
 end
 

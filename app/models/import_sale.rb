@@ -1,10 +1,6 @@
 class ImportSale < ImportSheet
   before_destroy :delete_imported
 
-  def initialize(params_hash = {})
-    super params_hash.merge({ob: "sale"})
-  end
-
   def on_upload
     self.imported[:count] = {
       :sale => 0,

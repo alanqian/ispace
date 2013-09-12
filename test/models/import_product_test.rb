@@ -24,9 +24,8 @@ class ImportProductTest < ImportSheetTest
       @import_sheet.errors.clear
 
       upload_sheet(filename)
-
-      assert @import_sheet.errors.any?, "upload bad file #{filename}"
       dump
+      assert @import_sheet.imported[:sheets].empty? || @import_sheet.imported[:categories].empty?, "upload bad file #{filename}"
     end
   end
 
