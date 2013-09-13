@@ -10,6 +10,13 @@
 #####################################################################
 # basic admin data
 
+User.delete_all
+User.create(
+  email: 't@g.cn',
+  password: '00000000',
+  password_confirmation: '00000000'
+)
+
 Category.delete_all
 Category.create(
   code: "1",
