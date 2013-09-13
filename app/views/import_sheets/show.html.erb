@@ -1,10 +1,16 @@
 <%# show import results ONLY %>
 
+<%#
+  1. filename, comment
+  2. spreadsheet preview
+  3. imported count:
+     sheets, rows, records,
+  4. structure info:
+     fields, ignore fields
+  5. discard button;
+%>
+
 <p id="notice"><%= notice %></p>
-<p>
-  <strong>User:</strong>
-  <%= @import_sheet.user_id %>
-</p>
 <p>
   <strong>Filename:</strong>
   <%= @import_sheet.filename %>
@@ -14,26 +20,22 @@
   <%= @import_sheet.comment %>
 </p>
 <p>
-  <strong>Sel_sheets:</strong>
-  <%= @import_sheet.sel_sheets %>
-</p>
-<p>
-  <strong>Category:</strong>
-  <%= @import_sheet.category_id %>
-</p>
-<p>
   <strong>Imported:</strong>
-  <%#= @import_sheet.imported %>
-  <ol>
-    <% @import_sheet.imported.each do |k,count| %>
-      <% table = t("activerecord.models.#{k}") %>
-      <% ctrler = k.to_s.pluralize %>
-      <%= link_to "#{table}: #{count}", controller: ctrler, action: 'index', import_id: @import_sheet.id %>
-    <% end %>
-  </ol>
+  <%#= @import_sheet.imported.to_json %>
+  <%= render "imported", import_sheet: @import_sheet %>
+  <%= render 'counts', import_sheet: @import_sheet %>
+</p>
+<p>
+  <strong>Date:</strong>
+  <%= @import_sheet.created_at.localtime %>
 </p>
 
 <hr/>
+<p>
+  <strong>Sheets:</strong>
+  <%#= @import_sheet.sheets %>
+  <%= render 'preview', import_sheet: @import_sheet %>
+</p>
 
 <%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
-<%= link_to 'Back', import_sheets_path %>
+<%= link_to 'Back', import_sheets_path(_t: @t) %>

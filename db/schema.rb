@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130909155648) do
+ActiveRecord::Schema.define(version: 20130912035808) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -50,12 +50,13 @@ ActiveRecord::Schema.define(version: 20130909155648) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",                  null: false
+    t.string   "name",                               null: false
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",       limit: 32, null: false
+    t.string   "code",       limit: 32,              null: false
     t.string   "parent_id",  limit: 32
+    t.integer  "import_id",             default: -1
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
@@ -109,18 +110,19 @@ ActiveRecord::Schema.define(version: 20130909155648) do
   create_table "import_sheets", force: true do |t|
     t.string   "comment"
     t.string   "filename"
-    t.string   "ext"
-    t.text     "sheets",      limit: 2147483647
-    t.string   "sel_sheets"
-    t.string   "category_id"
-    t.text     "mapping",     limit: 16777215
-    t.string   "imported"
+    t.string   "type",       limit: 48
+    t.text     "sheets",     limit: 2147483647
+    t.string   "_do",        limit: 48
+    t.text     "mapping",    limit: 16777215
+    t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
-    t.integer  "step",                           default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
+  add_index "import_sheets", ["updated_at"], name: "index_import_sheets_on_updated_at", using: :btree
 
   create_table "manufacturers", force: true do |t|
     t.string   "name"
@@ -239,6 +241,7 @@ ActiveRecord::Schema.define(version: 20130909155648) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "consume_type", limit: 32, default: "B", null: false
+    t.integer  "import_id",               default: -1
   end
 
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
