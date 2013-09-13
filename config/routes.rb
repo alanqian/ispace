@@ -1,18 +1,18 @@
 Ispace::Application.routes.draw do
 
-  devise_for :users
+  resources :plan_sets
+  resources :plans
 
+  devise_for :users
   devise_scope :user do
     get "sign_in" => "devise/sessions#new", as: :sign_in
     delete "sign_out" => "devise/sessions#destroy", as: :sign_out
   end
 
   resources :users
-
   resources :sales
 
   get "mdses/" => "mdses#index"
-
   resources :brands
   resources :suppliers
   resources :manufacturers

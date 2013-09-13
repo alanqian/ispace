@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @plan_set.name %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @plan_set.notes %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @plan_set.category_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @plan_set.user_id %>
+</p>
+
+<p>
+  <strong>Plans:</strong>
+  <%= @plan_set.plans %>
+</p>
+
+<p>
+  <strong>Stores:</strong>
+  <%= @plan_set.stores %>
+</p>
+
+<p>
+  <strong>Published at:</strong>
+  <%= @plan_set.published_at %>
+</p>
+
+<p>
+  <strong>Unpublished plans:</strong>
+  <%= @plan_set.unpublished_plans %>
+</p>
+
+<p>
+  <strong>Undeployed stores:</strong>
+  <%= @plan_set.undeployed_stores %>
+</p>
+
+<%= link_to 'Edit', edit_plan_set_path(@plan_set) %> |
+<%= link_to 'Back', plan_sets_path %>

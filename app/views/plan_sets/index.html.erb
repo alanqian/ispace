@@ -1,0 +1,43 @@
+<h1>Listing plan_sets</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Notes</th>
+      <th>Category</th>
+      <th>User</th>
+      <th>Plans</th>
+      <th>Stores</th>
+      <th>Published at</th>
+      <th>Unpublished plans</th>
+      <th>Undeployed stores</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @plan_sets.each do |plan_set| %>
+      <tr>
+        <td><%= plan_set.name %></td>
+        <td><%= plan_set.notes %></td>
+        <td><%= plan_set.category_id %></td>
+        <td><%= plan_set.user_id %></td>
+        <td><%= plan_set.plans %></td>
+        <td><%= plan_set.stores %></td>
+        <td><%= plan_set.published_at %></td>
+        <td><%= plan_set.unpublished_plans %></td>
+        <td><%= plan_set.undeployed_stores %></td>
+        <td><%= link_to 'Show', plan_set %></td>
+        <td><%= link_to 'Edit', edit_plan_set_path(plan_set) %></td>
+        <td><%= link_to 'Destroy', plan_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Plan set', new_plan_set_path %>

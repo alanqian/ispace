@@ -1,0 +1,19 @@
+<%= simple_form_for(@plan_set) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :name %>
+    <%= f.input :notes %>
+    <%= f.input :category_id %>
+    <%= f.input :user_id %>
+    <%= f.input :plans %>
+    <%= f.input :stores %>
+    <%= f.input :published_at %>
+    <%= f.input :unpublished_plans %>
+    <%= f.input :undeployed_stores %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
