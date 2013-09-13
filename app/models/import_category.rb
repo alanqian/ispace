@@ -1,6 +1,4 @@
 class ImportCategory < ImportSheet
-  before_destroy :delete_imported
-
   def on_upload
     imported[:count] = {
       category: [0, 0, 0]
@@ -35,10 +33,10 @@ class ImportCategory < ImportSheet
   end
 
   def end_import(sheet)
-    columns = [:code, :name, :parent_id]
+    columns = [:code, :name, :parent_id, :import_id]
     values = []
     @importing.each do |code, name|
-      values.push [code, name, parent_code(code)]
+      values.push [code, name, parent_code(code), self.id]
     end
     Category.import(columns, values)
     @importing.clear
@@ -46,12 +44,14 @@ class ImportCategory < ImportSheet
     true
   end
 
-  def delete_imported
-    count = self.imported[:count][:category].sum
-    if count > 0
-      Category.delete_all(["import_id=?", self.id])
-      logger.debug "discard import Category, import_id:#{id} count:#{count}"
-    end
+  def self.map_dict
+    @@dict
+  end
+
+  def self.import_tables
+    imports = {
+      category: Category
+    }
   end
 
   private
@@ -67,10 +67,6 @@ class ImportCategory < ImportSheet
     pcode = parent_code(code)
     return true unless pcode
     return Category.exists?(pcode) || @importing[pcode]
-  end
-
-  def self.map_dict
-    @@dict
   end
 
   @@dict = load_dict("import_categories")

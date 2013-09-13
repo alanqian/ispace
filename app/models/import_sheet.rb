@@ -14,7 +14,8 @@ class ImportSheet < ActiveRecord::Base
   validates :file_upload, presence: true
   validate :validate_mapping
   validate :validate_sheets
-  after_update :import
+  before_update :import
+  before_destroy :discard_imported
 
   # fake method for view
   def _target
@@ -25,7 +26,6 @@ class ImportSheet < ActiveRecord::Base
   def file_upload
     self.filename
   end
-
 
   # 1. load sheets, assign self.filename
   # 2. set field mapping for this upload
@@ -90,16 +90,19 @@ class ImportSheet < ActiveRecord::Base
   def import
     return if mapping.empty? || self._do != "import"
 
+    failed = false
     sheets.each do |sheet|
       if sheet[:empty]
         logger.debug "skip empty sheet[#{sheet[:id]}]: #{sheet[:name]}"
         next
       end
+      next if sheet[:empty]
       if !start_import?(sheet)
-        logger.debug "failed to start import sheet[#{sheet[:id]}]: #{sheet[:name]}"
-        return
+        logger.warn "failed to start import, id:#{id} sheet[#{sheet[:id]}]: #{sheet[:name]}"
+        imported[:_fail] = [sheet[:name], 0]
+        failed = true
+        break
       end
-      next if sheet[:empty] || !start_import?(sheet)
       # get the mapping
       map = []
       sheet[:header].each do |field|
@@ -107,7 +110,6 @@ class ImportSheet < ActiveRecord::Base
       end
 
       row_index = 1
-      fail_row_index = nil
       sheet[:cells].each do |row|
         params = {}
         for i in 0..(map.size-1)
@@ -133,14 +135,24 @@ class ImportSheet < ActiveRecord::Base
           end
         end
         if !import_row(params, row_index)
-          fail_row_index = row_index
+          imported[:_fail] = [sheet[:name], row_index]
+          failed = true
           break
         else
           row_index += 1
         end
       end
-      return if fail_row_index || !end_import(sheet)
+      return if failed;
+      if !end_import(sheet)
+        imported[:_fail] = [sheet[:name], -1]
+        break
+      end
       self.imported[:rows] += row_index - 1
+    end
+
+    if failed
+      # TODO: discard import, delete imported...
+      discard_imported
     end
   end
 
@@ -155,6 +167,18 @@ class ImportSheet < ActiveRecord::Base
 
   def end_import(sheet)
     true
+  end
+
+  def discard_imported
+    counts = self.imported[:count]
+    self.class.import_tables.each do |table, klass|
+      count = counts[table]
+      count = count.sum if count.kind_of?(Array)
+      if imported[:_fail] || count > 0
+        klass.delete_all(["import_id=?", self.id])
+        logger.debug "discard import #{klass}, import_id:#{id} count:#{count[table]}"
+      end
+    end
   end
 
   def import_local(local_file, comment="import local file")

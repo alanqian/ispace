@@ -1,6 +1,4 @@
 class ImportSale < ImportSheet
-  before_destroy :delete_imported
-
   def on_upload
     self.imported[:count] = {
       :sale => 0,
@@ -36,16 +34,14 @@ class ImportSale < ImportSheet
     @count = 0
   end
 
-  def delete_imported
-    count = self.imported[:count][:sale]
-    if count > 0
-      Category.delete_all(["import_id=?", self.id])
-      logger.debug "discard import Sale, import_id:#{id} count:#{count}"
-    end
-  end
-
   def self.map_dict
     @@dict
+  end
+
+  def self.import_tables
+    imports = {
+      :sale => Sale,
+    }
   end
 
   @@dict = load_dict("import_sales")

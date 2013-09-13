@@ -1,5 +1,4 @@
 class ImportProduct < ImportSheet
-  before_destroy :delete_imported
   validate :validate_categories
 
   def categories
@@ -67,18 +66,12 @@ class ImportProduct < ImportSheet
       :product => 0,
     }
     @category_id = categories[sheet[:id]]
-    @tables = {
-      :brand => Brand,
-      :manufacturer => Manufacturer,
-      :supplier => Supplier,
-      :product => Product
-    }
     @imported_cat = {}
     true
   end
 
   def end_import(sheet)
-    @tables.each do |table, _|
+    self.class.import_tables.each do |table, _|
       self.imported[:count][table] += @count[table]
     end
     if @imported_cat[@category_id]
@@ -103,7 +96,7 @@ class ImportProduct < ImportSheet
     [:brand, :supplier, :manufacturer].each do |k|
       # skip if no info for this table
       if params[k]
-        klass = @tables[k]
+        klass = self.class.import_tables[k]
         prm = params[k].merge(m)
         ar = klass.where(prm.select {|k,_| keys_set[k] }).first
         if ar
@@ -148,18 +141,17 @@ class ImportProduct < ImportSheet
     true
   end
 
-  def delete_imported
-    count = self.imported[:count]
-    @tables.each do |table, klass|
-      if count[table] > 0
-        klass.delete_all(["import_id=?", self.id])
-        logger.debug "discard import #{klass}, import_id:#{id} count:#{count[table]}"
-      end
-    end
-  end
-
   def self.map_dict
     @@dict
+  end
+
+  def self.import_tables
+    imports = {
+      :brand => Brand,
+      :manufacturer => Manufacturer,
+      :supplier => Supplier,
+      :product => Product
+    }
   end
 
   @@dict = load_dict("import_products")

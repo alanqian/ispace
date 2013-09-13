@@ -1,6 +1,4 @@
 class ImportStore < ImportSheet
-  before_destroy :delete_imported
-
   def on_upload
     self.imported[:count] = {
       :region => 0,
@@ -15,10 +13,6 @@ class ImportStore < ImportSheet
     @count = {
       :region => 0,
       :store => 0,
-    }
-    @tables = {
-      :region => Region,
-      :store => Store,
     }
     true
   end
@@ -76,19 +70,18 @@ class ImportStore < ImportSheet
     true
   end
 
-  def delete_imported
-    count = imported[:count]
-    @tables.each do |table, klass|
-      if count[table] > 0
-        klass.delete_all(["import_id=?", self.id])
-        logger.debug "discard import #{klass}, import_id:#{id} count:#{count[table]}"
-      end
-    end
-  end
-
   def self.map_dict
     @@dict
   end
+
+  def self.import_tables
+    imports = {
+      :region => Region,
+      :store => Store,
+      # TODO: user?
+    }
+  end
+
 
   private
   def parent_region_code(code)
