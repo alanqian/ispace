@@ -1,5 +1,14 @@
 Ispace::Application.routes.draw do
+
   devise_for :users
+
+  devise_scope :user do
+    get "sign_in" => "devise/sessions#new", as: :sign_in
+    delete "sign_out" => "devise/sessions#destroy", as: :sign_out
+  end
+
+  resources :users
+
   resources :sales
 
   get "mdses/" => "mdses#index"
@@ -32,7 +41,7 @@ Ispace::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'stores#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
