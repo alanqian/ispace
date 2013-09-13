@@ -29,7 +29,14 @@ class ImportStore < ImportSheet
           abbr_region = false
         end
 
-        if valid_region_code?(region_params[:code])
+        if Region.exists?(region_params[:code])
+          @region_id = region_params[:code]
+          logger.warn "duplicated region updated, code:#{region_params[:code]}"
+          region_params[:consume_type] ||= "B"
+          region_params[:import_id] = self.id
+          Region.update(@region_id, region_params)
+          @region_pre = @region_id unless abbr_region
+        elsif valid_region_code?(region_params[:code])
           # import it!
           region_params[:consume_type] ||= "B"
           region_params[:import_id] = self.id

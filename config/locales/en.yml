@@ -25,14 +25,15 @@ en:
   #   validates :email, :presence: true
   activerecord:
     models:
-      category: "品类"
-      user: "Customer"
-      brand: "品牌"
-      supplier: "供应商"
-      manufacturer: "生产商"
-      product: "商品"
-      sale: "销售记录"
-      store: "门店"
+      category: 品类
+      region: 区域
+      store: 门店
+      user: 用户
+      brand: 品牌
+      supplier: 供应商
+      manufacturer: 生产商
+      product: 商品
+      sale: 销售记录
 
     attributes:
       category:
@@ -202,7 +203,7 @@ en:
         case_pack_name: "包装"
         barcode: "条形码"
         color: "颜色"
-        sale_type: "商品类型"
+        sale_type: "销售类型"
         new_product: "新品"
         on_promotion: "促销"
       brand:
