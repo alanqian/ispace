@@ -112,13 +112,13 @@ ActiveRecord::Schema.define(version: 20130912035808) do
     t.string   "filename"
     t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
+    t.string   "_do",        limit: 48
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "_do",        limit: 48
   end
 
   add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
