@@ -176,7 +176,7 @@ class ImportSheet < ActiveRecord::Base
       count = count.sum if count.kind_of?(Array)
       if imported[:_fail] || count > 0
         klass.delete_all(["import_id=?", self.id])
-        logger.debug "discard import #{klass}, import_id:#{id} count:#{count[table]}"
+        logger.debug "discard import #{klass}, import_id:#{id} count:#{count}"
       end
     end
   end
