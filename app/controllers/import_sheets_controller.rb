@@ -112,6 +112,7 @@ class ImportSheetsController < ApplicationController
         format.json { render action: 'show', status: :created, location: @import_sheet }
         format.js
       else
+        logger.warn "upload failed, id:#{@import_sheet.id} imported:#{@import_sheet.imported.to_s}"
         format.html { render action: 'new', import_sheet: @import_sheet }
         format.json { render json: @import_sheet.errors, status: :unprocessable_entity }
         format.js
@@ -135,6 +136,7 @@ class ImportSheetsController < ApplicationController
         format.json { head :no_content }
         format.js
       else
+        logger.warn "import failed, id:#{@import_sheet.id} imported:#{@import_sheet.imported.to_s}"
         format.html { render action: 'edit' }
         format.json { render json: @import_sheet.errors, status: :unprocessable_entity }
         format.js
@@ -156,8 +158,8 @@ class ImportSheetsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_import_sheet
-      @t = params[:_t] || "sale"
       @import_sheet = ImportSheet.find(params[:id])
+      @t = @import_sheet._target
     end
 
     def new_import_sheet

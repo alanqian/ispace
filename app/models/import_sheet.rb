@@ -235,7 +235,8 @@ class ImportSheet < ActiveRecord::Base
           required_set.delete field
           m[col_name] = field
         else
-          ignore_fields.push([col.dup, col_name])
+          # ignore_fields.push([col.dup, col_name])
+          ignore_fields.push(col_name)
         end
         col.succ!
       end
