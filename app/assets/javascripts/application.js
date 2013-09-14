@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery.ui.all
 //= require jquery_ujs
-//= require twitter/bootstrap
 //= require jquery.remotipart
 //= require splitter-152.js
 //= require jquery.dataTables.js

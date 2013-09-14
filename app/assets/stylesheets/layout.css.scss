@@ -1,0 +1,191 @@
+/* css from bootstrap */
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+a {
+  color: #0088cc;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #005580;
+  text-decoration: underline;
+}
+a:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+a:hover,
+a:active {
+  outline: 0;
+}
+sub,
+sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  /* Responsive images (ensure images don't scale beyond their parents) */
+
+  max-width: 100%;
+  /* Part 1: Set a maxium relative to the parent */
+
+  width: auto\9;
+  /* IE7-8 need help adjusting responsive images */
+
+  height: auto;
+  /* Part 2: Scale the height according to the width, otherwise you get stretching */
+
+  vertical-align: middle;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+/* end */
+
+@mixin list-reset {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@mixin clearfix {
+  display: inline-block;
+  &:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+  }
+}
+
+.navbar-fixed-top {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1030;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #aaa;
+}
+
+
+.navbar {
+  a {
+    display: block;
+    padding: 7px 15px;
+    color: gray;
+    text-decoration: none;
+  }
+  a.brand {
+    float: left;
+    padding-left: 0;
+    font-size: 18px;
+    line-height: 20px;
+  }
+  .navbar-inner {
+    position: relative;
+  }
+}
+
+.pull-right {
+  float: right !important;
+}
+
+ul.nav {
+  @include clearfix();
+  @include list-reset();
+  li {
+    float: left;
+  }
+}
+
+.dropdown {
+  position: relative;
+  width: 100px;
+  &:hover {
+    .dropdown-menu {
+      display: block !important;
+      background-color: #FFF;
+      border: 1px solid #aaa;
+    }
+  }
+  a.dropdown-toggle {
+    float: none;
+  }
+  .dropdown-menu {
+    @include list-reset();
+    display: none;
+    position: absolute;
+    width: 100px;
+    li {
+      width: 100px;
+    }
+  }
+}
+
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+.row {
+  @include clearfix();
+}
+
+.sidebar {
+  width: 200px;
+  float: left;
+}
+
+.main {
+  width: 740px;
+  margin-left: 20px;
+  float: left;
+}
+
+nav[role="navigation"] {
+  > ul > li {
+    width: 90%;
+  }
+  ul li a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  ul li a:focus,
+  ul li a:hover {
+    background: #eee;
+  }
+  ul li a:active {
+    background: #ddd;
+  }
+}

@@ -10,11 +10,11 @@
  * at the top of the compiled file, but it's generally better to create a new
  * file per style scope.
  *
+ *= require layout
  *= require jquery.ui.all
  *= require jquery.simplecolorpicker.css
  *= require jquery.dataTables.css
  *= require demo_table_jui.css
- *= require bootstrap_and_overrides
  *= require_self
  */
 
