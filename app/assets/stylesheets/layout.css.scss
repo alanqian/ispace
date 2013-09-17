@@ -89,6 +89,7 @@ img {
   position: fixed;
   left: 0;
   top: 0;
+  background-color: #FFF;
   z-index: 1030;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -187,5 +188,30 @@ nav[role="navigation"] {
   }
   ul li a:active {
     background: #ddd;
+  }
+}
+
+/* basic form style */
+form {
+  div.input {
+    margin: 5px 0;
+    line-height: 1.6em;
+    color: #333;
+    input {
+      line-height: 1.6em;
+      padding: 0 5px;
+      color: #333;
+    }
+    input[type=text], input[type=number] {
+      width: 200px;
+    }
+    textarea {
+      width: 400px;
+      height: 10em;
+    }
+  }
+  label {
+    min-width: 150px;
+    display: inline-block;
   }
 }
