@@ -2,18 +2,35 @@
   <%= f.error_notification %>
 
   <div class="inputs">
-    <%= f.input :name %>
-    <%= f.input :notes %>
-    <%= f.input :category_id %>
-    <%= f.input :user_id %>
-    <%= f.input :plans %>
-    <%= f.input :stores %>
+    <%= f.hidden_field :user_id %>
+    <% if @do == :edit_add_store %>
+      <p><strong>规划名称：</strong><%= @plan_set.name %> (<%= @plan_set.category_name %>)</p>
+      <%= content_tag :p, @plan_set.note %>
+    <% else %>
+      <%= f.input :name %>
+      <%= f.input :note, as: :text  %>
+      <%= f.input :category_id, input_html: { class: "auto_category", data: { ctg: @categories_all.to_json } } %>
+    <% end %>
+    <% if @plan_set.id %>
+      <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>
+      <%= field_set_tag "样板店", id: "model-stores" do %>
+        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all %>
+      <% end %>
+      <div id="model-store-info" data-stores="<%= model_store_info.to_json %>">
+        <p><span id="store.name"></span>: <span id="store.location"></span>, <span id="store.area"></span>m²</p>
+        <p>门店数：<span id="store.ref_count"></span>, 属<span id="store.region_name"></span></p>
+      </div>
+    <% end %>
+    <!--
+    <%= f.input :num_plans %>
+    <%= f.input :num_stores %>
     <%= f.input :published_at %>
     <%= f.input :unpublished_plans %>
     <%= f.input :undeployed_stores %>
+    -->
   </div>
 
   <div class="actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, "确定" %>
   </div>
 <% end %>

@@ -1,0 +1,160 @@
+<h1>空间设计</h1>
+
+<hr>
+<%= link_to "Test Update init_facing=4", plan_path(@plan, "plan[init_facing]" => 4), method: :put %>
+<hr>
+
+<h2>Test Toolbar</h2>
+
+<%# tools:
+  set facings for select products.
+  check sale_type: 必卖品
+  plan#publish,
+%>
+
+<hr>
+
+<% buttons = [
+  #--- the 1st row, 20x18 ---
+  "plan-new",
+  "plan-edit-summary",
+  "plan-publish",     #
+  "plan-copy-to",     # dup the plan to other model stores
+  "position-facing-inc",
+  "position-facing-dec",
+  "position-remove",
+  "positions-reorder",# Products can be repositioned in a different order
+                      # within a shelf or from a combination of shelves.
+                      # Select the products in the order that you want them to appear on
+                      # the shelf. (The first product selected will be first in traffic flow).
+  "position-edit-leading-gaps",  # ?: show dialog
+  "position-edit-dividers", # ?: show dialog
+
+  "switch-product-information", # switch the info on right/bottom/hide
+  "sort", # ??
+  "select-showing-information", # product infobox or product list on bottom
+  "switch-show-colors", # (brand/manufacture/product/supplier)
+] %>
+
+<%# [
+  #--- without image ---
+  "position-new",
+  "shelf-combine",
+  "shelf-break",
+  "peg-equalize-spacing",
+  "peg-close-up-spacing",
+  "peg-line-up-spacing",
+  "chest-auto-pack",
+  "chest-repack",
+  "chest-repack-all",
+  "chest-options",
+  "switch-peg-holes",
+  "undo",
+] %>
+
+<div id="plan_toolbar" class="ui-widget-header ui-corner-all">
+  <% buttons.each do |btn| %>
+    <%= button_tag btn, type: :button, id: btn, class: "toolbar-button",
+      data: { icon: "ui-#{btn}" } %>
+  <% end %>
+</div>
+
+<%#
+  fixture view:
+    from left to right: bay 1 -> bay 2 -> ...
+    from top to bottom: space, shelf, space, shelf, ..., space, shelf, base
+%>
+<div id="products-container">
+<%= render "/fixtures/layout", fixture: @plan.fixture %>
+</div>
+
+<!--
+<div id="products-container">
+  <div>
+    <table class="fixtures">
+      <thead>
+        <tr>
+          <th width="25%"></th><th width="25%"></th><th width="25%"></th><th width="25%"></th>
+        </tr>
+      <tbody >
+        <tr id="space1" class="bay-space"><td>1</td><td></td><td></td><td></td></tr>
+        <tr id="shelf1" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
+        <tr id="space2" class="bay-space"><td>2</td><td></td><td></td><td></td></tr>
+        <tr id="shelf2" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
+        <tr id="space3" class="bay-space"><td>3</td><td></td><td></td><td></td></tr>
+        <tr id="shelf3" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
+        <tr id="space4" class="bay-space"><td>4</td><td></td><td></td><td></td></tr>
+        <tr id="shelf4" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
+        <tr id="base" class="bay-base"><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ui-helper-clearfix"></div>
+</div>
+-->
+
+<hr/>
+
+<div id="info-box" class="ui-widget-content ui-corner-all ui-draggable1 ui-resizable1">
+  <h3 class="ui-widget-header">Product Info Box</h3>
+  <p>blah, blah</p>
+</div>
+
+<div id="products-data" class="ui-widget-header ui-corner-all">
+  <div id="products-list" class="ui-widget-content">
+    <p>This is products list.
+  </div>
+</div>
+
+
+<div>
+  <ul id="layer1" data-container="#space-4-7" class="sortable-editor">
+    <li class="ui-state-default">Item a1</li>
+    <li class="ui-state-default">Item a2</li>
+    <li class="ui-state-default">Item a3</li>
+    <li class="ui-state-default">Item a4</li>
+    <li class="ui-state-default">Item a5</li>
+  </ul>
+  <ul id="layer2" data-container="#space-4-6" class="sortable-editor">
+    <li class="ui-state-highlight">Item b1</li>
+    <li class="ui-state-highlight">Item b2</li>
+    <li class="ui-state-highlight">Item b3</li>
+    <li class="ui-state-highlight">Item b4</li>
+    <li class="ui-state-highlight">Item b5</li>
+    <li id="test" title="product 111" data-id="p111" class="product-item">
+      text must be replaced!
+    </li>
+  </ul>
+</div>
+
+<!--
+<div id="test_toolbar" class="ui-widget-header ui-corner-all">
+
+<button id="add-open-shelf" class="toolbar-button" data-icon="ui-add-open-shelf">Add OpenShelf</button>
+
+<input type="checkbox" id="switcher" class="toolbar-button" /><label for="switcher">Toggle</label>
+
+<span id="format" class="toolbar-button-set">
+  <input type="checkbox" id="bold" class="toolbar-button" /><label for="bold">B</label>
+  <input type="checkbox" id="italic" class="toolbar-button" /><label for="italic">I</label>
+  <input type="checkbox" id="underline" class="toolbar-button" /><label for="underline">U</label>
+</span>
+
+<span id="format" class="toolbar-button-set">
+  <button id="rerun" class="toolbar-button" >Run last action</button>
+  <button id="select" >Select an action</button>
+</span>
+
+<span id="repeat" class="toolbar-button-set">
+  <input type="radio" id="repeat0"  class="toolbar-button" name="repeat" checked="checked" /><label for="repeat0">No Repeat</label>
+  <input type="radio" id="repeat1"  class="toolbar-button" name="repeat" /><label for="repeat1">Once</label>
+  <input type="radio" id="repeatall"  class="toolbar-button" name="repeat" /><label for="repeatall">All</label>
+</span>
+</div>
+
+<ul id="menu">
+<li><a href="#">Open...</a></li>
+<li><a href="#">Save</a></li>
+<li><a href="#">Delete</a></li>
+</ul>
+-->

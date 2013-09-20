@@ -22,6 +22,7 @@ en:
       #     email: 'E-mail.'
       # my customize below here
       defaults:
+        category_id: 品类
 
       import_sheet:
         file_upload: "上传文件"
@@ -37,6 +38,11 @@ en:
         new_product: "新品"
         on_promotion: "促销"
 
+      plan_set:
+        name: 规划名称：
+        note: 说明：
+        category_id: 品类：
+        model_stores: 选择包含的样板店：
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:

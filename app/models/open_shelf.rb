@@ -31,4 +31,8 @@ class OpenShelf < ActiveRecord::Base
     r.depth = bay.base_depth
     r
   end
+
+  alias_attribute :merch_width, :width
+  alias_attribute :merch_height, :height
+  alias_attribute :shelf_thick, :thick
 end

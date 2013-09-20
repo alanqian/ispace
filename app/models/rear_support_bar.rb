@@ -24,4 +24,14 @@ class RearSupportBar < ActiveRecord::Base
     r.bay_id = bay.id
     r
   end
+
+  def merch_width
+    bay.back_width
+  end
+
+  def shelf_thick
+    bar_thick
+  end
+
+  alias_attribute :merch_height, :height
 end

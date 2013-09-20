@@ -20,7 +20,13 @@ class PlansControllerTest < ActionController::TestCase
 
   test "should create plan" do
     assert_difference('Plan.count') do
-      post :create, plan: { base_footage: @plan.base_footage, category_id: @plan.category_id, fixture_id: @plan.fixture_id, init_facing: @plan.init_facing, nominal_size: @plan.nominal_size, num_stores: @plan.num_stores, plan_set_id: @plan.plan_set_id, published_at: @plan.published_at, store_id: @plan.store_id, usage_percent: @plan.usage_percent, user_id: @plan.user_id }
+      post :create, plan: {
+        category_id: @plan.category_id,
+        fixture_id: @plan.fixture_id,
+        init_facing: @plan.init_facing,
+        plan_set_id: @plan.plan_set_id,
+        store_id: @plan.store_id + 1000,
+        user_id: @plan.user_id }
     end
 
     assert_redirected_to plan_path(assigns(:plan))

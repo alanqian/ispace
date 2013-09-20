@@ -22,4 +22,12 @@ class FreezerChest < ActiveRecord::Base
     r.bay_id = bay.id
     r
   end
+
+  def merch_width
+    bay.back_width
+  end
+
+  def shelf_thick
+    0
+  end
 end

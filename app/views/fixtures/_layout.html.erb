@@ -1,0 +1,70 @@
+<h3>fixtures here!</h3>
+<% shelf_space = fixture.shelf_spaces %>
+<% total_width = shelf_space.sum { |id,spaces| spaces[:width] * spaces[:num_bays] } %>
+
+<div id="fixture-<%= fixture.id %>" class="fixture-layout">
+  <% shelf_space.each do |item_id, spaces| %>
+    <%
+      bays_width = spaces[:width] * spaces[:num_bays]
+      num_bays = spaces[:num_bays]
+      ratio = bays_width * 99.999 / total_width
+      base_h = spaces[:base_height] * 99.99 / spaces[:height]
+      base_color = spaces[:base_color]
+    %>
+    <div id="fixture_<%= item_id %>" class="fixture-item-layout" style="width:<%=ratio%>%;">
+      <%#= render 'bay_table' %>
+      <%#= show shelves from top to down %>
+
+      <% spaces[:num_layers].downto(1) do |layer| %>
+        <%
+          merch_h = spaces[layer][:merch_height] * 99.99 / spaces[:height]
+          shelf_h = spaces[layer][:shelf_height] * 99.99 / spaces[:height]
+          blank_width = bays_width - spaces[layer][:width] * spaces[:num_bays]
+          col_ratio = spaces[layer][:width] * 99.3 / bays_width
+          show_splits = (num_bays > 1 || blank_width >= 1.0)
+          shelf_color = spaces[layer][:shelf_color]
+          space_id = "space-#{item_id}-#{layer}"
+          shelf_id = "shelf-#{item_id}-#{layer}"
+          title = "bay-#{item_id}-#{layer}"
+        %>
+        <%# show space %>
+        <div title="<%= space_id %>" id="<%= space_id %>" class="bay-layer bay-space" style="height:<%= merch_h %>%">
+          <% if show_splits %>
+            <% num_bays.times do |i| %>
+              <div id="space-<%= "#{item_id}-#{layer}-#{i}"%>" class="bay-single bay-space" style="width:<%=col_ratio%>%"></div>
+            <% end %>
+          <% end %>
+        </div>
+        <%# show shelf %>
+          <% if show_splits %>
+            <div id="<%= shelf_id %>" title="<%= shelf_id %>" class="bay-layer bay-shelf" style="height:<%= shelf_h %>%">
+              <% num_bays.times do |i| %>
+                <div id="shelf-<%= "#{item_id}-#{layer}-#{i}"%>" class="bay-single bay-shelf"
+                  style="width:<%= col_ratio %>%; background-color: <%= shelf_color %>;"></div>
+              <% end %>
+            </div>
+          <% else %>
+            <div id="<%= shelf_id %>" title="<%= shelf_id %>"
+              class="bay-layer bay-shelf" style="height:<%= shelf_h %>%; background-color: <%= shelf_color %>;">
+            </div>
+          <% end %>
+      <% end %>
+      <%# show base %>
+      <% if num_bays > 1 %>
+        <div id="base-<%= item_id %>" class="bay-layer bay-base" style="height:<%= base_h %>%">
+          <% num_bays.times do |i| %>
+            <% col_ratio = spaces[:base_width] * 99.3 / bays_width %>
+            <div id="base-<%= "#{item_id}-#{i}"%>" class="bay-single bay-base"
+              style="width:<%= col_ratio %>%; background-color: <%= base_color %>;"></div>
+          <% end %>
+        </div>
+      <% else %>
+        <div id="base-<%= "#{item_id}" %>"
+          class="bay-layer bay-base" style="height:<%= base_h %>%; background-color: <%= base_color %>;">
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="ui-helper-clearfix"></div>
+</div>
+

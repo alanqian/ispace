@@ -2,20 +2,29 @@
   <%= f.error_notification %>
 
   <div class="inputs">
-    <%= f.input :plan_set_id %>
-    <%= f.input :category_id %>
-    <%= f.input :user_id %>
-    <%= f.input :store_id %>
-    <%= f.input :num_stores %>
-    <%= f.input :fixture_id %>
+    <%= f.hidden_field :user_id %>
+    <%= f.hidden_field :plan_set_id %>
+    <%= f.hidden_field :category_id %>
+    <%= f.input :store_id, collection: @model_stores_all, disabled: @plan.id != nil %>
     <%= f.input :init_facing %>
+    <div id="store-info">
+      <li>requries json data: store_id =&gt; [StoreInfoText, FixtureInfoText]
+      <li>Selected store info: location, area, refer_count, region.name</li>
+      <li>Fixture info of sample store</li>
+    </div>
+    <!--
+    <%= f.input :fixture_id, disabled: true %>
+    <%= f.input :num_stores %>
     <%= f.input :nominal_size %>
     <%= f.input :base_footage %>
     <%= f.input :usage_percent %>
-    <%= f.input :published_at %>
+    <%= f.input :published_at %> -->
   </div>
 
   <div class="actions">
     <%= f.button :submit %>
   </div>
+
 <% end %>
+
+

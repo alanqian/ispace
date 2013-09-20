@@ -17,7 +17,7 @@ two:
   plan_set_id: 1
   category_id: MyString
   user_id: 1
-  store_id: 1
+  store_id: 11
   num_stores: 1
   fixture_id: 1
   init_facing: 1

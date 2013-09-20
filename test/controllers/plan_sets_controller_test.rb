@@ -20,10 +20,16 @@ class PlanSetsControllerTest < ActionController::TestCase
 
   test "should create plan_set" do
     assert_difference('PlanSet.count') do
-      post :create, plan_set: { category_id: @plan_set.category_id, name: @plan_set.name, notes: @plan_set.notes, plans: @plan_set.plans, published_at: @plan_set.published_at, stores: @plan_set.stores, undeployed_stores: @plan_set.undeployed_stores, unpublished_plans: @plan_set.unpublished_plans, user_id: @plan_set.user_id }
+      post :create, plan_set: {
+        user_id: 1,
+        category_id: @plan_set.category_id,
+        name: @plan_set.name,
+        note: @plan_set.note,
+        user_id: @plan_set.user_id }
     end
 
-    assert_redirected_to plan_set_path(assigns(:plan_set))
+    # redirect changed to #edit, no default
+    assert_redirected_to edit_plan_set_path(assigns(:plan_set))
   end
 
   test "should show plan_set" do
@@ -37,7 +43,17 @@ class PlanSetsControllerTest < ActionController::TestCase
   end
 
   test "should update plan_set" do
-    patch :update, id: @plan_set, plan_set: { category_id: @plan_set.category_id, name: @plan_set.name, notes: @plan_set.notes, plans: @plan_set.plans, published_at: @plan_set.published_at, stores: @plan_set.stores, undeployed_stores: @plan_set.undeployed_stores, unpublished_plans: @plan_set.unpublished_plans, user_id: @plan_set.user_id }
+    patch :update, id: @plan_set, plan_set: {
+      category_id: @plan_set.category_id,
+      name: @plan_set.name,
+      note: @plan_set.note,
+      num_plans: @plan_set.num_plans,
+      #published_at: @plan_set.published_at,
+      #num_stores: @plan_set.num_stores,
+      #undeployed_stores: @plan_set.undeployed_stores,
+      #unpublished_plans: @plan_set.unpublished_plans,
+      user_id: @plan_set.user_id
+    }
     assert_redirected_to plan_set_path(assigns(:plan_set))
   end
 
