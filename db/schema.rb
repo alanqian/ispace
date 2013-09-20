@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130913091630) do
+ActiveRecord::Schema.define(version: 20130914111200) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -50,13 +50,15 @@ ActiveRecord::Schema.define(version: 20130913091630) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",                               null: false
+    t.string   "name",                                 null: false
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",       limit: 32,              null: false
-    t.string   "parent_id",  limit: 32
-    t.integer  "import_id",             default: -1
+    t.string   "code",         limit: 32,              null: false
+    t.string   "parent_id",    limit: 32
+    t.integer  "import_id",               default: -1
+    t.string   "pinyin"
+    t.string   "display_name"
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
@@ -195,17 +197,18 @@ ActiveRecord::Schema.define(version: 20130913091630) do
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
   create_table "plan_sets", force: true do |t|
-    t.string   "name",              null: false
-    t.string   "notes"
-    t.string   "category_id",       null: false
+    t.string   "name",                          null: false
+    t.string   "note"
+    t.string   "category_id",                   null: false
     t.integer  "user_id"
-    t.integer  "plans"
-    t.integer  "stores"
+    t.integer  "num_plans",         default: 0
+    t.integer  "num_stores",        default: 0
     t.datetime "published_at"
     t.integer  "unpublished_plans"
     t.integer  "undeployed_stores"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "category_name"
   end
 
   add_index "plan_sets", ["category_id"], name: "index_plan_sets_on_category_id", using: :btree
@@ -217,23 +220,26 @@ ActiveRecord::Schema.define(version: 20130913091630) do
   add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
 
   create_table "plans", force: true do |t|
-    t.integer  "plan_set_id",                                        null: false
-    t.string   "category_id",                                        null: false
+    t.integer  "plan_set_id",                                          null: false
+    t.string   "category_id",                                          null: false
     t.integer  "user_id"
-    t.integer  "store_id",                                           null: false
-    t.integer  "num_stores",                             default: 0
-    t.integer  "fixture_id",                                         null: false
-    t.integer  "init_facing",                            default: 1
-    t.decimal  "nominal_size",  precision: 10, scale: 2
-    t.decimal  "base_footage",  precision: 10, scale: 2
-    t.decimal  "usage_percent", precision: 10, scale: 2
+    t.integer  "store_id",                                             null: false
+    t.integer  "num_stores",                               default: 0
+    t.integer  "fixture_id",                                           null: false
+    t.integer  "init_facing",                              default: 1
+    t.decimal  "nominal_size",    precision: 10, scale: 2
+    t.decimal  "base_footage",    precision: 10, scale: 2
+    t.decimal  "usage_percent",   precision: 10, scale: 2
     t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "product_version",                          default: 0
+    t.string   "store_name"
   end
 
   add_index "plans", ["category_id"], name: "index_plans_on_category_id", using: :btree
   add_index "plans", ["fixture_id"], name: "index_plans_on_fixture_id", using: :btree
+  add_index "plans", ["plan_set_id", "store_id"], name: "index_plans_on_plan_set_id_and_store_id", unique: true, using: :btree
   add_index "plans", ["plan_set_id"], name: "index_plans_on_plan_set_id", using: :btree
   add_index "plans", ["published_at"], name: "index_plans_on_published_at", using: :btree
   add_index "plans", ["store_id"], name: "index_plans_on_store_id", using: :btree
@@ -242,7 +248,7 @@ ActiveRecord::Schema.define(version: 20130913091630) do
   create_table "positions", force: true do |t|
     t.integer  "plan_id"
     t.integer  "store_id"
-    t.integer  "product_id"
+    t.string   "product_id",                                             null: false
     t.integer  "layer"
     t.integer  "seq_num"
     t.integer  "facing"
@@ -268,6 +274,8 @@ ActiveRecord::Schema.define(version: 20130913091630) do
     t.decimal  "trail_divider",    precision: 10, scale: 1
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "fixture_item_id",                           default: -1, null: false
+    t.integer  "init_facing",                                            null: false
   end
 
   create_table "products", id: false, force: true do |t|
@@ -331,6 +339,8 @@ ActiveRecord::Schema.define(version: 20130913091630) do
     t.datetime "updated_at"
     t.string   "consume_type", limit: 32, default: "B", null: false
     t.integer  "import_id",               default: -1
+    t.string   "pinyin"
+    t.string   "display_name"
   end
 
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
@@ -397,6 +407,9 @@ ActiveRecord::Schema.define(version: 20130913091630) do
     t.integer  "area"
     t.string   "location",     limit: 32
     t.integer  "import_id",               default: -1
+    t.integer  "ref_count",               default: 0
+    t.string   "region_name",             default: ""
+    t.string   "pinyin"
   end
 
   add_index "stores", ["area"], name: "index_stores_on_area", using: :btree
