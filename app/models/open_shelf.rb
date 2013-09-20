@@ -32,6 +32,7 @@ class OpenShelf < ActiveRecord::Base
     r
   end
 
+  alias_attribute :merch_depth, :depth
   alias_attribute :merch_width, :width
   alias_attribute :merch_height, :height
   alias_attribute :shelf_thick, :thick

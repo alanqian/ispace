@@ -57,6 +57,7 @@ $ ->
     # position it
     # $("#test").position({my: "left top", at: "left top", of: $("#back"), collision: "none"})
 
+  return true
   $("div.ui-resizable").resizable()
   $("div.ui-draggable").draggable()
 

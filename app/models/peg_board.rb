@@ -32,5 +32,6 @@ class PegBoard < ActiveRecord::Base
     0
   end
 
+  alias_attribute :merch_depth, :depth
   alias_attribute :merch_height, :height
 end

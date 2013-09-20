@@ -30,4 +30,6 @@ class FreezerChest < ActiveRecord::Base
   def shelf_thick
     0
   end
+
+  alias_attribute :merch_depth, :depth
 end

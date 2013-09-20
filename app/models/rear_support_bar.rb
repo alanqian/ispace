@@ -33,5 +33,6 @@ class RearSupportBar < ActiveRecord::Base
     bar_thick
   end
 
+  alias_attribute :merch_depth, :bar_depth
   alias_attribute :merch_height, :height
 end
