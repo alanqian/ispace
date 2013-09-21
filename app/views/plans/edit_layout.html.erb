@@ -65,33 +65,46 @@
     from top to bottom: space, shelf, space, shelf, ..., space, shelf, base
 %>
 <div id="products-container">
-<%= render "/fixtures/layout", fixture: @plan.fixture %>
+  <%= render "/fixtures/layout", fixture: @plan.fixture %>
 </div>
 
-<!--
-<div id="products-container">
-  <div>
-    <table class="fixtures">
-      <thead>
-        <tr>
-          <th width="25%"></th><th width="25%"></th><th width="25%"></th><th width="25%"></th>
-        </tr>
-      <tbody >
-        <tr id="space1" class="bay-space"><td>1</td><td></td><td></td><td></td></tr>
-        <tr id="shelf1" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
-        <tr id="space2" class="bay-space"><td>2</td><td></td><td></td><td></td></tr>
-        <tr id="shelf2" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
-        <tr id="space3" class="bay-space"><td>3</td><td></td><td></td><td></td></tr>
-        <tr id="shelf3" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
-        <tr id="space4" class="bay-space"><td>4</td><td></td><td></td><td></td></tr>
-        <tr id="shelf4" class="bay-shelf"><td></td><td></td><td></td><td></td></tr>
-        <tr id="base" class="bay-base"><td></td><td></td><td></td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="ui-helper-clearfix"></div>
+<%#
+  all positions are stored in ajax-form; #plan-layout-form
+  init:
+    position slots;
+    create LIs from positions, move to proper slots(fixture_item_id, layer) in fixtures;
+  edit:
+    when sortable changed, we mark the form dirty;
+  save(submit):
+    save all positions by the items in fixture slots, than submit;
+  auto_save:
+    auto_save by a timer, save every 1 minute;
+
+
+  # slot:
+  <ul id="slot-4-6" data-container="#space-4-6"
+      data-fixture-item="4"
+      data-layer="6"
+      data-space="{&quot;merch_width&quot;:&quot;120.0&quot;,&quot;merch_depth&quot;:&quot;46.0&quot;,&quot;merch_height&quot;:&quot;20.0&quot;,&quot;shelf_height&quot;:&quot;5.0&quot;,&quot;from_base&quot;:&quot;131.0&quot;,&quot;shelf_color&quot;:&quot;#dfdfdf&quot;}"
+      class="sortable-editor sortable-container ui-sortable"
+      style="width: 600.3333333730698px; height: 40.33333337306976px; top: 341.9375px; left: 434.58331298828125px;"></ul>
+  # input:
+  <input id="plan_positions_attributes_0_id"
+    name="plan[positions_attributes][0][id]" type="hidden" value="96">
+  # ==>
+  # group by (fixture_item_id, layer), sort by seq_num
+  <li id="pos_0" class="sortable-item"
+    title="" # by product id
+    data-id="#{position_id}">
+    <table>..</table>
+  </li>
+
+  <input id="plan_positions_attributes_0_fixture_item_id"
+         name="plan[positions_attributes][0][fixture_item_id]" type="hidden" value="-1">
+%>
+<div id="plan-edit-layout-form">
+  <%= render 'form_layout' %>
 </div>
--->
 
 <hr/>
 
@@ -100,61 +113,16 @@
   <p>blah, blah</p>
 </div>
 
-<div id="products-data" class="ui-widget-header ui-corner-all">
-  <div id="products-list" class="ui-widget-content">
-    <p>This is products list.
-  </div>
+<div id="products-data"
+  data-meta="<%= products.to_hash(:id, :code, :name, :price_level, :height, :width, :depth).to_json %>"
+  class="ui-widget-header ui-corner-all">
+  <%= render "/products/list",
+      products: products,
+      brands_all: brands_all,
+      suppliers_all: suppliers_all,
+      mfrs_all: mfrs_all,
+      sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
 </div>
 
-
-<div>
-  <ul id="layer1" data-container="#space-4-7" class="sortable-editor1">
-    <li class="ui-state-default">Item a1</li>
-    <li class="ui-state-default">Item a2</li>
-    <li class="ui-state-default">Item a3</li>
-    <li class="ui-state-default">Item a4</li>
-    <li class="ui-state-default">Item a5</li>
-  </ul>
-  <ul id="layer2" data-container="#space-4-16" class="sortable-editor1">
-    <li class="ui-state-highlight">Item b1</li>
-    <li class="ui-state-highlight">Item b2</li>
-    <li class="ui-state-highlight">Item b3</li>
-    <li class="ui-state-highlight">Item b4</li>
-    <li class="ui-state-highlight">Item b5</li>
-    <li id="test" title="product 111" data-id="p111" class="product-item">
-      text must be replaced!
-    </li>
-  </ul>
-</div>
-
-<!--
-<div id="test_toolbar" class="ui-widget-header ui-corner-all">
-
-<button id="add-open-shelf" class="toolbar-button" data-icon="ui-add-open-shelf">Add OpenShelf</button>
-
-<input type="checkbox" id="switcher" class="toolbar-button" /><label for="switcher">Toggle</label>
-
-<span id="format" class="toolbar-button-set">
-  <input type="checkbox" id="bold" class="toolbar-button" /><label for="bold">B</label>
-  <input type="checkbox" id="italic" class="toolbar-button" /><label for="italic">I</label>
-  <input type="checkbox" id="underline" class="toolbar-button" /><label for="underline">U</label>
-</span>
-
-<span id="format" class="toolbar-button-set">
-  <button id="rerun" class="toolbar-button" >Run last action</button>
-  <button id="select" >Select an action</button>
-</span>
-
-<span id="repeat" class="toolbar-button-set">
-  <input type="radio" id="repeat0"  class="toolbar-button" name="repeat" checked="checked" /><label for="repeat0">No Repeat</label>
-  <input type="radio" id="repeat1"  class="toolbar-button" name="repeat" /><label for="repeat1">Once</label>
-  <input type="radio" id="repeatall"  class="toolbar-button" name="repeat" /><label for="repeatall">All</label>
-</span>
-</div>
-
-<ul id="menu">
-<li><a href="#">Open...</a></li>
-<li><a href="#">Save</a></li>
-<li><a href="#">Delete</a></li>
-</ul>
--->
+<%#= render 'sortable_test' %>
+<%#= render 'toolbar_test' %>

@@ -49,12 +49,21 @@ class PlansController < ApplicationController
       end
     end
 
-    if @do == :edit_setup
+    case @do
+    when :edit_setup
       @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
       @optional_products ||= @plan.optional_products
+
+    when :edit_layout
+      locals = {
+        products: Product.on_sales(@plan.category_id),
+        brands_all: Brand.where(["category_id=?", @plan.category_id]),
+        suppliers_all: Supplier.where(["category_id=?", @plan.category_id]),
+        mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
+      }
     end
 
-    render @do;
+    render @do, locals: locals || {}
   end
 
   # POST /plans
@@ -125,6 +134,14 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
-        optional_products:[])
+        optional_products:[],
+        positions_attributes: [:_destroy, :id,
+          :product_id, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
+          :run, :units, :height_units, :width_units, :depth_units, :oritentation,
+          :merch_style, :peg_style,
+          :top_cap_height, :top_cap_depth, :bottom_cap_height, :bottom_cap_depth,
+          :left_cap_width, :left_cap_depth, :right_cap_width, :right_cap_depth,
+          :leading_gap, :leading_divider, :middle_divider, :trail_divider,]
+        )
     end
 end

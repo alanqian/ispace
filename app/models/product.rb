@@ -9,4 +9,8 @@ class Product < ActiveRecord::Base
   def display_name
     "#{name} #{size_name} #{case_pack_name}"
   end
+
+  def self.on_sales(category_id)
+    self.where(["category_id=? AND sale_type <= 2", category_id])
+  end
 end

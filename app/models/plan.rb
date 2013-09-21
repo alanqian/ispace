@@ -6,6 +6,7 @@ class Plan < ActiveRecord::Base
 
   has_many :deployments
   has_many :positions
+  accepts_nested_attributes_for :positions, allow_destroy: true
 
   validates :plan_set_id, presence: true
 
