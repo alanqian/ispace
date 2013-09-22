@@ -11,7 +11,7 @@ one:
   width: 9.99
   depth: 9.99
   weight: 9.99
-  price_level: A
+  price_zone: A
   size_name: 180g
   case_pack_name: 100g
   barcode: 182-122-44579
@@ -33,7 +33,7 @@ two:
   width: 9.99
   depth: 9.99
   weight: 9.99
-  price_level: A
+  price_zone: A
   size_name: 180g
   case_pack_name: 100g
   barcode: 182-122-44579
@@ -54,7 +54,7 @@ new:
   width: 9.99
   depth: 9.99
   weight: 9.99
-  price_level: B
+  price_zone: B
   size_name: 180g
   case_pack_name: 100g
   barcode: 182-122-44579

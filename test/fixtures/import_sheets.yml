@@ -485,7 +485,7 @@ three:
 
     品牌: brand.name
 
-    价格带: product.price_level
+    价格带: product.price_zone
 
     新品: product.new_product
 

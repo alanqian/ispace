@@ -126,7 +126,7 @@ class ImportSheetsControllerTest < ActionController::TestCase
         "高度"=>"product.height", "深度"=>"product.depth", "供应商"=>"supplier.name",
         "大小"=>"product.size_name", "品牌"=>"brand.name", "利润"=>"merchandise.profit",
         "销售速度"=>"merchandise.volume", "销售额"=>"merchandise.value",
-        "价格"=>"merchandise.price", "价格带"=>"product.price_level",
+        "价格"=>"merchandise.price", "价格带"=>"product.price_zone",
         "新品"=>"product.new_product"
       }
     }

@@ -13,4 +13,6 @@ class Product < ActiveRecord::Base
   def self.on_sales(category_id)
     self.where(["category_id=? AND sale_type <= 2", category_id])
   end
+
+  alias_attribute :price_zone, :price_level
 end

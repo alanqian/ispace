@@ -564,7 +564,7 @@ class ImportSheet < ActiveRecord::Base
       width: "宽度",
       depth: "深度",
       weight: "重量",
-      price_level: "价格带",
+      price_zone: "价格带",
       size_name: "规格(大小)",
       case_pack_name: "包装",
       bar_code: "条形码",
@@ -681,7 +681,7 @@ class WorkBook
       "销售速度" => "merchandise.volume",
       "销售额" => "merchandise.value",
       "价格" => "merchandise.price",
-      "价格带" => "merchandise.price_level",
+      "价格带" => "merchandise.price_zone",
       "新品" => "merchandise.new_product",
     }
     field_mapping.each do |k,v|
@@ -718,7 +718,7 @@ field_mapping: {
   "销售速度" => "merchandise.volume",
   "销售额" => "merchandise.value",
   "价格" => "merchandise.price",
-  "价格带" => "merchandise.price_level",
+  "价格带" => "merchandise.price_zone",
   "新品" => "merchandise.new_product",
 },
 

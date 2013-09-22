@@ -24,7 +24,7 @@ class ProductsControllerTest < ActionController::TestCase
       @product = products(:new)
       @product.code = "NN00002" # MUST set with a different code
       post :create, product:
-        { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_level: @product.price_level, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
+        { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_zone: @product.price_zone, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
     end
 
     assert_redirected_to product_path(assigns(:product))
@@ -41,12 +41,12 @@ class ProductsControllerTest < ActionController::TestCase
   end
 
   test "should update product" do
-    patch :update, id: @product, product: { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_level: @product.price_level, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
+    patch :update, id: @product, product: { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_zone: @product.price_zone, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
     assert_redirected_to product_path(assigns(:product))
   end
 
   test "should update product js" do
-    patch :update, format: 'js', id: @product, product: { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_level: @product.price_level, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
+    patch :update, format: 'js', id: @product, product: { barcode: @product.barcode, brand_id: @product.brand_id, case_pack_name: @product.case_pack_name, category_id: @product.category_id, color: @product.color, depth: @product.depth, height: @product.height, id: @product.id, mfr_id: @product.mfr_id, name: @product.name, price_zone: @product.price_zone, size_name: @product.size_name, user_id: @product.user_id, weight: @product.weight, width: @product.width }
     assert_response :success
   end
 
