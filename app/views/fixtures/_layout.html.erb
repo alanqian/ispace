@@ -32,6 +32,7 @@
         <div id="<%= space_id %>" title="<%= space_id %>" class="bay-layer bay-space" style="height:<%= merch_h %>%">
           <ul id="<%= slot_id %>" data-container="#<%= space_id %>"
             data-fixture-item="<%= item_id %>" data-layer="<%= layer %>" data-space="<%= spaces[layer].to_json %>"
+            data-width="<%= bays_width %>"
             class="sortable-editor sortable-container"></ul>
           <% if show_splits %>
             <% num_bays.times do |i| %>

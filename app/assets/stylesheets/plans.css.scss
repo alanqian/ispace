@@ -232,6 +232,10 @@
   background: green;
 }
 
+ul.sortable-editor.ui-selected {
+  background-color: blue;
+}
+
 ul.sortable-editor {
   list-style-type: none;
   position: absolute;
@@ -247,8 +251,10 @@ ul.sortable-editor {
   //padding: 2.5em;
   //min-width: 5em;
   //min-height: 5em;
-
   li.ui-selected {
+    table {
+      border-color: yellow;
+    }
     background-color: blue;
   }
 
