@@ -88,9 +88,17 @@ class PlansController < ApplicationController
           end
         }
         format.json { head :no_content }
+        format.js {
+          @result = "200 OK"
+          @version = params[:_version]
+        }
       else
         format.html { render action: 'edit' }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
+        format.js {
+          @result = "failed"
+          @version = params[:_version]
+        }
       end
     end
   end

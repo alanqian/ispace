@@ -1,4 +1,5 @@
-<h3>fixtures here!</h3>
+
+<h3>fixtures here!<span id="layout-modified"></span></h3>
 <% shelf_space = fixture.shelf_spaces %>
 <% total_width = shelf_space.sum { |id,spaces| spaces[:width] * spaces[:num_bays] } %>
 
@@ -19,8 +20,8 @@
         <%
           merch_h = spaces[layer][:merch_height] * 99.99 / spaces[:height]
           shelf_h = spaces[layer][:shelf_height] * 99.99 / spaces[:height]
-          blank_width = bays_width - spaces[layer][:merch_width] * spaces[:num_bays]
-          col_ratio = spaces[layer][:merch_width] * 99.3 / bays_width
+          blank_width = bays_width - spaces[layer][:merch_width]
+          col_ratio = 99.3 * spaces[layer][:merch_width] / (spaces[:num_bays] * bays_width)
           show_splits = (num_bays > 1 || blank_width >= 1.0)
           shelf_color = spaces[layer][:shelf_color]
           space_id = "space-#{item_id}-#{layer}"
@@ -30,15 +31,15 @@
         %>
         <%# show space %>
         <div id="<%= space_id %>" title="<%= space_id %>" class="bay-layer bay-space" style="height:<%= merch_h %>%">
-          <ul id="<%= slot_id %>" data-container="#<%= space_id %>"
-            data-fixture-item="<%= item_id %>" data-layer="<%= layer %>" data-space="<%= spaces[layer].to_json %>"
-            data-width="<%= bays_width %>"
-            class="sortable-editor sortable-container"></ul>
           <% if show_splits %>
             <% num_bays.times do |i| %>
               <div id="space-<%= "#{item_id}-#{layer}-#{i}"%>" class="bay-single bay-space" style="width:<%=col_ratio%>%"></div>
             <% end %>
           <% end %>
+          <ul id="<%= slot_id %>" data-container="#<%= space_id %>"
+            data-fixture-item="<%= item_id %>" data-layer="<%= layer %>" data-space="<%= spaces[layer].to_json %>"
+            class="sortable-editor sortable-container"></ul>
+          <div class="space-overflow"></div>
         </div>
         <%# show shelf %>
           <% if show_splits %>

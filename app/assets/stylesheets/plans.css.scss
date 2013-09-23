@@ -225,21 +225,25 @@
 // }
 
 // sortable-editor
-.positionDiv {
-  position: absolute;
-  width: 75px;
-  height: 75px;
-  background: green;
-}
-
 ul.sortable-editor.ui-selected {
   background-color: blue;
 }
 
+div.space-overflow {
+  position: absolute;
+  z-index: 20;
+  width: 3em;
+  font-size: 8pt;
+  height: 1.5em;
+  border: 1px dotted #777777;
+  background-color: #CCCCCC;
+  display: none;
+}
+
 ul.sortable-editor {
   list-style-type: none;
-  position: absolute;
-  z-index: 100;
+  position: relative;
+  z-index: 1;
   //overflow: hidden;
   float: left;
   clear: both;

@@ -54,7 +54,7 @@ class Fixture < ActiveRecord::Base
         elem = bay.get_element(layer)
         if elem
           spaces[fi.id][layer] = {
-            merch_width: elem.merch_width,
+            merch_width: elem.merch_width * fi.num_bays,
             merch_depth: elem.merch_depth,
             merch_height: elem.merch_height,
             shelf_height: elem.shelf_thick,
