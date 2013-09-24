@@ -35,6 +35,7 @@ class Plan < ActiveRecord::Base
           plan_id: self.id,
           store_id: self.store_id,
           product_id: p.code,
+          init_facing: self.init_facing,
           facing: self.init_facing,
         })
       elsif on_shelf[p.code] && p.sale_type == 2

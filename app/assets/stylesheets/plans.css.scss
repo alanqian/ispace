@@ -11,11 +11,18 @@
    font-size: 1.8em !important;
 }
 
+.toolbar-select {
+  max-width: 8em;
+  min-width: 3em;
+  font-size: 110%;
+  height: 26px;
+}
+
 .ui-button {
   // toolbar: 20x18, 2px gap between 2 rows
   // --- the 1st row, 20x18 ---
   // 1.1 plan-new
-  .ui-icon.ui-plan-new {
+  .ui-icon.ui-plan-publish {
     background-image: url(/assets/toolbar.png);
     background-position: 0px 0px;
     width: 20px;
@@ -105,6 +112,13 @@
   .ui-icon.ui-switch-show-colors {
     background-image: url(/assets/toolbar.png);
     background-position: -240px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.17 switch-show-colors(x4)
+  .ui-icon.ui-plan-save {
+    background-image: url(/assets/toolbar.png);
+    background-position: -320px 0px;
     width: 20px;
     height: 18px;
   }

@@ -41,6 +41,15 @@ class PlanSet < ActiveRecord::Base
     self.plans.any?
   end
 
+  def model_stores_opt
+    store_opt_class = Struct.new(:id, :name)
+    opt = []
+    plans.map do |plan|
+      opt.push store_opt_class.new(plan.id, plan.store_name)
+    end
+    opt
+  end
+
   def update_redundancy
     self.num_plans = plans.count
     self.num_stores = plans.map { |plan| plan.num_stores } .sum

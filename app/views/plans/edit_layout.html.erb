@@ -16,9 +16,11 @@
 
 <% buttons = [
   #--- the 1st row, 20x18 ---
-  "plan-new",
-  "plan-edit-summary",
-  "plan-publish",     #
+  # ["plan-save", "ui-icon-disk"],
+   "plan-save",
+  ["plan-edit-summary", "ui-icon-comment"],
+  # ["plan-publish", "ui-icon-circle-check"],    #
+  "plan-publish",
   "plan-copy-to",     # dup the plan to other model stores
   "position-facing-inc",
   "position-facing-dec",
@@ -53,9 +55,20 @@
 ] %>
 
 <div id="plan_toolbar" class="ui-widget-header ui-corner-all">
+  <%= select_tag "plan-switch-model-store",
+    options_from_collection_for_select(@plan.plan_set.model_stores_opt, "id", "name", @plan.id),
+    class: "toolbar-select" %>
   <% buttons.each do |btn| %>
-    <%= button_tag btn, type: :button, id: btn, class: "toolbar-button",
-      data: { icon: "ui-#{btn}" } %>
+    <%
+      if btn.kind_of?(Array)
+        text, icon = btn
+      else
+        text = btn
+        icon = "ui-#{btn}"
+      end
+      %>
+    <%= button_tag text, type: :button, id: text, class: "toolbar-button",
+      data: { icon: icon } %>
   <% end %>
 </div>
 

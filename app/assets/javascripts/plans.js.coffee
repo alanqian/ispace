@@ -17,7 +17,7 @@ class Toolbar
     for delegate in @delegates
       break if delegate.handle(id, el)
 
-  init: (button_sel) ->
+  init: (button_sel, select_sel) ->
     self = @
     @delegates = []
     $(button_sel).each (index, el) ->
@@ -29,9 +29,14 @@ class Toolbar
           primary: $(el).data("icon")
           secondary: $(el).data("icon2")
       $(el).button(buttonOpt).click (e)->
-        console.log "click it:", this.id
+        #console.log "click it:", this.id
         self.handle(this.id, this)
       return true
+    $(select_sel).each (index, el) ->
+      $(el).addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only")
+      $(el).change (e) ->
+        #console.log "change it", e, this, this.value
+        self.handle(this.id, this)
     return self
 
 class PlanEditor
@@ -115,8 +120,9 @@ class PlanEditor
 
     # initialize command handler
     @handlers =
-      "position-facing-inc":() -> self.onPositionFacingInc()
-      "plan-new":           () -> self.onPlanNew()
+      #"plan-new":           () -> self.onPlanNew()
+      "plan-save":           () -> self.onPlanSave()
+      "plan-switch-model-store":(el) -> self.onPlanSwitchModelStore(el.value)
       "plan-edit-summary":  () -> self.onPlanEditSummary()
       "plan-publish":       () -> self.onPlanPublish()     #
       "plan-copy-to":       () -> self.onPlanCopyTo()      # dup the plan to other model stores
@@ -176,9 +182,13 @@ class PlanEditor
         # ui.item.parent() => received ul
         # remove is the constract
         self.addItemToSlot(ui.item, ui.item.parent().get(0))
-      stop: (e, ui) ->
-        # when stop sorting, mark it as dirty
+      update: (e, ui) ->
+        # when update, mark it selected and dirty
+        # console.log "update!"
+        self.selectSlotItem(ui.item.get(0), false)
         self.setDirty()
+      # stop: (e, ui) ->
+      #   console.log "stop!"
       # over: (e, ui) ->
         # e.target: over slot ul
         # console.log "over:", ui.item, e.target
@@ -457,6 +467,22 @@ class PlanEditor
       self.save()
     setTimeout(saveProc, 90000)  # 90s
 
+  onPlanSave: () ->
+    $("#plan-layout-form").submit()
+
+  onPlanSwitchModelStore: (store_id) ->
+    # /plans/13/edit?_do=layout
+    re = new RegExp("/plans/\\d+/edit")
+    href = window.location.href.replace(re, "/plans/#{store_id}/edit")
+    #console.log "jump to", store_id, href
+    window.location.replace(href)
+
+  onPlanEditSummary: () ->
+
+  onPlanPublish: () ->
+
+  onPlanCopyTo: () ->      # dup the plan to other model stores
+
   onPositionRemove: () ->
     if @selectedItems.length == 0
       console.log "no selected items"
@@ -499,7 +525,7 @@ $ ->
   window.planEditor.init()
 
   window.myToolbar = new Toolbar
-  window.myToolbar.init(".toolbar-button").addDelegate(window.planEditor)
+  window.myToolbar.init(".toolbar-button", ".toolbar-select").addDelegate(window.planEditor)
   return true
 
   #############################################
