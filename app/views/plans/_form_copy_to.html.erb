@@ -1,0 +1,31 @@
+<%= simple_form_for(@plan, remote: true) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.hidden_field :user_id %>
+    <%= token_tag %>
+    <%= hidden_field_tag "_do", "copy_to" %>
+
+    <div id="plan-set-info">
+      <%#= f.hidden_field :plan_set_id %>
+      <%#= f.hidden_field :category_id %>
+    </div>
+    <div id=store-info>
+      <%= f.input :store_name, disabled: true %>
+      <%= f.input :num_stores, disabled: true %>
+      <%= f.input :usage_percent, disabled: true %>
+      <%= f.input :init_facing, disabled: true %>
+    </div>
+    <div id="selected-fixture-info">
+      <li>Fixture info of selected sample store</li>
+    </div>
+
+    <%= field_set_tag "复制到样板店", id: "model-stores" do %>
+      <%= select_all_check "plan[target_plans][]"%>
+      <%= label_tag "select-all", "全选" %>
+      <% plans = @plan.plan_set.plans.reject { |p| p.id == @plan.id } %>
+      <%= f.collection_check_boxes :target_plans, plans, :id, :store_name,
+        {}, { class: "select-one", onclick: "javascript: onClickSelectOne(event, this);",
+          data: {"select-all" => "#SELECT_ALL"}} %>
+    <% end %>
+    <%#= f.submit %>
+<% end %>

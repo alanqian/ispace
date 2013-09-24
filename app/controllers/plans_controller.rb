@@ -73,7 +73,7 @@ class PlansController < ApplicationController
 
   # PATCH/PUT /plans/1
   # PATCH/PUT /plans/1.json
-  # _do: setup, layout, edit(summary)
+  # _do: setup, layout, edit(summary), copy_to
   def update
     @do = (params[:_do] || "edit").to_sym
     logger.debug "plans#update, _do:#{@do}"
@@ -143,6 +143,7 @@ class PlansController < ApplicationController
       params.require(:plan).permit(:plan_set_id, :category_id, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
         optional_products:[],
+        target_plans:[],
         positions_attributes: [:_destroy, :id,
           :product_id, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
           :run, :units, :height_units, :width_units, :depth_units, :oritentation,

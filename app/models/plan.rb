@@ -51,6 +51,13 @@ class Plan < ActiveRecord::Base
     end
   end
 
+  def target_plans
+  end
+
+  def target_plans=(plan_ids)
+    # TODO: copy to ...
+  end
+
   # <LI> element(position): fixture_item, layer; seq_num, product_id
   def fixture_shelf_spaces
     self.fixture.shelf_spaces

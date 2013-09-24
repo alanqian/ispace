@@ -43,6 +43,11 @@ en:
         note: 说明：
         category_id: 品类：
         model_stores: 选择包含的样板店：
+      plan:
+        store_name: 样板店
+        num_stores: 门店数
+        usage_percent: 空间使用率
+        init_facing: 初始排面数
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:
@@ -54,6 +59,8 @@ en:
         #filename: "xls,xlsx,csv file:"
         #comment: "comment"
         #category_id: "Category of Product"
+      plan:
+        init_facing: (对未上架的商品有效)
 
     # By default, show in EMPTY input element in gray color
     placeholders:

@@ -137,5 +137,20 @@
       sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
 </div>
 
+<div id="plan-edit-summary-dialog" class="ui-helper-hidden" title="修改规划基本信息">
+  <%= render 'form_summary' %>
+</div>
+
+<div id="plan-copy-to-dialog" class="ui-helper-hidden" title="复制空间规划">
+  <%= render 'form_copy_to' %>
+</div>
+
+<div id="plan-publish-confirm" title="发布规划?">
+<p>
+<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，是否确认？</p>
+</div>
+
+
 <%#= render 'sortable_test' %>
 <%#= render 'toolbar_test' %>

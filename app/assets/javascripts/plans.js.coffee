@@ -89,6 +89,7 @@ class PlanEditor
     slotPosition = @loadPosition()
     @initSlotItems(slotPosition)
     @initHandler()
+    @initModified()
     @log "planEditor inited"
     return @
 
@@ -98,6 +99,7 @@ class PlanEditor
 
     # init set active slot handler
     $("ul.sortable-editor").click (e) ->
+      self.selectSlotItem(null, false)
       self.setActiveSlot(this)
 
     $("ul.sortable-editor li").click (e) ->
@@ -107,6 +109,7 @@ class PlanEditor
 
     $("div.bay-layer.bay-shelf").click (e) ->
       ul = $(this).prev().find("ul.sortable-editor")[0]
+      self.selectSlotItem(null, false)
       self.setActiveSlot(ul)
 
     $("#plan-layout-form").submit (e) ->
@@ -182,10 +185,11 @@ class PlanEditor
         # ui.item.parent() => received ul
         # remove is the constract
         self.addItemToSlot(ui.item, ui.item.parent().get(0))
+      start: (e, ui) ->
+        self.selectSlotItem(ui.item.get(0), false)
       update: (e, ui) ->
         # when update, mark it selected and dirty
         # console.log "update!"
-        self.selectSlotItem(ui.item.get(0), false)
         self.setDirty()
       # stop: (e, ui) ->
       #   console.log "stop!"
@@ -196,6 +200,10 @@ class PlanEditor
 
   isDirty: () ->
     @editVersion > @savedVersion
+
+  initModified: () ->
+    # insert a SPAN to switch model store's default OPTION
+    $("#plan-switch-model-store option[selected]").prepend("<span id='layout-modified'></span>")
 
   showModified: (modified) ->
     text = if modified then "*" else ""
@@ -323,14 +331,6 @@ class PlanEditor
 
   # update item view: height,width/title/grids/align_bottom
   updateSlotItemView: (li, position, ul) ->
-    # create a rows x cols table in LI
-    rows = position.height_units
-    cols = position.width_units
-    tds = Array(cols+1).join("<td></td>")
-    trs = Array(rows+1).join("<tr>#{tds}</tr>")
-    table = "<table><tbody>#{trs}</tbody></table>"
-    li.html(table)
-
     # update title of LI
     product = @productMap[position.product_id]
     title = "#{product.name} #{product.price_zone}"
@@ -345,6 +345,14 @@ class PlanEditor
     li.css("width", "#{width}px")
     li.css("height", "#{height}px")
 
+    # create a rows x cols table in LI
+    rows = position.height_units
+    cols = position.width_units
+    tds = Array(cols+1).join("<td></td>")
+    trs = Array(rows+1).join("<tr>#{tds}</tr>")
+    table = "<table><tbody>#{trs}</tbody></table>"
+    li.html(table)
+
     # align LI to bottom of $(ul)
     total = $(ul).height()
     h = li.outerHeight()
@@ -355,8 +363,9 @@ class PlanEditor
       for item in @selectedItems
         $(item[0]).removeClass("ui-selected")
       @selectedItems = []
-    @selectedItems.push [el, $(el).data("id")]
-    $(el).addClass("ui-selected")
+    if el?
+      @selectedItems.push [el, $(el).data("id")]
+      $(el).addClass("ui-selected")
 
   getActiveSlotItem: () ->
     if @selectedItems.length == 1
@@ -480,8 +489,28 @@ class PlanEditor
   onPlanEditSummary: () ->
 
   onPlanPublish: () ->
+    $("#plan-publish-confirm").dialog
+      resizable: true
+      # height: parseInt($(this).data("height"))
+      modal: true
+      buttons:
+        "取消": () ->
+          $(this).dialog("close")
+        "确认": () ->
+          $(this).dialog("close")
 
   onPlanCopyTo: () ->      # dup the plan to other model stores
+    $("#plan-copy-to-dialog").dialog
+      resizable: true
+      modal: true
+      width: 400
+      height: 300
+      buttons:
+        "取消": () ->
+          $(this).dialog("close")
+        "确认": () ->
+          $(this).dialog("close")
+          $("form", this).submit()
 
   onPositionRemove: () ->
     if @selectedItems.length == 0

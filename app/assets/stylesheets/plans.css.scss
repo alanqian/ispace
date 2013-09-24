@@ -271,7 +271,7 @@ ul.sortable-editor {
   //min-height: 5em;
   li.ui-selected {
     table {
-      border-color: yellow;
+      border: 2px solid yellow;
     }
     background-color: blue;
   }
@@ -280,21 +280,16 @@ ul.sortable-editor {
     display: inline-block;
     float: left;
     margin: 0 0px;
-    padding: 1px;
-    font-size: 1.2em;
-    height: 2em;
-    width: 7em;
+    //padding: 1px;
     background-color: transparent;
 
     table {
       width: 100%;
       height: 100%;
-      border-width: 0 0 1px 1px;
-      border-color: black;
-      border-style: solid;
+      border: 1px solid black;
       border-collapse: collapse;
       padding: 0px;
-      margin: 0px;
+      margin: 1px;
       tbody {
         tr {
           width: 100%;
