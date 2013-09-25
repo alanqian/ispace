@@ -172,7 +172,8 @@ class PlanEditor
       for f in ["merch_width", "merch_height", "merch_depth", "shelf_height", "from_base"]
         space[f] = parseFloat(space[f])
       space.free = space.merch_width
-      self.slotMap[self.slotKey(fixture_item, layer)] = [ul, space]
+      space.ul = ul
+      self.slotMap[self.slotKey(fixture_item, layer)] = space
       true
 
     # create jquery sortable
@@ -233,7 +234,7 @@ class PlanEditor
     @slotMap[@slotKey(fixture_item, layer)]
 
   getULSpace: (ul) ->
-    @slotMap[@slotKey($(ul).data("fixture-item"), $(ul).data("layer"))][1]
+    @slotMap[@slotKey($(ul).data("fixture-item"), $(ul).data("layer"))]
 
   setActiveSlot: (el, addSelectItem=false) ->
     # when in addSelectItem mode, don't change exist activeSlot
@@ -251,7 +252,7 @@ class PlanEditor
     self = @
     @liIndex = 0
     for slot, item of @slotMap
-      ul = item[0]
+      ul = item.ul
       ul.empty() # remove all LIs at first
       positions = slotPosition[slot] # [position_id, seq_num, ..]
       # add items if exists
@@ -297,11 +298,26 @@ class PlanEditor
     position.setPlace(-1, -1, -1)
     @updateSlotSpace(ul, position.run, null, null)
 
+  dumpSlot: (ulId) ->
+    # dump ul metrics
+    self = @
+    ul = document.getElementById(ulId)
+    space = @getULSpace(ul)
+    console.log ul.id, $(ul).width(), space
+    # dump li metrics
+    total_width = 0
+    $("li", ul).each (index, el) ->
+      posId = $(el).data("id")
+      width = $(el).width()
+      total_width += width
+      console.log ">>", $(el).data("id"), width, ">>", total_width
+    ">>End Of Dump"
+
   updateSlotSpace: (ul, delta, li, position) ->
     @setDirty()
     self = @
     slotKey = @slotKey($(ul).data("fixture-item"), $(ul).data("layer"))
-    space = @slotMap[slotKey][1]
+    space = @slotMap[slotKey]
     old_free_space = space.free
     space.free += delta
 
@@ -310,15 +326,17 @@ class PlanEditor
     else if old_free_space <= 0 && space.free > 0
       $(ul).addClass("sortable-container")
 
-    if space.free > 0
-      $("div.space-overflow", ul.parentNode).hide()
+    oDiv = $($(ul).data("overflow"))
+    if space.free >= 0
+      oDiv.hide()
     else
+      #console.log "show overflow..."
       overflow = ((space.merch_width - space.free) * 100.0) / space.merch_width
-      $("div.space-overflow", ul.parentNode).text("#{overflow.toFixed(0)}%").show().position
+      oDiv.text("#{overflow.toFixed(1)}%").show().position
         of: ul
         collision: "none"
 
-    @log "free space updated:", ul, delta, old_free_space, space.free
+    @log "free space updated:", $(ul).attr("id"), delta, old_free_space, space.free
     if old_free_space < 0 || space.free < 0
       # update all items in slot
       $("li", ul).each (index, el) ->
@@ -338,33 +356,49 @@ class PlanEditor
 
     # calculate height/width of LI
     slotKey = position.slotKey()
-    space = @slotMap[slotKey][1]
+    space = @slotMap[slotKey]
     virtual_width = if space.free >= 0 then space.merch_width else (space.merch_width - space.free)
     height = position.height_units * product.height * $(ul).height() / space.merch_height
-    width = position.run * $(ul).width() / virtual_width - 2
-    li.css("width", "#{width}px")
-    li.css("height", "#{height}px")
+    # -2 to avoid overflow
+    view_width = $(ul).width() - 2
+    width = position.run * ($(ul).width() - 2) / virtual_width
+    # -2 for selected border
+    if li.hasClass("ui-selected")
+      width -= 2
+    li.css("width", "#{width.toFixed(1)}px")
+    li.css("height", "#{height.toFixed(1)}px")
 
     # create a rows x cols table in LI
     rows = position.height_units
     cols = position.width_units
+    if cols > 1
+      ratio = (99.0 / cols).toFixed(1)
+      h = (height / rows).toFixed(0)
+      ths = "<th height='#{h}px' width='#{ratio}%'></th>" +
+        Array(cols).join("<th width='#{ratio}%'></th>")
+      rows--
+      thead = "<thead><tr>#{ths}</tr></thead>"
+    else
+      thead = ""
     tds = Array(cols+1).join("<td></td>")
     trs = Array(rows+1).join("<tr>#{tds}</tr>")
-    table = "<table><tbody>#{trs}</tbody></table>"
+    table = "<table>#{thead}<tbody>#{trs}</tbody></table>"
     li.html(table)
 
     # align LI to bottom of $(ul)
     total = $(ul).height()
     h = li.outerHeight()
-    li.css("margin-top", (total - h) + "px")
+    li.css("margin-top", (total - h).toFixed(1) + "px")
 
   selectSlotItem: (el, addMode) ->
     if !addMode
       for item in @selectedItems
-        $(item[0]).removeClass("ui-selected")
+        $(item.li).removeClass("ui-selected")
       @selectedItems = []
     if el?
-      @selectedItems.push [el, $(el).data("id")]
+      @selectedItems.push
+        li: el
+        position_id: $(el).data("id")
       $(el).addClass("ui-selected")
 
   getActiveSlotItem: () ->
@@ -435,7 +469,7 @@ class PlanEditor
     # store edit version
     $("#plan_layout_version").val(@editVersion)
     for slot,item of @slotMap
-      ul = item[0]
+      ul = item.ul
       fixture_item = ul.data("fixture-item")
       layer = ul.data("layer")
       console.log slot, ul
@@ -476,8 +510,39 @@ class PlanEditor
       self.save()
     setTimeout(saveProc, 90000)  # 90s
 
-  onPlanSave: () ->
+  messageBox: (dlgId, onOk) ->
+    $(dlgId).dialog
+      resizable: true
+      modal: true
+      buttons:
+        "取消": () ->
+          $(this).dialog("close")
+        "确认": () ->
+          $(this).dialog("close")
+          if onOk?
+            onOk()
+
+  openDialog: (dlgId, onInitDialog) ->
+    if onInitDialog?
+      onInitDialog($(dlgId))
+
+    $(dlgId).dialog
+      resizable: true
+      width: $(dlgId).width()
+      height: $(dlgId).height()
+      modal: true
+      buttons:
+        "取消": () ->
+          $(this).dialog("destroy")
+        "确认": () ->
+          $(this).dialog("destroy")
+          $("form", this).submit()
+
+  doSave: () ->
     $("#plan-layout-form").submit()
+
+  onPlanSave: () ->
+    @doSave()
 
   onPlanSwitchModelStore: (store_id) ->
     # /plans/13/edit?_do=layout
@@ -487,36 +552,24 @@ class PlanEditor
     window.location.replace(href)
 
   onPlanEditSummary: () ->
+    @doSave()
+    @openDialog("#plan-edit-summary-dialog")
 
   onPlanPublish: () ->
-    $("#plan-publish-confirm").dialog
-      resizable: true
-      # height: parseInt($(this).data("height"))
-      modal: true
-      buttons:
-        "取消": () ->
-          $(this).dialog("close")
-        "确认": () ->
-          $(this).dialog("close")
+    @doSave()
+    @messageBox "#plan-publish-confirm", () ->
+      # TODO:
+      console.log "publish it"
 
   onPlanCopyTo: () ->      # dup the plan to other model stores
-    $("#plan-copy-to-dialog").dialog
-      resizable: true
-      modal: true
-      width: 400
-      height: 300
-      buttons:
-        "取消": () ->
-          $(this).dialog("close")
-        "确认": () ->
-          $(this).dialog("close")
-          $("form", this).submit()
+    @doSave()
+    @openDialog("#plan-copy-to-dialog")
 
   onPositionRemove: () ->
     if @selectedItems.length == 0
       console.log "no selected items"
     for item in @selectedItems
-      el = item[0]
+      el = item.li
       @removeItemFromSlot(el, el.parentNode)
       $(el).remove() # remove LI element
     @selectedItems = []
@@ -524,37 +577,35 @@ class PlanEditor
   onPositionFacingInc: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item[1]
+      position_id = item.position_id
       position = @positionMap[position_id]
-      @changePositionFacing(position, 1)
+      @changePositionFacing(item.li, position, 1)
 
   onPositionFacingDec: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item[1]
+      position_id = item.position_id
       position = @positionMap[position_id]
-      if position.facing == 1
-        @onPositionRemove()
-      else
-        @changePositionFacing(position, -1)
+      if position.facing > 1
+        @changePositionFacing(item.li, position, -1)
 
-  changePositionFacing: (position, delta) ->
+  changePositionFacing: (li, position, delta) ->
     product = @productMap[position.product_id]
     old_run = position.recalcRun(product)
     position.facing += delta
     position.width_units += delta
     new_run = position.recalcRun(product)
     slotKey = position.slotKey()
-    slotUL = @slotMap[slotKey][0]
-    li = $("li.sortable-item[data-id='#{position.id}']")
-    @updateSlotSpace(slotUL, old_run - new_run, li, position)
+    slotUL = @slotMap[slotKey].ul
+    @updateSlotSpace(slotUL, old_run - new_run, $(li), position)
 
 $ ->
+  window.myToolbar = new Toolbar
+  window.myToolbar.init(".toolbar-button", ".toolbar-select")
+
   window.planEditor = new PlanEditor
   window.planEditor.init()
-
-  window.myToolbar = new Toolbar
-  window.myToolbar.init(".toolbar-button", ".toolbar-select").addDelegate(window.planEditor)
+  window.myToolbar.addDelegate(window.planEditor)
   return true
 
   #############################################

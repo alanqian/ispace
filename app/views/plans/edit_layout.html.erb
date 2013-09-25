@@ -137,11 +137,15 @@
       sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
 </div>
 
-<div id="plan-edit-summary-dialog" class="ui-helper-hidden" title="修改规划基本信息">
+<div id="plan-edit-summary-dialog" class="ui-helper-hidden"
+  title="修改规划基本信息",
+  data-width="400" data-height="260" >
   <%= render 'form_summary' %>
 </div>
 
-<div id="plan-copy-to-dialog" class="ui-helper-hidden" title="复制空间规划">
+<div id="plan-copy-to-dialog" class="ui-helper-hidden"
+  title="复制空间规划"
+  data-width="400" data-height="300" >
   <%= render 'form_copy_to' %>
 </div>
 

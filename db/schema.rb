@@ -220,21 +220,25 @@ ActiveRecord::Schema.define(version: 20130914111200) do
   add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
 
   create_table "plans", force: true do |t|
-    t.integer  "plan_set_id",                                          null: false
-    t.string   "category_id",                                          null: false
+    t.integer  "plan_set_id",                                              null: false
+    t.string   "category_id",                                              null: false
     t.integer  "user_id"
-    t.integer  "store_id",                                             null: false
-    t.integer  "num_stores",                               default: 0
-    t.integer  "fixture_id",                                           null: false
-    t.integer  "init_facing",                              default: 1
-    t.decimal  "nominal_size",    precision: 10, scale: 2
-    t.decimal  "base_footage",    precision: 10, scale: 2
-    t.decimal  "usage_percent",   precision: 10, scale: 2
+    t.integer  "store_id",                                                 null: false
+    t.integer  "num_stores",                                   default: 0
+    t.integer  "fixture_id",                                               null: false
+    t.integer  "init_facing",                                  default: 1
+    t.decimal  "nominal_size",        precision: 10, scale: 2
+    t.decimal  "base_footage",        precision: 10, scale: 2
+    t.decimal  "usage_percent",       precision: 10, scale: 2
     t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "product_version",                          default: 0
+    t.integer  "product_version",                              default: 0
     t.string   "store_name"
+    t.integer  "num_prior_products",                           default: 0
+    t.integer  "num_normal_products",                          default: 0
+    t.integer  "num_done_priors",                              default: 0
+    t.integer  "num_done_normals",                             default: 0
   end
 
   add_index "plans", ["category_id"], name: "index_plans_on_category_id", using: :btree

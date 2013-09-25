@@ -51,11 +51,27 @@ class Plan < ActiveRecord::Base
     end
   end
 
-  def target_plans
+  def copy_product_only
+    @copy_product_only
   end
 
-  def target_plans=(plan_ids)
-    # TODO: copy to ...
+  def copy_product_only=(f)
+    logger.debug "copy_options: #{f.to_s}"
+    @copy_product_only = (f == "true")
+  end
+
+  def target_plans
+    @target_plans
+  end
+
+  def target_plans=(f)
+    logger.debug("set target plan: #{f.to_s}")
+    @target_plans = f.reject { |id| id.empty? } .map { |id| id.to_i }
+    logger.debug("new target plan: #{@target_plans.to_s}")
+  end
+
+  def do_copy_to
+    logger.debug "TODO: do_copy_to, #{@target_plans.to_s}"
   end
 
   # <LI> element(position): fixture_item, layer; seq_num, product_id
@@ -116,6 +132,50 @@ class Plan < ActiveRecord::Base
     !published_at.nil?
   end
 
+  def calc_positions_done
+    # type, count, done
+    # type:
+    #   0: "必卖品"
+    #   1: "可卖品"
+    occupy_run = {} # (fixture_item_id, layer) => run
+    total_count = [0, 0]
+    done_count = [0, 0]
+    product_map = Product.on_sales(self.category_id).to_hash(:code, :sale_type)
+    positions.each do |pos|
+      type = product_map[pos.product_id]
+      if pos.done?
+        done_count[type] += 1
+        occupy_run[pos.layer_key] ||= 0
+        occupy_run[pos.layer_key] += pos.run
+      end
+      total_count[type] += 1
+    end
+
+    self.num_prior_products = total_count[0]
+    self.num_normal_products = total_count[1]
+    self.num_done_priors = done_count[0]
+    self.num_done_normals = done_count[1]
+
+    # calculate usage
+    run_total = 0
+    run_occopies = 0
+    merch_space = self.fixture.merch_spaces
+
+    merch_space.each do |k, space|
+      run_total += space.merch_space
+      if occupy_run[k]
+        if occupy_run[k] > space.merch_space # overflow
+          run_occopies += space.merch_space
+        else
+          run_occopies += occupy_run[k]
+        end
+      end
+    end
+
+    self.usage_percent = run_occopies * 100.0 / run_total
+    self
+  end
+
   def products_on_shelf
     positions.to_hash(:product_id, :id)
   end
@@ -137,6 +197,56 @@ class Plan < ActiveRecord::Base
         })
       end
     end
+  end
+
+  # auto place products
+  def auto_position
+    merch_space = self.fixture.merch_spaces
+    layers = merch_space.keys
+
+    # update current places
+    self.positions.each do |pos|
+      if pos.done?
+        merch_space[pos.layer_key].used_space += pos.run
+        if merch_space[pos.layer_key].count < pos.seq_num
+          merch_space[pos.layer_key].count = pos.seq_num
+        end
+      end
+    end
+
+    # place force on sale products first, then normal ones
+    layer = layers.shift
+    product_map = Product.on_sales(self.category_id).to_hash(:code)
+    new_positions = []
+    0.upto(1) do |sale_type|
+      self.positions.map! do |pos|
+        prod = product_map[pos.product_id]
+        if !pos.done? && prod.sale_type == sale_type
+          run = pos.init_facing * prod.width
+          while layer && merch_space[layer].used_space + run > merch_space[layer].merch_space
+            layer = layers.shift
+          end
+          if layer && merch_space[layer].used_space + run <= merch_space[layer].merch_space
+            pos.fixture_item_id = merch_space[layer].fixture_item
+            pos.layer = merch_space[layer].layer
+            pos.seq_num = merch_space[layer].count + 1
+            pos.run = run
+            pos.facing = pos.width_units = pos.init_facing
+            pos.height_units = (merch_space[layer].merch_height / prod.height).floor
+            pos.depth_units = (merch_space[layer].merch_depth / prod.depth).floor
+            pos.units = pos.depth_units * pos.width_units * pos.height_units
+            merch_space[layer].count += 1
+            merch_space[layer].used_space += run
+          end
+        end
+        pos
+      end
+    end
+    calc_positions_done
+    self.save
+    #self.update(new_positions.to_nested_param(:positions))
+    #self.save
+    # self.update({positions_attributes: positions.to_hash(:id), id: self.id})
   end
 end
 

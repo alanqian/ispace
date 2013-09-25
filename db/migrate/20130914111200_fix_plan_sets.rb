@@ -15,6 +15,10 @@ class FixPlanSets < ActiveRecord::Migration
 
     # add redundancy fields
     add_column :plans, :store_name, :string
+    add_column :plans, :num_prior_products, :integer, default: 0
+    add_column :plans, :num_normal_products, :integer, default: 0
+    add_column :plans, :num_done_priors, :integer, default: 0
+    add_column :plans, :num_done_normals, :integer, default: 0
 
     add_column :stores, :ref_count, :integer, default: 0
     add_column :stores, :region_name, :string, default: ""
@@ -36,6 +40,10 @@ class FixPlanSets < ActiveRecord::Migration
     remove_index :plans, [:plan_set_id, :store_id]
     remove_column :plans, :product_version
     remove_column :plans, :store_name
+    remove_column :plans, :num_prior_products
+    remove_column :plans, :num_normal_products
+    remove_column :plans, :num_done_priors
+    remove_column :plans, :num_done_normals
 
     change_column :positions, :product_id, :integer
     remove_column :positions, :init_facing

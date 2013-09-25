@@ -244,14 +244,15 @@ ul.sortable-editor.ui-selected {
 }
 
 div.space-overflow {
+  display: none;
   position: absolute;
   z-index: 20;
-  width: 3em;
+  width: 5em;
   font-size: 8pt;
+  text-align: center;
   height: 1.5em;
-  border: 1px dotted #777777;
+  border: 2px solid #777777;
   background-color: #CCCCCC;
-  display: none;
 }
 
 ul.sortable-editor {
@@ -290,16 +291,14 @@ ul.sortable-editor {
       border-collapse: collapse;
       padding: 0px;
       margin: 1px;
-      tbody {
-        tr {
-          width: 100%;
-          td {
-            margin: 0;
-            padding: 0;
-            border-width: 1px 1px 0 0;
-            border-style: solid;
-            background-color: red;
-          }
+      tr {
+        width: 100%;
+        td, th {
+          margin: 0;
+          padding: 0;
+          border-width: 1px 1px 0 0;
+          border-style: solid;
+          background-color: red;
         }
       }
     }
@@ -390,3 +389,14 @@ table.fixtures {
     }
   }
 }
+
+div#plan-edit-summary-dialog {
+  width: 400px;
+  height: 260px;
+}
+
+div#plan-copy-to-dialog {
+  width: 400px;
+  height: 300px;
+}
+

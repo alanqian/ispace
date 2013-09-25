@@ -71,15 +71,48 @@ class PlansController < ApplicationController
   def create
   end
 
+  def copy_to
+    respond_to do |format|
+      if @plan.update_attributes(plan_params)
+        @plan.do_copy_to
+        format.html {
+          if @do == :setup
+            redirect_to edit_plan_path(@plan, _do: "layout")
+          else
+            redirect_to @plan, notice: 'Plan was successfully updated.'
+          end
+        }
+        format.json { head :no_content }
+        format.js {
+          @result = "200 OK"
+          @version = 0
+        }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+        format.js {
+          @result = "failed"
+          @version = 0
+        }
+      end
+    end
+  end
+
   # PATCH/PUT /plans/1
   # PATCH/PUT /plans/1.json
   # _do: setup, layout, edit(summary), copy_to
   def update
     @do = (params[:_do] || "edit").to_sym
     logger.debug "plans#update, _do:#{@do}"
+    if @do == :copy_to
+      return copy_to
+    end
 
     respond_to do |format|
       if @plan.update(plan_params)
+        if @do == :layout
+          @plan.calc_positions_done.save!
+        end
         format.html {
           if @do == :setup
             redirect_to edit_plan_path(@plan, _do: "layout")
@@ -142,8 +175,9 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
-        optional_products:[],
+        :copy_product_only,
         target_plans:[],
+        optional_products:[],
         positions_attributes: [:_destroy, :id,
           :product_id, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
           :run, :units, :height_units, :width_units, :depth_units, :oritentation,

@@ -27,6 +27,7 @@
           space_id = "space-#{item_id}-#{layer}"
           shelf_id = "shelf-#{item_id}-#{layer}"
           slot_id = "slot-#{item_id}-#{layer}"
+          overflow_id = "overflow-#{item_id}-#{layer}"
           title = "bay-#{item_id}-#{layer}"
         %>
         <%# show space %>
@@ -36,10 +37,10 @@
               <div id="space-<%= "#{item_id}-#{layer}-#{i}"%>" class="bay-single bay-space" style="width:<%=col_ratio%>%"></div>
             <% end %>
           <% end %>
-          <ul id="<%= slot_id %>" data-container="#<%= space_id %>"
+          <ul id="<%= slot_id %>" data-overflow="#<%= overflow_id %>" data-container="#<%= space_id %>"
             data-fixture-item="<%= item_id %>" data-layer="<%= layer %>" data-space="<%= spaces[layer].to_json %>"
             class="sortable-editor sortable-container"></ul>
-          <div class="space-overflow"></div>
+          <div id="<%= overflow_id %>" class="space-overflow"></div>
         </div>
         <%# show shelf %>
           <% if show_splits %>

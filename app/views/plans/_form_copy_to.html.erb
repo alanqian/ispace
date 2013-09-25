@@ -15,17 +15,23 @@
       <%= f.input :usage_percent, disabled: true %>
       <%= f.input :init_facing, disabled: true %>
     </div>
-    <div id="selected-fixture-info">
-      <li>Fixture info of selected sample store</li>
-    </div>
 
-    <%= field_set_tag "复制到样板店", id: "model-stores" do %>
+    <%= field_set_tag "复制内容：", id: "copy-options" do %>
+      <% copy_options = [[true, '仅复制上架商品和排面数'], [false, '同时复制商品和布局']] %>
+      <%= f.collection_radio_buttons :copy_product_only, copy_options, :first, :last %>
+    <% end %>
+
+    <%= field_set_tag "复制到其他样板店", id: "model-stores" do %>
+      <% plans = @plan.plan_set.plans.reject { |p| p.id == @plan.id } %>
+
       <%= select_all_check "plan[target_plans][]"%>
       <%= label_tag "select-all", "全选" %>
-      <% plans = @plan.plan_set.plans.reject { |p| p.id == @plan.id } %>
       <%= f.collection_check_boxes :target_plans, plans, :id, :store_name,
         {}, { class: "select-one", onclick: "javascript: onClickSelectOne(event, this);",
           data: {"select-all" => "#SELECT_ALL"}} %>
     <% end %>
+    <div id="selected-fixture-info">
+      <li>Fixture info of selected sample store</li>
+    </div>
     <%#= f.submit %>
 <% end %>
