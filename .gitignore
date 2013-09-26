@@ -33,3 +33,4 @@ capybara-*.html
 
 # ignore eclipse file
 .project
+*.swp
