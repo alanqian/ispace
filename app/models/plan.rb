@@ -155,7 +155,7 @@ class Plan < ActiveRecord::Base
   end
 
   def fixture_name
-    if self.fixture.nil? then I18n.t("dict.unset") else fixture.name end
+    fixture.nil? ? I18n.t("dict.unset") : fixture.name
   end
 
   def update_redundancy

@@ -50,17 +50,21 @@ class PlanEditor
   activeSlotUL: null
   selectedItems: [] # [li, position_id]
 
-  layout_fields: [
-    "product_id",
-    "fixture_item_id",
-    "layer",
-    "run",
-    "seq_num",
-    "init_facing",
-    "facing",
-    "height_units",
-    "width_units",
-    "depth_units", ]
+  layout_fields:
+    product_id: "?"
+    fixture_item_id: -1
+    layer: -1
+    seq_num: -1
+    run: 0
+    init_facing: 1
+    facing: 1
+    height_units: 1
+    width_units: 1
+    depth_units: 1
+    leading_gap: 0
+    leading_divider: 0
+    middle_divider: 0
+    trail_divider: 0
 
   handlers: {}
 
@@ -440,11 +444,10 @@ class PlanEditor
           # TODO: add precious version for calculate run
           this.run = product.width * this.facing
 
-      for f in self.layout_fields
-        if f == "product_id"
-          position[f] = $("##{prefix}_#{f}").val() || "?"
-        else
-          position[f] = parseInt($("##{prefix}_#{f}").val()) || -1
+      for f,v of self.layout_fields
+        val = $("##{prefix}_#{f}").val() || v
+        val = parseFloat(val) if typeof v == "number"
+        position[f] = val
 
       # add to positionMap
       self.positionMap[el.value] = position
@@ -483,7 +486,7 @@ class PlanEditor
 
     # store positions to form INPUTs
     for position_id, position of @positionMap
-      for f in @layout_fields
+      for f,v of @layout_fields
         $(position.input_id(f)).val(position[f])
     return true
 
@@ -537,6 +540,26 @@ class PlanEditor
         "确认": () ->
           $(this).dialog("destroy")
           $("form", this).submit()
+
+  openJsDialog: (dlgId, dlgProc) ->
+    dlg = $(dlgId)
+    if dlgProc.init?
+      dlgProc.init(dlg)
+
+    $(dlgId).dialog
+      resizable: true
+      width: $(dlgId).width()
+      height: $(dlgId).height()
+      modal: true
+      buttons:
+        "取消": () ->
+          $(this).dialog("destroy")
+          if dlgProc.cancel?
+            dlgProc.cancel(dlg)
+        "确认": () ->
+          $(this).dialog("destroy")
+          if dlgProc.ok?
+            dlgProc.ok(dlg)
 
   doSave: () ->
     $("#plan-layout-form").submit()
@@ -619,6 +642,82 @@ class PlanEditor
     slotKey = position.slotKey()
     slotUL = @slotMap[slotKey].ul
     @updateSlotSpace(slotUL, old_run - new_run, $(li), position)
+
+  onPositionsReorder: () ->
+    if @selectedItems.length <= 1
+      console.log "no selected items"
+    else
+      target = null
+      for item in @selectedItems
+        el = item.li
+        ul = el.parentNode
+        if target != null
+          @moveSlotItemAfter(item, target)
+        target = item
+
+  moveSlotItemAfter: (item, target) ->
+    return if target == null
+    el = item.li
+    ulFrom = el.parentNode
+    ulTo = target.li.parentNode
+    # move the html element first
+    $(el).insertAfter(target.li)
+    # update the item/slot space relation
+    if ulFrom != ulTo
+      console.log el, item.position_id, "change slot"
+      @removeItemFromSlot(el, ulFrom)
+      @addItemToSlot(el, ulTo)
+
+  onPositionEditLeadingGaps: () ->
+    self = @
+    elId = "#plan_positions_attributes__leading_gap"
+    if @selectedItems.length == 0
+      return
+    @openJsDialog "#plan-positions-gap-dialog",
+      init: (dlg) ->
+        console.log "init"
+        # fill the form input with 1st selectedItem
+        item = self.selectedItems[0]
+        position = self.positionMap[item.position_id]
+        $(elId).val(position.leading_gap)
+
+      ok: (dlg) ->
+        console.log "ok"
+        gap = $(elId).val()
+        # set each position of selected items
+        for item in self.selectedItems
+          position = self.positionMap[item.position_id]
+          position.leading_gap = parseInt($(elId).val())
+
+  onPositionEditDividers: () ->
+    self = @
+    prefix = "#plan_positions_attributes_"
+    fields = ["leading_divider", "middle_divider", "trail_divider"]
+    @openJsDialog "#plan-positions-divider-dialog",
+      init: (dlg) ->
+        console.log "init"
+        # fill the form input with 1st selectedItem
+        item = self.selectedItems[0]
+        position = self.positionMap[item.position_id]
+        $("#{prefix}_leading_divider").val(position.leading_divider)
+        $("#{prefix}_middle_divider").prop("checked", position.middle_divider > 0)
+        $("#{prefix}_trail_divider").prop("checked", position.trail_divider > 0)
+
+      ok: (dlg) ->
+        pos =
+          leading_divider: $("#{prefix}_leading_divider").val()
+          middle_divider: 0
+          trail_divider: 0
+        if $("#{prefix}_middle_divider").prop("checked")
+          pos.middle_divider = pos.leading_divider
+        if $("#{prefix}_trail_divider").prop("checked")
+          pos.trail_divider = pos.leading_divider
+        # set each position of selected items
+        for item in self.selectedItems
+          position = self.positionMap[item.position_id]
+          for f in fields
+            position[f] = pos[f]
+        console.log "ok"
 
 $ ->
   window.myToolbar = new Toolbar

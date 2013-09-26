@@ -33,7 +33,7 @@ class PlansController < ApplicationController
   # 2. can switch to other category
   # 3. product#index, show products on shelf
   # 4. product#edit, edit products summary
-  # 5. position edit, by jquery sort
+  # 5. position edit, by jquery sortable
   def edit
     # check store_fixtures: store + category
     # _do: :edit_layout, :edit_setup, :edit_summay(:edit)
@@ -61,8 +61,8 @@ class PlansController < ApplicationController
     when :edit_setup
       @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
       @optional_products ||= @plan.optional_products
-
     when :edit_layout
+      @position = Position.new
       locals = {
         products: Product.on_sales(@plan.category_id),
         brands_all: Brand.where(["category_id=?", @plan.category_id]),
@@ -70,7 +70,6 @@ class PlansController < ApplicationController
         mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
       }
     end
-
     render @do, locals: locals || {}
   end
 

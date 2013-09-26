@@ -48,6 +48,11 @@ en:
         num_stores: 门店数
         usage_percent: 空间使用率
         init_facing: 初始排面数
+        positions:
+          leading_gap: 前置间隙
+          leading_divider: 前分隔物
+          middle_divider: 货品间分隔物
+          trail_divider: 后分隔物
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:

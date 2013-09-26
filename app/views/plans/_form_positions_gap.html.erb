@@ -1,0 +1,7 @@
+<%= simple_form_for(@plan, remote: true, html: { id: "positions-gap-form" }) do |f| %>
+  <div class="inputs">
+    <%= f.simple_fields_for(:positions, @position, child_index: "") do |nf| %>
+      <%= nf.input :leading_gap %>
+    <% end %>
+  </div>
+<% end %>

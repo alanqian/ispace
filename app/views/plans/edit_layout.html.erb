@@ -115,6 +115,7 @@
   <input id="plan_positions_attributes_0_fixture_item_id"
          name="plan[positions_attributes][0][fixture_item_id]" type="hidden" value="-1">
 %>
+
 <div id="plan-edit-layout-form">
   <%= render 'form_layout' %>
   <%= render 'form_publish' %>
@@ -139,15 +140,23 @@
 </div>
 
 <div id="plan-edit-summary-dialog" class="ui-helper-hidden"
-  title="修改规划基本信息",
-  data-width="400" data-height="260" >
+  title="修改规划基本信息" >
   <%= render 'form_summary' %>
 </div>
 
 <div id="plan-copy-to-dialog" class="ui-helper-hidden"
-  title="复制空间规划"
-  data-width="400" data-height="300" >
+  title="复制空间规划" >
   <%= render 'form_copy_to' %>
+</div>
+
+<div id="plan-positions-gap-dialog" class="ui-helper-hidden"
+  title="修改货品间隙" >
+  <%= render 'form_positions_gap' %>
+</div>
+
+<div id="plan-positions-divider-dialog" class="ui-helper-hidden"
+  title="设置货品分隔物" >
+  <%= render 'form_positions_divider' %>
 </div>
 
 <div id="plan-publish-confirm" title="发布规划?">
