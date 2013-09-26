@@ -14,6 +14,10 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 end
 
+class ActionController::TestCase
+  include Devise::TestHelpers
+end
+
 class ActiveRecord::Base
   def to_params(excepts=[], rep_hash={})
     excepts.push "created_at", "updated_at"
