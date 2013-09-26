@@ -7,11 +7,11 @@ module ActiveRecordExtension
       return {}.tap { |h| self.each {|r| h[r[key]] = r}}
     when 1
       f = value_fields.first
-      return {}.tap { |h| self.each {|r| h[r[key]] = r[f]}}
+      return {}.tap { |h| self.each {|r| h[r[key]] = r.send(f)}}
     else
       hash = {}
       self.each do |r|
-        hash[r[key]] = {}.tap { |h| value_fields.each { |f| h[f] = r[f] }}
+        hash[r[key]] = {}.tap { |h| value_fields.each { |f| h[f] = r.send(f) }}
       end
       return hash
     end
@@ -25,7 +25,7 @@ module ActiveRecordExtension
         h[r[f]] ||= {}
         h = h[r[f]]
       end
-      h[r[last_key_field]] = r[value_field]
+      h[r[last_key_field]] = r.send(value_field)
     end
     hash
   end
@@ -36,7 +36,7 @@ module ActiveRecordExtension
     self.each do |r|
       h = hash
       hash[r[key_field1]] ||= {}
-      hash[r[key_field1]][r[key_field2]] = r[value_field]
+      hash[r[key_field1]][r[key_field2]] = r.send(value_field)
     end
     hash
   end

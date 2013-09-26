@@ -5,12 +5,12 @@
   <%= @plan.store_name %>
 </p>
 
-<%= simple_form_for(@plan) do |f| %>
+<%= simple_form_for(@plan, html: {id: "plan-setup-form"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="inputs">
     <%= f.hidden_field :user_id %>
-    <%= hidden_field_tag "_do", "setup" %>
+    <%= f.hidden_field :_do, value: "setup" %>
 
     <% if @missing_fixture %>
       <p>现在还没有为 <em><%= @plan.category.name %></em> 品类设置货架!</p>

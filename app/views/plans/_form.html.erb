@@ -15,7 +15,7 @@
         <li>Fixture info of sample store</li>
       </div>
     <% else %>
-      <%= hidden_field_tag "_do", "summary" %>
+      <%= f.hidden_field :_do, value: "summary" %>
       <%= f.input :store_name, disabled: true %>
       <%= f.input :num_stores, disabled: true %>
       <%= f.input :usage_percent, disabled: true %>

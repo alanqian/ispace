@@ -15,9 +15,17 @@ class PlansController < ApplicationController
   end
 
   # GET /plans/new
+  # nothing
   def new
     @plan = new_plan
   end
+
+  # POST /plans
+  # POST /plans.json
+  # nothing
+  def create
+  end
+
 
   # GET /plans/1/edit
   # product layout editor, include view elements
@@ -66,53 +74,15 @@ class PlansController < ApplicationController
     render @do, locals: locals || {}
   end
 
-  # POST /plans
-  # POST /plans.json
-  def create
-  end
-
-  def copy_to
-    respond_to do |format|
-      if @plan.update_attributes(plan_params)
-        @plan.do_copy_to
-        format.html {
-          if @do == :setup
-            redirect_to edit_plan_path(@plan, _do: "layout")
-          else
-            redirect_to @plan, notice: 'Plan was successfully updated.'
-          end
-        }
-        format.json { head :no_content }
-        format.js {
-          @result = "200 OK"
-          @version = 0
-        }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @plan.errors, status: :unprocessable_entity }
-        format.js {
-          @result = "failed"
-          @version = 0
-        }
-      end
-    end
-  end
-
   # PATCH/PUT /plans/1
   # PATCH/PUT /plans/1.json
   # _do: setup, layout, edit(summary), copy_to
   def update
-    @do = (params[:_do] || "edit").to_sym
+    @do = (params[:plan][:_do] || "edit").to_sym
     logger.debug "plans#update, _do:#{@do}"
-    if @do == :copy_to
-      return copy_to
-    end
 
     respond_to do |format|
       if @plan.update(plan_params)
-        if @do == :layout
-          @plan.calc_positions_done.save!
-        end
         format.html {
           if @do == :setup
             redirect_to edit_plan_path(@plan, _do: "layout")
@@ -122,15 +92,15 @@ class PlansController < ApplicationController
         }
         format.json { head :no_content }
         format.js {
-          @result = "200 OK"
           @version = params[:_version]
+          render "update_#{@do}"
         }
       else
         format.html { render action: 'edit' }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
         format.js {
-          @result = "failed"
           @version = params[:_version]
+          render "update_#{@do}"
         }
       end
     end
@@ -173,7 +143,7 @@ class PlansController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_params
-      params.require(:plan).permit(:plan_set_id, :category_id, :user_id, :fixture_id,
+      params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
         :copy_product_only,
         target_plans:[],

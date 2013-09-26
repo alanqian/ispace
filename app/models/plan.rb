@@ -9,8 +9,11 @@ class Plan < ActiveRecord::Base
   accepts_nested_attributes_for :positions, allow_destroy: true
 
   validates :plan_set_id, presence: true
+  validate :can_plan_publish, if: :do_publish?
 
-  before_save :update_redundancy
+  before_save :update_redundancy, if: :do_init?
+  before_save :do_copy_to, if: :do_copy_to?
+  before_save :calc_positions_done, if: :do_layout?
 
   attr_accessor :new_products
 
@@ -20,6 +23,33 @@ class Plan < ActiveRecord::Base
 
   def products_changed?
     product_version != Product.version
+  end
+
+  def _do
+  end
+
+  def _do=(f)
+    @did = f.to_sym
+  end
+
+  def did
+    @did
+  end
+
+  def do_init?
+    @did.nil?
+  end
+
+  def do_copy_to?
+    @did == :copy_to
+  end
+
+  def do_layout?
+    @did == :layout
+  end
+
+  def do_publish?
+    @did == :publish
   end
 
   def optional_products
@@ -70,6 +100,22 @@ class Plan < ActiveRecord::Base
     logger.debug("new target plan: #{@target_plans.to_s}")
   end
 
+  def can_plan_publish
+    # TODO:
+    logger.debug "check plan finish state"
+    true
+  end
+
+  def finish_state
+    {
+      usage_percent: self.usage_percent,
+      num_prior_products: self.num_prior_products,
+      num_normal_products: self.num_normal_products,
+      num_done_priors: self.num_done_priors,
+      num_done_normals: self.num_done_normals,
+    }
+  end
+
   def do_copy_to
     logger.debug "TODO: do_copy_to, #{@target_plans.to_s}"
   end
@@ -108,6 +154,10 @@ class Plan < ActiveRecord::Base
     end
   end
 
+  def fixture_name
+    if self.fixture.nil? then I18n.t("dict.unset") else fixture.name end
+  end
+
   def update_redundancy
     self.fixture_id = 0 #
     sf = StoreFixture.store_fixture(store_id, category_id)
@@ -137,6 +187,7 @@ class Plan < ActiveRecord::Base
     # type:
     #   0: "必卖品"
     #   1: "可卖品"
+    logger.debug "calc_positions_done"
     occupy_run = {} # (fixture_item_id, layer) => run
     total_count = [0, 0]
     done_count = [0, 0]
@@ -162,10 +213,10 @@ class Plan < ActiveRecord::Base
     merch_space = self.fixture.merch_spaces
 
     merch_space.each do |k, space|
-      run_total += space.merch_space
+      run_total += space.merch_width
       if occupy_run[k]
-        if occupy_run[k] > space.merch_space # overflow
-          run_occopies += space.merch_space
+        if occupy_run[k] > space.merch_width # overflow
+          run_occopies += space.merch_width
         else
           run_occopies += occupy_run[k]
         end
@@ -202,7 +253,12 @@ class Plan < ActiveRecord::Base
   # auto place products
   def auto_position
     merch_space = self.fixture.merch_spaces
-    layers = merch_space.keys
+
+    # calculate sorted layer
+    gold_point = 150.0
+    layers = merch_space.keys.sort do |a, b|
+      (merch_space[a].from_base - gold_point).abs <=> (merch_space[b].from_base - gold_point).abs
+    end
 
     # update current places
     self.positions.each do |pos|
@@ -223,10 +279,10 @@ class Plan < ActiveRecord::Base
         prod = product_map[pos.product_id]
         if !pos.done? && prod.sale_type == sale_type
           run = pos.init_facing * prod.width
-          while layer && merch_space[layer].used_space + run > merch_space[layer].merch_space
+          while layer && merch_space[layer].used_space + run > merch_space[layer].merch_width
             layer = layers.shift
           end
-          if layer && merch_space[layer].used_space + run <= merch_space[layer].merch_space
+          if layer && merch_space[layer].used_space + run <= merch_space[layer].merch_width
             pos.fixture_item_id = merch_space[layer].fixture_item
             pos.layer = merch_space[layer].layer
             pos.seq_num = merch_space[layer].count + 1
@@ -244,9 +300,5 @@ class Plan < ActiveRecord::Base
     end
     calc_positions_done
     self.save
-    #self.update(new_positions.to_nested_param(:positions))
-    #self.save
-    # self.update({positions_attributes: positions.to_hash(:id), id: self.id})
   end
 end
-

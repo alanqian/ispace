@@ -3,9 +3,9 @@
 
   <div class="inputs">
     <%= token_tag %>
-    <%= hidden_field_tag "_do", "layout" %>
-    <%= hidden_field_tag "_version", "0", { id: "plan_layout_version" } %>
+    <%= f.hidden_field :_do, value: "layout" %>
     <%= f.hidden_field :user_id %>
+    <%= hidden_field_tag "_version", "0", { id: "plan_layout_version" } %>
   </div>
 
   <div class="input-positons">

@@ -1,9 +1,9 @@
-<%= simple_form_for(@plan, remote: true) do |f| %>
+<%= simple_form_for(@plan, remote: true, html: {id: "plan-summary-form"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="inputs">
     <%= token_tag %>
-    <%= hidden_field_tag "_do", "summary" %>
+    <%= f.hidden_field :_do, value: "summary" %>
     <%= f.hidden_field :user_id %>
 
     <%= f.input :store_name, disabled: true %>

@@ -74,9 +74,8 @@ class Fixture < ActiveRecord::Base
 
   # returns layer-key => fixture_item_id, layer, merch_space
   def merch_spaces
-    merch_space = Struct.new(:fixture_item, :layer, :merch_space, :merch_height, :merch_depth,
+    merch_space = Struct.new(:fixture_item, :layer, :merch_width, :merch_height, :merch_depth,
                              :used_space, :from_base, :count)
-    gold_point = 150.0
     run = {}
     spaces = []
     fixture_items.each do |fi|
@@ -85,10 +84,8 @@ class Fixture < ActiveRecord::Base
                         layer.merch_width * fi.num_bays, layer.merch_height, layer.merch_depth,
                         0, layer.from_base, 0) })
     end
-    spaces.sort { |a, b| (a.from_base - gold_point).abs <=> (b.from_base - gold_point).abs }
-    return {}.tap do |map|
-      spaces.each {|sp| map[Position.layer_key(sp.fixture_item, sp.layer)] = sp }
-    end
+    # convert to hash
+    {}.tap { |h| spaces.each {|sp| h[Position.layer_key(sp.fixture_item, sp.layer)] = sp } }
   end
 
   private

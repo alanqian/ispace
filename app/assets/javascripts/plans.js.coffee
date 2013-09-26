@@ -556,22 +556,43 @@ class PlanEditor
     @openDialog("#plan-edit-summary-dialog")
 
   onPlanPublish: () ->
-    @doSave()
+    self = @
     @messageBox "#plan-publish-confirm", () ->
       # TODO:
       console.log "publish it"
+      self.doSave()
+      $("#plan_published_at").val(new Date())
+      $("#plan-publish-form").submit()
+
+  setDlgStoreInfo: (info) ->
+    $("#selected-store-fixture").text(info.fixture_name)
+    $("#plan-usage-percent").text(info.finish_state.usage_percent)
+    $("#plan-num-done-priors").text(info.finish_state.num_done_priors)
+    $("plan-num-prior-products").text(info.finish_state.num_prior_products)
+    $("plan-num-done-normals").text(info.finish_state.num_done_normals)
+    $("plan-num-normal-products").text(info.finish_state.num_normal_products)
 
   onPlanCopyTo: () ->      # dup the plan to other model stores
+    self = @
+    plans_info = $("#selected-store-info").data("plans-info")
     @doSave()
-    @openDialog("#plan-copy-to-dialog")
+    @openDialog "#plan-copy-to-dialog", (dlg) ->
+      $("label[for^='plan_target_plans_']", dlg).click (event) ->
+        planId = $("##{$(this).attr("for")}").val()
+        self.setDlgStoreInfo(plans_info[planId])
+
+      $("#store-info", dlg).click (event) ->
+        thisPlanId = $("form", dlg).attr("action").match(/(\d+)$/)[1]
+        self.setDlgStoreInfo(plans_info[thisPlanId])
 
   onPositionRemove: () ->
     if @selectedItems.length == 0
       console.log "no selected items"
     for item in @selectedItems
       el = item.li
-      @removeItemFromSlot(el, el.parentNode)
+      ul = el.parentNode
       $(el).remove() # remove LI element
+      @removeItemFromSlot(el, ul)
     @selectedItems = []
 
   onPositionFacingInc: () ->

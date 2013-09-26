@@ -1,10 +1,10 @@
 <%# Edit Position Details %>
-<%= simple_form_for(@plan, remote: true) do |f| %>
+<%= simple_form_for(@plan, remote: true, html: {id: "position-detail-form"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="inputs">
     <%= token_tag %>
-    <%= hidden_field_tag "_do", "position" %>
+    <%= f.hidden_field :_do, value: "position" %>
     <%= f.hidden_field :user_id %>
   </div>
 
