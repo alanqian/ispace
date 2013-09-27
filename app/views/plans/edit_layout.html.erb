@@ -129,7 +129,10 @@
 </div>
 
 <div id="products-data"
-  data-meta="<%= products.to_hash(:id, :code, :name, :price_zone, :height, :width, :depth).to_json %>"
+  data-products="<%= products.to_hash(:id, :code, :name, :price_zone, :height, :width, :depth, :supplier_id, :brand_id, :mfr_id).to_json %>"
+  data-brands="<%= brands_all.to_hash(:id, :color).to_json %>"
+  data-mfrs="<%= mfrs_all.to_hash(:id, :color).to_json %>"
+  data-suppliers="<%= suppliers_all.to_hash(:id, :color).to_json %>"
   class="ui-corner-all">
   <%= render "/products/list",
       products: products,
@@ -164,6 +167,13 @@
 <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
 发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！</p>
 </div>
+
+<ul id="showing-colors-menu" class="popup-menu">
+  <li><a id="show-brand-color" href="#">品牌颜色</a></li>
+  <li><a id="show-product-color" href="#">产品颜色</a></li>
+  <li><a id="show-manufacturer-color" href="#">生产商颜色</a></li>
+  <li><a id="show-supplier-color" href="#">供应商颜色</a></li>
+</ul>
 
 <%#= render 'sortable_test' %>
 <%#= render 'toolbar_test' %>

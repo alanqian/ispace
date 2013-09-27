@@ -582,3 +582,9 @@ div.setup-container {
   margin: -0.25em 0.1em;
 }
 
+.ui-menu {
+  position: absolute;
+  // width: 5em;
+  z-index: 10000;
+}
+

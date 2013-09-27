@@ -2,7 +2,10 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-class Toolbar
+# Delegate command UI for
+# 1. toolbar: ".toolbar-button", "toolbar-select"
+# 2. popup-menu: "ul.pupop-menu"
+class CmdUI
   delegates: null
 
   # delegate object must have a handle(id, el) function
@@ -17,10 +20,10 @@ class Toolbar
     for delegate in @delegates
       break if delegate.handle(id, el)
 
-  init: (button_sel, select_sel) ->
+  init: () ->
     self = @
     @delegates = []
-    $(button_sel).each (index, el) ->
+    $(".toolbar-button").each (index, el) ->
       buttonOpt =
         disable: false
         text: false
@@ -30,19 +33,49 @@ class Toolbar
           secondary: $(el).data("icon2")
       $(el).button(buttonOpt).click (e)->
         #console.log "click it:", this.id
+        e.stopPropagation()
         self.handle(this.id, this)
       return true
-    $(select_sel).each (index, el) ->
+
+    $(".toolbar-select").each (index, el) ->
       $(el).addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only")
       $(el).change (e) ->
         #console.log "change it", e, this, this.value
         self.handle(this.id, this)
+
+    # initialize the popup menu width
+    menuItemPadding = 28
+    $("ul.popup-menu").each (index, ul) ->
+      # initialize each popup item
+      $(ul).data("maxChild", 0)
+      $("li ul", ul).each (index, el) ->
+        $(el).data "maxChild", 0
+
+      $("li a", ul).each (index, el) ->
+        popup = $(el).closest("ul")
+        maxChild = popup.data("maxChild")
+        if maxChild < $(el).width()
+          popup.data("maxChild", $(el).width())
+
+      # set the width of all popups
+      $("li ul", ul).each (index, el) ->
+        $(el).width($(el).data("maxChild") + menuItemPadding)
+      $(ul).width($(ul).data("maxChild")+ menuItemPadding)
+
+    $("ul.popup-menu").menu().hide()
+    $("ul.popup-menu").find("a").click (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+      # hide the outer popup menubox
+      $(this).closest("ul.popup-menu").hide()
+      self.handle(this.id, this)
     return self
 
 class PlanEditor
   slotMap: {}     # slot => [ul, space]
   positionMap: {} # position id => position
   productMap: {}  # product_id => position_id, code, name, :price_zone, height, width, depth
+  showingColor: "color" # product color
   debug: true
   editVersion: 0 # for plan layout editor
   savedVersion: 0 # for plan layout editor
@@ -88,8 +121,8 @@ class PlanEditor
     @activeSlotUL = null
     @editVersion = 0
     @savedVersion = 0
+    @initProductMap()
     @initSlotMap()
-    @productMap = $("#products-data").data("meta")
     slotPosition = @loadPosition()
     @initSlotItems(slotPosition)
     @initHandler()
@@ -147,7 +180,21 @@ class PlanEditor
       "switch-product-information": () -> self.onSwitchProductInformation(), # switch the info on right/bottom/hide
       "sort": () -> console.log ""
       "select-showing-information": () -> console.log "", # product infobox or product list on bottom
-      "switch-show-colors":         () -> console.log ""  # (brand/manufacture/product/supplier)
+      "switch-show-colors":         (el) -> self.onSelectShowingColors(el)
+      "show-brand-color":           () -> self.onSwitchToColor("brand_color")
+      "show-product-color":         () -> self.onSwitchToColor("color")
+      "show-manufacturer-color":    () -> self.onSwitchToColor("mfr_color")
+      "show-supplier-color":        () -> self.onSwitchToColor("supplier_color")
+
+  initProductMap: () ->
+    @productMap = $("#products-data").data("products")
+    brands = $("#products-data").data("brands")
+    mfrs = $("#products-data").data("mfrs")
+    suppliers = $("#products-data").data("suppliers")
+    for id,product of @productMap
+      product.brand_color = suppliers[product.brand_id] || "#CCCCCC"
+      product.mfr_color = mfrs[product.mfr_id] || "#CCCCCC"
+      product.supplier_color = suppliers[product.supplier_id] || "#CCCCCC"
 
   initSlotMap: () ->
     console.log "build slots"
@@ -169,7 +216,7 @@ class PlanEditor
         collision: "none"
 
       # save the ul to slot map
-      self.log el
+      # self.log el
       fixture_item = ul.data("fixture-item")
       layer = ul.data("layer")
       space = ul.data("space")
@@ -340,7 +387,7 @@ class PlanEditor
         of: ul
         collision: "none"
 
-    @log "free space updated:", $(ul).attr("id"), delta, old_free_space, space.free
+    # @log "free space updated:", $(ul).attr("id"), delta, old_free_space, space.free
     if old_free_space < 0 || space.free < 0
       # update all items in slot
       $("li", ul).each (index, el) ->
@@ -352,6 +399,10 @@ class PlanEditor
       @updateSlotItemView(li, position, ul)
 
   # update item view: height,width/title/grids/align_bottom
+  updateSlotItemColors: () ->
+    # TODO: update slot item colors
+    console.log "todo: update slot item colors", @showingColor
+
   updateSlotItemView: (li, position, ul) ->
     # update title of LI
     product = @productMap[position.product_id]
@@ -480,7 +531,7 @@ class PlanEditor
       seq_num = 1
       $("li", ul).each (index, el) ->
         position_id = $(el).data("id")
-        self.log "setPlace", position_id, fixture_item, layer, seq_num
+        # self.log "setPlace", position_id, fixture_item, layer, seq_num
         self.positionMap[position_id].setPlace(fixture_item, layer, seq_num++)
         true
 
@@ -719,13 +770,30 @@ class PlanEditor
             position[f] = pos[f]
         console.log "ok"
 
+  popupMenu: (menuSel, el) ->
+    menu = $(menuSel).menu().show().position
+      my: "left top"
+      at: "left bottom"
+      of: el
+    $(document).one "click", ()->
+      console.log "hide popup menu by", this
+      menu.hide()
+
+  onSelectShowingColors: (el) ->
+    # show menu
+    @popupMenu("#showing-colors-menu", el)
+
+  onSwitchToColor: (color) ->
+    @showingColor = color
+    @updateSlotItemColors()
+
 $ ->
-  window.myToolbar = new Toolbar
-  window.myToolbar.init(".toolbar-button", ".toolbar-select")
+  window.myCmdUI = new CmdUI
+  window.myCmdUI.init()
 
   window.planEditor = new PlanEditor
   window.planEditor.init()
-  window.myToolbar.addDelegate(window.planEditor)
+  window.myCmdUI.addDelegate(window.planEditor)
   return true
 
   #############################################
@@ -756,5 +824,6 @@ $ ->
       menu.hide()
     return false
 
-  $("#menu").hide().menu()
+  $("#menu").menu().hide()
+
   #############################################
