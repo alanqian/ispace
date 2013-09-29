@@ -129,7 +129,7 @@
 </div>
 
 <div id="products-data"
-  data-products="<%= products.to_hash(:id, :code, :name, :price_zone, :height, :width, :depth, :supplier_id, :brand_id, :mfr_id).to_json %>"
+  data-products="<%= products.to_hash(:id, :code, :name, :price_zone, :height, :width, :depth, :color, :supplier_id, :brand_id, :mfr_id).to_json %>"
   data-brands="<%= brands_all.to_hash(:id, :color).to_json %>"
   data-mfrs="<%= mfrs_all.to_hash(:id, :color).to_json %>"
   data-suppliers="<%= suppliers_all.to_hash(:id, :color).to_json %>"
@@ -162,7 +162,8 @@
   <%= render 'form_positions_divider' %>
 </div>
 
-<div id="plan-publish-confirm" title="发布规划?">
+<div id="plan-publish-confirm" class="ui-helper-hidden"
+  title="发布规划?">
 <p>
 <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
 发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！</p>

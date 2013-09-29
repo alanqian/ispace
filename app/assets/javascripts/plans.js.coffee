@@ -192,9 +192,10 @@ class PlanEditor
     mfrs = $("#products-data").data("mfrs")
     suppliers = $("#products-data").data("suppliers")
     for id,product of @productMap
-      product.brand_color = suppliers[product.brand_id] || "#CCCCCC"
-      product.mfr_color = mfrs[product.mfr_id] || "#CCCCCC"
-      product.supplier_color = suppliers[product.supplier_id] || "#CCCCCC"
+      product.color ||= "#CC0000"
+      product.brand_color = suppliers[product.brand_id] || "#CCCC00"
+      product.mfr_color = mfrs[product.mfr_id] || "#CC00CC"
+      product.supplier_color = suppliers[product.supplier_id] || "#00CCCC"
 
   initSlotMap: () ->
     console.log "build slots"
@@ -399,9 +400,56 @@ class PlanEditor
       @updateSlotItemView(li, position, ul)
 
   # update item view: height,width/title/grids/align_bottom
-  updateSlotItemColors: () ->
-    # TODO: update slot item colors
-    console.log "todo: update slot item colors", @showingColor
+  updateSlotItemColor: (li, position) ->
+    product = @productMap[position.product_id]
+    $("div.mdse-col", li).css "background-color", product[@showingColor]
+
+  resetSlotItemGrid: (li, position) ->
+    # create a rows x cols table in LI
+    # leading_gap, leading_divider, col, middle_divider, col, trail_divider
+    self = @
+    li.empty()
+    li_height = li.height()
+    li_width = li.width()
+    run = position.run
+    # leading_gap
+    if position.leading_gap > 0
+      gap = "<div class='mdse-gap'></div>"
+      width = (position.leading_gap * li_width / run).toFixed(1)
+      $(gap).appendTo(li).css("width", width)
+    # leading_divider
+    divider = "<div class='mdse-divider'><div class='top-half'></div><div class='bottom-half'></div></div>"
+    if position.leading_divider > 0
+      width = (position.leading_divider * li_width / run).toFixed(1)
+      $(divider).appendTo(li).css("width", width)
+
+    # columns
+    rows = position.height_units
+    cols = position.width_units
+    row = "<div class='mdse-unit'></div>"
+    col = "<div class='mdse-col'></div>"
+    product = @productMap[position.product_id]
+    col_width = product.width * (li_width - 2)/ run
+    for i in [1..cols]
+      rowDivs = Array(rows+1).join(row)
+      colDiv = $(col).appendTo(li).append(rowDivs).css
+        "width": (col_width - 1).toFixed(1)
+        "background-color": product[self.showingColor]
+      if i < cols
+        if position.middle_divider > 0
+          width = (position.middle_divider * li_width / run).toFixed(1)
+          $(divider).appendTo(li).css("width", width)
+        else
+          colDiv.addClass("collapse")
+
+    # set property: color,height of each mdse-unit
+    height = (li_height - (rows - 1)) / rows
+    $("div.mdse-unit", li).height(height.toFixed(1))
+
+    # trail_divider
+    if position.trail_divider > 0
+        width = (position.trail_divider * li_width / run).toFixed(1)
+        $(divider).appendTo(li).css("width", width)
 
   updateSlotItemView: (li, position, ul) ->
     # update title of LI
@@ -423,22 +471,7 @@ class PlanEditor
     li.css("width", "#{width.toFixed(1)}px")
     li.css("height", "#{height.toFixed(1)}px")
 
-    # create a rows x cols table in LI
-    rows = position.height_units
-    cols = position.width_units
-    if cols > 1
-      ratio = (99.0 / cols).toFixed(1)
-      h = (height / rows).toFixed(0)
-      ths = "<th height='#{h}px' width='#{ratio}%'></th>" +
-        Array(cols).join("<th width='#{ratio}%'></th>")
-      rows--
-      thead = "<thead><tr>#{ths}</tr></thead>"
-    else
-      thead = ""
-    tds = Array(cols+1).join("<td></td>")
-    trs = Array(rows+1).join("<tr>#{tds}</tr>")
-    table = "<table>#{thead}<tbody>#{trs}</tbody></table>"
-    li.html(table)
+    @resetSlotItemGrid(li, position)
 
     # align LI to bottom of $(ul)
     total = $(ul).height()
@@ -493,7 +526,10 @@ class PlanEditor
 
         recalcRun: (product) ->
           # TODO: add precious version for calculate run
-          this.run = product.width * this.facing
+          this.run = this.leading_gap + this.leading_divider +
+            product.width * this.facing +
+            this.middle_divider * (this.facing - 1) +
+            this.trail_divider
 
       for f,v of self.layout_fields
         val = $("##{prefix}_#{f}").val() || v
@@ -563,6 +599,15 @@ class PlanEditor
     saveProc = () ->
       self.save()
     setTimeout(saveProc, 90000)  # 90s
+
+  popupMenu: (menuSel, el) ->
+    menu = $(menuSel).menu().show().position
+      my: "left top"
+      at: "left bottom"
+      of: el
+    $(document).one "click", ()->
+      console.log "hide popup menu by", this
+      menu.hide()
 
   messageBox: (dlgId, onOk) ->
     $(dlgId).dialog
@@ -734,11 +779,17 @@ class PlanEditor
 
       ok: (dlg) ->
         console.log "ok"
-        gap = $(elId).val()
+        new_gap = parseFloat $(elId).val()
         # set each position of selected items
         for item in self.selectedItems
           position = self.positionMap[item.position_id]
-          position.leading_gap = parseInt($(elId).val())
+          product = self.productMap[position.product_id]
+          old_run = position.recalcRun(product)
+          if new_gap != position.leading_gap
+            position.leading_gap = new_gap
+            new_run = position.recalcRun(product)
+            self.updateSlotSpace($(item.li).parent(), old_run - new_run, $(item.li), position)
+        return true
 
   onPositionEditDividers: () ->
     self = @
@@ -756,36 +807,45 @@ class PlanEditor
 
       ok: (dlg) ->
         pos =
-          leading_divider: $("#{prefix}_leading_divider").val()
+          leading_divider: parseFloat($("#{prefix}_leading_divider").val())
           middle_divider: 0
           trail_divider: 0
         if $("#{prefix}_middle_divider").prop("checked")
           pos.middle_divider = pos.leading_divider
         if $("#{prefix}_trail_divider").prop("checked")
           pos.trail_divider = pos.leading_divider
+
         # set each position of selected items
         for item in self.selectedItems
           position = self.positionMap[item.position_id]
+          product = self.productMap[position.product_id]
+          old_run = position.recalcRun(product)
+          # set new divider
+          changed = false
           for f in fields
-            position[f] = pos[f]
+            if position[f] != pos[f]
+              position[f] = pos[f]
+              changed = true
+          if changed
+            new_run = position.recalcRun(product)
+            self.updateSlotSpace($(item.li).parent(), old_run - new_run, $(item.li), position)
         console.log "ok"
-
-  popupMenu: (menuSel, el) ->
-    menu = $(menuSel).menu().show().position
-      my: "left top"
-      at: "left bottom"
-      of: el
-    $(document).one "click", ()->
-      console.log "hide popup menu by", this
-      menu.hide()
+        return true
 
   onSelectShowingColors: (el) ->
     # show menu
     @popupMenu("#showing-colors-menu", el)
 
   onSwitchToColor: (color) ->
-    @showingColor = color
-    @updateSlotItemColors()
+    self = @
+    if @showingColor != color
+      @showingColor = color
+      # update color of all slot items with @showingColor
+      for ul,space of @slotMap
+        $("li", space.ul).each (index, li) ->
+          position_id = $(li).data("id")
+          position = self.positionMap[position_id]
+          self.updateSlotItemColor(li, position)
 
 $ ->
   window.myCmdUI = new CmdUI
