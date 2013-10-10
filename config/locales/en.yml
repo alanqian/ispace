@@ -74,6 +74,8 @@ en:
         mfr_id: "生产商"
         category_id: "品类"
         status: "销售"
+        plan_info_rank: 排名
+        facings: 排面
     errors:
       models:
         user:

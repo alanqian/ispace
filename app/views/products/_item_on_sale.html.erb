@@ -1,0 +1,15 @@
+
+<tr data-id="<%= product.id %>">
+  <%= data_td_list product,
+    #[:select_one, :code, "products[]"],
+    # sales_status(product),
+    "", # facings
+    :name,
+    :size_name,
+    :code,
+    "", # plan_info_rank
+    [:price_zone, collection: t("dict.prices").invert()],
+    [:brand_id, collection: brands_hash],
+    :sale_type
+  %>
+</tr>
