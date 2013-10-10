@@ -3,9 +3,10 @@
   <div class="inputs">
     <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
       input_html: {
-        data: { brand_id: rel3_hash(brands_all, :category_id, :id, :name),
-          mfr_id: rel3_hash(mfrs_all, :category_id, :id, :name),
-          supplier_id: rel3_hash(suppliers_all, :category_id, :id, :name),
+      data: {
+          brand_id: brands_all.to_hierarchy(:category_id, :id, :name),
+          mfr_id: mfrs_all.to_hierarchy(:category_id, :id, :name),
+          supplier_id: suppliers_all.to_hierarchy(:category_id, :id, :name),
           selects: {
             "select#product_brand_id" => "brand-id",
             "select#product_mfr_id" => "mfr-id",
@@ -20,7 +21,7 @@
     <%= f.input :width %>
     <%= f.input :depth %>
     <%= f.input :weight %>
-    <%= f.input :price_level, collection: t("dict.prices") %>
+    <%= f.input :price_zone, collection: t("dict.prices") %>
     <%= f.input :size_name %>
     <%= f.input :case_pack_name %>
     <%= f.input :barcode %>

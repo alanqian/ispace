@@ -1,0 +1,45 @@
+<h1>空间规划</h1>
+
+<li> == new plan_set, order by create_time</li>
+
+<table>
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>品类</th>
+      <th>创建时间</th>
+      <th>样板店</th>
+      <th>门店数</th>
+      <th>发布时间</th>
+      <th>未发布样板</th>
+      <th>未实施门店</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @plan_sets.each do |plan_set| %>
+      <tr>
+        <td title="<%= plan_set.note %>"><%= link_to plan_set.name, plan_set_path(plan_set) %></td>
+        <td><%= @category_map[plan_set.category_id] %></td>
+        <td><%= plan_set.created_at.localtime %></td>
+        <% if plan_set.num_plans > 0 %>
+          <td><%= link_to plan_set.num_plans, plans_path(cat: plan_set.category_id, plan_set: plan_set.id), title: "点击查看样板店规划" %></td>
+        <% else %>
+          <td>&nbsp;</td>
+        <% end %>
+        <td><%= plan_set.num_stores %></td>
+        <td><%= plan_set.published_at %></td>
+        <td><%= plan_set.unpublished_plans %></td>
+        <td><%= plan_set.undeployed_stores %></td>
+        <td><%= link_to '编辑', edit_plan_set_path(plan_set) %></td>
+        <td><%= link_to '删除', plan_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to '新建规划', new_plan_set_path %>

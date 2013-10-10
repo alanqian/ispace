@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: set1
+  note: MyString
+  category_id: 10103
+  user_id: 1
+  num_plans: 1
+  num_stores: 1
+  published_at: 2013-09-13 15:54:16
+  unpublished_plans: 1
+  undeployed_stores: 1
+
+two:
+  name: set2
+  note: MyString
+  category_id: 10104
+  user_id: 1
+  num_plans: 1
+  num_stores: 1
+  published_at: 2013-09-13 15:54:16
+  unpublished_plans: 1
+  undeployed_stores: 1

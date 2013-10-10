@@ -23,4 +23,15 @@ class PegBoard < ActiveRecord::Base
     r.height = bay.back_height
     r
   end
+
+  def merch_width
+    bay.back_width
+  end
+
+  def shelf_thick
+    0
+  end
+
+  alias_attribute :merch_depth, :depth
+  alias_attribute :merch_height, :height
 end

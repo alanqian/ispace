@@ -1,0 +1,47 @@
+<h1>Listing plans</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Plan set</th>
+      <th>Category</th>
+      <th>User</th>
+      <th>Store</th>
+      <th>Num stores</th>
+      <th>Fixture</th>
+      <th>Init facing</th>
+      <th>Nominal size</th>
+      <th>Base footage</th>
+      <th>Usage percent</th>
+      <th>Published at</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @plans.each do |plan| %>
+      <tr>
+        <td><%= plan.plan_set_id %></td>
+        <td><%= plan.category_id %></td>
+        <td><%= plan.user_id %></td>
+        <td><%= plan.store_id %></td>
+        <td><%= plan.num_stores %></td>
+        <td><%= plan.fixture_id %></td>
+        <td><%= plan.init_facing %></td>
+        <td><%= plan.nominal_size %></td>
+        <td><%= plan.base_footage %></td>
+        <td><%= plan.usage_percent %></td>
+        <td><%= plan.published_at %></td>
+        <td><%= link_to 'Show', plan %></td>
+        <td><%= link_to 'Edit', edit_plan_path(plan) %></td>
+        <td><%= link_to 'Destroy', plan, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Plan', new_plan_path %>

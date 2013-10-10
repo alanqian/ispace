@@ -488,7 +488,7 @@ class WorkBook
       "销售速度" => "merchandise.volume",
       "销售额" => "merchandise.value",
       "价格" => "merchandise.price",
-      "价格带" => "merchandise.price_level",
+      "价格带" => "merchandise.price_zone",
       "新品" => "merchandise.new_product",
     }
     field_mapping.each do |k,v|

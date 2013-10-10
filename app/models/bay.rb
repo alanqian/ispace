@@ -41,6 +41,22 @@ class Bay < ActiveRecord::Base
     (from_base - notch_1st) / notch_spacing
   end
 
+  def get_element(layer)
+    open_shelves.where(level: layer).first ||
+    peg_boards.where(level: layer).first ||
+    freezer_chests.where(level: layer).first ||
+    rear_support_bars.where(level: layer).first
+  end
+
+  def layers
+    elems = []
+    elems.concat open_shelves
+    elems.concat peg_boards
+    elems.concat freezer_chests
+    elems.concat rear_support_bars
+    elems.sort { |a,b| b.level <=> a.level }
+  end
+
   # for notch_num
   # from_base = (notch_num - 1) * notch_spacing + notch_first
   def notch_to(notch_num)

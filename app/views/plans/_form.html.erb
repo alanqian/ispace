@@ -1,0 +1,35 @@
+<%= simple_form_for(@plan) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.hidden_field :user_id %>
+    <% if @plan.id.nil? %>
+      <%= f.hidden_field :plan_set_id %>
+      <%= f.hidden_field :category_id %>
+      <%= f.input :store_id, collection: @model_stores_all %>
+      <div id="store-info">
+        <li>requries json data: store_id =&gt; [StoreInfoText, FixtureInfoText]
+        <li>Selected store info: location, area, refer_count, region.name</li>
+      </div>
+      <div id="fixture-info">
+        <li>Fixture info of sample store</li>
+      </div>
+    <% else %>
+      <%= f.hidden_field :_do, value: "summary" %>
+      <%= f.input :store_name, disabled: true %>
+      <%= f.input :num_stores, disabled: true %>
+      <%= f.input :usage_percent, disabled: true %>
+    <% end %>
+
+    <%= f.input :init_facing %>
+
+    <!-- TODO: change fixture? -->
+    <%#= f.input :fixture_id, disabled: true %>
+    <%#= f.input :nominal_size %>
+    <%#= f.input :base_footage %>
+    <%#= f.input :published_at %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
+

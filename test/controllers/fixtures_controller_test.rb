@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class FixturesControllerTest < ActionController::TestCase
-  fixtures :fixtures, :categories
+  fixtures :fixtures
   fixtures :bays
 
   setup do

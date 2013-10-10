@@ -4,8 +4,12 @@ module ApplicationHelper
     return I18n.t "activerecord.attributes.#{model.downcase}"
   end
 
-  def tf(field)
-    model = controller_name.classify.downcase
+  def tf(field, object_sym=nil)
+    if object_sym
+      model = object_sym.to_s
+    else
+      model = controller_name.classify.downcase
+    end
     prefixs = ["activerecord.attributes.#{model}", "dict"]
     prefixs.each do |prefix|
       s = I18n.t("#{prefix}.#{field}", default: '')
@@ -102,7 +106,7 @@ module ApplicationHelper
           if field.is_a?(Symbol)
             opt = col.shift || {}
             opts = { input: "#{object}[#{field}]" }.merge(opt)
-            content = tf(field)
+            content = tf(field, object_sym)
           else
             opts = col.shift || {}
             content = field
@@ -124,7 +128,7 @@ module ApplicationHelper
         if col.is_a?(Symbol)
           # :field => w/ default input, sort, search
           opts = { input: "#{object}[#{field}]" }
-          content = tf(field)
+          content = tf(field, object_sym)
         else
           # input:nil, w/ default sort, search
           opts = {}

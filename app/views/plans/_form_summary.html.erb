@@ -1,0 +1,22 @@
+<%= simple_form_for(@plan, remote: true, html: {id: "plan-summary-form"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= token_tag %>
+    <%= f.hidden_field :_do, value: "summary" %>
+    <%= f.hidden_field :user_id %>
+
+    <%= f.input :store_name, disabled: true %>
+    <%= f.input :num_stores, disabled: true %>
+    <%= f.input :usage_percent, disabled: true %>
+
+    <%= f.input :init_facing %>
+
+    <!-- TODO: change fixture? -->
+    <%#= f.input :fixture_id, disabled: true %>
+    <%#= f.input :nominal_size %>
+    <%#= f.input :base_footage %>
+    <%#= f.input :published_at %>
+  </div>
+<% end %>
+

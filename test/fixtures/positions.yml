@@ -1,0 +1,57 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  plan_id: 1
+  store_id: 1
+  product_id: 1
+  layer: 1
+  seq_num: 1
+  facing: 1
+  run: 9.99
+  units: 1
+  height_units: 1
+  width_units: 1
+  depth_units: 1
+  oritentation: MyString
+  merch_style: MyString
+  peg_style: MyString
+  top_cap_width: 9.99
+  top_cap_depth: 9.99
+  bottom_cap_width: 9.99
+  bottom_cap_depth: 9.99
+  left_cap_width: 9.99
+  left_cap_depth: 9.99
+  right_cap_width: 9.99
+  right_cap_depth: 9.99
+  leading_gap: 9.99
+  leading_divider: 9.99
+  middle_divider: 9.99
+  trail_divider: 9.99
+
+two:
+  plan_id: 1
+  store_id: 1
+  product_id: 1
+  layer: 1
+  seq_num: 1
+  facing: 1
+  run: 9.99
+  units: 1
+  height_units: 1
+  width_units: 1
+  depth_units: 1
+  oritentation: MyString
+  merch_style: MyString
+  peg_style: MyString
+  top_cap_width: 9.99
+  top_cap_depth: 9.99
+  bottom_cap_width: 9.99
+  bottom_cap_depth: 9.99
+  left_cap_width: 9.99
+  left_cap_depth: 9.99
+  right_cap_width: 9.99
+  right_cap_depth: 9.99
+  leading_gap: 9.99
+  leading_divider: 9.99
+  middle_divider: 9.99
+  trail_divider: 9.99

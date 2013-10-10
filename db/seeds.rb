@@ -7,72 +7,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-#####################################################################
-# basic admin data
-
-User.delete_all
-User.create(
-  email: 't@g.cn',
-  password: '00000000',
-  password_confirmation: '00000000'
-)
-
-Category.delete_all
-Category.create(
-  code: "1",
-  name: '百货',
-  memo: %{百货})
-
-Category.create(
-  code: "101",
-  parent_id: "1",
-  name: '日用百货',
-  memo: %{日用品})
-
-Category.create(
-  code: '10101',
-  parent_id: "101",
-  name: '牙膏',
-  memo: %{各种品类的牙膏，含特种牙膏})
-
-Category.create(
-  code: '10102',
-  parent_id: "101",
-  name: '纸巾',
-  memo: '')
-
-Region.delete_all
-Store.delete_all
-
-Region.create(code: "cn",
-              name: "中国",
-              consume_type: "B",
-              memo: "中国总部")
-
-Region.create(code: "cn.north",
-              name: "华北区",
-              consume_type: "B",
-              memo: "华北区，含内蒙")
-
-Region.create(code: "cn.north.bj",
-              name: "北京",
-              consume_type: "A+",
-              memo: "北京，含各郊县")
-
-Store.create(region_id: "cn.north.bj",
-             name: "12号店",
-             code: "001",
-             area: 60,
-             location: "市区",
-             memo: "牡丹园，tel: 81231234")
-Store.create(region_id: "cn.north.bj",
-             name: "18号店",
-             code: "002",
-             area: 120,
-             location: "市区",
-             memo: "亚运村，tel: 81231234")
-
-__END__
 
 #####################################################################
 # bay data
@@ -464,9 +398,8 @@ fixtures = []
 ["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
   fixtures.push Fixture.create(
     name: name,
-    code: name[0..4]
+    code: name[0..4],
     user_id: 0,
-    category_id: "牙膏",
     flow_l2r: true,
   )
 end
@@ -517,5 +450,71 @@ fixture_item = FixtureItem.create(
   continuous: true,
 )
 
-__END__
 
+#####################################################################
+# basic admin data
+
+User.delete_all
+User.create(
+  email: 't@g.cn',
+  password: '00000000',
+  password_confirmation: '00000000'
+)
+
+__END__
+Category.delete_all
+Category.create(
+  code: "1",
+  name: '百货',
+  memo: %{百货})
+
+Category.create(
+  code: "101",
+  parent_id: "1",
+  name: '日用百货',
+  memo: %{日用品})
+
+Category.create(
+  code: '10101',
+  parent_id: "101",
+  name: '牙膏',
+  memo: %{各种品类的牙膏，含特种牙膏})
+
+Category.create(
+  code: '10102',
+  parent_id: "101",
+  name: '纸巾',
+  memo: '')
+
+Region.delete_all
+Store.delete_all
+
+Region.create(code: "cn",
+              name: "中国",
+              consume_type: "B",
+              memo: "中国总部")
+
+Region.create(code: "cn.north",
+              name: "华北区",
+              consume_type: "B",
+              memo: "华北区，含内蒙")
+
+Region.create(code: "cn.north.bj",
+              name: "北京",
+              consume_type: "A+",
+              memo: "北京，含各郊县")
+
+Store.create(region_id: "cn.north.bj",
+             name: "12号店",
+             code: "001",
+             area: 60,
+             location: "市区",
+             memo: "牡丹园，tel: 81231234")
+Store.create(region_id: "cn.north.bj",
+             name: "18号店",
+             code: "002",
+             area: 120,
+             location: "市区",
+             memo: "亚运村，tel: 81231234")
+
+__END__

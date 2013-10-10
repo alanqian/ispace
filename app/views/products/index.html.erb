@@ -14,7 +14,7 @@
       <%= f.input :width %>
       <%= f.input :depth %>
       <%= f.input :weight %>
-      <%= f.input :price_level, collection: t("dict.prices") %>
+      <%= f.input :price_zone, collection: t("dict.prices") %>
       <%= f.input :size_name %>
       <%= f.input :case_pack_name %>
       <%= f.input :barcode %>
@@ -22,29 +22,12 @@
       <%= f.input :supplier_id, collection: suppliers_all %>
       <%= f.input :mfr_id, collection: mfrs_all %>
     </div>
-    <table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
-      <thead>
-        <tr>
-          <%= data_th_list(:product,
-            [:select_all, "products[]"],
-            [:status, input: false, sort: false],
-            :code,
-            :brand_id,
-            :name,
-            [:color, sort: false, search: false],
-            :height, :width, :depth, :weight, :price_level,
-            :size_name, :case_pack_name, :barcode, :supplier_id, :mfr_id) %>
-        </tr>
-      </thead>
-      <tbody>
-        <% @products.each do |product| %>
-          <%= render 'item', product: product,
-            brands_hash: rel_hash(brands_all, :id, :name),
-            suppliers_hash: rel_hash(suppliers_all, :id, :name),
-            mfrs_hash: rel_hash(mfrs_all, :id, :name) %>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render 'list',
+      products: @products,
+      brands_all: brands_all,
+      suppliers_all: suppliers_all,
+      mfrs_all: mfrs_all,
+      sinfoempty: "请重新选择品类或重新搜索" %>
     <div id="dataTable-filter">
       <div id="products-choose-category" >
         <%= f.input :category_id, collection: categories_all, prompt: "选择品类",

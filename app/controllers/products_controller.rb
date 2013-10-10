@@ -156,20 +156,20 @@ class ProductsController < ApplicationController
     def set_products_ex_js
       @product = Product.find(@products.first)
       @products_hash = Hash[Product.where(code: @products).map {|r| [r.id, r]} ]
-      @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
-      @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
-      @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
+      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
+      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
     end
 
     def set_product_update_js
-      @brands_hash = view_context.rel_hash(Brand.where(category_id: @product.category_id), :id, :name)
-      @suppliers_hash = view_context.rel_hash(Supplier.where(category_id: @product.category_id), :id, :name)
-      @mfrs_hash = view_context.rel_hash(Manufacturer.where(category_id: @product.category_id), :id, :name)
+      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
+      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
+      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:category_id, :code, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_level, :size_name, :case_pack_name, :barcode, :color)
+      params.require(:product).permit(:category_id, :code, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_zone, :size_name, :case_pack_name, :barcode, :color)
     end
 
     def product_attr_params

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130912035808) do
+ActiveRecord::Schema.define(version: 20130914111200) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -50,18 +50,35 @@ ActiveRecord::Schema.define(version: 20130912035808) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",                               null: false
+    t.string   "name",                                 null: false
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",       limit: 32,              null: false
-    t.string   "parent_id",  limit: 32
-    t.integer  "import_id",             default: -1
+    t.string   "code",         limit: 32,              null: false
+    t.string   "parent_id",    limit: 32
+    t.integer  "import_id",               default: -1
+    t.string   "pinyin"
+    t.string   "display_name"
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
   add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
   add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
+
+  create_table "deployments", force: true do |t|
+    t.integer  "plan_id"
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.datetime "downloaded_at"
+    t.datetime "deployed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "deployments", ["deployed_at"], name: "index_deployments_on_deployed_at", using: :btree
+  add_index "deployments", ["downloaded_at"], name: "index_deployments_on_downloaded_at", using: :btree
+  add_index "deployments", ["plan_id"], name: "index_deployments_on_plan_id", using: :btree
+  add_index "deployments", ["store_id"], name: "index_deployments_on_store_id", using: :btree
 
   create_table "fixture_items", force: true do |t|
     t.integer  "fixture_id"
@@ -79,14 +96,12 @@ ActiveRecord::Schema.define(version: 20130912035808) do
   create_table "fixtures", force: true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.string   "category_id"
     t.boolean  "flow_l2r"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",        limit: 48, default: "", null: false
+    t.string   "code",       limit: 48, default: "", null: false
   end
 
-  add_index "fixtures", ["category_id"], name: "index_fixtures_on_category_id", using: :btree
   add_index "fixtures", ["code"], name: "index_fixtures_on_code", using: :btree
   add_index "fixtures", ["name"], name: "index_fixtures_on_name", using: :btree
   add_index "fixtures", ["user_id"], name: "index_fixtures_on_user_id", using: :btree
@@ -181,6 +196,92 @@ ActiveRecord::Schema.define(version: 20130912035808) do
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
+  create_table "plan_sets", force: true do |t|
+    t.string   "name",                          null: false
+    t.string   "note"
+    t.string   "category_id",                   null: false
+    t.integer  "user_id"
+    t.integer  "num_plans",         default: 0
+    t.integer  "num_stores",        default: 0
+    t.datetime "published_at"
+    t.integer  "unpublished_plans"
+    t.integer  "undeployed_stores"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "category_name"
+  end
+
+  add_index "plan_sets", ["category_id"], name: "index_plan_sets_on_category_id", using: :btree
+  add_index "plan_sets", ["created_at"], name: "index_plan_sets_on_created_at", using: :btree
+  add_index "plan_sets", ["name"], name: "index_plan_sets_on_name", using: :btree
+  add_index "plan_sets", ["published_at"], name: "index_plan_sets_on_published_at", using: :btree
+  add_index "plan_sets", ["undeployed_stores"], name: "index_plan_sets_on_undeployed_stores", using: :btree
+  add_index "plan_sets", ["unpublished_plans"], name: "index_plan_sets_on_unpublished_plans", using: :btree
+  add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
+
+  create_table "plans", force: true do |t|
+    t.integer  "plan_set_id",                                              null: false
+    t.string   "category_id",                                              null: false
+    t.integer  "user_id"
+    t.integer  "store_id",                                                 null: false
+    t.integer  "num_stores",                                   default: 0
+    t.integer  "fixture_id",                                               null: false
+    t.integer  "init_facing",                                  default: 1
+    t.decimal  "nominal_size",        precision: 10, scale: 2
+    t.decimal  "base_footage",        precision: 10, scale: 2
+    t.decimal  "usage_percent",       precision: 10, scale: 2
+    t.datetime "published_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "product_version",                              default: 0
+    t.string   "store_name"
+    t.integer  "num_prior_products",                           default: 0
+    t.integer  "num_normal_products",                          default: 0
+    t.integer  "num_done_priors",                              default: 0
+    t.integer  "num_done_normals",                             default: 0
+  end
+
+  add_index "plans", ["category_id"], name: "index_plans_on_category_id", using: :btree
+  add_index "plans", ["fixture_id"], name: "index_plans_on_fixture_id", using: :btree
+  add_index "plans", ["plan_set_id", "store_id"], name: "index_plans_on_plan_set_id_and_store_id", unique: true, using: :btree
+  add_index "plans", ["plan_set_id"], name: "index_plans_on_plan_set_id", using: :btree
+  add_index "plans", ["published_at"], name: "index_plans_on_published_at", using: :btree
+  add_index "plans", ["store_id"], name: "index_plans_on_store_id", using: :btree
+  add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
+
+  create_table "positions", force: true do |t|
+    t.integer  "plan_id"
+    t.integer  "store_id"
+    t.string   "product_id",                                             null: false
+    t.integer  "layer"
+    t.integer  "seq_num"
+    t.integer  "facing"
+    t.decimal  "run",              precision: 10, scale: 1
+    t.integer  "units"
+    t.integer  "height_units"
+    t.integer  "width_units"
+    t.integer  "depth_units"
+    t.string   "oritentation"
+    t.string   "merch_style"
+    t.string   "peg_style"
+    t.decimal  "top_cap_width",    precision: 10, scale: 1
+    t.decimal  "top_cap_depth",    precision: 10, scale: 1
+    t.decimal  "bottom_cap_width", precision: 10, scale: 1
+    t.decimal  "bottom_cap_depth", precision: 10, scale: 1
+    t.decimal  "left_cap_width",   precision: 10, scale: 1
+    t.decimal  "left_cap_depth",   precision: 10, scale: 1
+    t.decimal  "right_cap_width",  precision: 10, scale: 1
+    t.decimal  "right_cap_depth",  precision: 10, scale: 1
+    t.decimal  "leading_gap",      precision: 10, scale: 1
+    t.decimal  "leading_divider",  precision: 10, scale: 1
+    t.decimal  "middle_divider",   precision: 10, scale: 1
+    t.decimal  "trail_divider",    precision: 10, scale: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "fixture_item_id",                           default: -1, null: false
+    t.integer  "init_facing",                                            null: false
+  end
+
   create_table "products", id: false, force: true do |t|
     t.string   "code",                                                    null: false
     t.string   "category_id"
@@ -193,7 +294,7 @@ ActiveRecord::Schema.define(version: 20130912035808) do
     t.decimal  "width",          precision: 10, scale: 0
     t.decimal  "depth",          precision: 10, scale: 0
     t.decimal  "weight",         precision: 10, scale: 0
-    t.string   "price_level"
+    t.string   "price_zone"
     t.string   "size_name"
     t.string   "case_pack_name"
     t.string   "barcode"
@@ -242,6 +343,8 @@ ActiveRecord::Schema.define(version: 20130912035808) do
     t.datetime "updated_at"
     t.string   "consume_type", limit: 32, default: "B", null: false
     t.integer  "import_id",               default: -1
+    t.string   "pinyin"
+    t.string   "display_name"
   end
 
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
@@ -283,6 +386,20 @@ ActiveRecord::Schema.define(version: 20130912035808) do
   add_index "sales", ["store_id"], name: "index_sales_on_store_id", using: :btree
   add_index "sales", ["updated_at"], name: "index_sales_on_updated_at", using: :btree
 
+  create_table "store_fixtures", force: true do |t|
+    t.string   "code",        null: false
+    t.integer  "fixture_id",  null: false
+    t.integer  "store_id",    null: false
+    t.string   "category_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "store_fixtures", ["code"], name: "index_store_fixtures_on_code", using: :btree
+  add_index "store_fixtures", ["fixture_id"], name: "index_store_fixtures_on_fixture_id", using: :btree
+  add_index "store_fixtures", ["store_id", "category_id"], name: "index_store_fixtures_on_store_id_and_category_id", unique: true, using: :btree
+  add_index "store_fixtures", ["store_id", "code"], name: "index_store_fixtures_on_store_id_and_code", unique: true, using: :btree
+
   create_table "stores", force: true do |t|
     t.string   "region_id",                            null: false
     t.string   "name"
@@ -294,6 +411,9 @@ ActiveRecord::Schema.define(version: 20130912035808) do
     t.integer  "area"
     t.string   "location",     limit: 32
     t.integer  "import_id",               default: -1
+    t.integer  "ref_count",               default: 0
+    t.string   "region_name",             default: ""
+    t.string   "pinyin"
   end
 
   add_index "stores", ["area"], name: "index_stores_on_area", using: :btree

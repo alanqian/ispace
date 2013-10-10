@@ -1,0 +1,39 @@
+<h1>选择货架</h1>
+
+<p>
+  <%= @plan.plan_set.display_shortname %>：
+  <%= @plan.store_name %>
+</p>
+
+<%= simple_form_for(@plan, html: {id: "plan-setup-form"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.hidden_field :user_id %>
+    <%= f.hidden_field :_do, value: "setup" %>
+
+    <% if @missing_fixture %>
+      <p>现在还没有为 <em><%= @plan.category.name %></em> 品类设置货架!</p>
+    <% end %>
+    <%= field_set_tag "设置货架", id: "fixtures" do %>
+      <li><%= link_to "新建货架", new_fixture_path %></ul>
+      <%= f.collection_radio_buttons :fixture_id, @fixtures_all, :first, :last %>
+    <% end %>
+
+    <% if @optional_products.any? %>
+      <p>商品目录可能有更新，请选择新商品(<%= @optional_products.size %>)，加入到本次空间规划</p>
+      <div class="">
+        <%= select_all_check "plan[optional_products][]"%>
+        <%= label_tag "select-all", "全选" %>
+        <%= f.collection_check_boxes :optional_products, @optional_products, :id, :display_name,
+          {}, { class: "select-one", onclick: "javascript: onClickSelectOne(event, this);",
+            data: {"select-all" => "#SELECT_ALL"}} %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit, "确定" %>
+  </div>
+<% end %>
+

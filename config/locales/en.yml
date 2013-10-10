@@ -20,6 +20,12 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
   #   validates :email, :presence: true
@@ -56,7 +62,7 @@ en:
         code: "编码"
         id: "编码"
         name: "品名"
-        price_level: "价格带"
+        price_zone: "价格带"
         size_name: "规格"
         case_pack_name: "包装"
         color: "颜色"
@@ -68,6 +74,8 @@ en:
         mfr_id: "生产商"
         category_id: "品类"
         status: "销售"
+        plan_info_rank: 排名
+        facings: 排面
     errors:
       models:
         user:
@@ -126,6 +134,7 @@ en:
     depth: "深度"
     weight: "重量"
     brand: "品牌"
+    unset: 未设置
     removeOpenShelf: "从货备中删除本层隔板"
     removePegboard: "从货备中删除本层钉板"
     removeFreezerChest: "从货备中删除冷冻柜"
@@ -198,7 +207,7 @@ en:
         width: "宽度"
         depth: "深度"
         weight: "重量"
-        price_level: "价格带"
+        price_zone: "价格带"
         size_name: "规格(大小)"
         case_pack_name: "包装"
         barcode: "条形码"

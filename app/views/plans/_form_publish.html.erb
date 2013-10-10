@@ -1,0 +1,6 @@
+<%= simple_form_for(@plan, remote: true, html: {id: "plan-publish-form"}) do |f| %>
+  <%= token_tag %>
+  <%= f.hidden_field :_do, value: "publish" %>
+  <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :published_at %>
+<% end %>
