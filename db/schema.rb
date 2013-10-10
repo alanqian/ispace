@@ -294,7 +294,7 @@ ActiveRecord::Schema.define(version: 20130914111200) do
     t.decimal  "width",          precision: 10, scale: 0
     t.decimal  "depth",          precision: 10, scale: 0
     t.decimal  "weight",         precision: 10, scale: 0
-    t.string   "price_level"
+    t.string   "price_zone"
     t.string   "size_name"
     t.string   "case_pack_name"
     t.string   "barcode"

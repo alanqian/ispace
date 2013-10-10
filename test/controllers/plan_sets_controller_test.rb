@@ -2,6 +2,7 @@ require 'test_helper'
 
 class PlanSetsControllerTest < ActionController::TestCase
   fixtures :plan_sets
+  fixtures :categories
 
   setup do
     @plan_set = plan_sets(:one)

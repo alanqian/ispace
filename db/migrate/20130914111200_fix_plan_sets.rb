@@ -29,6 +29,8 @@ class FixPlanSets < ActiveRecord::Migration
     add_column :regions, :pinyin, :string
     add_column :regions, :display_name, :string
     add_column :stores, :pinyin, :string
+
+    rename_column :products, :price_level, :price_zone
   end
 
   def down
@@ -57,5 +59,7 @@ class FixPlanSets < ActiveRecord::Migration
     remove_column :regions, :pinyin
     remove_column :regions, :display_name
     remove_column :stores, :pinyin
+
+    rename_column :products, :price_zone, :price_level
   end
 end
