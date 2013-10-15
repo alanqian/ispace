@@ -2,7 +2,7 @@ class Position < ActiveRecord::Base
   belongs_to :plan
   belongs_to :product
 
-  def done?
+  def on_shelf?
     fixture_item_id > 0 && layer >= 0 && seq_num >= 0
   end
 

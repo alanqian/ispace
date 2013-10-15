@@ -61,7 +61,7 @@
       id, text, icon = btn
       icon ||= "ui-#{id}"
       %>
-    <%= button_tag text, type: :button, id: text, class: "toolbar-button",
+    <%= button_tag text, type: :button, id: id, class: "toolbar-button",
       data: { icon: icon } %>
   <% end %>
 </div>

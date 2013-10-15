@@ -48,6 +48,41 @@ class Bay < ActiveRecord::Base
     rear_support_bars.where(level: layer).first
   end
 
+  # origin: left/bottom corner
+  def to_pdf(pdf, ostate)
+    num_bays = ostate.fixture[:num_bays]
+    case ostate.fixture[:bay]
+    when :front_view
+      # move origin to base
+      ostate.origin[1] += base_height * ostate.scale
+
+      # draw layers, space without fill, shelf with fill
+      layers.each do |layer|
+        ostate.fixture[:layer] = :layout
+        layer.to_pdf(pdf, ostate)
+
+        # output text of each layer
+        ostate.fixture[:layer] = :text
+        layer.to_pdf(pdf, ostate)
+
+        ostate.fixture[:layer] = ostate.fixture[:contains]
+        layer.to_pdf(pdf, ostate)
+      end
+
+      # draw base with fill color
+      pdf.fill_color(base_color)
+      origin = ostate.origin.dup
+      cx = base_width * ostate.scale
+      num_bays.times do
+        pdf.fill_and_stroke_rectangle origin, cx, base_height * ostate.scale
+        origin[0] += cx
+      end
+
+      # restore origin
+      ostate.origin[1] -= base_height * ostate.scale
+    end
+  end
+
   def layers
     elems = []
     elems.concat open_shelves
@@ -73,6 +108,20 @@ class Bay < ActiveRecord::Base
     else
       return base_height
     end
+  end
+
+  def max_height
+    back_height + base_height
+  end
+
+  def max_width
+    widths = [base_width, back_width]
+    [open_shelves, peg_boards, freezer_chests, rear_support_bars].each do |els|
+      els.each do |el|
+        widths.push el.width
+      end
+    end
+    widths.max
   end
 
   # fake attr writer

@@ -196,7 +196,7 @@ class PlanEditor
     suppliers = $("#products-data").data("suppliers")
     for id,product of @productMap
       product.color ||= "#CC0000"
-      product.brand_color = suppliers[product.brand_id] || "#CCCC00"
+      product.brand_color = brands[product.brand_id] || "#CCCC00"
       product.mfr_color = mfrs[product.mfr_id] || "#CC00CC"
       product.supplier_color = suppliers[product.supplier_id] || "#00CCCC"
 

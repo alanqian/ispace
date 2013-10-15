@@ -1,3 +1,51 @@
+class OutputState < Struct.new(:origin, :scale, :options, :fixture, :blocks,
+                               :positions)
+  def initialize(hash)
+    super(*hash.values_at(:origin, :scale, :options, :fixture, :blocks,
+                          :positions))
+  end
+end
+
+class PlanBlock < Struct.new(:id, :name, :color,
+                       :width, :height, :depth,
+                       :fixture_item_id, :layer, :seq_num,
+                       :width_units, :height_units, :depth_units,
+                       :facing, :run, :leading_gap, :trail_gap)
+  def self.by_brand(product, brand, position)
+    pos_params = [
+      :fixture_item_id, :layer, :seq_num,
+      :width_units, :height_units, :depth_units,
+      :facing, :run, :leading_gap].map { |f| f.to_s }
+    params = brand.values_at(:id, :name, :color) .
+          concat(product.values_at(:width, :height, :depth)).
+          concat(position.attributes.values_at(*pos_params))
+    block = self.new(*params)
+    block.height *= position.height_units
+    block.depth *= position.depth_units
+    block.leading_gap += position.leading_divider
+    block.trail_gap = position.trail_divider
+    block.width = block.width * position.width_units +
+      position.middle_divider * (position.width_units - 1) +
+      block.leading_gap + block.trail_gap
+    block
+  end
+
+  def self.by_product(product, position)
+    pos_params = [
+      :fixture_item_id, :layer, :seq_num,
+      :width_units, :height_units, :depth_units,
+      :facing, :run, :leading_gap].map { |f| f.to_s }
+    params = product.values_at(:code, # :id
+                               :name, :color,
+                               :width, :height, :depth).
+          concat(position.attributes.values_at(*pos_params))
+    block = self.new(*params)
+    block.leading_gap += position.leading_divider
+    block.trail_gap = position.trail_divider
+    block
+  end
+end
+
 class Plan < ActiveRecord::Base
   belongs_to :plan_set
   belongs_to :store
@@ -5,9 +53,10 @@ class Plan < ActiveRecord::Base
   belongs_to :category
 
   has_many :deployments
-  has_many :positions
+  has_many :positions, -> { order("fixture_item_id, layer DESC, seq_num") }
   accepts_nested_attributes_for :positions, allow_destroy: true
 
+  validates :init_facing, numericality: { greater_than_or_equal_to: 1 }
   validates :plan_set_id, presence: true
   validate :can_plan_publish, if: :do_publish?
 
@@ -16,6 +65,7 @@ class Plan < ActiveRecord::Base
   before_save :calc_positions_done, if: :do_layout?
 
   attr_accessor :new_products
+
 
   def verify_fixture?
     StoreFixture.verify_store_fixture?(store_id, category_id)
@@ -154,6 +204,235 @@ class Plan < ActiveRecord::Base
     end
   end
 
+  def to_pdf
+    pdf_path = Rails.root.join('public', 'downloads', "#{id}.pdf")
+    ostate = OutputState.new({
+      origin: [0, 0],
+      scale: 1.0,
+      options: {
+        label_font:  '/usr/share/fonts/truetype/fzxh1k.ttf',
+        left_overflow_text: "<\n<\n<\n<",
+        right_overflow_text: ">\n>\n>\n>",
+      },
+      blocks: blocks_by_brand,
+      positions: positions_by_layer,
+    })
+    Prawn::Document.generate(pdf_path,
+       page_size: "A4", page_layout: :portrait, skip_page_creation: true) do |pdf|
+      # TODO: borrow from prawn master branch, will deleted when prawn released it!
+      def pdf.stroke_axis(options = {})
+        options = {
+          :at => [0,0],
+          :height => bounds.height.to_i - (options[:at] || [0,0])[1],
+          :width => bounds.width.to_i - (options[:at] || [0,0])[0],
+          :step_length => 100,
+          :negative_axes_length => 20,
+          :color => "000000",
+        }.merge(options)
+
+        Prawn.verify_options([:at, :width, :height, :step_length,
+                             :negative_axes_length, :color], options)
+
+        save_graphics_state do
+          fill_color(options[:color])
+          stroke_color(options[:color])
+
+          dash(1, :space => 4)
+          stroke_horizontal_line(options[:at][0] - options[:negative_axes_length],
+                                 options[:at][0] + options[:width], :at => options[:at][1])
+          stroke_vertical_line(options[:at][1] - options[:negative_axes_length],
+                               options[:at][1] + options[:height], :at => options[:at][0])
+          undash
+
+          fill_circle(options[:at], 1)
+
+          (options[:step_length]..options[:width]).step(options[:step_length]) do |point|
+            fill_circle([options[:at][0] + point, options[:at][1]], 1)
+            draw_text(point, :at => [options[:at][0] + point - 5, options[:at][1] - 10], :size => 7)
+          end
+
+          (options[:step_length]..options[:height]).step(options[:step_length]) do |point|
+            fill_circle([options[:at][0], options[:at][1] + point], 1)
+            draw_text(point, :at => [options[:at][0] - 17, options[:at][1] + point - 2], :size => 7)
+          end
+        end
+      end
+
+      def pdf.color(color)
+        color.sub('#', '')
+      end
+
+      def pdf.text_color(color)
+        fill_color(color)
+      end
+
+      def pdf.fill_color(color)
+        super (color || "FFFFFF").sub('#', '')
+      end
+
+      def pdf.new_page(page_layout = :portrait)
+        self.start_new_page(layout: page_layout)
+        stroke_axis
+      end
+
+      def pdf.header
+      end
+
+      def pdf.footer
+      end
+
+      def pdf.layout
+        return layout
+      end
+
+      # cover
+      make_pdf_cover(pdf)
+
+      # blocked plan
+      # output fixture-layout: front-view, with shelf numbers
+      # output positions blocks grouped by brand
+      make_pdf_blocked_plan(pdf, ostate)
+
+      # normal plan
+      # output fixture-layout: front-view
+      # output positions by product
+      make_pdf_normal_plan(pdf, ostate)
+
+      # fixture profile
+      # output fixture-layout, with front-view and side-view
+
+      # merchandising list
+      # output positions by product, and, plan numbers;
+
+      # summary list
+      # statistics info for positions, by suppliers, brands, ...
+      # color, supplier, facings, run, run%
+      # show tables, and with bar on right side
+
+      # fill table of content
+    end
+  end
+
+  def make_pdf_cover(pdf)
+    # plan_set: name, category, deploy_at
+    # plan: created_by, published_at
+    #---------------------
+    # applying stores:
+    # deploy notes:
+    pdf.new_page
+    pdf.text "plan cover"
+    pdf.text "create date:"
+    pdf.text "deploy date:"
+    pdf.text "by..."
+
+    # print store_names
+    pdf.text "This plan is applied to the following stores:"
+    pdf.text "If not, please call: 123456, Mr. Wang"
+
+    pdf.move_down 200
+    pdf.text "the following is testing code..."
+    bbox = pdf.bounds
+    pdf.text "bounds:"
+    pdf.text "  left:#{bbox.left}"
+    pdf.text "  top:#{bbox.top}"
+    pdf.text "  right:#{bbox.right}"
+    pdf.text "  bottom:#{bbox.bottom}"
+    mbox = pdf.margin_box
+    pdf.text "margin_box:"
+    pdf.text "  left:#{mbox.left}"
+    pdf.text "  top:#{mbox.top}"
+    pdf.text "  right:#{mbox.right}"
+    pdf.text "  bottom:#{mbox.bottom}"
+
+    # test
+    pdf.line [-40, 200], [100, 150]
+    pdf.stroke
+
+    pdf.new_page(:landscape)
+    pts = [
+      [0.0, 256.9079375],
+      [60.949625, 256.9079375],
+      [60.949625, 83.6826875],
+      [0.0,83.6826875]
+    ]
+    pdf.polygon *pts
+    pdf.fill_and_stroke
+    pdf.fill_color "FF0000"
+    pdf.stroke_polygon [50, 200], [50, 300], [150, 300]
+    pdf.fill_polygon [50, 150], [150, 200], [250, 150], [250, 50], [150, 0], [50, 50]
+
+    pdf.dash(4, :space => 8)
+    pdf.rectangle [0, 336.9], 660, 27
+    pdf.stroke
+    pdf.undash
+
+    # pdf.text "this is a landscape page, A4 also"
+
+    # pdf.new_page
+    # pdf.text "this is a portrait page, A4 also"
+  end
+
+  def make_pdf_blocked_plan(pdf, ostate)
+    # output fixtures
+    ostate.fixture = {
+      output: :front_view_full,
+      bay: :front_view,
+      contains: :blocks,
+    }
+    self.fixture.to_pdf(pdf, ostate)
+  end
+
+  # normal plan
+  # output fixture-layout: front-view
+  # output positions by product
+  def make_pdf_normal_plan(pdf, ostate)
+    ostate.fixture = {
+      output: :front_view,
+      bay: :front_view,
+      contains: :positions,
+    }
+    self.fixture.to_pdf(pdf, ostate)
+  end
+
+  def positions_by_layer
+    product_map = Product.on_sales(category_id).to_hash(:id, :code, :name, :color, :width, :height, :depth)
+    blocks = {}
+    positions.each do |p|
+      if p.on_shelf?
+        product = product_map[p.product_id]
+        block = PlanBlock.by_product(product, p)
+        key = p.layer_key
+        blocks[key] ||= []
+        blocks[key].push block
+      end
+    end
+    blocks
+  end
+
+  def blocks_by_brand
+    product_map = Product.on_sales(category_id).to_hash(:id, :id, :brand_id, :width, :height, :depth)
+    brand_map = Brand.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
+    blocks = {}
+    positions.each do |p|
+      if p.on_shelf?
+        product = product_map[p.product_id]
+        brand = brand_map[product[:brand_id]]
+        block = PlanBlock.by_brand(product, brand, p)
+        key = p.layer_key
+        blocks[key] ||= []
+
+        # group by block.id
+        last = blocks[key].last
+        if last && block.id == last.first.id
+          last.push block
+        else
+          blocks[key].push [block]
+        end
+      end
+    end
+    blocks
+  end
+
   def fixture_name
     fixture.nil? ? I18n.t("dict.unset") : fixture.name
   end
@@ -194,7 +473,7 @@ class Plan < ActiveRecord::Base
     product_map = Product.on_sales(self.category_id).to_hash(:code, :sale_type)
     positions.each do |pos|
       type = product_map[pos.product_id]
-      if pos.done?
+      if pos.on_shelf?
         done_count[type] += 1
         occupy_run[pos.layer_key] ||= 0
         occupy_run[pos.layer_key] += pos.run
@@ -236,7 +515,7 @@ class Plan < ActiveRecord::Base
     dict = positions.to_hash(:product_id, :id)
 
     # create positions if not exists
-    products = products_on_sale
+    products = Product.on_sales(category_id)
     products.each do |product|
       unless dict[product.code]
         positions << Position.create({
@@ -262,7 +541,7 @@ class Plan < ActiveRecord::Base
 
     # update current places
     self.positions.each do |pos|
-      if pos.done?
+      if pos.on_shelf?
         merch_space[pos.layer_key].used_space += pos.run
         if merch_space[pos.layer_key].count < pos.seq_num
           merch_space[pos.layer_key].count = pos.seq_num
@@ -273,11 +552,18 @@ class Plan < ActiveRecord::Base
     # place force on sale products first, then normal ones
     layer = layers.shift
     product_map = Product.on_sales(self.category_id).to_hash(:code)
-    new_positions = []
+
+    # order position by brand_id
+    self.positions.sort! do |a, b|
+      prod_a = product_map[a.product_id]
+      prod_b = product_map[b.product_id]
+      prod_a.brand_id <=> prod_b.brand_id
+    end
+
     0.upto(1) do |sale_type|
       self.positions.map! do |pos|
         prod = product_map[pos.product_id]
-        if !pos.done? && prod.sale_type == sale_type
+        if !pos.on_shelf? && prod.sale_type == sale_type
           run = pos.init_facing * prod.width
           while layer && merch_space[layer].used_space + run > merch_space[layer].merch_width
             layer = layers.shift
