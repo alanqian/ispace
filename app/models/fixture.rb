@@ -35,8 +35,56 @@ class Fixture < ActiveRecord::Base
   def new_pdf_page(pdf, ostate)
     case ostate.fixture[:output]
     when :front_and_side_view
-      # front view in upper area, small view
-      # side view in below area, with detailed
+      # front view in upper area, small view, 1/3 height
+      # side view in below area, with detailed number, 2/3 height
+      ostate.origin[0] = 0.0
+      ostate.origin[1] = 50.0
+      ostate.scale = 0
+
+      full_width = 0
+      full_depth = 0
+      full_height = 0
+      count = fixture_items.size
+      fixture_items.each do |fi|
+        logger.debug "origin 1: #{ostate.origin.to_s}"
+        full_width += fi.bay.max_width * fi.num_bays
+        full_depth += fi.bay.max_depth
+        full_height = [full_height, fi.bay.max_height].max
+      end
+
+      pdf.new_page
+      bbox = pdf.bounds
+      ratio1 = 1 / 3.0
+      ratio2 = 1 - ratio1
+      y = [bbox.top, bbox.top * ratio1, bbox.top * ratio2, bbox.top * ratio2]
+      x = [bbox.left, bbox.right]
+      pdf.dash(2, :space => 2)
+      pdf.stroke_rectangle([x[0], y[0]], x[1], y[1])
+      pdf.stroke_rectangle([x[0], y[2]], x[1], y[3])
+      pdf.undash
+
+      # calculate scale/origin for top: full front view
+      ostate.scale = []
+      ostate.origin = []
+
+      w = bbox.right
+      h = y[1]
+      scale = [w / full_width, h / full_height].min
+      x0 = (w - full_width * scale) / 2
+      y0 = y[2] + (h - full_height * scale) / 2
+      ostate.scale.push scale
+      ostate.origin.push [x0, y0]
+
+      # calculate scale/origin for bottom: side view
+      h = y[3]
+      extra = ostate.options[:bay_left_width] * count + ostate.options[:bay_spacing] * (count - 1)
+
+      scale = [(w - extra)/ full_depth, h / full_height].min
+      x0 = (w - extra - full_depth * scale) / 2
+      y0 = (h - full_height * scale) / 2
+      ostate.scale.push scale
+      ostate.origin.push [x0, y0]
+      logger.debug "scale: #{ostate.scale.to_s} origin: #{ostate.origin.to_s}"
 
     when :front_view # show fixtures, one bay per page
       bay = ostate.fixture[:_bay]
@@ -75,13 +123,38 @@ class Fixture < ActiveRecord::Base
     case ostate.fixture[:output]
     when :front_and_side_view
       # front view in upper area, small view
-      # side view in below area, with detailed
+      new_pdf_page(pdf, ostate)
+      scale = ostate.scale.dup
+      origin = ostate.origin.dup
+
+      ostate.scale = scale.shift
+      ostate.origin = origin.shift
+      ostate.fixture[:bay] = :front_view
+      fixture_items.each do |fi|
+        num_bays = fi.num_bays
+        bay = fi.bay
+        ostate.fixture[:fixture_item_id] = fi.id
+        ostate.fixture[:num_bays] = num_bays
+        bay.to_pdf(pdf, ostate)
+        bay_width = bay.max_width * num_bays * ostate.scale
+
+        # for next fixture item
+        ostate.origin[0] += bay_width
+      end
+
+      # side view in below area, with detailed numbers
+      ostate.scale = scale.shift
+      ostate.origin = origin.shift
+      ostate.fixture[:bay] = :side_view
+      fixture_items.each do |fi|
+        bay = fi.bay
+        bay.to_pdf(pdf, ostate)
+        # for next fixture item
+        ostate.origin[0] += bay.max_depth * ostate.scale
+      end
 
     when :front_view # show fixtures, one bay per page
       # draw bays of fixture
-      ostate.origin[0] = 0.0
-      ostate.origin[1] = 50.0
-      ostate.scale = 0
       fixture_items.each do |fi|
         logger.debug "origin 1: #{ostate.origin.to_s}"
         num_bays = fi.num_bays

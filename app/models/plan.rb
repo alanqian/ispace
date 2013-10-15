@@ -213,6 +213,12 @@ class Plan < ActiveRecord::Base
         label_font:  '/usr/share/fonts/truetype/fzxh1k.ttf',
         left_overflow_text: "<\n<\n<\n<",
         right_overflow_text: ">\n>\n>\n>",
+        bay_left_width: 20, # 20pt
+        bay_spacing: 8, # 8pt
+        distance_above: 10,
+        distance_left: 10,
+        scale_size: 12,
+        scale_font_size: 10,
       },
       blocks: blocks_by_brand,
       positions: positions_by_layer,
@@ -270,6 +276,104 @@ class Plan < ActiveRecord::Base
         super (color || "FFFFFF").sub('#', '')
       end
 
+      def pdf.draw_horz_distance(text, opt)
+        at = opt[:at]
+        width = opt[:width]
+        above = opt[:above]
+        scale_size = opt[:scale_size]
+        scale_font_size = opt[:scale_font_size]
+
+        # draw vert lines at both side
+        x = [at[0], at[0] + width]
+        y = [at[1] + above + scale_size / 2, at[1] + above - scale_size / 2]
+        self.stroke_line [x[0], y[0]], [x[0], y[1]]
+        self.stroke_line [x[1], y[0]], [x[1], y[1]]
+
+        # draw horz arrow line
+        y0 = at[1] + above
+        text_width = self.width_of(text, size: scale_font_size) + 6
+        remain = (width - text_width) / 2
+        self.stroke_line [x[0], y0], [x[0] + remain, y0]
+        self.stroke_line [x[1] - remain, y0], [x[1], y0]
+
+        # draw scale text
+        self.stroke_color("000000")
+        self.fill_color("000000")
+        self.text_box text,
+          at: [x[0], y[0] + (scale_font_size * 1.2 - scale_size) / 2],
+          width: width,
+          height: scale_size,
+          size: scale_font_size,
+          align: :center,
+          valign: :center
+        self.text_box "<",
+          at: [x[0], y[0] + (scale_font_size - scale_size) / 2],
+          width: width,
+          height: scale_size,
+          size: scale_font_size,
+          align: :left,
+          valign: :center
+        self.text_box ">",
+          at: [x[0], y[0] + (scale_font_size - scale_size) / 2],
+          width: width,
+          height: scale_size,
+          size: scale_font_size,
+          align: :right,
+          valign: :center
+      end
+
+      def pdf.draw_vert_distance(text, opt)
+        at = opt[:at]
+        height = opt[:height]
+        left = opt[:left]
+        scale_size = opt[:scale_size]
+        scale_font_size = opt[:scale_font_size]
+
+        # draw horz lines at both side
+        x = [at[0] - left - scale_size / 2, at[0] - left + scale_size / 2]
+        y = [at[1] - height, at[1]]
+        self.stroke_line [x[0], y[0]], [x[1], y[0]]
+        self.stroke_line [x[0], y[1]], [x[1], y[1]]
+
+        # draw vert arrow line
+        x0 = at[0] - left
+        text_width = self.width_of(text, size: scale_font_size) + 6
+        remain = (height - text_width) / 2
+        self.stroke_line [x0, y[0]], [x0, y[0] + remain]
+        self.stroke_line [x0, y[1] - remain], [x0, y[1]]
+
+        # draw text
+        self.stroke_color("000000")
+        self.fill_color("000000")
+        self.text_box text,
+          at: [x[1] - scale_font_size * 0.25, y[1]],
+          width: height,
+          height: scale_size,
+          size: scale_font_size,
+          align: :center,
+          valign: :center,
+          rotate: 270,
+          rotate_around: :upper_left
+        self.text_box "<",
+          at: [x[1] - scale_font_size * 0.25, y[1]],
+          width: height,
+          height: scale_size,
+          size: scale_font_size,
+          align: :left,
+          valign: :center,
+          rotate: 270,
+          rotate_around: :upper_left
+        self.text_box ">",
+          at: [x[1] - scale_font_size * 0.25, y[1]],
+          width: height,
+          height: scale_size,
+          size: scale_font_size,
+          align: :right,
+          valign: :center,
+          rotate: 270,
+          rotate_around: :upper_left
+      end
+
       def pdf.new_page(page_layout = :portrait)
         self.start_new_page(layout: page_layout)
         stroke_axis
@@ -300,6 +404,7 @@ class Plan < ActiveRecord::Base
 
       # fixture profile
       # output fixture-layout, with front-view and side-view
+      make_pdf_fixture(pdf, ostate)
 
       # merchandising list
       # output positions by product, and, plan numbers;
@@ -393,6 +498,16 @@ class Plan < ActiveRecord::Base
     }
     self.fixture.to_pdf(pdf, ostate)
   end
+
+  def make_pdf_fixture(pdf, ostate)
+    ostate.fixture = {
+      output: :front_and_side_view,
+      bay: :front_view,
+      contains: nil,
+    }
+    self.fixture.to_pdf(pdf, ostate)
+  end
+
 
   def positions_by_layer
     product_map = Product.on_sales(category_id).to_hash(:id, :code, :name, :color, :width, :height, :depth)

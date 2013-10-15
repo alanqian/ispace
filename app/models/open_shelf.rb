@@ -167,7 +167,7 @@ class OpenShelf < ActiveRecord::Base
         horz += cx
       end
 
-    when :layout
+    when :front_view
       pdf.fill_color(color)
       num_bays.times do
         # draw space without fill
@@ -176,6 +176,26 @@ class OpenShelf < ActiveRecord::Base
         pdf.fill_and_stroke_rectangle([x, y2], cx, thick * ostate.scale)
         x += cx
       end
+
+    when :side_view
+      pdf.fill_color(color)
+      # draw shelf only, with fill
+      cx = depth * ostate.scale
+      pdf.fill_and_stroke_rectangle([x, y2], cx, thick * ostate.scale)
+      size_text = "#{depth}cm"
+      pdf.draw_horz_distance(size_text,
+                             at: [x, y2], width: cx,
+                             above: ostate.options[:distance_above],
+                             scale_size: ostate.options[:scale_size],
+                             scale_font_size: ostate.options[:scale_font_size])
+      size_text = "#{height}cm"
+      h = height * ostate.scale
+      pdf.draw_vert_distance(size_text,
+                             at: [ostate.fixture[:back_left], y2 + h], height: h,
+                             left: ostate.options[:distance_left],
+                             scale_size: ostate.options[:scale_size],
+                             scale_font_size: ostate.options[:scale_font_size])
+
     when :text
       # write text on shelf
       #text = "第#{level}层, 深度: #{depth}cm"

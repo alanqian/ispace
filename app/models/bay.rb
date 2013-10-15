@@ -52,21 +52,48 @@ class Bay < ActiveRecord::Base
   def to_pdf(pdf, ostate)
     num_bays = ostate.fixture[:num_bays]
     case ostate.fixture[:bay]
+    when :side_view
+      # draw base, filled with color
+      x0 = ostate.origin[0] + ostate.options[:bay_left_width]
+      y0 = ostate.origin[1]
+      w = base_depth * ostate.scale
+      h = base_height * ostate.scale
+      pdf.fill_color(base_color)
+      pdf.fill_and_stroke_rectangle([x0, y0 + h], w, h)
+
+      # draw back
+      pdf.fill_color(back_color)
+      y1 = ostate.origin[1] + (base_height + back_height) * ostate.scale
+      pdf.fill_and_stroke_rectangle([x0, y1], back_thick * ostate.scale, back_height * ostate.scale)
+      ostate.fixture[:back_left] = x0
+
+      # draw shelves & numbers, filled with color
+      ostate.fixture[:layer] = :side_view
+      ostate.origin[0] = x0 + back_thick * ostate.scale
+      ostate.origin[1] += (base_height  - layers.first.thick) * ostate.scale
+      layers.each do |layer|
+        layer.to_pdf(pdf, ostate)
+      end
+      ostate.origin[0] = x0 - ostate.options[:bay_left_width]
+      ostate.origin[1] -= base_height * ostate.scale
+
     when :front_view
       # move origin to base
       ostate.origin[1] += base_height * ostate.scale
 
       # draw layers, space without fill, shelf with fill
       layers.each do |layer|
-        ostate.fixture[:layer] = :layout
+        ostate.fixture[:layer] = :front_view
         layer.to_pdf(pdf, ostate)
 
         # output text of each layer
         ostate.fixture[:layer] = :text
         layer.to_pdf(pdf, ostate)
 
-        ostate.fixture[:layer] = ostate.fixture[:contains]
-        layer.to_pdf(pdf, ostate)
+        if ostate.fixture[:contains]
+          ostate.fixture[:layer] = ostate.fixture[:contains]
+          layer.to_pdf(pdf, ostate)
+        end
       end
 
       # draw base with fill color
@@ -122,6 +149,16 @@ class Bay < ActiveRecord::Base
       end
     end
     widths.max
+  end
+
+  def max_depth
+    depths = [base_depth]
+    [open_shelves, peg_boards, freezer_chests, rear_support_bars].each do |els|
+      els.each do |el|
+        depths.push el.depth
+      end
+    end
+    [base_depth, back_thick + depths.max].max
   end
 
   # fake attr writer
