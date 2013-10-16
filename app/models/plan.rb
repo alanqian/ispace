@@ -1,8 +1,11 @@
+#encoding: utf-8
+
 class OutputState < Struct.new(:origin, :scale, :options, :fixture, :blocks,
-                               :positions)
+                               :positions, :outline)
   def initialize(hash)
     super(*hash.values_at(:origin, :scale, :options, :fixture, :blocks,
                           :positions))
+    self.outline = {}
   end
 end
 
@@ -10,19 +13,20 @@ class PlanBlock < Struct.new(:id, :name, :color,
                        :width, :height, :depth,
                        :fixture_item_id, :layer, :seq_num,
                        :width_units, :height_units, :depth_units,
-                       :facing, :run, :leading_gap, :trail_gap)
-  def self.by_brand(product, brand, position)
+                       :facing, :run, :leading_gap, :trail_gap,
+                       :count, :percentage, :spercent)
+  def self.by_attr(product, attr, position)
     pos_params = [
       :fixture_item_id, :layer, :seq_num,
       :width_units, :height_units, :depth_units,
-      :facing, :run, :leading_gap].map { |f| f.to_s }
-    params = brand.values_at(:id, :name, :color) .
+      :facing, :run, :rank].map { |f| f.to_s }
+    params = attr.values_at(:id, :name, :color) .
           concat(product.values_at(:width, :height, :depth)).
           concat(position.attributes.values_at(*pos_params))
     block = self.new(*params)
     block.height *= position.height_units
     block.depth *= position.depth_units
-    block.leading_gap += position.leading_divider
+    block.leading_gap = position.leading_gap + position.leading_divider
     block.trail_gap = position.trail_divider
     block.width = block.width * position.width_units +
       position.middle_divider * (position.width_units - 1) +
@@ -34,15 +38,19 @@ class PlanBlock < Struct.new(:id, :name, :color,
     pos_params = [
       :fixture_item_id, :layer, :seq_num,
       :width_units, :height_units, :depth_units,
-      :facing, :run, :leading_gap].map { |f| f.to_s }
+      :facing, :run, :rank].map { |f| f.to_s }
     params = product.values_at(:code, # :id
                                :name, :color,
                                :width, :height, :depth).
           concat(position.attributes.values_at(*pos_params))
     block = self.new(*params)
-    block.leading_gap += position.leading_divider
+    block.leading_gap = position.leading_gap + position.leading_divider
     block.trail_gap = position.trail_divider
     block
+  end
+
+  def checker
+    "□"
   end
 end
 
@@ -210,7 +218,7 @@ class Plan < ActiveRecord::Base
       origin: [0, 0],
       scale: 1.0,
       options: {
-        label_font:  '/usr/share/fonts/truetype/fzxh1k.ttf',
+        label_font:  '/usr/share/fonts/truetype/ttf-windows/stxihei.ttf',
         left_overflow_text: "<\n<\n<\n<",
         right_overflow_text: ">\n>\n>\n>",
         bay_left_width: 20, # 20pt
@@ -219,6 +227,11 @@ class Plan < ActiveRecord::Base
         distance_left: 10,
         scale_size: 12,
         scale_font_size: 10,
+        mdse_fields: [:seq_num, :id, :name, :facing, :depth_units, :height_units, :width_units, :checker],
+        mdse_fields_name: ["No.", "Prod Id", "Prod Name", "Facings", "Depth", "Height", "Width", "☑"],
+        summary_title: "商品汇总表",
+        summary_field: [:name, :count, :run, :spercent],
+        summary_header: ["供应商", "位置", "总排面", "百分比(%)"],
       },
       blocks: blocks_by_brand,
       positions: positions_by_layer,
@@ -272,7 +285,7 @@ class Plan < ActiveRecord::Base
         fill_color(color)
       end
 
-      def pdf.fill_color(color)
+      def pdf.fill_color(color="000000")
         super (color || "FFFFFF").sub('#', '')
       end
 
@@ -338,7 +351,7 @@ class Plan < ActiveRecord::Base
         # draw vert arrow line
         x0 = at[0] - left
         text_width = self.width_of(text, size: scale_font_size) + 6
-        remain = (height - text_width) / 2
+        remain = (height - scale_font_size * 1.2) / 2
         self.stroke_line [x0, y[0]], [x0, y[0] + remain]
         self.stroke_line [x0, y[1] - remain], [x0, y[1]]
 
@@ -346,14 +359,12 @@ class Plan < ActiveRecord::Base
         self.stroke_color("000000")
         self.fill_color("000000")
         self.text_box text,
-          at: [x[1] - scale_font_size * 0.25, y[1]],
-          width: height,
-          height: scale_size,
+          at: [x[1] - text_width, y[1]],
+          width: text_width,
+          height: y[1] - y[0],
           size: scale_font_size,
-          align: :center,
-          valign: :center,
-          rotate: 270,
-          rotate_around: :upper_left
+          align: :right,
+          valign: :center
         self.text_box "<",
           at: [x[1] - scale_font_size * 0.25, y[1]],
           width: height,
@@ -389,92 +400,99 @@ class Plan < ActiveRecord::Base
         return layout
       end
 
+      # register fonts
+      pdf.font_families.update(
+        "XiHei" => {
+          :normal => ostate.options[:label_font],
+        }
+      )
+      pdf.fallback_fonts ["Times-Roman", "XiHei"]
+
       # cover
-      make_pdf_cover(pdf)
+      make_pdf_cover(pdf, ostate)
+
+      make_pdf_toc(pdf, ostate)
 
       # blocked plan
       # output fixture-layout: front-view, with shelf numbers
       # output positions blocks grouped by brand
       make_pdf_blocked_plan(pdf, ostate)
 
+      # fixture profile
+      # output fixture-layout, with front-view and side-view
+      make_pdf_fixture(pdf, ostate)
+
       # normal plan
       # output fixture-layout: front-view
       # output positions by product
       make_pdf_normal_plan(pdf, ostate)
 
-      # fixture profile
-      # output fixture-layout, with front-view and side-view
-      make_pdf_fixture(pdf, ostate)
-
       # merchandising list
       # output positions by product, and, plan numbers;
+      make_pdf_mdse_list(pdf, ostate)
 
       # summary list
       # statistics info for positions, by suppliers, brands, ...
       # color, supplier, facings, run, run%
       # show tables, and with bar on right side
+      make_pdf_summary(pdf, ostate)
 
       # fill table of content
+      make_pdf_outline(pdf, ostate)
     end
   end
 
-  def make_pdf_cover(pdf)
+  def make_pdf_cover(pdf, ostate)
     # plan_set: name, category, deploy_at
     # plan: created_by, published_at
     #---------------------
     # applying stores:
     # deploy notes:
     pdf.new_page
-    pdf.text "plan cover"
-    pdf.text "create date:"
-    pdf.text "deploy date:"
-    pdf.text "by..."
+    ostate.outline[:cover] = pdf.page_count
+
+    pdf.move_down 250
+    pdf.text self.plan_set.name,
+      :size => 18,
+      :align => :center
+    pdf.move_down 20
+    pdf.text "品类规划书",
+      :size => 24,
+      :align => :center
+    pdf.move_down 6
+    pdf.text "(#{self.plan_set.category_name}品类)",
+      :size => 18,
+      :align => :center
+
+    info = "设计：John Denver\n" +
+           "发布：#{self.plan_set.published_at.localtime.to_formatted_s(:db)}\n" +
+           "实施：#{self.plan_set.deploy_at.localtime.to_formatted_s(:db)}\n"
+    pdf.text_box info,
+      :size => 16,
+      :at => [150,300],
+      :width => 200,
+      :height => 80,
+      :valign => :center
 
     # print store_names
-    pdf.text "This plan is applied to the following stores:"
-    pdf.text "If not, please call: 123456, Mr. Wang"
+    stores_list = Store.where(ref_store_id: self.store_id).select(:name).map { |ar| ar.name }
 
-    pdf.move_down 200
-    pdf.text "the following is testing code..."
-    bbox = pdf.bounds
-    pdf.text "bounds:"
-    pdf.text "  left:#{bbox.left}"
-    pdf.text "  top:#{bbox.top}"
-    pdf.text "  right:#{bbox.right}"
-    pdf.text "  bottom:#{bbox.bottom}"
-    mbox = pdf.margin_box
-    pdf.text "margin_box:"
-    pdf.text "  left:#{mbox.left}"
-    pdf.text "  top:#{mbox.top}"
-    pdf.text "  right:#{mbox.right}"
-    pdf.text "  bottom:#{mbox.bottom}"
+    pdf.new_page
+    pdf.font_size 16
+    pdf.text "本次品类规划说明："
+    pdf.text self.plan_set.note
+    pdf.move_down 20
 
-    # test
-    pdf.line [-40, 200], [100, 150]
-    pdf.stroke
+    pdf.text "本规划书适用于以下门店，请核对后再进行操作"
+    pdf.move_down 10
+    pdf.text stores_list.join(" ")
+    pdf.move_down 10
+    pdf.text "具体实施中如发现问题，请联系品类规划专员。"
+  end
 
-    pdf.new_page(:landscape)
-    pts = [
-      [0.0, 256.9079375],
-      [60.949625, 256.9079375],
-      [60.949625, 83.6826875],
-      [0.0,83.6826875]
-    ]
-    pdf.polygon *pts
-    pdf.fill_and_stroke
-    pdf.fill_color "FF0000"
-    pdf.stroke_polygon [50, 200], [50, 300], [150, 300]
-    pdf.fill_polygon [50, 150], [150, 200], [250, 150], [250, 50], [150, 0], [50, 50]
-
-    pdf.dash(4, :space => 8)
-    pdf.rectangle [0, 336.9], 660, 27
-    pdf.stroke
-    pdf.undash
-
-    # pdf.text "this is a landscape page, A4 also"
-
-    # pdf.new_page
-    # pdf.text "this is a portrait page, A4 also"
+  def make_pdf_toc(pdf, ostate)
+    pdf.new_page
+    ostate.outline[:toc] = pdf.page_count
   end
 
   def make_pdf_blocked_plan(pdf, ostate)
@@ -484,7 +502,7 @@ class Plan < ActiveRecord::Base
       bay: :front_view,
       contains: :blocks,
     }
-    self.fixture.to_pdf(pdf, ostate)
+    ostate.outline[:blocked_plan] = self.fixture.to_pdf(pdf, ostate)
   end
 
   # normal plan
@@ -496,7 +514,7 @@ class Plan < ActiveRecord::Base
       bay: :front_view,
       contains: :positions,
     }
-    self.fixture.to_pdf(pdf, ostate)
+    ostate.outline[:normal_plan] = self.fixture.to_pdf(pdf, ostate)
   end
 
   def make_pdf_fixture(pdf, ostate)
@@ -505,9 +523,143 @@ class Plan < ActiveRecord::Base
       bay: :front_view,
       contains: nil,
     }
-    self.fixture.to_pdf(pdf, ostate)
+    ostate.outline[:fixture] = self.fixture.to_pdf(pdf, ostate)
   end
 
+  # merchandising list
+  # output positions by product, and, plan numbers;
+  def make_pdf_mdse_list(pdf, ostate)
+    ostate.fixture = {
+      output: :merchandise,
+    }
+    ostate.outline[:mdse] = self.fixture.to_pdf(pdf, ostate)
+  end
+
+  # statistics info for positions, by suppliers, brands, ...
+  # color, supplier, facings, run, run%
+  # show tables, and with bar on right side
+  def make_pdf_summary(pdf, ostate)
+    summary = get_summary(:supplier)
+    title = ostate.options[:summary_title]
+    fields = ostate.options[:summary_field]
+    thead = ostate.options[:summary_header]
+    tdata = [thead]
+    tdata.concat summary.map { |block| fields.map { |f| block.send(f) } }
+    top_percent = summary.first.percentage
+
+    table_ratio = 0.61
+    pdf.new_page :landscape
+    ostate.outline[:summary] = table_page = pdf.page_count
+    pdf.font_size 12
+    bbox = pdf.bounds
+    # draw title
+    pdf.text title
+    pdf.move_down 8
+
+    # draw table
+    pdf.font_size 10
+    table_top = pdf.cursor
+    table = pdf.table(tdata,
+      width: bbox.right * table_ratio,
+      cell_style: { borders: [], },
+      header: true) do
+        style(rows(0), :borders => [:top, :bottom])
+        style(rows(summary.size), :borders => [:top])
+      end
+
+    # draw right percentage bar
+    pdf.go_to_page(table_page)
+    row_heights = table.row_heights
+    horz_padding = 10
+    vert_padding = 5
+    vert_leading = row_heights.shift + vert_padding
+    at = [bbox.right * table_ratio, table_top - vert_leading]
+    pdf.stroke_color("000000")
+    w = bbox.right * (1- table_ratio) - horz_padding * 2
+    at[0] += horz_padding
+    summary.each do |block|
+      h = row_heights.shift
+      if block.percentage > 0.0
+        if at[1] + vert_padding - h < 0
+          table_page += 1
+          pdf.go_to_page(table_page)
+          at[1] = bbox.top - vert_leading
+        end
+        pdf.fill_color(block.color)
+        pdf.fill_and_stroke_rectangle at, w * block.percentage / top_percent, h - vert_padding * 2
+      end
+      at[1] -= h
+    end
+  end
+
+  def make_pdf_outline(pdf, ostate)
+    logger.debug "#{ostate.outline.to_s}"
+    outline = ostate.outline
+    title = {
+      cover: "品类规划",
+      toc: "目录",
+      blocked_plan: "规划概要图",
+      normal_plan: "规划详图",
+      fixture: "货架图",
+      mdse: "单品规划明细表",
+      summary: "商品汇总表"
+    }
+    outline_items = [:cover, :toc, :blocked_plan, :normal_plan, :fixture, :mdse, :summary]
+    outline_items.sort! { |a, b| outline[a] <=> outline[b] }
+
+    pdf.outline.define do
+      outline_items.each do |f|
+        page :title => title[f], :destination => ostate.outline[f]
+      end
+    end
+
+    if outline[:toc]
+      outline_items.reject! { |el| el == :cover || el == :toc }
+      pdf.go_to_page(outline[:toc])
+      pdf.move_down 100
+      pdf.font_size 24
+      pdf.text "目录"
+      pdf.move_down 20
+      pdf.font_size 16
+      outline_items.each do |f|
+        pdf.text "#{title[f]}  #{outline[f]}"
+        pdf.move_down 8
+      end
+    end
+
+    # number pages
+    n = outline_items.find_index(:normal_plan) + 1
+    normal_plan_cnt = outline[outline_items[n]] - outline[:normal_plan]
+
+    n = outline_items.find_index(:mdse) + 1
+    mdse_cnt = outline[outline_items[n]] - outline[:mdse]
+
+    # number normal plan pages
+    string = "- <page>/#{mdse_cnt} -"
+    options = {
+      :at => [pdf.bounds.right - 150, 0],
+      :width => 150,
+      :align => :right,
+      :page_filter => (outline[:mdse]..outline[:mdse] + mdse_cnt - 1),
+      :start_count_at => 1,
+      :color => "000000",
+      :size => 12,
+    }
+    pdf.number_pages string, options
+
+    # number normal plan pages
+    string = "- <page> -"
+    options = {
+      :at => [pdf.bounds.right - 150, 0],
+      :width => 150,
+      :align => :right,
+      :page_filter => (outline[:normal_plan]..outline[:normal_plan] + normal_plan_cnt - 1),
+      :start_count_at => 1,
+      :color => "222222",
+      :size => 12,
+    }
+    pdf.number_pages string, options
+  end
 
   def positions_by_layer
     product_map = Product.on_sales(category_id).to_hash(:id, :code, :name, :color, :width, :height, :depth)
@@ -532,7 +684,7 @@ class Plan < ActiveRecord::Base
       if p.on_shelf?
         product = product_map[p.product_id]
         brand = brand_map[product[:brand_id]]
-        block = PlanBlock.by_brand(product, brand, p)
+        block = PlanBlock.by_attr(product, brand, p)
         key = p.layer_key
         blocks[key] ||= []
 
@@ -545,6 +697,49 @@ class Plan < ActiveRecord::Base
         end
       end
     end
+    blocks
+  end
+
+  def get_summary(by = :supplier)
+    # by_supplier
+    product_map = Product.on_sales(category_id).to_hash(:id, :id, :brand_id, :supplier_id, :width, :height, :depth)
+    attr_map = Supplier.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
+    attr_id = :supplier_id
+    blocks = {}
+    total_run = 0
+    total_count = 0
+    positions.each do |p|
+      if p.on_shelf?
+        product = product_map[p.product_id]
+        attr = attr_map[product[attr_id]]
+        block = PlanBlock.by_attr(product, attr, p)
+        key = attr[:id]
+        total_run += block.run
+        total_count += 1
+        if blocks[key]
+          blocks[key].count += 1
+          blocks[key].run += block.run
+        else
+          block.count = 1
+          blocks[key] = block
+        end
+      end
+    end
+    blocks.each do |key, block|
+      block.percentage = block.run / total_run * 100
+    end
+    blocks = blocks.values.sort { |a,b| b.percentage <=> a.percentage } .each do |b|
+      b.spercent = "%.2f%%" % b.percentage
+    end
+
+    # add summary
+    sum = PlanBlock.new
+    sum.name = ""
+    sum.count = total_count
+    sum.run = total_run
+    sum.percentage = 0
+    sum.spercent = "100.0%"
+    blocks.push sum
     blocks
   end
 

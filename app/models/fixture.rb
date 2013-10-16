@@ -116,14 +116,53 @@ class Fixture < ActiveRecord::Base
       flow_size = 30
       ostate.origin[0] = (bbox.right - width * scale) / 2
       ostate.origin[1] = (bbox.top - flow_size - height * scale) / 2
+    else
+      pdf.new_page
+      bbox = pdf.bounds
+      ostate.scale = 1.0
+      ostate.origin[0] = bbox.left
+      ostate.origin[1] = bbox.bottom
     end
+    pdf.page_count
   end
 
   def to_pdf(pdf, ostate)
+    start_page = nil
     case ostate.fixture[:output]
+    when :merchandise
+      positions = ostate.positions
+      start_page = new_pdf_page(pdf, ostate)
+      fields = ostate.options[:mdse_fields]
+
+      layer_name = {}
+      fixture_items.each do |fi|
+        bay = fi.bay
+        bay.layers.each do |layer|
+          key = Position.layer_key(fi.fixture_id, layer.layer)
+          flow = self.flow_l2r ? ">>" : "<<"
+          layer_name[key] = layer.get_layer_info_text("#{flow} #{self.name} #{flow}")
+        end
+      end
+
+      pdf.font(ostate.options[:label_font]) do
+        positions.each do |key, blocks|
+          #logger.debug "#{key}, #{blocks.first.layer}"
+          pdf.move_down 10
+          pdf.text layer_name[key]
+          pdf.move_down 10
+          tdata = [ostate.options[:mdse_fields_name]]
+          tdata.concat blocks.map { |block| fields.map { |f| block.send(f) } }
+          pdf.table(tdata,
+            cell_style: { borders: [], },
+            header: true) do
+            style(rows(0), :borders => [:top, :bottom])
+          end
+        end
+      end
+
     when :front_and_side_view
       # front view in upper area, small view
-      new_pdf_page(pdf, ostate)
+      start_page = new_pdf_page(pdf, ostate)
       scale = ostate.scale.dup
       origin = ostate.origin.dup
 
@@ -164,7 +203,8 @@ class Fixture < ActiveRecord::Base
         ostate.fixture[:num_bays] = 1 # one bay per page
         num_bays.times do |i|
           ostate.fixture[:bay_index] = i
-          new_pdf_page(pdf, ostate)
+          pg = new_pdf_page(pdf, ostate)
+          start_page ||= pg
           bay.to_pdf(pdf, ostate)
         end
         logger.debug "origin 2: #{ostate.origin.to_s}"
@@ -172,7 +212,7 @@ class Fixture < ActiveRecord::Base
 
     when :front_view_full # show whole fixture in a single page
       # calc scale
-      new_pdf_page(pdf, ostate)
+      start_page = new_pdf_page(pdf, ostate)
       logger.debug "scale: #{ostate.scale.to_s}"
 
       # draw bays of fixture
@@ -199,6 +239,7 @@ class Fixture < ActiveRecord::Base
         ostate.origin[0] += bay_width
       end
     end
+    start_page
   end
 
   def flow_text

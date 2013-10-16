@@ -55,4 +55,6 @@ class PlanSet < ActiveRecord::Base
     self.num_stores = plans.map { |plan| plan.num_stores } .sum
     self.category_name = category.name
   end
+
+  alias_attribute :deploy_at, :published_at
 end

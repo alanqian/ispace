@@ -32,6 +32,10 @@ class OpenShelf < ActiveRecord::Base
     r
   end
 
+  def get_layer_info_text(fixture_info_text)
+    "#{fixture_info_text} layer:#{self.layer} depth:#{self.depth}cm"
+  end
+
   def position_to_pdf(pdf, block, horz, ostate)
     # calculate left/right overflow
     left_overflow = horz < 0 ? -horz : 0
