@@ -13,16 +13,16 @@ class PlanBlock < Struct.new(:id, :name, :color,
                        :width, :height, :depth,
                        :fixture_item_id, :layer, :seq_num,
                        :width_units, :height_units, :depth_units,
-                       :facing, :run, :leading_gap, :trail_gap,
+                       :facing, :run, :rank, :leading_gap, :trail_gap,
                        :count, :percentage, :spercent)
   def self.by_attr(product, attr, position)
     pos_params = [
       :fixture_item_id, :layer, :seq_num,
       :width_units, :height_units, :depth_units,
-      :facing, :run, :rank].map { |f| f.to_s }
+      :facing, :run, :rank].map { |f| position.send(f) }
     params = attr.values_at(:id, :name, :color) .
           concat(product.values_at(:width, :height, :depth)).
-          concat(position.attributes.values_at(*pos_params))
+          concat(pos_params)
     block = self.new(*params)
     block.height *= position.height_units
     block.depth *= position.depth_units
@@ -38,11 +38,10 @@ class PlanBlock < Struct.new(:id, :name, :color,
     pos_params = [
       :fixture_item_id, :layer, :seq_num,
       :width_units, :height_units, :depth_units,
-      :facing, :run, :rank].map { |f| f.to_s }
+      :facing, :run, :rank].map { |f| position.send(f) }
     params = product.values_at(:code, # :id
                                :name, :color,
-                               :width, :height, :depth).
-          concat(position.attributes.values_at(*pos_params))
+                               :width, :height, :depth).concat(pos_params)
     block = self.new(*params)
     block.leading_gap = position.leading_gap + position.leading_divider
     block.trail_gap = position.trail_divider
@@ -227,11 +226,19 @@ class Plan < ActiveRecord::Base
         distance_left: 10,
         scale_size: 12,
         scale_font_size: 10,
-        mdse_fields: [:seq_num, :id, :name, :facing, :depth_units, :height_units, :width_units, :checker],
-        mdse_fields_name: ["No.", "Prod Id", "Prod Name", "Facings", "Depth", "Height", "Width", "☑"],
-        summary_title: "商品汇总表",
+        mdse_fields: [:seq_num, :id, :name, :facing, :rank, :depth_units, :height_units, :width_units, :checker],
+        mdse_fields_name: ["№", "编号", "品名", "排面", "排名", "深", "高", "宽", "☑"],
         summary_field: [:name, :count, :run, :spercent],
         summary_header: ["供应商", "位置", "总排面", "百分比(%)"],
+        title: {
+          cover: "品类规划",
+          toc: "目录",
+          blocked_plan: "规划概要图",
+          normal_plan: "规划详图",
+          fixture: "货架图",
+          mdse: "单品排面明细表",
+          summary: "商品汇总表",
+        },
       },
       blocks: blocks_by_brand,
       positions: positions_by_layer,
@@ -387,7 +394,7 @@ class Plan < ActiveRecord::Base
 
       def pdf.new_page(page_layout = :portrait)
         self.start_new_page(layout: page_layout)
-        stroke_axis
+        # stroke_axis
       end
 
       def pdf.header
@@ -404,9 +411,15 @@ class Plan < ActiveRecord::Base
       pdf.font_families.update(
         "XiHei" => {
           :normal => ostate.options[:label_font],
-        }
+        },
+        "DejaVuSans" => {
+          :normal => "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf",
+        },
+        "Kai" => {
+          :normal => "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf",
+        },
       )
-      pdf.fallback_fonts ["Times-Roman", "XiHei"]
+      pdf.fallback_fonts ["Times-Roman", "XiHei", "DejaVuSans"]
 
       # cover
       make_pdf_cover(pdf, ostate)
@@ -540,7 +553,7 @@ class Plan < ActiveRecord::Base
   # show tables, and with bar on right side
   def make_pdf_summary(pdf, ostate)
     summary = get_summary(:supplier)
-    title = ostate.options[:summary_title]
+    title = ostate.options[:title][:summary]
     fields = ostate.options[:summary_field]
     thead = ostate.options[:summary_header]
     tdata = [thead]
@@ -595,15 +608,7 @@ class Plan < ActiveRecord::Base
   def make_pdf_outline(pdf, ostate)
     logger.debug "#{ostate.outline.to_s}"
     outline = ostate.outline
-    title = {
-      cover: "品类规划",
-      toc: "目录",
-      blocked_plan: "规划概要图",
-      normal_plan: "规划详图",
-      fixture: "货架图",
-      mdse: "单品规划明细表",
-      summary: "商品汇总表"
-    }
+    title = ostate.options[:title]
     outline_items = [:cover, :toc, :blocked_plan, :normal_plan, :fixture, :mdse, :summary]
     outline_items.sort! { |a, b| outline[a] <=> outline[b] }
 
@@ -664,6 +669,15 @@ class Plan < ActiveRecord::Base
   def positions_by_layer
     product_map = Product.on_sales(category_id).to_hash(:id, :code, :name, :color, :width, :height, :depth)
     blocks = {}
+    # update position rank
+    rank = 1
+    positions.sort { |a, b| b.run <=> a.run }.each do |p|
+      if p.on_shelf?
+        p.rank = rank
+        rank += 1
+      end
+    end
+
     positions.each do |p|
       if p.on_shelf?
         product = product_map[p.product_id]

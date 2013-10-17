@@ -43,16 +43,40 @@ class OpenShelf < ActiveRecord::Base
     right_overflow = h2 < 0 ? 0 : h2
     vrun = block.run - left_overflow - right_overflow
 
-    # draw last position
+    # draw position
     left = ostate.origin[0] + (horz + left_overflow) * ostate.scale
     w = vrun * ostate.scale
     h = block.height * block.height_units * ostate.scale
     top = ostate.fixture[:layer_space_bottom] + h
 
+    # draw grid lines for product
+    pdf.stroke_color("888888")
+    pdf.line_width 0.25
+    # vertical grids
+    (block.width_units + 1).times do |i|
+      cx = block.leading_gap + i * block.width
+      if cx >= left_overflow && cx <= block.run - right_overflow # clip
+        x = ostate.origin[0] + (horz + cx) * ostate.scale
+        pdf.stroke_line([x, top], [x, top - h])
+      end
+    end
+    # horizonal grids
+    (block.height_units + 1).times do |i|
+      y = top - i * block.height * ostate.scale
+      pdf.stroke_line([left, y], [left + w, y])
+    end
+    pdf.line_width 1
+
+    # draw position bounding box
+    pdf.stroke_color("000000")
     pdf.fill_color(block.color)
-    pdf.fill_and_stroke_rectangle([left, top], w, h)
+    pdf.line_width 1.5
+    gap = block.leading_gap * ostate.scale
+    gap2 = (block.leading_gap + block.trail_gap) * ostate.scale
+    pdf.stroke_rectangle([left + gap, top], w - gap2, h)
 
     # draw label
+    pdf.stroke_color("000000")
     pdf.fill_color("000000")
     if vrun * 2 >= [block.run, width].min
       # show prod id/name

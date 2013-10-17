@@ -132,6 +132,11 @@ class Fixture < ActiveRecord::Base
     when :merchandise
       positions = ostate.positions
       start_page = new_pdf_page(pdf, ostate)
+      bbox = pdf.bounds
+      pdf.move_down 20
+      pdf.fill_color "000000"
+      pdf.text ostate.options[:title][:mdse], :size => 20
+      pdf.move_down 20
       fields = ostate.options[:mdse_fields]
 
       layer_name = {}
@@ -148,12 +153,13 @@ class Fixture < ActiveRecord::Base
         positions.each do |key, blocks|
           #logger.debug "#{key}, #{blocks.first.layer}"
           pdf.move_down 10
-          pdf.text layer_name[key]
+          pdf.text layer_name[key], :size => 16
           pdf.move_down 10
           tdata = [ostate.options[:mdse_fields_name]]
           tdata.concat blocks.map { |block| fields.map { |f| block.send(f) } }
           pdf.table(tdata,
             cell_style: { borders: [], },
+            width: bbox.right,
             header: true) do
             style(rows(0), :borders => [:top, :bottom])
           end
