@@ -19,6 +19,9 @@ gem 'jquery-simplecolorpicker-rails'
 gem "jqgrid_for_rails", "~> 1.0.2"
 gem 'prawn'
 
+# delayed job for active record
+gem 'delayed_job_active_record'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
