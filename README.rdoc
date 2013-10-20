@@ -19,6 +19,11 @@ Things you may want to cover:
 
 * Services (job queues, cache servers, search engines, etc.)
 
+  delayed job:
+  rake jobs:work
+  bin/delayed_job start
+  bin/delayed_job stop
+
 * Deployment instructions
 
 * ...
