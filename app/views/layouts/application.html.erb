@@ -109,6 +109,10 @@
             </nav><!--/.nav-->
           </div><!--/span-->
           <div class="span9 main">
+            <% if notice %>
+              <p id="notice"><%= notice %></p>
+            <% end %>
+
             <%= yield %>
           </div>
         </div><!--/row-->
