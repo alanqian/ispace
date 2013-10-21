@@ -34,3 +34,5 @@ capybara-*.html
 # ignore eclipse file
 .project
 *.swp
+
+.DS_Store

@@ -11,6 +11,27 @@
 #####################################################################
 # bay data
 
+require 'csv'
+
+def import_from_csv(table)
+  CSV.foreach("db/csvs/#{table}.csv", headers: true) do |row|
+    table.singularize.capitalize.constantize.create! row.to_hash
+  end
+end
+
+Store.delete_all
+import_from_csv('stores')
+
+Category.delete_all
+import_from_csv('categories')
+
+Product.delete_all
+import_from_csv('products')
+
+Sale.delete_all
+import_from_csv('sales')
+
+
 Bay.delete_all
 OpenShelf.delete_all
 PegBoard.delete_all
@@ -518,3 +539,4 @@ Store.create(region_id: "cn.north.bj",
              memo: "亚运村，tel: 81231234")
 
 __END__
+
