@@ -9,7 +9,7 @@
     <% else %>
       <%= f.input :name %>
       <%= f.input :note, as: :text  %>
-      <%= f.input :category_id, input_html: { class: "auto_category", data: { ctg: @categories_all.to_json } } %>
+      <%= f.input :category_id, colloection: @categories_all, input_html: { class: "auto_category" } %>
     <% end %>
     <% if @plan_set.id %>
       <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>

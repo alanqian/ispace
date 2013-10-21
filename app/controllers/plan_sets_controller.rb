@@ -62,6 +62,7 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets/new
   def new
     @plan_set = new_plan_set
+    @categories_all = Category.all
   end
 
   # GET /plan_sets/1/edit

@@ -37,10 +37,6 @@ Ispace::Application.routes.draw do
   post "categories/bulk_update"
   resources :categories
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
   root 'stores#index'
 
   # Example of regular route:
