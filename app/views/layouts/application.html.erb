@@ -44,9 +44,6 @@
         <div class="container">
           <div class="container">
             <ul class="nav">
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
             </ul>
             <ul class="nav pull-right clearfix">
               <% if user_signed_in? %>
@@ -76,10 +73,38 @@
           <div class="span3 sidebar">
             <nav class="sidebar-nav" role="navigation">
               <ul class="nav nav-list">
-                <li class="nav-header">Sidebar</li>
-                <li><%= link_to "Link1", "/path1"  %></li>
-                <li><%= link_to "Link2", "/path2"  %></li>
-                <li><%= link_to "Link3", "/path3"  %></li>
+                <li class="nav-header">门店</li>
+                <li><%= link_to "门店管理", stores_path %></li>
+                <li><%= link_to "样板店管理", '#' %></li>
+                <li><%= link_to "区域管理", regions_path %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">用户</li>
+                <li><%= link_to "用户管理", '#' %></li>
+                <li><%= link_to "用户管理", '#' %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">空间</li>
+                <li><%= link_to "空间布局管理", plans_path %></li>
+                <li><%= link_to "规划组管理", plan_sets_path %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">货架</li>
+                <li><%= link_to "货架管理", fixtures_path %></li>
+                <li><%= link_to "货备管理", bays_path %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">商品</li>
+                <li><%= link_to "品类管理", categories_path %></li>
+                <li><%= link_to "品牌管理", brands_path  %></li>
+                <li><%= link_to "供应商管理", suppliers_path %></li>
+                <li><%= link_to "制造商管理", manufacturers_path %></li>
+                <li><%= link_to "商品管理", products_path %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">数据</li>
+                <li><%= link_to "数据导入", import_sheets_path %></li>
+                <li><%= link_to "分析统计", '#' %></li>
               </ul>
             </nav><!--/.nav-->
           </div><!--/span-->
