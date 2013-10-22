@@ -42,6 +42,7 @@ en:
         name: 规划名称：
         note: 说明：
         category_id: 品类：
+        category_name: 品类：
         model_stores: 选择包含的样板店：
       plan:
         store_name: 样板店

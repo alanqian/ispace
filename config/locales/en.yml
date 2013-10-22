@@ -72,8 +72,8 @@ en:
         weight: "重量"
         brand_id: "品牌"
         mfr_id: "生产商"
-        category_id: "品类"
-        status: "销售"
+        category_id: 品类
+        status: 销售
         plan_info_rank: 排名
         facings: 排面
     errors:
