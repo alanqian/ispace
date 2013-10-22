@@ -82,15 +82,53 @@ class AutoCompleteUtil
           break
     callback(items)
 
+class TreeViewUtil
+  # label:
+  # id:
+  # children: [...]
+  @createData: (itemOrderList, opts) ->
+    idField = opts.id
+    parentIdField = opts.parent
+    labelField = opts.label
+    root =
+      id: opts.rootId
+      parent_id: null
+      label: null
+      children: []
+    parents = [root]
+    for item in itemOrderList
+      item.id = item[idField]
+      item.parent_id = item[parentIdField]
+      item.children = []
+      item.label = item[labelField]
+      # find parent item
+      # console.log "append item", item
+      parent = null
+      while node = parents.pop()
+        if node.id == item.parent_id
+          parent = node
+          break
+      if parent == null
+        console.log "Invalid parent id error:", item
+        return null
+      else
+        parents.push parent
+        parents.push item
+        parent.children.push item
+    return root.children
+
 $.util =
+  createTreeData: (itemOrderList, opts) ->
+    TreeViewUtil.createData(itemOrderList, opts)
+
+  setupAutoCompleteInput: (sel) ->
+    AutoCompleteUtil.setupAutoCompleteInput(sel)
+
   initCmdUI: () ->
     root.cmdUI.init()
 
   addCmdDelegate: (object) ->
     root.cmdUI.addDelegate(object)
-
-  setupAutoCompleteInput: (sel) ->
-    AutoCompleteUtil.setupAutoCompleteInput(sel)
 
   popupMenu: (menuSel, el) ->
     root.cmdUI.popupMenu(menuSel, el)
@@ -146,4 +184,5 @@ $.util =
 $ ->
   $.util.initCmdUI()
   $.util.setupAutoCompleteInput(".auto-complete")
+  $.util.crate
 

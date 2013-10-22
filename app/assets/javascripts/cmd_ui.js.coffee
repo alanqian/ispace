@@ -134,21 +134,21 @@ class CmdUI
     for item in itemOrderList
       id = item[idField]
       parentId = item[parentIdField]
-      pItem = null
       # find parent item
       # console.log "append item", item
+      parent = null
       while node = parents.pop()
         if node[idField] == parentId
-          pItem = node
+          parent = node
           break
-      if pItem == null
+      if parent == null
         console.log "Invalid parent id error:", item
         return null
       else
-        parents.push pItem
+        parents.push parent
         parents.push item
-        pItem.ul ||= $("<ul></ul").appendTo(pItem.li)
-        item.li = $("<li></li>").append("<a data-id='#{id}'>#{item[labelField]}</a>").appendTo(pItem.ul)
+        parent.ul ||= $("<ul></ul").appendTo(parent.li)
+        item.li = $("<li></li>").append("<a data-id='#{id}'>#{item[labelField]}</a>").appendTo(parent.ul)
     @setMenuItemWidth(root.ul)
     return root.ul
 
