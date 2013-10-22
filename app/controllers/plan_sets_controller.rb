@@ -128,7 +128,7 @@ class PlanSetsController < ApplicationController
     end
 
     def set_options
-      @categories_all = Category.select([:code, :name]).order(:code)
+      @categories_all = Category.select([:code, :name, :pinyin]).order(:code)
       @category_map = {}.tap { |h| @categories_all.each { |c| h[c.code] = c.name } }
       @model_stores_all = Store.model_stores
     end
