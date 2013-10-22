@@ -33,11 +33,14 @@ ul.jqtree-tree .jqtree-toggler {
     font-family: arial;  /* fix for ie9 */
     border-bottom: none;
     color: #333;
+    background-color: #ffffff;
 }
 
+/*
 ul.jqtree-tree .jqtree-toggler:hover {
     color: #000;
 }
+*/
 
 ul.jqtree-tree .jqtree-element {
     cursor: pointer;
