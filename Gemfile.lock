@@ -56,6 +56,9 @@ GEM
     eventmachine (1.0.3)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    hanzi_to_pinyin (0.9.1)
+      json
+      yamler
     hashery (2.1.1)
     hike (1.2.3)
     i18n (0.6.4)
@@ -163,6 +166,7 @@ GEM
       rack (>= 1.0)
     will_paginate (3.0.4)
     yaml_db (0.2.3)
+    yamler (0.1.0)
 
 PLATFORMS
   ruby
@@ -173,6 +177,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   delayed_job_active_record
   devise
+  hanzi_to_pinyin
   jbuilder (~> 1.0.1)
   jqgrid_for_rails (~> 1.0.2)
   jquery-rails

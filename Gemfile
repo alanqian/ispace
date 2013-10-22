@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'mysql2'
 gem 'roo'
 gem 'yaml_db'
+gem 'hanzi_to_pinyin'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0.rc1'
