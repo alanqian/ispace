@@ -19,4 +19,6 @@
 //= require jquery.dataTables.js
 //= require colResizable-1.3.source.js
 //= require jquery.simplecolorpicker.js
+//= require cmd_ui
+//= require jqutil
 //= require app

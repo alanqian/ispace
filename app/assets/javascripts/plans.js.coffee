@@ -1,80 +1,4 @@
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-
-# Delegate command UI for
-# 1. toolbar: ".toolbar-button", "toolbar-select"
-# 2. popup-menu: "ul.pupop-menu"
-class CmdUI
-  delegates: null
-
-  # delegate object must have a getCmdMap() function
-  addDelegate: (obj) ->
-    if obj?
-      @delegates.unshift obj
-
-  send: (cmdId) ->
-    $("##{cmdId}").click()
-
-  handle: (id, el) ->
-    for delegate in @delegates
-      cmdMap = delegate.getCmdMap()
-      if cmdMap
-        fn = cmdMap[id]
-        if fn && fn(el)
-          return true
-    console.log "[CmdUI] ignore unhandled cmd:", id
-    return false
-
-  init: () ->
-    self = @
-    @delegates = []
-    $(".toolbar-button").each (index, el) ->
-      buttonOpt =
-        disable: false
-        text: false
-        label: el.text
-        icons:
-          primary: $(el).data("icon")
-          secondary: $(el).data("icon2")
-      $(el).button(buttonOpt).click (e)->
-        #console.log "click it:", this.id
-        e.stopPropagation()
-        self.handle(this.id, this)
-      return true
-
-    $(".toolbar-select").each (index, el) ->
-      $(el).addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only")
-      $(el).change (e) ->
-        #console.log "change it", e, this, this.value
-        self.handle(this.id, this)
-
-    # initialize the popup menu width
-    menuItemPadding = 28
-    $("ul.popup-menu").each (index, ul) ->
-      # initialize each popup item
-      $(ul).data("maxChild", 0)
-      $("li ul", ul).each (index, el) ->
-        $(el).data "maxChild", 0
-
-      $("li a", ul).each (index, el) ->
-        popup = $(el).closest("ul")
-        maxChild = popup.data("maxChild")
-        if maxChild < $(el).width()
-          popup.data("maxChild", $(el).width())
-
-      # set the width of all popups
-      $("li ul", ul).each (index, el) ->
-        $(el).width($(el).data("maxChild") + menuItemPadding)
-      $(ul).width($(ul).data("maxChild")+ menuItemPadding)
-
-    $("ul.popup-menu").menu().hide()
-    $("ul.popup-menu").find("a").click (e) ->
-      e.preventDefault()
-      e.stopPropagation()
-      # hide the outer popup menubox
-      $(this).closest("ul.popup-menu").hide()
-      self.handle(this.id, this)
-    return self
+root = exports ? this
 
 class PlanEditor
   slotMap: {}     # slot => [ul, space]
@@ -105,37 +29,6 @@ class PlanEditor
     leading_divider: 0
     middle_divider: 0
     trail_divider: 0
-
-  cmdMap: null
-  getCmdMap: ()->
-    # define command handlers
-    self = @
-    @cmdMap ||=
-      #"plan-new":           () -> self.onPlanNew()
-      "plan-save":           () -> self.onPlanSave()
-      "plan-switch-model-store":(el) -> self.onPlanSwitchModelStore(el.value)
-      "plan-edit-summary":  () -> self.onPlanEditSummary()
-      "plan-publish":       () -> self.onPlanPublish()     #
-      "plan-copy-to":       () -> self.onPlanCopyTo()      # dup the plan to other model stores
-      "position-facing-inc":() -> self.onPositionFacingInc()
-      "position-facing-dec":() -> self.onPositionFacingDec()
-      "position-remove":    () -> self.onPositionRemove()
-      "positions-reorder":  () -> self.onPositionsReorder()
-                          # Products can be repositioned in a different order
-                          # within a shelf or from a combination of shelves.
-                          # Select the products in the order that you want them to appear on
-                          # the shelf. (The first product selected will be first in traffic flow).
-      "position-edit-leading-gaps": () -> self.onPositionEditLeadingGaps()  # ?: show dialog
-      "position-edit-dividers":     () -> self.onPositionEditDividers()  # ?: show dialog
-
-      "switch-product-information": () -> self.onSwitchProductInformation(), # switch the info on right/bottom/hide
-      "sort": () -> console.log ""
-      "select-showing-information": () -> console.log "", # product infobox or product list on bottom
-      "switch-show-colors":         (el) -> self.onSelectShowingColors(el)
-      "show-brand-color":           () -> self.onSwitchToColor("brand_color")
-      "show-product-color":         () -> self.onSwitchToColor("color")
-      "show-manufacturer-color":    () -> self.onSwitchToColor("mfr_color")
-      "show-supplier-color":        () -> self.onSwitchToColor("supplier_color")
 
   log: () ->
     if @debug
@@ -183,7 +76,7 @@ class PlanEditor
     $("#plan-layout-form").submit (e) ->
       self.storePosition()
 
-    $(window).unload () ->
+    $(root).unload () ->
       self.save()
 
     # to install auto-save timer
@@ -811,63 +704,6 @@ class PlanEditor
       self.save()
     setTimeout(saveProc, 90000)  # 90s
 
-  popupMenu: (menuSel, el) ->
-    menu = $(menuSel).menu().show().position
-      my: "left top"
-      at: "left bottom"
-      of: el
-    $(document).one "click", ()->
-      console.log "hide popup menu by", this
-      menu.hide()
-
-  messageBox: (dlgId, onOk) ->
-    $(dlgId).dialog
-      resizable: true
-      modal: true
-      buttons:
-        "取消": () ->
-          $(this).dialog("close")
-        "确认": () ->
-          $(this).dialog("close")
-          if onOk?
-            onOk()
-
-  openDialog: (dlgId, onInitDialog) ->
-    if onInitDialog?
-      onInitDialog($(dlgId))
-
-    $(dlgId).dialog
-      resizable: true
-      width: $(dlgId).width()
-      height: $(dlgId).height()
-      modal: true
-      buttons:
-        "取消": () ->
-          $(this).dialog("destroy")
-        "确认": () ->
-          $(this).dialog("destroy")
-          $("form", this).submit()
-
-  openJsDialog: (dlgId, dlgProc) ->
-    dlg = $(dlgId)
-    if dlgProc.init?
-      dlgProc.init(dlg)
-
-    $(dlgId).dialog
-      resizable: true
-      width: $(dlgId).width()
-      height: $(dlgId).height()
-      modal: true
-      buttons:
-        "取消": () ->
-          $(this).dialog("destroy")
-          if dlgProc.cancel?
-            dlgProc.cancel(dlg)
-        "确认": () ->
-          $(this).dialog("destroy")
-          if dlgProc.ok?
-            dlgProc.ok(dlg)
-
   doSave: () ->
     $("#plan-layout-form").submit()
 
@@ -875,22 +711,23 @@ class PlanEditor
     @doSave()
     true
 
-  onPlanSwitchModelStore: (store_id) ->
+  onPlanSwitchModelStore: (el) ->
     # /plans/13/edit?_do=layout
+    store_id = el.value
     re = new RegExp("/plans/\\d+/edit")
-    href = window.location.href.replace(re, "/plans/#{store_id}/edit")
+    href = root.location.href.replace(re, "/plans/#{store_id}/edit")
     #console.log "jump to", store_id, href
-    window.location.replace(href)
+    root.location.replace(href)
     true
 
   onPlanEditSummary: () ->
     @doSave()
-    @openDialog("#plan-edit-summary-dialog")
+    $.util.openDialog("#plan-edit-summary-dialog")
     true
 
   onPlanPublish: () ->
     self = @
-    @messageBox "#plan-publish-confirm", () ->
+    $.util.messageBox "#plan-publish-confirm", () ->
       # TODO:
       console.log "publish it"
       self.doSave()
@@ -910,7 +747,7 @@ class PlanEditor
     self = @
     plans_info = $("#selected-store-info").data("plans-info")
     @doSave()
-    @openDialog "#plan-copy-to-dialog", (dlg) ->
+    $.util.openDialog "#plan-copy-to-dialog", (dlg) ->
       $("label[for^='plan_target_plans_']", dlg).click (event) ->
         planId = $("##{$(this).attr("for")}").val()
         self.setDlgStoreInfo(plans_info[planId])
@@ -1049,7 +886,7 @@ class PlanEditor
     elId = "#plan_positions_attributes__leading_gap"
     if @selectedItems.length == 0
       return true
-    @openJsDialog "#plan-positions-gap-dialog",
+    $.util.openJsDialog "#plan-positions-gap-dialog",
       init: (dlg) ->
         console.log "init"
         # fill the form input with 1st selectedItem
@@ -1077,7 +914,7 @@ class PlanEditor
     self = @
     prefix = "#plan_positions_attributes_"
     fields = ["leading_divider", "middle_divider", "trail_divider"]
-    @openJsDialog "#plan-positions-divider-dialog",
+    $.util.openJsDialog "#plan-positions-divider-dialog",
       init: (dlg) ->
         console.log "init"
         # fill the form input with 1st selectedItem
@@ -1116,10 +953,22 @@ class PlanEditor
         return true
     true
 
-  onSelectShowingColors: (el) ->
+  onSwitchShowColors: (el) ->
     # show menu
-    @popupMenu("#showing-colors-menu", el)
+    $.util.popupMenu("#showing-colors-menu", el)
     true
+
+  OnShowBrandColor: () ->
+    @onSwitchToColor("brand_color")
+
+  onShowProductColor: () ->
+    @onSwitchToColor("color")
+
+  onShowManufacturerColor: () ->
+    @onSwitchToColor("mfr_color")
+
+  onShowSupplierColor: () ->
+    @onSwitchToColor("supplier_color")
 
   onSwitchToColor: (color) ->
     self = @
@@ -1139,43 +988,39 @@ class ProductTable
   planEditor: null
   table: null
   selected: []
-  cmdMap: null
   show_sale_type: -1
   productData: [] # [code,sale_type]
   productIndex: {}
   maxRank: 1
 
-  getCmdMap: () ->
-    self = @
-    @cmdMap ||=
-      "show-product-sale-type": (el) ->
-        sale_type = parseInt(el.value)
-        if self.show_sale_type != sale_type
-          self.show_sale_type = sale_type
-          console.log "show sale_type:", self.show_sale_type
-          if self.table
-            oTable = self.table.dataTable()
-            if oTable
-              oTable.fnDraw()
-        true
+  onShowProductSaleType: (el) ->
+    sale_type = parseInt(el.value)
+    if self.show_sale_type != sale_type
+      self.show_sale_type = sale_type
+      console.log "show sale_type:", self.show_sale_type
+      if self.table
+        oTable = self.table.dataTable()
+        if oTable
+          oTable.fnDraw()
+    true
 
-      "products-add-to-shelf": () ->
-        if self.selected.length == 0
-          console.log "no select prompt"
-        else
-          for el in self.selected
-            self.addProductToShelf(el)
-          console.log "products added"
-        true
+  onProductsAddToShelf: () ->
+    if self.selected.length == 0
+      console.log "no select prompt"
+    else
+      for el in self.selected
+        self.addProductToShelf(el)
+      console.log "products added"
+    true
 
-      "products-remove-from-shelf": () ->
-        if self.selected.length == 0
-          console.log "no select prompt"
-        else
-          for el in self.selected
-            self.removeProductFromShelf(el)
-          console.log "products removed"
-        true
+  onProductsRemoveFromShelf: () ->
+    if self.selected.length == 0
+      console.log "no select prompt"
+    else
+      for el in self.selected
+        self.removeProductFromShelf(el)
+      console.log "products removed"
+    true
 
   init: (tableId) ->
     self = @
@@ -1311,18 +1156,14 @@ class ProductTable
     return true
 
 $ ->
-  window.myCmdUI = new CmdUI
-  window.myCmdUI.init()
+  root.planEditor = new PlanEditor
+  root.planEditor.init()
+  $.util.addCmdDelegate(root.planEditor)
 
-  window.planEditor = new PlanEditor
-  window.planEditor.init()
-  window.myCmdUI.addDelegate(window.planEditor)
-
-  window.productTable = new ProductTable
-  window.productTable.init("#products-table").bind(window.planEditor)
-  window.myCmdUI.addDelegate(window.productTable)
+  root.productTable = new ProductTable
+  root.productTable.init("#products-table").bind(root.planEditor)
+  $.util.addCmdDelegate(root.productTable)
   console.log "plans inited"
-
   return true
 
   #############################################
