@@ -32,8 +32,219 @@ class OpenShelf < ActiveRecord::Base
     r
   end
 
+  def get_layer_info_text(fixture_info_text)
+    "#{fixture_info_text} layer:#{self.layer} depth:#{self.depth}cm"
+  end
+
+  def position_to_pdf(pdf, block, horz, ostate)
+    # calculate left/right overflow
+    left_overflow = horz < 0 ? -horz : 0
+    h2 = horz + block.run - width
+    right_overflow = h2 < 0 ? 0 : h2
+    vrun = block.run - left_overflow - right_overflow
+
+    # draw position
+    left = ostate.origin[0] + (horz + left_overflow) * ostate.scale
+    w = vrun * ostate.scale
+    h = block.height * block.height_units * ostate.scale
+    top = ostate.fixture[:layer_space_bottom] + h
+
+    # draw grid lines for product
+    pdf.stroke_color("888888")
+    pdf.line_width 0.25
+    # vertical grids
+    (block.width_units + 1).times do |i|
+      cx = block.leading_gap + i * block.width
+      if cx >= left_overflow && cx <= block.run - right_overflow # clip
+        x = ostate.origin[0] + (horz + cx) * ostate.scale
+        pdf.stroke_line([x, top], [x, top - h])
+      end
+    end
+    # horizonal grids
+    (block.height_units + 1).times do |i|
+      y = top - i * block.height * ostate.scale
+      pdf.stroke_line([left, y], [left + w, y])
+    end
+    pdf.line_width 1
+
+    # draw position bounding box
+    pdf.stroke_color("000000")
+    pdf.fill_color(block.color)
+    pdf.line_width 1.5
+    gap = block.leading_gap * ostate.scale
+    gap2 = (block.leading_gap + block.trail_gap) * ostate.scale
+    pdf.stroke_rectangle([left + gap, top], w - gap2, h)
+
+    # draw label
+    pdf.stroke_color("000000")
+    pdf.fill_color("000000")
+    if vrun * 2 >= [block.run, width].min
+      # show prod id/name
+      text = "#{block.id} #{block.name}"
+      pdf.font(ostate.options[:label_font]) do
+        pdf.text_box text,
+          at: [left, top],
+          width: w,
+          height: h,
+          size: 10,
+          align: :center,
+          valign: :center
+      end
+    else
+      # show <<< or >>>
+      text = left_overflow > 0 ? ostate.options[:left_overflow_text] : ostate.options[:right_overflow_text]
+      pdf.text_box text,
+        at: [left, top],
+        width: w,
+        height: h,
+        size: 10,
+        align: :center,
+        valign: :center
+    end
+  end
+
+  # origin=base
+  def to_pdf(pdf, ostate)
+    num_bays = ostate.fixture[:num_bays]
+    x = ostate.origin[0]
+    y1 = ostate.origin[1] + (from_base + thick + height) * ostate.scale # space top
+    y2 = ostate.origin[1] + (from_base + thick) * ostate.scale # space bottom
+    cx = width * ostate.scale
+    case ostate.fixture[:layer]
+    when :positions
+      fixture_item_id = ostate.fixture[:fixture_item_id]
+      key = Position.layer_key(fixture_item_id, layer)
+      blocks = ostate.positions[key] || []
+      bay_index = ostate.fixture[:bay_index]
+      ostate.fixture[:layer_space_bottom] = y2
+      pdf.stroke_color("000000")
+
+      # find start/stop index on this bay
+      left = bay_index * width
+      right = (bay_index + 1) * width
+      left_run = run = 0
+      start = -1
+      stop = blocks.size
+      blocks.each_index do |i|
+        if start < 0 && run + blocks[i].run > left
+          start = i
+          left_run = run
+        end
+        if start >= 0 && run >= right
+          stop = i
+          break
+        end
+        run += blocks[i].run
+      end
+
+      # draw each positions
+      #logger.debug "draw positions, width:#{width} start:#{start} stop:#{stop} left_run:#{left_run} left:#{left}"
+      horz = left_run - left
+      for i in start..(stop - 1)
+        # draw full position
+        block = blocks[i]
+        position_to_pdf(pdf, block, horz, ostate)
+        horz += block.run
+      end
+      #logger.debug "horz: #{left_run-left}, #{horz}"
+
+    when :blocks
+      fixture_item_id = ostate.fixture[:fixture_item_id]
+      key = Position.layer_key(fixture_item_id, layer)
+      blocks = ostate.blocks[key] || []
+      pdf.stroke_color("000000")
+      horz = 0
+      blocks.each do |group|
+        x = ostate.origin[0] + horz * ostate.scale
+        hprev = 0
+        cx = 0
+        pts = []
+        group.each do |block|
+          y = y2 + block.height * ostate.scale
+          if (hprev - block.height).abs > 0.1
+            pts.push [x + cx * ostate.scale, y]   # left,top
+            hprev = block.height
+          end
+          cx += block.width
+          pts.push [x + cx * ostate.scale, y]   # right,top
+        end
+
+        # modify x of 1st/last block
+        first = group.first
+        x1 = ostate.origin[0] + (horz + first.leading_gap) * ostate.scale
+        x2 = ostate.origin[0] + (horz + cx - group.last.trail_gap) * ostate.scale
+        pts.first[0] = x1
+        pts.last[0] = x2
+
+        pts.push [x2, y2]  # right,bottom of last
+        pts.push [x1, y2]  # left,bottom of first block
+
+        pdf.stroke_polygon(*pts)
+        pdf.fill_color(first.color)
+        pdf.fill_polygon(*pts)
+
+        # draw block label
+        pdf.text_color "000000"
+        pdf.font(ostate.options[:label_font]) do
+          pdf.text_box first.name,
+            :at => [x1, y1], :width => x2 - x1, :height => y1 - y2,
+            :align => :center, :valign => :center, :size => 9
+        end
+
+        # next group
+        horz += cx
+      end
+
+    when :front_view
+      pdf.fill_color(color)
+      num_bays.times do
+        # draw space without fill
+        pdf.stroke_rectangle([x, y1], cx, height * ostate.scale)
+        # draw shelf with fill
+        pdf.fill_and_stroke_rectangle([x, y2], cx, thick * ostate.scale)
+        x += cx
+      end
+
+    when :side_view
+      pdf.fill_color(color)
+      # draw shelf only, with fill
+      cx = depth * ostate.scale
+      pdf.fill_and_stroke_rectangle([x, y2], cx, thick * ostate.scale)
+      size_text = "#{depth}cm"
+      pdf.draw_horz_distance(size_text,
+                             at: [x, y2], width: cx,
+                             above: ostate.options[:distance_above],
+                             scale_size: ostate.options[:scale_size],
+                             scale_font_size: ostate.options[:scale_font_size])
+      size_text = "#{height}cm"
+      h = height * ostate.scale
+      pdf.draw_vert_distance(size_text,
+                             at: [ostate.fixture[:back_left], y2 + h], height: h,
+                             left: ostate.options[:distance_left],
+                             scale_size: ostate.options[:scale_size],
+                             scale_font_size: ostate.options[:scale_font_size])
+
+    when :text
+      # write text on shelf
+      #text = "第#{level}层, 深度: #{depth}cm"
+      cx *= num_bays
+      text = "shelf #{level}, depth: #{depth}cm"
+      size = 100
+      pt = 8
+      pdf.fill_color("#000000")
+      pdf.text_box text,
+        at: [x + cx / 2 - size / 2, y2],
+        width: size,
+        height: self.thick * ostate.scale,
+        size: pt,
+        align: :center,
+        valign: :center
+    end
+  end
+
   alias_attribute :merch_depth, :depth
   alias_attribute :merch_width, :width
   alias_attribute :merch_height, :height
   alias_attribute :shelf_thick, :thick
+  alias_attribute :layer, :level
 end

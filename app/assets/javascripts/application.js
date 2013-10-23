@@ -14,8 +14,12 @@
 //= require jquery.ui.all
 //= require jquery_ujs
 //= require jquery.remotipart
+//= require underscore.string.min.js
 //= require splitter-152.js
 //= require jquery.dataTables.js
 //= require colResizable-1.3.source.js
 //= require jquery.simplecolorpicker.js
+//= require tree.jquery.js
+//= require cmd_ui
+//= require jqutil
 //= require app

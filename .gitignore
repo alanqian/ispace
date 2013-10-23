@@ -21,6 +21,7 @@
 .sass-cache
 /public/system/*
 /public/sheets/*
+/public/downloads/*
 rerun.txt
 pickle-email-*.html
 

@@ -25,5 +25,6 @@ class Category < ActiveRecord::Base
   def update_redundancy
     # display_name
     # pinyin
+    self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)
   end
 end

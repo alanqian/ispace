@@ -22,8 +22,9 @@ class Store < ActiveRecord::Base
     self.where("ref_store_id = id").select([:id, :name])
   end
 
-  def update_region_name
+  def update_redundancy
     self.region_name = Region.get_display_name(region_id)
+    self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)
   end
 
   def name_with_region
