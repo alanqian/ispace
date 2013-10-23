@@ -10,7 +10,7 @@ class Store < ActiveRecord::Base
       # update_all: ref_store_id = stores.first
       # update_first: refer_count = stores.count
       self.where({id: stores}).update_all(ref_store_id: stores.first)
-      self.find(stores.first).update_column(refer_count: stores.count)
+      self.find(stores.first).update_column(:ref_count, stores.count)
     end
   end
 
