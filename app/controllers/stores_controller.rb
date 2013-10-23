@@ -4,7 +4,11 @@ class StoresController < ApplicationController
   # GET /stores
   # GET /stores.json
   def index
-    @stores = Store.all
+    if params[:model_store]
+      @stores = Store.model_store
+    else
+      @stores = Store.all
+    end
   end
 
   # GET /stores/1

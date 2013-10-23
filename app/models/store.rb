@@ -1,4 +1,5 @@
 class Store < ActiveRecord::Base
+  scope :model_store, -> { where('ref_store_id = id') }
 
   before_save :update_region_name
 
