@@ -955,10 +955,11 @@ class PlanEditor
 
   onSwitchShowColors: (el) ->
     # show menu
-    $.util.popupMenu("#showing-colors-menu", el)
+    $.util.popupMenu "#showing-colors-menu",
+      under: el
     true
 
-  OnShowBrandColor: () ->
+  onShowBrandColor: () ->
     @onSwitchToColor("brand_color")
 
   onShowProductColor: () ->
