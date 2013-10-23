@@ -20,12 +20,22 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  ago: 前
   date:
     formats:
       default: "%Y-%m-%d"
-  time:
+  time: # formats, see strftime
     formats:
       default: "%Y-%m-%d %H:%M"
+      today: "今天 %H:%M"
+      yesterday: "昨天 %H:%M"
+      the_day_before_yesterday: "前天 %H:%M"
+      this_week: "本周%a %H:%M"
+      last_week: "上周%a %H:%M"
+      this_month: "%b%e日 周%a"
+      last_month: "%b%e日"
+      date_only: "%y年%b%e日"
+
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
   #   validates :email, :presence: true

@@ -43,6 +43,39 @@ module ApplicationHelper
     hash
   end
 
+  def dt_ago(datetime)
+    now = Time.now()
+
+    today = now.beginning_of_day
+    days_ago = ((today - datetime.beginning_of_day) / 1.day).to_i
+    days = [
+      now.beginning_of_week(:sunday),
+      now.beginning_of_week(:sunday).ago(7.days),
+      now.beginning_of_month,
+      now.beginning_of_month.ago(1.days).beginning_of_month,
+    ].map { |day| ((today - day) / 1.day).to_i }
+    # Rails.logger.debug "#{days_ago} #{days.to_s}"
+
+    case days_ago
+    when 0..2
+      # today, yesterday, the day before yesterday
+      formats = [:today, :yesterday, :the_day_before_yesterday]
+      I18n.l datetime, :format => formats[days_ago]
+    when 3..days[0] # days_in_this_week
+      # in this week, weekday hh:mm
+      I18n.l datetime, :format => :this_week
+    when (days[0] + 1)..days[1] # days_in_prev_week
+      I18n.l datetime, :format => :last_week
+    when (days[1] + 1)..days[2] # days_in_this_month
+      I18n.l datetime, :format => :this_month
+    when (days[2] + 1)..days[3] # days_in_prev_month
+      I18n.l datetime, :format => :last_month
+    else
+      # yy-mm-dd
+      I18n.l datetime, :format => :date_only
+    end
+  end
+
   def select_one_check(id, sel_target, opts = {})
     opts ||= {}
     opts[:onclick] ||= "javascript: onClickSelectOne(event, this);"
