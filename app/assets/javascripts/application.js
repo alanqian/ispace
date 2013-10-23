@@ -20,6 +20,7 @@
 //= require colResizable-1.3.source.js
 //= require jquery.simplecolorpicker.js
 //= require tree.jquery.js
+//= require raphael-min.js
 //= require cmd_ui
 //= require jqutil
 //= require app

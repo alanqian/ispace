@@ -1,7 +1,7 @@
 source 'http://ruby.taobao.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0.rc1'
+gem 'rails', '4.0.0'
 
 # Use sqlite3 as the database for Active Record
 gem 'activerecord-import'
@@ -12,7 +12,7 @@ gem 'yaml_db'
 gem 'hanzi_to_pinyin'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0.rc1'
+gem 'sass-rails', '~> 4.0.0'
 # gems for view
 gem 'simple_form'
 gem "remotipart", "~> 1.0"
@@ -61,3 +61,17 @@ gem 'thin'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+#group :development do
+#  gem 'wirble'    # colorize your irb: syntax highlight
+#  gem 'bond'      # more advanced autocompletion
+#  gem 'sketches'  # editing and evaluating code easily
+#  gem 'boson'     # command framework for creating libraries of commands to be loaded as needed
+#  gem 'hirb'      # hirb: framework for associating views per class
+#  gem 'ori'       # ori: oo ri for irb console
+#  gem 'awesome_print' # awesome_print: pretty print ruby objects in full color
+#  gem 'map_by_method' # map_by_method: plural form of Symbol.to_proc
+#  gem 'what_methods'  # what?: method finder,
+#                      # if I have an object, what method can I call on it to get that result?
+#end
+
