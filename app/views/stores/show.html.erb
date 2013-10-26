@@ -1,37 +1,39 @@
-<p>
-  <strong>Region:</strong>
-  <%= @store.region_id %>
-</p>
+<div class="entity">
+  <p>
+    <label>Region:</label>
+    <%= @store.region_id %>
+  </p>
 
-<p>
-  <strong>Code:</strong>
-  <%= @store.code %>
-</p>
+  <p>
+    <label>Code:</label>
+    <%= @store.code %>
+  </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @store.name %>
-</p>
+  <p>
+    <label>Name:</label>
+    <%= @store.name %>
+  </p>
 
-<p>
-  <strong>Refer Store:</strong>
-  <%= @store.ref_store_id %>
-</p>
+  <p>
+    <label>Refer Store:</label>
+    <%= @store.ref_store_id %>
+  </p>
 
-<p>
-  <strong>Area:</strong>
-  <%= @store.area %>
-</p>
+  <p>
+    <label>Area:</label>
+    <%= @store.area %>
+  </p>
 
-<p>
-  <strong>Location:</strong>
-  <%= @store.location %>
-</p>
+  <p>
+    <label>Location:</label>
+    <%= @store.location %>
+  </p>
 
-<p>
-  <strong>Memo:</strong>
-  <%= @store.memo %>
-</p>
+  <p>
+    <label>Memo:</label>
+    <%= @store.memo %>
+  </p>
+</div>
 
 <%= link_to 'Edit', edit_store_path(@store) %> |
 <%= link_to 'Back', stores_path %>

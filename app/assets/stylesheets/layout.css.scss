@@ -191,6 +191,11 @@ nav[role="navigation"] {
   }
 }
 
+@mixin label {
+  min-width: 150px;
+  display: inline-block;
+}
+
 /* basic form style */
 form {
   div.input {
@@ -211,7 +216,21 @@ form {
     }
   }
   label {
-    min-width: 150px;
-    display: inline-block;
+    @include label;
+  }
+
+  div.actions {
+    padding-left: 0 !important;
+    margin-top: 0.8em;
+    input.button {
+      margin-left: 0 !important;
+      padding: 5px 8px;
+    }
+  }
+}
+
+.entity {
+  label {
+    @include label;
   }
 }
