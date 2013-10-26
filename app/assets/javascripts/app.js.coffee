@@ -742,7 +742,7 @@ root.dataTableUtil =
     iDisplayLength: -1
     bLengthChange: false
     bScrollAutoCss: true
-    sScrollY: "300px"
+    sScrollY: "500px"
     sScrollX: "100%"
     bScrollCollapse: true
     #"sScrollY": calcDataTableHeight(), don't use, it will split to two tables
