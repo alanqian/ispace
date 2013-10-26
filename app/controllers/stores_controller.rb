@@ -50,6 +50,7 @@ class StoresController < ApplicationController
       if @store.update(store_params)
         format.html { redirect_to @store, notice: 'Store was successfully updated.' }
         format.json { head :no_content }
+        format.js { set_store_update_js }
       else
         format.html { render action: 'edit' }
         format.json { render json: @store.errors, status: :unprocessable_entity }
@@ -76,5 +77,9 @@ class StoresController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def store_params
       params.require(:store).permit(:region_id, :code, :name, :ref_store_id, :area, :location, :memo)
+    end
+
+    def set_store_update_js
+      @store.reload
     end
 end

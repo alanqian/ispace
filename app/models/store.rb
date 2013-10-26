@@ -1,7 +1,10 @@
 class Store < ActiveRecord::Base
   scope :model_store, -> { where('ref_store_id = id') }
 
+  has_one :region
+
   before_save :update_region_name
+
 
   def self.define_model_store(stores)
     if stores.empty?
@@ -29,6 +32,12 @@ class Store < ActiveRecord::Base
 
   def name_with_region
     "#{region_name} #{name}"
+  end
+
+  private
+  def update_region_name
+    region = Region.find(self.region_id)
+    self.region_name = region.name
   end
 end
 
