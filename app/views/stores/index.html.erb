@@ -10,7 +10,7 @@
       <%= f.input :code  %>
       <%= f.input :area %>
       <%= f.input :location  %>
-      <%= f.input :ref_store_id  %>
+      <%= f.input :ref_store_id, collection: Store.model_store  %>
       <%= f.input :memo %>
     </div>
   <% end %>
