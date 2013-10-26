@@ -1,0 +1,21 @@
+<table id="stores-table" data-form="#stores-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:store,
+        :name,
+        :region_id,
+        :code,
+        :area,
+        :location,
+        [ :ref_store_id, sort: false ],
+        [ :memo, sort: false ]) %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% stores.each do |store| %>
+      <%= render 'item', store: store %>
+    <% end %>
+  </tbody>
+</table>

@@ -9,6 +9,8 @@ class StoresController < ApplicationController
     else
       @stores = Store.all
     end
+
+    render "index", locals: { store_new: Store.new }
   end
 
   # GET /stores/1

@@ -1,0 +1,12 @@
+<tr data-id="<%= store.id %>">
+  <% logger.debug store.inspect %>
+  <%= data_td_list store,
+                   :name,
+                   :region_id,
+                   :code,
+                   :area,
+                   :location,
+                   [ :ref_store_id ],
+                   :memo
+  %>
+</tr>
