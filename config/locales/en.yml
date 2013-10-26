@@ -76,6 +76,14 @@ en:
         status: 销售
         plan_info_rank: 排名
         facings: 排面
+      store:
+        name: 店名
+        region_id: 地址
+        code: Code
+        area: 区域
+        location: 位置
+        ref_store_id: Ref Store Id
+        memo: 备注
     errors:
       models:
         user:
