@@ -181,8 +181,13 @@ $.util =
           if dlgProc.ok?
             dlgProc.ok(dlg)
 
+  markCheckedCollectionItem: (inputDiv) ->
+    $("span.checkbox input[type=checkbox].check_boxes:checked+label.collection_check_boxes",
+      inputDiv).addClass("selected")
+
 $ ->
   $.util.initCmdUI()
   $.util.setupAutoCompleteInput(".auto-complete")
-  $.util.crate
+  $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
+
 
