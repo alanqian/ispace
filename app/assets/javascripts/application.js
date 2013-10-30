@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery.ui.all
+//= require jquery.ui.datepicker-zh-CN.js
 //= require jquery_ujs
 //= require jquery.remotipart
 //= require underscore.string.min.js

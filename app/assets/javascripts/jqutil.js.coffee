@@ -185,9 +185,24 @@ $.util =
     $("span.checkbox input[type=checkbox].check_boxes:checked+label.collection_check_boxes",
       inputDiv).addClass("selected")
 
+  datepicker: (el) ->
+    $(el).datepicker
+      altFormat: "yy-mm-dd"     # rails want it
+      dateFormat: "yy-mm-dd"    # just as rails set
+      altField: $(el).next()
+    # set as ISO 8601 at first, then modify to proper format: change initial display date
+    dateFormat = $(el).data("opt-dateFormat") || "yy年mm月dd日 DD"
+    $(el).datepicker("option", "dateFormat", dateFormat)
+    $(el).datepicker($.datepicker.regional["zh-CN"])
+
+  setupDatePicker: () ->
+    self = @
+    $("input.date.datepicker").each (index, el) ->
+      self.datepicker el
+
 $ ->
   $.util.initCmdUI()
+  $.util.setupDatePicker()
   $.util.setupAutoCompleteInput(".auto-complete")
   $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
-
 
