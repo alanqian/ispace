@@ -84,6 +84,11 @@ en:
         location: 位置
         ref_store_id: Ref Store Id
         memo: 备注
+      region:
+        code: Code
+        name: 区域
+        consume_type: 消费类型
+        memo: 备注
     errors:
       models:
         user:

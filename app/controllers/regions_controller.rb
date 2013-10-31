@@ -5,6 +5,8 @@ class RegionsController < ApplicationController
   # GET /regions.json
   def index
     @regions = Region.all
+
+    render "index", locals: { region_new: Region.new }
   end
 
   # GET /regions/1
@@ -40,14 +42,12 @@ class RegionsController < ApplicationController
   # PATCH/PUT /regions/1
   # PATCH/PUT /regions/1.json
   def update
-    respond_to do |format|
-      if @region.update(region_params)
-        format.html { redirect_to @region, notice: 'Region was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @region.errors, status: :unprocessable_entity }
-      end
+    if @region.update(region_params)
+      session[:notice] = 'Region was successfully updated.'
+      set_update_js
+      render "update"
+    else
+      render action: 'edit'
     end
   end
 
@@ -65,10 +65,15 @@ class RegionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_region
       @region = Region.find(params[:id])
+      logger.info(@region.inspect)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def region_params
       params.require(:region).permit(:code, :name, :consume_type, :memo)
+    end
+
+    def set_update_js
+      @region.reload
     end
 end

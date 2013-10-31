@@ -22,7 +22,8 @@ Ispace::Application.routes.draw do
 
   resources :fixtures
   resources :stores
-  resources :regions
+  resources :regions, except: [:patch]
+  patch "regions/*id", to: "regions#update", defaults: { format: 'js' }
 
   # removed resources
   # resources :fixture_items
