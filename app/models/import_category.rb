@@ -33,10 +33,11 @@ class ImportCategory < ImportSheet
   end
 
   def end_import(sheet)
-    columns = [:code, :name, :parent_id, :import_id]
+    columns = [:code, :name, :parent_id, :import_id, :pinyin]
     values = []
     @importing.each do |code, name|
-      values.push [code, name, parent_code(code), self.id]
+      pinyin = HanziToPinyin.hanzi_to_pinyin(name)
+      values.push [code, name, parent_code(code), self.id, pinyin]
     end
     Category.import(columns, values)
     @importing.clear

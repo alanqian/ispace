@@ -92,6 +92,7 @@ class ImportSheet < ActiveRecord::Base
 
     failed = false
     sheets.each do |sheet|
+      logger.debug "start import, sheet:#{sheet[:name]}"
       if sheet[:empty]
         logger.debug "skip empty sheet[#{sheet[:id]}]: #{sheet[:name]}"
         next
@@ -119,7 +120,7 @@ class ImportSheet < ActiveRecord::Base
             # strip \.0+ for :string & :integer
             column_type = self.class.map_dict[:_types][to_field]
             if column_type == :string || column_type == :integer
-              row[i] = row[i].to_s.sub(/\.0+$/, '')
+              row[i] = row[i].to_s.strip.sub(/\.0+$/, '')
             end
 
             # convert non-empty fields to rails style params
@@ -194,8 +195,7 @@ class ImportSheet < ActiveRecord::Base
 
     # step 2. confirm & import
     self._do = "import"
-    import
-    save!
+    save! # will call import automatically
     self
   end
 
@@ -332,9 +332,9 @@ class ImportSheet < ActiveRecord::Base
     when '.csv', 'csv'
       Roo::Csv.new(file.path)
     when '.xls', 'xls'
-      Roo::Excel.new(file.path, nil, :ignore)
+      Roo::Excel.new(file.path, {}, :ignore)
     when '.xlsx', 'xlsx'
-      Roo::Excelx.new(file.path, nil, :ignore)
+      Roo::Excelx.new(file.path, {}, :ignore)
     else
       raise "Unknown uploaded type: #{file.original_filename}"
     end
