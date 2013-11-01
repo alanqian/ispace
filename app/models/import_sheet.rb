@@ -8,7 +8,6 @@ class ImportSheet < ActiveRecord::Base
   serialize :imported, Hash
 
   validates :type, presence: true
-  validates :_do, presence: true
   validates :sheets, presence: true
   validates :comment, presence: true
   validates :file_upload, presence: true
@@ -32,7 +31,6 @@ class ImportSheet < ActiveRecord::Base
   # 3. reset imported, and, set other customized stuffs...
   def file_upload=(upload_field)
     logger.debug "upload_file, user_id: #{self.user_id}"
-    _do = "upload"
     reset_imported
     self.filename = upload_field.original_filename
     ext = File.extname(base_part_of(self.filename).downcase)
@@ -47,7 +45,7 @@ class ImportSheet < ActiveRecord::Base
     logger.warn "exception: #{e.to_s}\n#{e.backtrace.join("\n")}"
     sheets = []
     logger.debug "file_upload failed, filename:#{upload_field.original_filename}"
-    _do = "upload:fail"
+    _do = "upload_fail"
     return nil
   end
 
@@ -88,7 +86,7 @@ class ImportSheet < ActiveRecord::Base
 
   # finish the import task
   def import
-    return if mapping.empty? || self._do != "import"
+    return if mapping.empty? || self._do != :import
 
     failed = false
     sheets.each do |sheet|
@@ -154,6 +152,8 @@ class ImportSheet < ActiveRecord::Base
     if failed
       # TODO: discard import, delete imported...
       discard_imported
+    else
+      self.done = "import"
     end
   end
 
@@ -190,7 +190,7 @@ class ImportSheet < ActiveRecord::Base
       self.path
     end
     self.file_upload = file
-    self._do = "upload:local"
+    self._do = "upload_local"
     save!
 
     # step 2. confirm & import
@@ -273,7 +273,7 @@ class ImportSheet < ActiveRecord::Base
   end
 
   def self.load_xls(file, ext)
-    # logger.debug "load_xls, file:#{file}, ext:#{ext}"
+    logger.debug "load_xls, file:#{file}, ext:#{ext}"
     xls = self.open_spreadsheet(file, ext)
     sheets = []
     id = 0
@@ -327,14 +327,14 @@ class ImportSheet < ActiveRecord::Base
   end
 
   def self.open_spreadsheet(file, ext)
-    # logger.debug "open_spreadsheet, ext:#{ext}"
+    logger.debug "open_spreadsheet, file:#{file.path} ext:#{ext}"
     case ext
     when '.csv', 'csv'
       Roo::Csv.new(file.path)
     when '.xls', 'xls'
-      Roo::Excel.new(file.path, {}, :ignore)
+      Roo::Excel.new(file.path, {file_warning: :ignore})
     when '.xlsx', 'xlsx'
-      Roo::Excelx.new(file.path, {}, :ignore)
+      Roo::Excelx.new(file.path, {file_warning: :ignore})
     else
       raise "Unknown uploaded type: #{file.original_filename}"
     end

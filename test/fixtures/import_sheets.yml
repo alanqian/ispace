@@ -94,7 +94,7 @@ one:
   user_id: 1
   created_at: 2013-09-13 04:07:48.000000000 Z
   updated_at: 2013-09-13 04:07:58.000000000 Z
-  _do: import
+  done: import
 two:
   id: 7
   comment: upload store
@@ -177,7 +177,7 @@ two:
   user_id: 1
   created_at: 2013-09-13 04:13:12.000000000 Z
   updated_at: 2013-09-13 04:21:57.000000000 Z
-  _do: import
+  done: import
 three:
   id: 8
   comment: upload product
@@ -503,7 +503,7 @@ three:
   user_id: 1
   created_at: 2013-09-13 04:24:04.000000000 Z
   updated_at: 2013-09-13 04:26:50.000000000 Z
-  _do: import
+  done: import
 four:
   id: 9
   comment: upload sales data
@@ -689,4 +689,4 @@ four:
   user_id: 1
   created_at: 2013-09-13 04:28:18.000000000 Z
   updated_at: 2013-09-13 04:28:23.000000000 Z
-  _do: import
+  done: import

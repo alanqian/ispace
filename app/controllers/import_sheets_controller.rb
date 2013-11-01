@@ -40,19 +40,18 @@ class ImportSheetsController < ApplicationController
     user_id = 1
     is_designer_user = params[:_designer]
 
-    _do = "import"
     @t = params[:_t] || "sale"
     case @t
     when "sale"
       # show import sales list
       if is_designer_user
         # all recent imports
-        @import_sheets = ImportSale.where(_do: 'import').order(created_at: :desc)
+        @import_sheets = ImportSale.where(done: 'import').order(created_at: :desc)
         render 'index.sales_d'
       else
         # imports of his own store
         @import_sheets = ImportSale.where([
-          "_do=? and store_id=?", _do, store_id]).order(created_at: :desc)
+          "done='import' and store_id=?", store_id]).order(created_at: :desc)
         render 'index.sales'
       end
     when "product"
@@ -107,8 +106,11 @@ class ImportSheetsController < ApplicationController
 
     respond_to do |format|
       if @import_sheet.save
-        format.html { redirect_to edit_import_sheet_path(@import_sheet),
-          notice: 'spreadsheet was successfully uploaded.' }
+        format.html {
+          logger.debug "upload ok"
+          redirect_to edit_import_sheet_path(@import_sheet),
+            notice: 'spreadsheet was successfully uploaded.'
+        }
         format.json { render action: 'show', status: :created, location: @import_sheet }
         format.js
       else
