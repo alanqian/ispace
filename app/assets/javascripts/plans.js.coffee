@@ -22,9 +22,9 @@ class PlanEditor
     run: 0
     init_facing: 1
     facing: 1
-    height_units: 1
-    width_units: 1
-    depth_units: 1
+    height_units: 0
+    width_units: 0
+    depth_units: 0
     leading_gap: 0
     leading_divider: 0
     middle_divider: 0
@@ -995,6 +995,7 @@ class ProductTable
   maxRank: 1
 
   onShowProductSaleType: (el) ->
+    self = @
     sale_type = parseInt(el.value)
     if self.show_sale_type != sale_type
       self.show_sale_type = sale_type
@@ -1006,6 +1007,7 @@ class ProductTable
     true
 
   onProductsAddToShelf: () ->
+    self = @
     if self.selected.length == 0
       console.log "no select prompt"
     else
@@ -1015,6 +1017,7 @@ class ProductTable
     true
 
   onProductsRemoveFromShelf: () ->
+    self = @
     if self.selected.length == 0
       console.log "no select prompt"
     else
