@@ -2,10 +2,11 @@
 
 one:
   name: 宝洁
-  category_id: 牙膏
+  category: toothpaste
   color: #ffffff
 
 two:
   name: 联合利华
-  category_id: 牙膏
+  category: toothpaste
   color: #ff0000
+

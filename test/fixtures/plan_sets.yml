@@ -1,23 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  name: set1
-  note: MyString
-  category_id: 10103
+  name: 11月促销
+  category: toothpaste
+  to_deploy_at: 2013-11-13
+  note: "blah blah, deploy asap"
   user_id: 1
-  num_plans: 1
-  num_stores: 1
-  published_at: 2013-09-13 15:54:16
-  unpublished_plans: 1
-  undeployed_stores: 1
 
 two:
-  name: set2
-  note: MyString
-  category_id: 10104
+  name: 11月11日活动
+  category: :toothpaste
+  to_deploy_at: 2013-11-13
+  note: "blah blah, deploy asap"
   user_id: 1
-  num_plans: 1
-  num_stores: 1
-  published_at: 2013-09-13 15:54:16
-  unpublished_plans: 1
-  undeployed_stores: 1
+

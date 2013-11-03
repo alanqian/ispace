@@ -1,17 +1,19 @@
 require 'test_helper'
 
 class PlanSetsControllerTest < ActionController::TestCase
-  fixtures :plan_sets
   fixtures :categories
+  fixtures :plan_sets
 
   setup do
     @plan_set = plan_sets(:one)
+    @toothpaste = categories(:toothpaste)
+    @plan_set.category_id = @toothpaste.code # patch bug of rails fixtures identify(label)
   end
 
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:plan_sets)
+    assert_not_nil assigns(:designing_sets)
   end
 
   test "should get new" do

@@ -2,12 +2,12 @@
 
 one:
   name: mfr1
-  category_id: ctg1
+  category: toothpaste
   desc: MyString
   color: MyString
 
 two:
   name: mfr2
-  category_id: ctg2
+  category: toothpaste
   desc: MyString
   color: MyString

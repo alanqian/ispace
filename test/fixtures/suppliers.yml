@@ -2,12 +2,12 @@
 
 one:
   name: 天津日用品商贸公司
-  category_id: 牙膏
+  category: toothpaste
   desc: MyString
   color: MyString
 
 two:
   name: 天津日用品商贸公司北京分公司
-  category_id: 牙膏
+  category: toothpaste
   desc: MyString
   color: MyString

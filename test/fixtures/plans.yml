@@ -2,7 +2,7 @@
 
 one:
   plan_set_id: 1
-  category_id: 10103
+  category: toothpaste
   user_id: 1
   store_id: 1
   num_stores: 1
@@ -15,7 +15,7 @@ one:
 
 two:
   plan_set_id: 1
-  category_id: 10104
+  category: toothpaste
   user_id: 1
   store_id: 2
   num_stores: 1

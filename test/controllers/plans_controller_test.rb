@@ -1,10 +1,10 @@
 require 'test_helper'
 
 class PlansControllerTest < ActionController::TestCase
-  fixtures :plans
   fixtures :categories
-  fixtures :stores
   fixtures :regions
+  fixtures :stores
+  fixtures :plans
 
   setup do
     # modify fixtures to fit database relations
