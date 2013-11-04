@@ -212,19 +212,22 @@ module PrawnExtension
   def footer
   end
 
-  def register_fonts
-    font_families.update(
-      "XiHei" => {
-      :normal => @ostate.options[:label_font],
-    },
-    "DejaVuSans" => {
-      :normal => "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf",
-    },
-    "Kai" => {
-      :normal => "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf",
-    },
-    )
-    fallback_fonts ["Times-Roman", "XiHei", "DejaVuSans"]
+  def register_fonts(opt)
+    @@system_paths ||= {
+      '#{Prawn::BASEDIR}' => Prawn::BASEDIR,
+      '#{Rails.root}' => Rails.root.to_s,
+    }
+    families = opt[:font_families]
+    families.each do |f, fonts|
+      fonts.each do |style, file|
+        families[f][style] = file.sub(/^\#\{(Prawn::BASEDIR|Rails\.root)\}/) do |s|
+          @@system_paths[s]
+        end
+      end
+    end
+    Rails.logger.debug "register_fonts: #{families.to_json}"
+    font_families.update(families)
+    fallback_fonts opt[:fallbacks]
   end
 
   attr_accessor :ostate

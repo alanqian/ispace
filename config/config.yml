@@ -1,0 +1,95 @@
+test:
+  perform_authentication: false
+
+production:
+  perform_authentication: true
+
+development:
+  perform_authentication: false
+
+common:
+  pdf_fonts:
+    :font_families:
+      XiHei:
+        :normal: "#{Rails.root}/config/fonts/stxihei.ttf"
+      DejaVuSans:
+        :normal: "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
+      Kai:
+        :normal: "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
+    :fallbacks:
+      - XiHei
+      - DejaVuSans
+      - Times-Roman
+    :built_ins:
+      - Courier
+      - Courier-Bold
+      - Courier-Oblique
+      - Courier-BoldOblique
+      - Helvetica
+      - Helvetica-Bold
+      - Helvetica-Oblique
+      - Helvetica-BoldOblique
+      - Times-Roman
+      - Times-Bold
+      - Times-Italic
+      - Times-BoldItalic
+      - Symbol
+      - ZapfDingbats
+    :unsupported:
+      Song:
+        :normal: "#{Rails.root}/config/fonts/AdobeHeitiStd-Regular.otf"
+      Hei:
+        :normal: "#{Rails.root}/config/fonts/AdobeSongStd-Light.otf"
+  pdf_options:
+    :label_font: XiHei
+    :text_font: XiHei
+    :ascii_font: DejaVuSans
+    :left_overflow_text: "<\n<\n<\n<"
+    :right_overflow_text: ">\n>\n>\n>"
+    :bay_left_width: 20
+    :bay_spacing: 8
+    :distance_above: 10
+    :distance_left: 10
+    :scale_size: 12
+    :scale_font_size: 10
+    :mdse_fields:
+      - :seq_num
+      - :id
+      - :name
+      - :facing
+      - :rank
+      - :depth_units
+      - :height_units
+      - :width_units
+      - :checker
+    :mdse_fields_name:
+      - №
+      - 编号
+      - 品名
+      - 排面
+      - 排名
+      - 深
+      - 高
+      - 宽
+      - ☑
+    :summary_field:
+      - :name
+      - :count
+      - :run
+      - :spercent
+    :summary_header:
+      - 供应商
+      - 位置
+      - 总排面
+      - 百分比(%)
+    :title:
+      :cover: 品类规划
+      :toc: 目录
+      :blocked_plan: 规划概要图
+      :normal_plan: 规划详图
+      :fixture: 货架图
+      :mdse: 单品排面明细表
+      :summary: 商品汇总表
+    :open_shelf:
+      :shelf_text: "第#{level}层, 深度: #{depth}厘米"
+
