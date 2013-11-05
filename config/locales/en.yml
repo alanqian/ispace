@@ -48,7 +48,10 @@ en:
         parent_id: 上级品类
         memo: 备注
       user:
-        email: "E-mail address"
+        email: 邮箱
+        username: 用户名
+        telephone: 电话号码
+        employee_id: 员工号码
       brand:
         name: "品牌名"
       supplier:

@@ -1,32 +1,18 @@
 <h1>Listing users</h1>
 
-<table class="dataTable no-wrap resizable inplace_edit">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Employee Id</th>
-      <th>Email</th>
-      <th>Telephone</th>
-      <th data-no-sort="true"></th>
-      <th data-no-sort="true"></th>
-      <th data-no-sort="true"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.username %></td>
-        <td><%= user.employee_id %></td>
-        <td><%= user.email %></td>
-        <td><%= user.telephone %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div id="users-list">
+  <%= simple_form_for(user_new, method: "patch", remote: true,
+                      data: { url: user_path(user_new) },
+                      html: { id: "users-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :username %>
+      <%= f.input :employee_id %>
+      <%= f.input :email %>
+      <%= f.input :telephone %>
+    </div>
+    <%= render 'list', users: @users %>
+  <% end %>
+</div>
 
 <br>
 
