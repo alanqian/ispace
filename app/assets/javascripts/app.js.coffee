@@ -411,6 +411,7 @@ class InplaceEditor
     $(table).on "click", "tbody tr td", (event) ->
       unless self.isNoinputTD(this)
         self.bind($(this).parent(), this, event.target)
+        $(this).find(':input').focus()
 
     return self
 
