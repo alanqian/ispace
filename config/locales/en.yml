@@ -89,6 +89,11 @@ en:
         name: 区域
         consume_type: 消费类型
         memo: 备注
+      fixture:
+        name: 名称
+        code: Code
+        user: 用户
+        flow_l2r: Flow l2r
     errors:
       models:
         user:

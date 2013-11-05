@@ -6,6 +6,8 @@ class FixturesController < ApplicationController
   # GET /fixtures.json
   def index
     @fixtures = Fixture.all
+
+    render "index", locals: { fixture_new: Fixture.new }
   end
 
   # GET /fixtures/1
@@ -55,6 +57,7 @@ class FixturesController < ApplicationController
         logger.debug fixture_params
         format.html { redirect_to @fixture, notice: 'Fixture was successfully updated.' }
         format.json { head :no_content }
+        format.js { set_fixture_update_js }
       else
         format.html { render action: 'edit' }
         format.json { render json: @fixture.errors, status: :unprocessable_entity }
@@ -95,5 +98,9 @@ class FixturesController < ApplicationController
         :name, :code, :user_id, :category_id,
         :flow_l2r,
         fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
+    end
+
+    def set_fixture_update_js
+      @fixture.reload
     end
 end
