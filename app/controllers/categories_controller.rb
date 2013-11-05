@@ -5,6 +5,8 @@ class CategoriesController < ApplicationController
   # GET /categories.json
   def index
     @categories = Category.all
+
+    render "index", locals: { category_new: Category.new }
   end
 
   # GET /categories/1
@@ -44,6 +46,7 @@ class CategoriesController < ApplicationController
       if @category.update(category_params)
         format.html { redirect_to @category, notice: 'Category was successfully updated.' }
         format.json { head :no_content }
+        format.js { set_category_update_js }
       else
         format.html { render action: 'edit' }
         format.json { render json: @category.errors, status: :unprocessable_entity }
@@ -85,5 +88,9 @@ class CategoriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
       params.require(:category).permit(:code, :name, :parent_id, :memo)
+    end
+
+    def set_category_update_js
+      @category.reload
     end
 end
