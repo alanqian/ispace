@@ -10,9 +10,8 @@
       <%= f.input :parent_id, collection: Category.all %>
       <%= f.input :memo %>
     </div>
+    <%= render 'list', categorys: @categories %>
   <% end %>
-
-  <%= render 'list', categorys: @categories %>
 </div>
 
 <br>

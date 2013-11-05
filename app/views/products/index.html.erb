@@ -2,10 +2,8 @@
 
 <div id="products-list">
   <%= simple_form_for(product_new, method: "patch", remote: true,
-                      # url: "/products/2",
                       data: { url: product_path(product_new) },
-                      html: { id: "products-form", class: "inplace", },
-                     ) do |f| %>
+                      html: { id: "products-form", class: "inplace", }) do |f| %>
     <div class="inputs">
       <%= f.input :code %>
       <%= f.input :brand_id, collection: brands_all %>
