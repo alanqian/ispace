@@ -10,6 +10,16 @@ module Template
     (\.(?<bar>[\w\?]+))?      # bar
     \}/x
   def template(args = {})
+    # add string key via symbol key, to simplify the caller
+    extras = {}
+    args.each do |k,v|
+      if k.is_a?(Symbol) && !args.has_key?(k.to_s)
+        extras[k.to_s] = v
+      end
+    end
+    args.merge! extras
+
+    # execute template
     self.gsub(TemplateRE) do |match|
       foo = $~[:foo]
       baz = $~[:baz]
