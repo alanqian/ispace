@@ -94,6 +94,19 @@ en:
         code: Code
         user: 用户
         flow_l2r: Flow l2r
+      bay:
+        name: 名称
+        back_height: Back Height
+        back_width: Back Width
+        back_thick: Back Thick
+        back_color: Back Color
+        notch_spacing: Notch Spacing
+        notch_1st: Notch 1st
+        base_height: Base Height
+        base_width: Base Width
+        base_depth: Base Depth
+        base_color: Base Color
+        elem_count: 商品个数
     errors:
       models:
         user:
