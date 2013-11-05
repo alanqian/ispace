@@ -10,9 +10,9 @@
       <%= f.input :consume_type %>
       <%= f.input :memo %>
     </div>
+    <%= render 'list', regions: @regions %>
   <% end %>
 
-  <%= render 'list', regions: @regions %>
 </div>
 
 <br>

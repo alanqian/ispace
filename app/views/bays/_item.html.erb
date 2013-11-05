@@ -1,0 +1,16 @@
+<tr data-id="<%= bay.id %>">
+  <%= data_td_list bay,
+                   :name,
+                   :back_height,
+                   :back_width,
+                   :back_thick,
+                   [:back_color, color_tag(bay.back_color)],
+                   :notch_spacing,
+                   :notch_1st,
+                   :base_height,
+                   :base_width,
+                   :base_depth,
+                   [:base_color, color_tag(bay.base_color)],
+                   :elem_count
+  %>
+</tr>

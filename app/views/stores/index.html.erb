@@ -13,9 +13,9 @@
       <%= f.input :ref_store_id, collection: Store.model_store  %>
       <%= f.input :memo %>
     </div>
+    <%= render 'list', stores: @stores %>
   <% end %>
 
-  <%= render 'list', stores: @stores %>
 </div>
 
 <br>
