@@ -1,0 +1,26 @@
+<table id="bays-table" data-form="#bays-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:bay,
+        :name,
+        :back_height,
+        :back_width,
+        :back_thick,
+        :back_color,
+        :notch_spacing,
+        :notch_1st,
+        :base_height,
+        :base_width,
+        :base_depth,
+        :base_color,
+        :elem_count) %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% bays.each do |bay| %>
+      <%= render 'item', bay: bay %>
+    <% end %>
+  </tbody>
+</table>
