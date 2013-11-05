@@ -2,7 +2,7 @@
   <% field_set_tag "Basic" do %>
     <%= f.input :code %>
     <%= f.input :name %>
-    <%= f.input :parent_id %>
+    <%= f.input :parent_id, collection: Category.all %>
     <%= f.input :memo %>
     <%= f.button :submit %>
   <% end %>
