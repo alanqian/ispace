@@ -1,5 +1,19 @@
 <h1>Listing users</h1>
 
+<div id="users-list">
+  <%= simple_form_for(user_new, method: "patch", remote: true,
+                      data: { url: user_path(user_new) },
+                      html: { id: "users-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :username %>
+      <%= f.input :employee_id %>
+      <%= f.input :email %>
+      <%= f.input :telephone %>
+    </div>
+    <%= render 'list', users: @users %>
+  <% end %>
+</div>
+
 <table class="dataTable no-wrap resizable inplace_edit">
   <thead>
     <tr>
