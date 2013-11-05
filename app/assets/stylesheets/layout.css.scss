@@ -207,7 +207,7 @@ form {
       padding: 0 5px;
       color: #333;
     }
-    input[type=text], input[type=number] {
+    input[type=text], input[type=password], input[type=number], input[type=email], input[type=tel] {
       width: 200px;
     }
     textarea {
