@@ -43,6 +43,7 @@ common:
   pdf_options:
     :label_font: XiHei
     :text_font: XiHei
+    :number_font: Courier
     :ascii_font: DejaVuSans
     :left_overflow_text: "<\n<\n<\n<"
     :right_overflow_text: ">\n>\n>\n>"
@@ -92,4 +93,6 @@ common:
       :summary: 商品汇总表
     :open_shelf:
       :shelf_text: "第#{level}层, 深度: #{depth}厘米"
+      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}cm"
+      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}cm"
 

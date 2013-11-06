@@ -224,7 +224,7 @@ bay = Bay.create(
     back_height: 185.0,
     back_width: 60.0,
     back_thick: 3.0,
-    back_color: '#400040',
+    back_color: '#ffffff',
     notch_spacing: 1.0,
     notch_1st: 1.0,
     base_height: 15.0,

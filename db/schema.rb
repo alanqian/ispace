@@ -84,16 +84,28 @@ ActiveRecord::Schema.define(version: 20131026014448) do
   create_table "deployments", force: true do |t|
     t.integer  "plan_id"
     t.integer  "store_id"
-    t.integer  "user_id"
+    t.integer  "downloaded_by"
     t.datetime "downloaded_at"
     t.datetime "deployed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "store_name",                             null: false
+    t.integer  "plan_set_id",                            null: false
+    t.string   "plan_set_name"
+    t.string   "plan_set_note"
+    t.datetime "published_at"
+    t.date     "to_deploy_at",    default: '2013-11-06', null: false
+    t.datetime "download_1st_at"
+    t.integer  "download_count",  default: 0
+    t.integer  "deployed_by",     default: 0
+    t.integer  "discarded_by"
+    t.datetime "discarded_at"
   end
 
   add_index "deployments", ["deployed_at"], name: "index_deployments_on_deployed_at", using: :btree
   add_index "deployments", ["downloaded_at"], name: "index_deployments_on_downloaded_at", using: :btree
   add_index "deployments", ["plan_id"], name: "index_deployments_on_plan_id", using: :btree
+  add_index "deployments", ["plan_set_id"], name: "index_deployments_on_plan_set_id", using: :btree
   add_index "deployments", ["store_id"], name: "index_deployments_on_store_id", using: :btree
 
   create_table "fixture_items", force: true do |t|
@@ -143,13 +155,13 @@ ActiveRecord::Schema.define(version: 20131026014448) do
     t.string   "filename"
     t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
-    t.string   "_do",        limit: 48
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "done",       limit: 48
   end
 
   add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
@@ -213,18 +225,20 @@ ActiveRecord::Schema.define(version: 20131026014448) do
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
   create_table "plan_sets", force: true do |t|
-    t.string   "name",                          null: false
+    t.string   "name",                                                      null: false
     t.string   "note"
-    t.string   "category_id",                   null: false
+    t.string   "category_id",                                               null: false
     t.integer  "user_id"
-    t.integer  "num_plans",         default: 0
-    t.integer  "num_stores",        default: 0
+    t.integer  "num_plans",                          default: 0
+    t.integer  "num_stores",                         default: 0
     t.datetime "published_at"
     t.integer  "unpublished_plans"
     t.integer  "undeployed_stores"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "category_name"
+    t.date     "to_deploy_at",                       default: '2013-11-06', null: false
+    t.text     "recent_plans",      limit: 16777215
   end
 
   add_index "plan_sets", ["category_id"], name: "index_plan_sets_on_category_id", using: :btree

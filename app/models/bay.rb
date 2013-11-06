@@ -49,64 +49,64 @@ class Bay < ActiveRecord::Base
   end
 
   # origin: left/bottom corner
-  def to_pdf(pdf, ostate)
-    num_bays = ostate.fixture[:num_bays]
-    case ostate.fixture[:bay]
+  def to_pdf(pdf)
+    num_bays = pdf.ostate.fixture[:num_bays]
+    case pdf.ostate.fixture[:bay]
     when :side_view
       # draw base, filled with color
-      x0 = ostate.origin[0] + ostate.options[:bay_left_width]
-      y0 = ostate.origin[1]
-      w = base_depth * ostate.scale
-      h = base_height * ostate.scale
+      x0 = pdf.ostate.origin[0] + pdf.ostate.options[:bay_left_width]
+      y0 = pdf.ostate.origin[1]
+      w = base_depth * pdf.ostate.scale
+      h = base_height * pdf.ostate.scale
       pdf.fill_color(base_color)
       pdf.fill_and_stroke_rectangle([x0, y0 + h], w, h)
 
       # draw back
       pdf.fill_color(back_color)
-      y1 = ostate.origin[1] + (base_height + back_height) * ostate.scale
-      pdf.fill_and_stroke_rectangle([x0, y1], back_thick * ostate.scale, back_height * ostate.scale)
-      ostate.fixture[:back_left] = x0
+      y1 = pdf.ostate.origin[1] + (base_height + back_height) * pdf.ostate.scale
+      pdf.fill_and_stroke_rectangle([x0, y1], back_thick * pdf.ostate.scale, back_height * pdf.ostate.scale)
+      pdf.ostate.fixture[:back_left] = x0
 
       # draw shelves & numbers, filled with color
-      ostate.fixture[:layer] = :side_view
-      ostate.origin[0] = x0 + back_thick * ostate.scale
-      ostate.origin[1] += (base_height  - layers.first.thick) * ostate.scale
+      pdf.ostate.fixture[:layer] = :side_view
+      pdf.ostate.origin[0] = x0 + back_thick * pdf.ostate.scale
+      pdf.ostate.origin[1] += (base_height  - layers.first.thick) * pdf.ostate.scale
       layers.each do |layer|
-        layer.to_pdf(pdf, ostate)
+        layer.to_pdf(pdf)
       end
-      ostate.origin[0] = x0 - ostate.options[:bay_left_width]
-      ostate.origin[1] -= base_height * ostate.scale
+      pdf.ostate.origin[0] = x0 - pdf.ostate.options[:bay_left_width]
+      pdf.ostate.origin[1] = y0
 
     when :front_view
       # move origin to base
-      ostate.origin[1] += base_height * ostate.scale
+      pdf.ostate.origin[1] += base_height * pdf.ostate.scale
 
       # draw layers, space without fill, shelf with fill
       layers.each do |layer|
-        ostate.fixture[:layer] = :front_view
-        layer.to_pdf(pdf, ostate)
+        pdf.ostate.fixture[:layer] = :front_view
+        layer.to_pdf(pdf)
 
         # output text of each layer
-        ostate.fixture[:layer] = :text
-        layer.to_pdf(pdf, ostate)
+        pdf.ostate.fixture[:layer] = :text
+        layer.to_pdf(pdf)
 
-        if ostate.fixture[:contains]
-          ostate.fixture[:layer] = ostate.fixture[:contains]
-          layer.to_pdf(pdf, ostate)
+        if pdf.ostate.fixture[:contains]
+          pdf.ostate.fixture[:layer] = pdf.ostate.fixture[:contains]
+          layer.to_pdf(pdf)
         end
       end
 
       # draw base with fill color
       pdf.fill_color(base_color)
-      origin = ostate.origin.dup
-      cx = base_width * ostate.scale
+      origin = pdf.ostate.origin.dup
+      cx = base_width * pdf.ostate.scale
       num_bays.times do
-        pdf.fill_and_stroke_rectangle origin, cx, base_height * ostate.scale
+        pdf.fill_and_stroke_rectangle origin, cx, base_height * pdf.ostate.scale
         origin[0] += cx
       end
 
       # restore origin
-      ostate.origin[1] -= base_height * ostate.scale
+      pdf.ostate.origin[1] -= base_height * pdf.ostate.scale
     end
   end
 

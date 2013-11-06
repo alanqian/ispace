@@ -53,15 +53,14 @@ class PlansController < ApplicationController
       @do = :edit_setup if (@missing_fixture)
 
       if @plan.products_changed?
-        @optional_products = @plan.optional_products
-        @do = :edit_setup if @optional_products.any?
+        @do = :edit_setup
       end
     end
 
     case @do
     when :edit_setup
       @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
-      @optional_products ||= @plan.optional_products
+      @products_opt = @plan.products_opt
     when :edit_layout
       @position = Position.new
       locals = {

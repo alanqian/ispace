@@ -25,6 +25,11 @@ en:
     formats:
       default: "%Y-%m-%d"
   time: # formats, see strftime
+    seconds: 秒
+    minutes: 分
+    hours: 小时
+    days: 天
+    joiner: ""
     formats:
       default: "%Y-%m-%d %H:%M"
       today: "今天 %H:%M"

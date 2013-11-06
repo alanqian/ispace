@@ -43,6 +43,20 @@ module ApplicationHelper
     hash
   end
 
+  def humanize(secs)
+    return "NOW" if secs == 0
+    names = [[60, :seconds], [60, :minutes], [24, :hours], [1000, :days]].map{ |count, name|
+      if secs > 0
+        secs, n = secs.divmod(count)
+        n == 0 ? "" : "#{n.to_i}#{I18n.t("time.#{name}")}"
+      end
+    }.compact.last(2)
+    if names.first == ""
+      names.shift
+    end
+    names.reverse.join(I18n.t("time.joiner"))
+  end
+
   def dt_ago(datetime)
     now = Time.now()
 

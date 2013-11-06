@@ -40,10 +40,11 @@ en:
 
       plan_set:
         name: 规划名称：
-        note: 说明：
+        note: 规划说明：
         category_id: 品类：
         category_name: 品类：
         model_stores: 选择包含的样板店：
+        to_deploy_at: 计划部署日期：
       plan:
         store_name: 样板店
         num_stores: 门店数
@@ -74,6 +75,10 @@ en:
       import_sheet:
         filename: "--filename--"
         comment: "--comment for this upload file, --"
+      plan_set:
+        name: 规划名称
+        note: 填写本规划的说明，部署的要求等等；此处说明内容会打印在给门店的规划书的扉页
+        category_name: 品类
 
     options:
       # struct:: model/field/option: message

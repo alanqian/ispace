@@ -8,18 +8,20 @@
       <%= content_tag :p, @plan_set.note %>
     <% else %>
       <%= f.input :name %>
-      <%= f.input :note, as: :text  %>
       <%= f.hidden_field :category_id %>
       <%= f.input :category_id, input_html: { for: "plan_set_category_id", class: "auto-complete",
         data: {
           source: @categories_all.to_json,
           value: "code",
           labels: ["name", "pinyin", "code"], }} %>
+      <%= f.input :to_deploy_at %>
+      <%= f.input :note, as: :text  %>
     <% end %>
     <% if @plan_set.id %>
       <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>
       <%= field_set_tag "样板店", id: "model-stores" do %>
-        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all %>
+        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all,
+          wrapper_html: { class: "ui-selected-mark" } %>
       <% end %>
       <div id="model-store-info" data-stores="<%= model_store_info.to_json %>">
         <p><span id="store.name"></span>: <span id="store.location"></span>, <span id="store.area"></span>m²</p>

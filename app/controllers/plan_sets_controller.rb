@@ -3,6 +3,25 @@
 features:
 
 #index: PlanSet: List recent plan_sets
+  for Designer:
+  1. Plans on designing, by created_at
+     * designing plan_sets, filter: category
+     * quick launch for each plan_sets: last edited plans
+       Plan.recent_edited
+  2. published/undeployed plan_sets:
+     * model store, notes, published date;
+     * deployed stores, w/ download/deploy date
+     * undeployed stores
+     * recent download store w/ date...
+     * recent deployed store w/ date...
+  3. deployed plan_sets
+     * published date, download date range, deploy date range
+
+  for Store: order by published date;
+  1. recent plans
+     plan_name, download link, published date, download date; link_to :report
+  2. deployed plans, ordered by
+     plan_name, download link, published date, download_date, deployed date
 
 #new: new PlanSet
 
@@ -14,6 +33,7 @@ features:
 
 #edit:
   1. for unpublished, edit summary
+     if plans exists, cannot change category!
   2. for undownloaded, publish/unpublish plans in PlanSet
 
 #update:
@@ -51,8 +71,21 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets
   # GET /plan_sets.json
   def index
-    @plan_sets = PlanSet.all
-    render "index", locals: { plan_set_new: PlanSet.new }
+    @role = :store
+    case @role
+    when :designer
+      # for designers
+      @designing_sets = PlanSet.designing_sets
+      @recent_plans = Plan.recent_edited
+      @deploying_sets = PlanSet.deploying_sets
+      @deployed_sets = PlanSet.deployed_sets(10)
+    when :store
+      # for stores
+      @store_id = 9
+      @recent_plans = Deployment.recent_plans(@store_id)
+      @deployed_plans = Deployment.deployed_plans(@store_id, 100)
+      render 'index_store'
+    end
   end
 
   # GET /plan_sets/1
@@ -138,7 +171,7 @@ class PlanSetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_set_params
-      params.require(:plan_set).permit(:name, :note, :category_id, :user_id, model_stores:[] )
+      params.require(:plan_set).permit(:name, :note, :category_id, :category_name, :to_deploy_at, :user_id, model_stores:[] )
     end
 
     def set_fixture_update_js

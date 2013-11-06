@@ -25,6 +25,10 @@ class Store < ActiveRecord::Base
     self.where("ref_store_id = id").select([:id, :name])
   end
 
+  def follow_stores
+    self.class.where("ref_store_id = ?", id)
+  end
+
   def update_redundancy
     self.region_name = Region.get_display_name(region_id)
     self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)
