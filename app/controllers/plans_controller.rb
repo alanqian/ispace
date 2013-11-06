@@ -93,12 +93,24 @@ class PlansController < ApplicationController
     render @do, locals: locals || {}
   end
 
+  def update_deployed
+    @store_id = 9
+    @user_id = 100
+    deploy = Deployment.find(params[:deployed])
+    if deploy && deploy.store_id == @store_id && deploy.plan_id == @plan.id
+      deploy.deploy(@user_id)
+      logger.info "plan deployed: plan:#{@plan.id} store:#{@store_id} deploy:#{deploy.id}"
+    end
+    redirect_to plan_sets_path
+  end
+
   # PATCH/PUT /plans/1
   # PATCH/PUT /plans/1.json
-  # _do: setup, layout, edit(summary), copy_to
+  # _do: setup, layout, edit(summary), copy_to, :deploy
   def update
     @do = (params[:plan][:_do] || "edit").to_sym
     logger.debug "plans#update, _do:#{@do}"
+    return update_deployed if @do == :deploy
 
     respond_to do |format|
       if @plan.update(plan_params)

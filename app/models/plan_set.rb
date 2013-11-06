@@ -79,7 +79,7 @@ class PlanSet < ActiveRecord::Base
     self.num_plans = plans.count
     self.num_stores = plans.map { |plan| plan.num_stores } .sum
     self.unpublished_plans = plans.select { |plan| plan.published_at.nil? }.count
-    self.undeployed_stores = self.num_stores - Deployment.deployed_store_count(self.id)
+    self.undeployed_stores = self.num_stores - self.deployed_stores.count
   end
 
   # dup plan_set to another category: name,category_id,to_deploy_at, model_stores
