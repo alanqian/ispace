@@ -13,6 +13,26 @@ class PlansController < ApplicationController
   # GET /plans/1
   # GET /plans/1.json
   def show
+    if @_do == :download_pdf
+      logger.debug "start download_pdf, plan:#{@plan.id}"
+      download_pdf
+    else
+      # default
+    end
+  end
+
+  def download_pdf
+    @store_id = 9
+    @user_id = 100
+    path = @plan.plan_pdf
+    deploy = Deployment.start_download(@plan.id, @store_id)
+    if File.exists?(path) && deploy != nil
+      send_file(path, x_sendfile: true, filename: "#{deploy.plan_set_name}-#{@store_id}.#{@user_id}.pdf")
+      deploy.download(@user_id)
+      logger.info "download plan, plan:#{@plan.id} store:#{@store_id} user:#{@user_id}"
+    else
+      raise ActionController::RoutingError, "resource not found"
+    end
   end
 
   # GET /plans/new
@@ -118,6 +138,8 @@ class PlansController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_commons
+      @_do = params[:_do]
+      @_do = @_do.to_sym if @_do
       @user_id = 1
       @store_id = 1
     end

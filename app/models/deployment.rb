@@ -11,8 +11,8 @@ class Deployment < ActiveRecord::Base
   def download(user_id)
     self.downloaded_by = user_id
     self.download_count += 1
-    self.first_downloaded_at ||= Time.now()
-    self.download_at = Time.now()
+    self.download_1st_at ||= Time.now()
+    self.downloaded_at = Time.now()
     self.save
   end
 
@@ -20,6 +20,12 @@ class Deployment < ActiveRecord::Base
     self.deployed_by = user_id
     self.deployed_at = Time.now()
     self.save
+  end
+
+  def self.start_download(plan_id, store_id)
+    self.where(["discarded_at IS NULL AND plan_id = ? AND store_id = ?", plan_id, store_id]).
+      order(published_at: :desc).
+      select(:id, :plan_set_name, :downloaded_by, :download_count, :download_1st_at).first
   end
 
   def self.recent_plans(store_id)

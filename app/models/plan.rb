@@ -454,12 +454,12 @@ class Plan < ActiveRecord::Base
 
   #########################################################################
   # export to pdf
-  def plan_pdf_path
+  def plan_pdf
     pdf_path = Rails.root.join('public', 'downloads', "#{id}.pdf")
   end
 
   def remove_pdf
-    FileUtils.rm plan_pdf_path, :force => true # never raise exception
+    FileUtils.rm plan_pdf, :force => true # never raise exception
   end
 
   def to_pdf
@@ -477,7 +477,7 @@ class Plan < ActiveRecord::Base
       positions: positions_by_layer,
     })
 
-    Prawn::Document.generate(plan_pdf_path,
+    Prawn::Document.generate(plan_pdf,
       page_size: "A4", page_layout: :portrait, skip_page_creation: true) do |pdf|
 
       pdf.ostate = ostate
