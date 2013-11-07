@@ -41,9 +41,9 @@
 <%# == new plan_set, order by create_time %>
 <%#= link_to '新建规划', new_plan_set_path %>
 <table class="plan_sets">
-  <thead> <!-- style="display:none;" -->
+  <thead style="display:none;">
     <tr>
-      <th>Plans</th>
+      <th>规划</th>
       <th>Edit/Delete/Publish</th>
     </tr>
   </thead>
@@ -61,7 +61,7 @@
                 <%= link_to "样板店：#{plan_set.num_plans}", plans_path(cat: plan_set.category_id, plan_set: plan_set.id), title: "点击查看样板店规划" %>,
                 总门店数：<%= plan_set.num_stores %>
               </dd>
-              <dd>设计中规划(<%= plan_set.unpublished_plans %>)：
+              <dd>设计中规划：
               <% plans.each do |plan| %>
                 <%= link_to plan.name, edit_plan_path(id: plan.id, _do: :layout) %>
               <% end %>
@@ -73,8 +73,13 @@
         </td>
         <td><%= plan_set.published_at %></td>
         <td><%= plan_set.undeployed_stores %></td>
-        <td><%= link_to '设置', edit_plan_set_path(plan_set) %>
-            <%= link_to '删除', plan_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%= link_to '设置', edit_plan_set_path(plan_set) %>
+          <%= link_to '删除', plan_set, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <% if plan_set.plans.any? %>
+            <%= link_to '发布', edit_plan_set_path(plan_set, "_do" => :publish) %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
@@ -151,6 +156,9 @@
             <% nones.each do |dp| %>
               <%= link_to dp.store_name, store_path(dp.store_id) %>
             <% end %>
+          </td>
+          <td>
+            <%= link_to "取消发布", edit_plan_set_path(plan_set, _do: :publish, off: 1) %>
           </td>
         </tr>
       <% end %>

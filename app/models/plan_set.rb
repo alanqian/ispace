@@ -134,7 +134,7 @@ class PlanSet < ActiveRecord::Base
       logger.debug "plan_set published, plan_set:#{self.id}"
       return true
     else
-      logger.debug "unpublish plan_set, plan_set:#{plan_set.id}"
+      logger.debug "unpublish plan_set, plan_set:#{self.id}"
       self.update_column(:published_at, nil)
       # update deployments
       Deployment.discard(self.id, user_id)
