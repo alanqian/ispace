@@ -25,6 +25,7 @@ III. discard import: #destroy, (for all imports)
 =end
 
 class ImportSheetsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_import_sheet, only: [:show, :edit, :update, :destroy]
   # respond_to :json
 
@@ -77,7 +78,6 @@ class ImportSheetsController < ApplicationController
   # launch upload page: for all imports
   def new
     @store_id = 1
-    @user_id = 1
 
     @import_sheet = new_import_sheet
     respond_to do |format|
@@ -166,12 +166,12 @@ class ImportSheetsController < ApplicationController
     def new_import_sheet
       @t = params[:_t] || "sale"
       model = "import_#{@t}".classify
-      ImportSheet.new(store_id: @store_id, user_id: @user_id, type: model)
+      ImportSheet.new(store_id: @store_id, user_id: current_user.id, type: model)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_sheet_params
-      params.require(:import_sheet).permit(:user_id, :store_id, :type, :file_upload, :comment, :_do)
+      params.require(:import_sheet).permit(:store_id, :type, :file_upload, :comment, :_do)
       #logger.debug "mapping step, :mapping is whitelist'd"
       #return params.require(:import_sheet).permit(:user_id, :step).tap do |whitelist|
       #  whitelist[:mapping] = params[:import_sheet][:mapping]
