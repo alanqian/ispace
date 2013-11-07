@@ -22,6 +22,7 @@
 =end
 
 class ProductsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   # Product List
@@ -29,7 +30,6 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     @store_id = 1
-    @user_id = 1
     category_id = params[:category] || Category.default_id
 
     @products = Product.where(["category_id=?", category_id])
@@ -77,6 +77,7 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
+    @product.user_id = current_user.id
 
     respond_to do |format|
       if @product.save

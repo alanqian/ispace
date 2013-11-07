@@ -1,11 +1,26 @@
 require 'test_helper'
 
 class ProductsControllerTest < ActionController::TestCase
-  fixtures :products, :categories
+  fixtures :products, :categories, :users
 
   setup do
     @product = products(:one)
     @logger = Rails.logger
+    @user = users(:one)
+    sign_in @user
+  end
+
+  test "should redirect to sign in page if not sign in" do
+    sign_out @user
+
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+
+    patch :update, id: @product.id
+    assert_redirected_to sign_in_path
   end
 
   test "should get index" do
@@ -64,6 +79,10 @@ class ProductsControllerTest < ActionController::TestCase
       products: [products(:one).code, products(:two).code],
       id: @product, product: { sale_type: 0, new_product: true, on_promotion: false}
     assert_response :success
+  end
+
+  teardown do
+    sign_out @user
   end
 
 end
