@@ -7,6 +7,7 @@ class PlansController < ApplicationController
   # GET /plans.json
   def index
     @plans = Plan.all
+    render "index", locals: { plan_new: Plan.new }
   end
 
   # GET /plans/1
