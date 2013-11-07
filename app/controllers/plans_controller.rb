@@ -13,7 +13,7 @@ class PlansController < ApplicationController
   # GET /plans/1
   # GET /plans/1.json
   def show
-    if @_do == :download_pdf
+    if @do == :download_pdf
       logger.debug "start download_pdf, plan:#{@plan.id}"
       download_pdf
     else
@@ -57,40 +57,37 @@ class PlansController < ApplicationController
   # 5. position edit, by jquery sortable
   def edit
     # check store_fixtures: store + category
-    # _do: :edit_layout, :edit_setup, :edit_summay(:edit)
-    if params[:_do]
-      # :edit_summary here
-      @do = "edit_#{params[:_do]}".downcase.to_sym
-    else
-      @do = :edit
-    end
+    # _do: :layout, :setup, nil
 
     # check positions, if none, initialize; (online tools: #reinitialize position)
     # show layout editor, product index list, tool buttons
     # always ajax requests in :edit_layout mode
-    if @do == :edit_layout
+    if @do == :layout
       @missing_fixture = !@plan.verify_fixture?
-      @do = :edit_setup if (@missing_fixture)
+      @do = :setup if (@missing_fixture)
 
       if @plan.products_changed?
-        @do = :edit_setup
+        @do = :setup
       end
     end
 
+    logger.debug "edit plan, do:#{@do}"
     case @do
-    when :edit_setup
+    when :setup
       @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
       @products_opt = @plan.products_opt
-    when :edit_layout
+      render "edit_setup"
+    when :layout
       @position = Position.new
-      locals = {
+      render "edit_layout", locals: {
         products: Product.on_sales(@plan.category_id),
         brands_all: Brand.where(["category_id=?", @plan.category_id]),
         suppliers_all: Supplier.where(["category_id=?", @plan.category_id]),
         mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
       }
+    else
+      render "edit"
     end
-    render @do, locals: locals || {}
   end
 
   def update_deployed
@@ -150,8 +147,6 @@ class PlansController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_commons
-      @_do = params[:_do]
-      @_do = @_do.to_sym if @_do
       @user_id = 1
       @store_id = 1
     end
