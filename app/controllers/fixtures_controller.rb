@@ -37,6 +37,7 @@ class FixturesController < ApplicationController
   # POST /fixtures.json
   def create
     @fixture = Fixture.new(fixture_params)
+    @fixture.user_id = current_user.id
 
     respond_to do |format|
       if @fixture.save
