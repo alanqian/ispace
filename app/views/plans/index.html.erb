@@ -1,6 +1,7 @@
 <h1>Listing plans</h1>
 
-<table>
+<table id="plans-table" data-form="#plans-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
   <thead>
     <tr>
       <th>Plan set</th>
@@ -8,15 +9,15 @@
       <th>User</th>
       <th>Store</th>
       <th>Num stores</th>
-      <th>Fixture</th>
-      <th>Init facing</th>
+      <th data-no-sort="1">Fixture</th>
+      <th data-no-sort="1">Init facing</th>
       <th>Nominal size</th>
       <th>Base footage</th>
       <th>Usage percent</th>
       <th>Published at</th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th data-no-sort="1"></th>
+      <th data-no-sort="1"></th>
+      <th data-no-sort="1"></th>
     </tr>
   </thead>
 
@@ -24,9 +25,9 @@
     <% @plans.each do |plan| %>
       <tr>
         <td><%= plan.plan_set_id %></td>
-        <td><%= plan.category_id %></td>
+        <td><%= plan.category.name %></td>
         <td><%= plan.user_id %></td>
-        <td><%= plan.store_id %></td>
+        <td><%= plan.store.name %></td>
         <td><%= plan.num_stores %></td>
         <td><%= plan.fixture_id %></td>
         <td><%= plan.init_facing %></td>
@@ -36,7 +37,7 @@
         <td><%= plan.published_at %></td>
         <td><%= link_to 'Show', plan %></td>
         <td><%= link_to 'Edit', edit_plan_path(plan) %></td>
-        <td><%= link_to 'Destroy', plan, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to raw('&times;'), plan, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
