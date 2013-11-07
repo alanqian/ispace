@@ -52,6 +52,7 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets.json
   def index
     @plan_sets = PlanSet.all
+    render "index", locals: { plan_set_new: PlanSet.new }
   end
 
   # GET /plan_sets/1
@@ -96,6 +97,7 @@ class PlanSetsController < ApplicationController
       if @plan_set.update(plan_set_params)
         format.html { redirect_to @plan_set, notice: 'Plan set was successfully updated.' }
         format.json { head :no_content }
+        format.js { set_plan_set_update_js }
       else
         format.html { render action: 'edit' }
         format.json { render json: @plan_set.errors, status: :unprocessable_entity }
@@ -137,5 +139,9 @@ class PlanSetsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_set_params
       params.require(:plan_set).permit(:name, :note, :category_id, :user_id, model_stores:[] )
+    end
+
+    def set_fixture_update_js
+      @plan_set.reload
     end
 end

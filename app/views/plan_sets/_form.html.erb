@@ -10,7 +10,7 @@
       <%= f.input :name %>
       <%= f.input :note, as: :text  %>
       <%= f.hidden_field :category_id %>
-      <%= f.input :category_name, input_html: { for: "plan_set_category_id", class: "auto-complete",
+      <%= f.input :category_id, input_html: { for: "plan_set_category_id", class: "auto-complete",
         data: {
           source: @categories_all.to_json,
           value: "code",
