@@ -234,3 +234,9 @@ form {
     @include label;
   }
 }
+
+.dataTable {
+  a {
+    text-decoration: underline;
+  }
+}

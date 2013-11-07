@@ -1,20 +1,18 @@
 <h1>空间规划</h1>
 
-<li> == new plan_set, order by create_time</li>
-
-<table>
+<table id="plan_sets-table" data-form="#plan_sets-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
   <thead>
     <tr>
       <th>名称</th>
       <th>品类</th>
-      <th>创建时间</th>
       <th>样板店</th>
       <th>门店数</th>
       <th>发布时间</th>
       <th>未发布样板</th>
       <th>未实施门店</th>
-      <th></th>
-      <th></th>
+      <th>创建时间</th>
+      <th data-no-sort="1"></th>
     </tr>
   </thead>
 
@@ -23,7 +21,6 @@
       <tr>
         <td title="<%= plan_set.note %>"><%= link_to plan_set.name, plan_set_path(plan_set) %></td>
         <td><%= @category_map[plan_set.category_id] %></td>
-        <td><%= plan_set.created_at.localtime %></td>
         <% if plan_set.num_plans > 0 %>
           <td><%= link_to plan_set.num_plans, plans_path(cat: plan_set.category_id, plan_set: plan_set.id), title: "点击查看样板店规划" %></td>
         <% else %>
@@ -33,8 +30,8 @@
         <td><%= plan_set.published_at %></td>
         <td><%= plan_set.unpublished_plans %></td>
         <td><%= plan_set.undeployed_stores %></td>
-        <td><%= link_to '编辑', edit_plan_set_path(plan_set) %></td>
-        <td><%= link_to '删除', plan_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= plan_set.created_at.localtime %></td>
+        <td><%= link_to raw('&times;'), plan_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
