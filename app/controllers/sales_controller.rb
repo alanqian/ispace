@@ -1,4 +1,5 @@
 class SalesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_sale, only: [:show, :edit, :update, :destroy]
 
   # GET /sales
@@ -25,6 +26,7 @@ class SalesController < ApplicationController
   # POST /sales.json
   def create
     @sale = Sale.new(sale_params)
+    @sale.user_id = current_user.id
 
     respond_to do |format|
       if @sale.save
