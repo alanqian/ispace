@@ -240,3 +240,10 @@ form {
     text-decoration: underline;
   }
 }
+
+div.field_with_errors {
+  label[for] {
+    color: black;
+  }
+  background-color: pink;
+}
