@@ -6,7 +6,6 @@ class FixturesController < ApplicationController
   # GET /fixtures.json
   def index
     @fixtures = Fixture.all
-
     render "index", locals: { fixture_new: Fixture.new }
   end
 
