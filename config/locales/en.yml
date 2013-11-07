@@ -157,14 +157,6 @@ en:
       purple:      '#dbadff'
       gray:        '#e1e1e1'
       white:       '#ffffff'
-    commits:
-      upload: 上传
-      import: 导入
-      discard: 放弃导入
-      prev: 上一步
-      next: 下一步
-      finish: 完成
-      cancel: 取消
     prices:
       "高": "a"
       "中": "b"

@@ -2,6 +2,28 @@ en:
   simple_form:
     "yes": 'Yes'
     "no": 'No'
+    commits:
+      upload: 上传
+      import: 导入
+      discard: 放弃导入
+      prev: 上一步
+      next: 下一步
+      finish: 完成
+      update: 更新
+      new: 新建
+      publish: 发布
+      back: 返回
+      yes: 是
+      no: 否
+      ok: 确定
+      cancel: 取消
+
+    titles:
+      plan_set:
+        add_store: 添加样板店
+        publish: 发布空间规划
+        defaults: 修改空间规划
+
     required:
       text: 'required'
       mark: '*'

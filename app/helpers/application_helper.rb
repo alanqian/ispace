@@ -26,6 +26,11 @@ module ApplicationHelper
     return I18n.t("#{prefixs[0]}.#{field}")
   end
 
+  def simple_title(_do)
+    item = _do || "defaults"
+    I18n.t("simple_form.titles.#{controller_name.singularize}.#{item}")
+  end
+
   def color_tag(color)
     content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
   end
