@@ -51,6 +51,7 @@ gem 'will_paginate', '~> 3.0'
 gem 'bcrypt-ruby', '~> 3.0.0'
 
 gem 'devise'
+gem 'cancan'
 gem 'thin'
 
 # Use unicorn as the app server
