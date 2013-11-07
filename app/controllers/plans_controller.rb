@@ -177,7 +177,7 @@ class PlansController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
-        :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
+        :init_facing, :nominal_size, :base_footage, :usage_percent,
         :copy_product_only,
         target_plans:[],
         optional_products:[],

@@ -14,7 +14,6 @@
       <th>Nominal size</th>
       <th>Base footage</th>
       <th>Usage percent</th>
-      <th>Published at</th>
       <th data-no-sort="1"></th>
       <th data-no-sort="1"></th>
       <th data-no-sort="1"></th>
@@ -34,7 +33,6 @@
         <td><%= plan.nominal_size %></td>
         <td><%= plan.base_footage %></td>
         <td><%= plan.usage_percent %></td>
-        <td><%= plan.published_at %></td>
         <td><%= link_to 'Show', plan %></td>
         <td><%= link_to 'Edit', edit_plan_path(plan) %></td>
         <td><%= link_to raw('&times;'), plan, method: :delete, data: { confirm: 'Are you sure?' } %></td>

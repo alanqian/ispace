@@ -18,6 +18,8 @@ class RefineDeployment < ActiveRecord::Migration
 
     add_column :plan_sets, :to_deploy_at, :date, null:false, default:Date.today
     add_column :plan_sets, :recent_plans, :text, limit: 16777215
+    remove_column :plan_sets, :unpublished_plans
+    remove_column :plans, :published_at
 
     rename_column :import_sheets, :_do, :done
   end
@@ -39,6 +41,10 @@ class RefineDeployment < ActiveRecord::Migration
 
     remove_column :plan_sets, :to_deploy_at
     remove_column :plan_sets, :recent_plans
+    add_column :plan_sets, :unpublished_plans, :integer
+
+    add_column :plans, :published_at, :datetime
+
 
     rename_column :import_sheets, :done, :_do
   end

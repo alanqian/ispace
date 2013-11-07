@@ -14,7 +14,6 @@ class Plan < ActiveRecord::Base
 
   validates :init_facing, numericality: { greater_than_or_equal_to: 1 }
   validates :plan_set_id, presence: true
-  validate :can_plan_publish, if: :do_publish?
 
   before_save :update_redundancy, if: :do_init?
   before_save :do_copy_to, if: :do_copy_to?
@@ -47,10 +46,6 @@ class Plan < ActiveRecord::Base
     did == :layout
   end
 
-  def do_publish?
-    did == :publish
-  end
-
   def copy_product_only
     @copy_product_only
   end
@@ -80,7 +75,6 @@ class Plan < ActiveRecord::Base
 
   def status
     return :new if positions.empty?
-    return :closed if !published_at.nil?
     return :opened
   end
 
@@ -304,18 +298,6 @@ class Plan < ActiveRecord::Base
     positions.empty?
   end
 
-  def unpublish
-    self.update_column(:published_at, nil)
-  end
-
-  def publish
-    self.update_column(:published_at, Time.now)
-  end
-
-  def finished?
-    !published_at.nil?
-  end
-
   def calc_positions_done
     # type, count, done
     # type:
@@ -433,7 +415,7 @@ class Plan < ActiveRecord::Base
   end
 
   def self.recent_edited(count = 8)
-    self.select(:id, :plan_set_id, :store_id, :store_name, :updated_at, :published_at,
+    self.select(:id, :plan_set_id, :store_id, :store_name, :updated_at,
                :num_prior_products, :num_normal_products, :num_done_priors,
                :num_done_normals, :usage_percent, :num_stores).
                order(updated_at: :desc).limit(count)
@@ -460,6 +442,14 @@ class Plan < ActiveRecord::Base
 
   def remove_pdf
     FileUtils.rm plan_pdf, :force => true # never raise exception
+  end
+
+  def publish
+    if self.to_pdf
+      init_deployment
+    end
+  rescue Exception => e
+    logger.warn "failed in to_pdf, e: #{e}"
   end
 
   def to_pdf
@@ -515,6 +505,7 @@ class Plan < ActiveRecord::Base
       # fill table of content
       make_pdf_outline(pdf)
     end
+    true
   end
 
   def make_pdf_cover(pdf)

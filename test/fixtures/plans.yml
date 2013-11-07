@@ -11,7 +11,6 @@ one:
   nominal_size: 9.99
   base_footage: 9.99
   usage_percent: 9.99
-  published_at: 2013-09-13 15:45:04
 
 two:
   plan_set_id: 1
@@ -24,4 +23,3 @@ two:
   nominal_size: 9.99
   base_footage: 9.99
   usage_percent: 9.99
-  published_at: 2013-09-13 15:45:04

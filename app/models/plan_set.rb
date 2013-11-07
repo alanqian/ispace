@@ -78,7 +78,6 @@ class PlanSet < ActiveRecord::Base
     self.category_name = category.name
     self.num_plans = plans.count
     self.num_stores = plans.map { |plan| plan.num_stores } .sum
-    self.unpublished_plans = plans.select { |plan| plan.published_at.nil? }.count
     self.undeployed_stores = self.num_stores - self.deployed_stores.count
   end
 
@@ -119,21 +118,28 @@ class PlanSet < ActiveRecord::Base
     plan_set
   end
 
-  def unpublish(user_id)
-    self.update_column(:published_at, nil)
-    # update deployments
-    Deployment.discard(self.id, user_id)
-    # remove pdfs of plans
-    self.plans.each { |plan| plan.remove_pdf }
-  end
+  def publish(publish_on, user_id)
+    if publish_on
+      if plans.empty?
+        logger.debug "cannot publish empty plan_set, plan_set:#{self.id}"
+        return false
+      end
+      if plans.select { |plan| plan.empty? }.any?
+        logger.debug "cannot publish plan_set with empty plans, plan_set:#{self.id}"
+        return false
+      end
 
-  def publish
-    # output plans to pdf
-    # init deployments
-    self.update_column(:published_at, Time.now)
-    self.plans.each do |plan|
-      plan.to_pdf
-      plan.init_deployment
+      self.update_column(:published_at, Time.now)
+      self.plans.each { |plan| plan.delay.publish }
+      logger.debug "plan_set published, plan_set:#{self.id}"
+      return true
+    else
+      logger.debug "unpublish plan_set, plan_set:#{plan_set.id}"
+      self.update_column(:published_at, nil)
+      # update deployments
+      Deployment.discard(self.id, user_id)
+      # remove pdfs of plans
+      self.plans.each { |plan| plan.remove_pdf }
     end
   end
 
@@ -147,11 +153,11 @@ class PlanSet < ActiveRecord::Base
   end
 
   def self.designing_sets
-    self.where("num_plans = 0 OR unpublished_plans > 0").order('created_at DESC')
+    self.where("num_plans = 0 OR published_at IS NULL").order('created_at DESC')
   end
 
   def self.deploying_sets
-    plan_sets = self.where("num_plans > 0 AND unpublished_plans = 0 AND undeployed_stores > 0").
+    plan_sets = self.where("num_plans > 0 AND published_at IS NOT NULL AND undeployed_stores > 0").
       order('published_at DESC').select(:id, :name, :category_name, :published_at, :to_deploy_at)
     deployings = []
     if plan_sets.any?

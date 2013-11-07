@@ -727,14 +727,16 @@ class PlanEditor
     $.util.openDialog("#plan-edit-summary-dialog")
     true
 
-  onPlanPublish: () ->
+  onPlanClose: () ->
     self = @
-    $.util.messageBox "#plan-publish-confirm", () ->
+    $.util.messageBox "#plan-close-confirm", () ->
       # TODO:
-      console.log "publish it"
+      console.log "close it"
       self.doSave()
-      $("#plan_published_at").val(new Date())
-      $("#plan-publish-form").submit()
+      re = new RegExp("/plans/.*")
+      href = root.location.href.replace(re, $("#plan_sets_index").attr("href"))
+      root.location.replace(href)
+      #console.log "jump to", store_id, href
     true
 
   setDlgStoreInfo: (info) ->
