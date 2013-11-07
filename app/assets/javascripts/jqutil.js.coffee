@@ -127,6 +127,49 @@ $.util =
   initCmdUI: () ->
     root.cmdUI.init()
 
+  # usage
+  #   class FooPage
+  #     constructor: (action, _do) ->
+  #       ...
+  #
+  #     # be called if no specified onLoad
+  #     onLoad: () ->
+  #
+  #     onLoadActionDo: () ->
+  #       ...
+  #
+  #   # export it
+  #   root.FooPage = FooPage
+  #
+  # Reference:
+  #   see plans.js.coffee
+  onPageLoad: () ->
+    pageId = $("body").attr("id")
+    action = $("body").data("action")
+    _do = $("body").data("do")
+    pageClass = _.str.classify("#{pageId}_page")
+    klass = root[pageClass]
+    test = {}
+    if klass && test.toString.call(klass) == "[object Function]"
+      root.page = new klass(action, _do)
+      if root.page
+        @addCmdDelegate root.page
+        fnName = _.str.camelize("on_load_#{action}_#{_do}")
+        fn = root.page[fnName]
+        if fn && test.toString.call(fn) == "[object Function]"
+          fn.apply(root.page)
+        else
+          fn = root.page["onLoad"]
+          if fn && test.toString.call(fn) == "[object Function]"
+            # call onLoad
+            fn.apply(root.page)
+          else
+            console.log "cannot find page load function: #{fnName}"
+      else
+        console.log "cannot create page object"
+    else
+      console.log "cannot find page class:", pageClass
+
   addCmdDelegate: (object) ->
     root.cmdUI.addDelegate(object)
 

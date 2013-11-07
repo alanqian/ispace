@@ -37,8 +37,7 @@
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
-  <body>
-
+  <body id="<%= params[:controller].singularize %>" data-action="<%= params[:action] %>" data-do="<%= params[:_do] %>">
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">

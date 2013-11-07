@@ -30,6 +30,8 @@ class PlanEditor
     middle_divider: 0
     trail_divider: 0
 
+  constructor: (action, do_what) ->
+
   log: () ->
     if @debug
       console.log.apply(console, arguments)
@@ -1159,45 +1161,56 @@ class ProductTable
     data._aSortData[facing_index] = facing
     return true
 
+class PlanPage
+  action: ""
+  _do: ""
+
+  constructor: (action, _do) ->
+    console.log "create PlanPage"
+    @action = action
+    @_do = _do
+
+  onLoadEditLayout: () ->
+    root.planEditor = new PlanEditor
+    root.planEditor.init()
+    $.util.addCmdDelegate(root.planEditor)
+
+    root.productTable = new ProductTable
+    root.productTable.init("#products-table").bind(root.planEditor)
+    $.util.addCmdDelegate(root.productTable)
+    console.log "plans inited"
+    return true
+
+  test: () ->
+    # position it
+    $("#test").position({my: "left top", at: "left top", of: $("#back"), collision: "none"})
+
+    $("div.ui-resizable").resizable()
+    $("div.ui-draggable").draggable()
+
+    sel = $("#select").button
+      disabled: false
+      text: false
+      label: "v"
+      icons:
+        primary: "ui-icon-triangle-1-s"
+
+    $(".toolbar-button-set").each (index,el) ->
+      $(el).buttonset()
+
+    sel.click ->
+      menu = $("#menu").show().position
+        my: "left top"
+        at: "left bottom"
+        of: this
+      $(document).one "click", ->
+        menu.hide()
+      return false
+
+    $("#menu").menu().hide()
+
+root.PlanPage = PlanPage
+
 $ ->
-  root.planEditor = new PlanEditor
-  root.planEditor.init()
-  $.util.addCmdDelegate(root.planEditor)
+  $.util.onPageLoad()
 
-  root.productTable = new ProductTable
-  root.productTable.init("#products-table").bind(root.planEditor)
-  $.util.addCmdDelegate(root.productTable)
-  console.log "plans inited"
-  return true
-
-  #############################################
-  # following is test code
-
-  # position it
-  $("#test").position({my: "left top", at: "left top", of: $("#back"), collision: "none"})
-
-  $("div.ui-resizable").resizable()
-  $("div.ui-draggable").draggable()
-
-  sel = $("#select").button
-    disabled: false
-    text: false
-    label: "v"
-    icons:
-      primary: "ui-icon-triangle-1-s"
-
-  $(".toolbar-button-set").each (index,el) ->
-    $(el).buttonset()
-
-  sel.click ->
-    menu = $("#menu").show().position
-      my: "left top"
-      at: "left bottom"
-      of: this
-    $(document).one "click", ->
-      menu.hide()
-    return false
-
-  $("#menu").menu().hide()
-
-  #############################################
