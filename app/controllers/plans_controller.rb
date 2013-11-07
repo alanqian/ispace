@@ -1,4 +1,5 @@
 class PlansController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_commons
   before_action :set_options, only: [:new, :show, :edit, :update ]
   before_action :set_plan, only: [:show, :edit, :update, :destroy]
@@ -171,7 +172,6 @@ class PlansController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_commons
-      @user_id = 1
       @store_id = 1
     end
 
@@ -184,7 +184,7 @@ class PlansController < ApplicationController
       plan_set_id = params[:plan_set]
       category_id = params[:cat]
       @plan = Plan.new({
-        user_id: @user_id,
+        user_id: current_user.id,
         plan_set_id: plan_set_id,
         category_id: category_id
       })
