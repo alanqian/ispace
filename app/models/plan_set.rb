@@ -29,13 +29,20 @@ class PlanSet < ActiveRecord::Base
 
       if !old_stores[store_id]
         # create new plan for model store
-        self.plans << Plan.create({
+        plan = Plan.create({
           plan_set_id: self.id,
           category_id: self.category_id,
           store_id: store_id,
         })
+        self.plans << plan
+        update_recent_plan(plan)
       else
         old_stores.delete(store_id)
+        plan = Plan.where(store_id: store_id, plan_set_id: self.id).first
+        if plan
+          self.recent_plans.delete_if { |p| p.id == plan.id }
+          plan.destroy
+        end
       end
     end
     #
