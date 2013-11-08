@@ -32,7 +32,19 @@ class ApplicationController < ActionController::Base
   end
 
   def update
-    self.send("update_#{@do}".to_sym)
+    logger.debug "#{controller_name}#update, _do:#{@do}"
+    update_proc = (@do.nil? ? "update_default" : "update_#{@do}").to_sym
+    if self.respond_to?(update_proc)
+      self.send(update_proc.to_sym)
+    elsif self.respond_to?(:update_others)
+      self.send(:update_others)
+    else
+      logger.warn "missing handler for route: #{controller_name}##{update_proc}"
+      respond_to do |format|
+        format.html { render :file => "#{Rails.root}/public/404", :layout =>
+          false, :status => :not_found }
+      end
+    end
   end
 
   @@commit_map = I18n.t("simple_form.commits").invert
