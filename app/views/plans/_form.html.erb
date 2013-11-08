@@ -15,7 +15,7 @@
         <li>Fixture info of sample store</li>
       </div>
     <% else %>
-      <%= f.hidden_field :_do, value: "summary" %>
+      <%= f.input :_do, as: :hidden, input_html: { value: "default" } %>
       <%= f.input :store_name, disabled: true %>
       <%= f.input :num_stores, disabled: true %>
       <%= f.input :usage_percent, disabled: true %>
@@ -29,6 +29,6 @@
     <%#= f.input :base_footage %>
   </div>
 
-  <%= f.submit %>
+  <%= f.submit "更新" %>
 <% end %>
 

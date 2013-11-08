@@ -3,7 +3,7 @@
 
   <div class="inputs">
     <%= token_tag %>
-    <%= f.hidden_field :_do, value: "summary" %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "summary" } %>
     <%= f.hidden_field :user_id %>
 
     <%= f.input :store_name, disabled: true %>

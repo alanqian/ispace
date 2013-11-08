@@ -10,7 +10,7 @@
 
   <div class="inputs">
     <%= f.hidden_field :user_id %>
-    <%= f.hidden_field :_do, value: "setup" %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "setup" } %>
 
     <% if @missing_fixture %>
       <p>现在还没有为 <em><%= @plan.category.name %></em> 品类设置货架!</p>

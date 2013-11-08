@@ -3,7 +3,7 @@
 
   <%= f.hidden_field :user_id %>
     <%= token_tag %>
-    <%= f.hidden_field :_do, value: "copy_to" %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "copy_to" } %>
 
     <div id="plan-set-info">
       <%#= f.hidden_field :plan_set_id %>

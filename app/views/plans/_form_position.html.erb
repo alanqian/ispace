@@ -4,7 +4,7 @@
 
   <div class="inputs">
     <%= token_tag %>
-    <%= f.hidden_field :_do, value: "position" %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "position" } %>
     <%= f.hidden_field :user_id %>
   </div>
 

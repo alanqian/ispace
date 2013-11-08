@@ -6,8 +6,11 @@ class PlansController < ApplicationController
   # GET /plans
   # GET /plans.json
   def index
-    @plans = Plan.all
-    render "index", locals: { plan_new: Plan.new }
+    plan_set = PlanSet.find(params[:plan_set])
+    @plans = Plan.where(plan_set_id: plan_set.id)
+    store_id_list = @plans.map { |plan| plan.store_id }
+    store_map = Store.follow_store_map(store_id_list)
+    render "index", locals: { plan_set: plan_set, store_map: store_map }
   end
 
   # GET /plans/1
@@ -90,7 +93,7 @@ class PlansController < ApplicationController
     end
   end
 
-  def update_deployed
+  def update_deploy
     @store_id = 9
     @user_id = 100
     deploy = Deployment.find(params[:deployed])
@@ -101,22 +104,42 @@ class PlansController < ApplicationController
     redirect_to plan_sets_path
   end
 
-  # PATCH/PUT /plans/1
-  # PATCH/PUT /plans/1.json
-  # _do: setup, layout, edit(summary), copy_to, :deploy
-  def update
-    @do = (params[:plan][:_do] || "edit").to_sym
-    logger.debug "plans#update, _do:#{@do}"
-    return update_deployed if @do == :deploy
-
+  # set basic plan info, init_facing only in current version
+  def update_default
     respond_to do |format|
       if @plan.update(plan_params)
         format.html {
-          if @do == :setup
-            redirect_to edit_plan_path(@plan, _do: "layout")
-          else
-            redirect_to @plan, notice: 'Plan was successfully updated.'
-          end
+          redirect_to plans_path(plan_set: @plan.plan_set_id)
+        }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_setup
+    respond_to do |format|
+      if @plan.update(plan_params)
+        format.html {
+          redirect_to edit_plan_path(@plan, _do: "layout")
+        }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # ajax call
+  # :layout, :copy_to, :position, :summary
+  def update_others
+    respond_to do |format|
+      if @plan.update(plan_params)
+        format.html {
+          redirect_to @plan, notice: 'Plan was successfully updated.'
         }
         format.json { head :no_content }
         format.js {
@@ -124,7 +147,7 @@ class PlansController < ApplicationController
           render "update_#{@do}"
         }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'edit', _do: "layout" }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
         format.js {
           @version = params[:_version]
@@ -153,6 +176,7 @@ class PlansController < ApplicationController
 
     def set_plan
       @plan = Plan.find(params[:id])
+      @plan._do = @do
     end
 
     def new_plan

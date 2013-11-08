@@ -29,6 +29,11 @@ class Store < ActiveRecord::Base
     self.class.where("ref_store_id = ?", id)
   end
 
+  def self.follow_store_map(store_id_list)
+    self.where(ref_store_id: store_id_list).
+      select(:id, :name, :ref_store_id).to_hash2(:ref_store_id, :id, :name)
+  end
+
   def update_redundancy
     self.region_name = Region.get_display_name(region_id)
     self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)
