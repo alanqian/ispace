@@ -29,7 +29,9 @@ development:
 #  host: localhost
 test:
   adapter: sqlite3
-  database: ":memory:"
+# rails 4.0 failed to use memory sqlite, when rake test:prepare
+# database: ":memory:"
+  database: db/test.sqlite3
   verbosity: quiet
 
 production:

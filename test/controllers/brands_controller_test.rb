@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class BrandsControllerTest < ActionController::TestCase
-  fixtures :brands, :categories
+  fixtures :categories, :brands
 
   setup do
     @brand = brands(:one)

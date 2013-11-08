@@ -13,7 +13,11 @@ def in_memory_database?
 end
 
 if in_memory_database?
-  puts "creating sqlite in memory database"
+  puts "create sqlite db in memory database"
+  #Rails.configuration.active_record.migration = :page_load
+  #Rails.configuration.active_record.skip_migration_errors = true
+  # ActiveRecord::Schema.verbose = false
   load "#{Rails.root}/db/schema.rb"
+  # ActiveRecord::Migrator.up("#{Rails.root}/db/migrate")
 end
 

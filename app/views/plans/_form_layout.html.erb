@@ -3,7 +3,7 @@
 
   <div class="inputs">
     <%= token_tag %>
-    <%= f.hidden_field :_do, value: "layout" %>
+    <%= f.input :_do, as: :hidden, value: "layout" %>
     <%= f.hidden_field :user_id %>
     <%= hidden_field_tag "_version", "0", { id: "plan_layout_version" } %>
   </div>

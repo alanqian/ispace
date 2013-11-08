@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131018031917) do
+ActiveRecord::Schema.define(version: 20131026014448) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -84,16 +84,28 @@ ActiveRecord::Schema.define(version: 20131018031917) do
   create_table "deployments", force: true do |t|
     t.integer  "plan_id"
     t.integer  "store_id"
-    t.integer  "user_id"
+    t.integer  "downloaded_by"
     t.datetime "downloaded_at"
     t.datetime "deployed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "store_name",                             null: false
+    t.integer  "plan_set_id",                            null: false
+    t.string   "plan_set_name"
+    t.string   "plan_set_note"
+    t.datetime "published_at",                           null: false
+    t.date     "to_deploy_at",    default: '2013-11-07', null: false
+    t.datetime "download_1st_at"
+    t.integer  "download_count",  default: 0
+    t.integer  "deployed_by",     default: 0
+    t.integer  "discarded_by"
+    t.datetime "discarded_at"
   end
 
   add_index "deployments", ["deployed_at"], name: "index_deployments_on_deployed_at", using: :btree
   add_index "deployments", ["downloaded_at"], name: "index_deployments_on_downloaded_at", using: :btree
   add_index "deployments", ["plan_id"], name: "index_deployments_on_plan_id", using: :btree
+  add_index "deployments", ["plan_set_id"], name: "index_deployments_on_plan_set_id", using: :btree
   add_index "deployments", ["store_id"], name: "index_deployments_on_store_id", using: :btree
 
   create_table "fixture_items", force: true do |t|
@@ -143,13 +155,13 @@ ActiveRecord::Schema.define(version: 20131018031917) do
     t.string   "filename"
     t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
-    t.string   "_do",        limit: 48
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "done",       limit: 48
   end
 
   add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
@@ -213,18 +225,19 @@ ActiveRecord::Schema.define(version: 20131018031917) do
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
 
   create_table "plan_sets", force: true do |t|
-    t.string   "name",                          null: false
+    t.string   "name",                                                      null: false
     t.string   "note"
-    t.string   "category_id",                   null: false
+    t.string   "category_id",                                               null: false
     t.integer  "user_id"
-    t.integer  "num_plans",         default: 0
-    t.integer  "num_stores",        default: 0
+    t.integer  "num_plans",                          default: 0
+    t.integer  "num_stores",                         default: 0
     t.datetime "published_at"
-    t.integer  "unpublished_plans"
     t.integer  "undeployed_stores"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "category_name"
+    t.date     "to_deploy_at",                       default: '2013-11-07', null: false
+    t.text     "recent_plans",      limit: 16777215
   end
 
   add_index "plan_sets", ["category_id"], name: "index_plan_sets_on_category_id", using: :btree
@@ -232,7 +245,6 @@ ActiveRecord::Schema.define(version: 20131018031917) do
   add_index "plan_sets", ["name"], name: "index_plan_sets_on_name", using: :btree
   add_index "plan_sets", ["published_at"], name: "index_plan_sets_on_published_at", using: :btree
   add_index "plan_sets", ["undeployed_stores"], name: "index_plan_sets_on_undeployed_stores", using: :btree
-  add_index "plan_sets", ["unpublished_plans"], name: "index_plan_sets_on_unpublished_plans", using: :btree
   add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
 
   create_table "plans", force: true do |t|
@@ -246,7 +258,6 @@ ActiveRecord::Schema.define(version: 20131018031917) do
     t.decimal  "nominal_size",        precision: 10, scale: 2
     t.decimal  "base_footage",        precision: 10, scale: 2
     t.decimal  "usage_percent",       precision: 10, scale: 2
-    t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "product_version",                              default: 0
@@ -261,7 +272,6 @@ ActiveRecord::Schema.define(version: 20131018031917) do
   add_index "plans", ["fixture_id"], name: "index_plans_on_fixture_id", using: :btree
   add_index "plans", ["plan_set_id", "store_id"], name: "index_plans_on_plan_set_id_and_store_id", unique: true, using: :btree
   add_index "plans", ["plan_set_id"], name: "index_plans_on_plan_set_id", using: :btree
-  add_index "plans", ["published_at"], name: "index_plans_on_published_at", using: :btree
   add_index "plans", ["store_id"], name: "index_plans_on_store_id", using: :btree
   add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
 
@@ -468,6 +478,9 @@ ActiveRecord::Schema.define(version: 20131018031917) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "username"
+    t.string   "employee_id"
+    t.string   "telephone"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

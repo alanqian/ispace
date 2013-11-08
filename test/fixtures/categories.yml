@@ -1,19 +1,43 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  code: 10103
-  name: ctg1
+  code: 10101
+  name: 牙刷
   parent_id: 101
-  memo: Category1
+  pinyin: ys
+  memo: one
 
 two:
-  code: 10104
-  name: ctg2
-  parent_id: 101
-  memo: Category2
+  code: 10300
+  name: 脸部营养品
+  parent_id: 103
+  pinyin: lbyhp
+  memo: two
 
-three:
-  code: 20204
+p1:
+  code: 1
+  name: 百货
+  pinyin: bh
+  memo: p1
+
+p101:
+  code: 101
+  name: 口腔清洁用品
+  parent_id: 1
+  pinyin: bh
+  memo: p101
+
+p103:
+  code: 103
+  name: 保养品
+  parent_id: 1
+  pinyin: bh
+  memo: p103
+
+toothpaste:
+  code: 10100
   name: 牙膏
-  parent_id: 202
+  parent_id: 101
+  pinyin: yg
   memo: toothpaste
+

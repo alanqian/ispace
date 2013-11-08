@@ -13,6 +13,12 @@ class StoresControllerTest < ActionController::TestCase
     assert_not_nil assigns(:stores)
   end
 
+  test "should get smaple store list" do
+    get :index, model_store: true
+    @model_store = stores(:model_store)
+    assert_equal [@model_store], assigns(:stores)
+  end
+
   test "should get new" do
     get :new
     assert_response :success

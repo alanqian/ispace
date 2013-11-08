@@ -1,32 +1,19 @@
 <h1>Listing regions</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Consume Type</th>
-      <th>Desc</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div id="regions-list">
+  <%= simple_form_for(region_new, method: 'patch', remote: true,
+                      data: { url: region_path(region_new) },
+                      html: { id: "regions-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :code %>
+      <%= f.input :name %>
+      <%= f.input :consume_type %>
+      <%= f.input :memo %>
+    </div>
+    <%= render 'list', regions: @regions %>
+  <% end %>
 
-  <tbody>
-    <% @regions.each do |region| %>
-      <tr>
-        <td><%= region.id %></td>
-        <td><%= region.name %></td>
-        <td><%= region.consume_type %></td>
-        <td><%= region.memo %></td>
-        <td><%= link_to 'Show', region %></td>
-        <td><%= link_to 'Edit', edit_region_path(region) %></td>
-        <td><%= link_to 'Destroy', region, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+</div>
 
 <br>
 

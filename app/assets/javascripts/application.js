@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery.ui.all
+//= require jquery.ui.datepicker-zh-CN.js
 //= require jquery_ujs
 //= require jquery.remotipart
 //= require underscore.string.min.js
@@ -20,6 +21,7 @@
 //= require colResizable-1.3.source.js
 //= require jquery.simplecolorpicker.js
 //= require tree.jquery.js
+//= require raphael-min.js
 //= require cmd_ui
 //= require jqutil
 //= require app

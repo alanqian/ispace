@@ -1,10 +1,4 @@
-<% if @do == :edit_add_store %>
-  <h1>添加样板店</h1>
-<% else %>
-  <h1>修改空间规划</h1>
-<% end %>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @plan_set %> |
-<%= link_to 'Back', plan_sets_path %>
+<h1>
+  <%= simple_title @do %>
+</h1>
+<%= render @form %>

@@ -411,6 +411,7 @@ class InplaceEditor
     $(table).on "click", "tbody tr td", (event) ->
       unless self.isNoinputTD(this)
         self.bind($(this).parent(), this, event.target)
+        $(this).find(':input').focus()
 
     return self
 
@@ -742,7 +743,7 @@ root.dataTableUtil =
     iDisplayLength: -1
     bLengthChange: false
     bScrollAutoCss: true
-    sScrollY: "300px"
+    sScrollY: "500px"
     sScrollX: "100%"
     bScrollCollapse: true
     #"sScrollY": calcDataTableHeight(), don't use, it will split to two tables

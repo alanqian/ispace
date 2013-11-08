@@ -1,0 +1,18 @@
+<table id="users-table" data-form="#users-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:user,
+        :username,
+        :employee_id,
+        :email,
+        :telephone) %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% users.each do |user| %>
+      <%= render 'item', user: user %>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,91 @@
+<h3>最新规划</h3>
+  <% if @recent_plans.any? %>
+    <%# plan_name(category), plan_note, published_at, to_deploy_at, download_link, downloaded_at, finish_button %>
+    <table>
+      <thead>
+        <tr>
+          <th>规划</th>
+          <th>说明</th>
+          <th>计划日期</th>
+          <th>下载时间</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_plans.each do |dp| %>
+          <tr>
+            <td>
+              <%= dp.plan_set_name %><br>
+              <small><%=dt_ago dp.published_at %>发布</small>
+            </td>
+            <td>
+              <%= dp.plan_set_note %><br>
+            </td>
+            <td>
+              <%= dp.to_deploy_at.to_s(:short) %>
+            </td>
+            <td>
+              <% if !dp.downloaded_at.nil? %>
+                <%=dt_ago dp.downloaded_at.localtime %>
+              <% else %>
+                未下载
+              <% end %>
+            </td>
+            <td>
+              <%= link_to "下载规划", plan_path(dp.plan_id, _do: :download_pdf), target: :_blank %>
+              <% if !dp.downloaded_at.nil? %>
+                <%= link_to  "完成部署", plan_path(dp.plan_id, deployed: dp.id, "plan[_do]" => :deploy), method: :put %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>无</p>
+  <% end %>
+
+<h3>完成规划</h3>
+  <% if @deployed_plans.any? %>
+    <% @deployed_plans.each do |dp| %>
+      <% @deployed_plans.each do |dp| %>
+        <%# plan_name(category)+published_at, plan_note, to_deploy_at,
+          deployed_at, download_link %>
+        <table>
+          <thead>
+            <tr>
+              <th>规划</th>
+              <th>说明</th>
+              <th>计划日期</th>
+              <th>部署日期</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <%= dp.plan_set_name %><br>
+                <small><%=dt_ago dp.published_at %>发布</small>
+              </td>
+              <td>
+                <%= dp.plan_set_note %><br>
+              </td>
+              <td>
+                <%= dp.to_deploy_at.to_s(:short) %>
+              </td>
+              <td>
+                <%=dt_ago dp.deployed_at.localtime %>
+              </td>
+              <td>
+                <%= link_to "下载规划", plan_path(dp.plan_id, _do: :download_pdf), target: :_blank %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      <% end %>
+    <% end %>
+  <% else %>
+    <p>无</p>
+  <% end %>
+<br>
+

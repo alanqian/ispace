@@ -22,13 +22,15 @@ class PlanEditor
     run: 0
     init_facing: 1
     facing: 1
-    height_units: 1
-    width_units: 1
-    depth_units: 1
+    height_units: 0
+    width_units: 0
+    depth_units: 0
     leading_gap: 0
     leading_divider: 0
     middle_divider: 0
     trail_divider: 0
+
+  constructor: (action, do_what) ->
 
   log: () ->
     if @debug
@@ -725,14 +727,16 @@ class PlanEditor
     $.util.openDialog("#plan-edit-summary-dialog")
     true
 
-  onPlanPublish: () ->
+  onPlanClose: () ->
     self = @
-    $.util.messageBox "#plan-publish-confirm", () ->
+    $.util.messageBox "#plan-close-confirm", () ->
       # TODO:
-      console.log "publish it"
+      console.log "close it"
       self.doSave()
-      $("#plan_published_at").val(new Date())
-      $("#plan-publish-form").submit()
+      re = new RegExp("/plans/.*")
+      href = root.location.href.replace(re, $("#plan_sets_index").attr("href"))
+      root.location.replace(href)
+      #console.log "jump to", store_id, href
     true
 
   setDlgStoreInfo: (info) ->
@@ -955,10 +959,11 @@ class PlanEditor
 
   onSwitchShowColors: (el) ->
     # show menu
-    $.util.popupMenu("#showing-colors-menu", el)
+    $.util.popupMenu "#showing-colors-menu",
+      under: el
     true
 
-  OnShowBrandColor: () ->
+  onShowBrandColor: () ->
     @onSwitchToColor("brand_color")
 
   onShowProductColor: () ->
@@ -994,6 +999,7 @@ class ProductTable
   maxRank: 1
 
   onShowProductSaleType: (el) ->
+    self = @
     sale_type = parseInt(el.value)
     if self.show_sale_type != sale_type
       self.show_sale_type = sale_type
@@ -1005,6 +1011,7 @@ class ProductTable
     true
 
   onProductsAddToShelf: () ->
+    self = @
     if self.selected.length == 0
       console.log "no select prompt"
     else
@@ -1014,6 +1021,7 @@ class ProductTable
     true
 
   onProductsRemoveFromShelf: () ->
+    self = @
     if self.selected.length == 0
       console.log "no select prompt"
     else
@@ -1155,45 +1163,56 @@ class ProductTable
     data._aSortData[facing_index] = facing
     return true
 
+class PlanPage
+  action: ""
+  _do: ""
+
+  constructor: (action, _do) ->
+    console.log "create PlanPage"
+    @action = action
+    @_do = _do
+
+  onLoadEditLayout: () ->
+    root.planEditor = new PlanEditor
+    root.planEditor.init()
+    $.util.addCmdDelegate(root.planEditor)
+
+    root.productTable = new ProductTable
+    root.productTable.init("#products-table").bind(root.planEditor)
+    $.util.addCmdDelegate(root.productTable)
+    console.log "plans inited"
+    return true
+
+  test: () ->
+    # position it
+    $("#test").position({my: "left top", at: "left top", of: $("#back"), collision: "none"})
+
+    $("div.ui-resizable").resizable()
+    $("div.ui-draggable").draggable()
+
+    sel = $("#select").button
+      disabled: false
+      text: false
+      label: "v"
+      icons:
+        primary: "ui-icon-triangle-1-s"
+
+    $(".toolbar-button-set").each (index,el) ->
+      $(el).buttonset()
+
+    sel.click ->
+      menu = $("#menu").show().position
+        my: "left top"
+        at: "left bottom"
+        of: this
+      $(document).one "click", ->
+        menu.hide()
+      return false
+
+    $("#menu").menu().hide()
+
+root.PlanPage = PlanPage
+
 $ ->
-  root.planEditor = new PlanEditor
-  root.planEditor.init()
-  $.util.addCmdDelegate(root.planEditor)
+  $.util.onPageLoad()
 
-  root.productTable = new ProductTable
-  root.productTable.init("#products-table").bind(root.planEditor)
-  $.util.addCmdDelegate(root.productTable)
-  console.log "plans inited"
-  return true
-
-  #############################################
-  # following is test code
-
-  # position it
-  $("#test").position({my: "left top", at: "left top", of: $("#back"), collision: "none"})
-
-  $("div.ui-resizable").resizable()
-  $("div.ui-draggable").draggable()
-
-  sel = $("#select").button
-    disabled: false
-    text: false
-    label: "v"
-    icons:
-      primary: "ui-icon-triangle-1-s"
-
-  $(".toolbar-button-set").each (index,el) ->
-    $(el).buttonset()
-
-  sel.click ->
-    menu = $("#menu").show().position
-      my: "left top"
-      at: "left bottom"
-      of: this
-    $(document).one "click", ->
-      menu.hide()
-    return false
-
-  $("#menu").menu().hide()
-
-  #############################################

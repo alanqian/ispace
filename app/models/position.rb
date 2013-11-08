@@ -15,12 +15,4 @@ class Position < ActiveRecord::Base
   def self.layer_key(fixture_item_id, layer)
     "#{fixture_item_id}_#{layer}"
   end
-
-  def rank
-    @rank
-  end
-
-  def rank=(rank)
-    @rank = rank
-  end
 end

@@ -2,6 +2,8 @@ class Region < ActiveRecord::Base
   self.primary_key = "code"
   before_save :update_redundancy
 
+  has_many :stores
+
   def self.parent_id(self_id)
     codes = self_id.split(".")
     codes.pop

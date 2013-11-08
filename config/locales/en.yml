@@ -20,12 +20,27 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  ago: 前
   date:
     formats:
       default: "%Y-%m-%d"
-  time:
+  time: # formats, see strftime
+    seconds: 秒
+    minutes: 分
+    hours: 小时
+    days: 天
+    joiner: ""
     formats:
       default: "%Y-%m-%d %H:%M"
+      today: "今天 %H:%M"
+      yesterday: "昨天 %H:%M"
+      the_day_before_yesterday: "前天 %H:%M"
+      this_week: "本周%a %H:%M"
+      last_week: "上周%a %H:%M"
+      this_month: "%b%e日 周%a"
+      last_month: "%b%e日"
+      date_only: "%y年%b%e日"
+
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
   #   validates :email, :presence: true
@@ -48,7 +63,10 @@ en:
         parent_id: 上级品类
         memo: 备注
       user:
-        email: "E-mail address"
+        email: 邮箱
+        username: 用户名
+        telephone: 电话号码
+        employee_id: 员工号码
       brand:
         name: "品牌名"
       supplier:
@@ -76,6 +94,37 @@ en:
         status: 销售
         plan_info_rank: 排名
         facings: 排面
+      store:
+        name: 店名
+        region_id: 地址
+        code: Code
+        area: 区域
+        location: 位置
+        ref_store_id: Ref Store Id
+        memo: 备注
+      region:
+        code: Code
+        name: 区域
+        consume_type: 消费类型
+        memo: 备注
+      fixture:
+        name: 名称
+        code: Code
+        user: 用户
+        flow_l2r: Flow l2r
+      bay:
+        name: 名称
+        back_height: Back Height
+        back_width: Back Width
+        back_thick: Back Thick
+        back_color: Back Color
+        notch_spacing: Notch Spacing
+        notch_1st: Notch 1st
+        base_height: Base Height
+        base_width: Base Width
+        base_depth: Base Depth
+        base_color: Base Color
+        elem_count: 商品个数
     errors:
       models:
         user:
@@ -108,14 +157,6 @@ en:
       purple:      '#dbadff'
       gray:        '#e1e1e1'
       white:       '#ffffff'
-    commits:
-      upload: 上传
-      import: 导入
-      discard: 放弃导入
-      prev: 上一步
-      next: 下一步
-      finish: 完成
-      cancel: 取消
     prices:
       "高": "a"
       "中": "b"

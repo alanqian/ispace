@@ -18,6 +18,7 @@ class ImportStore < ImportSheet
   end
 
   def import_row(params, row_index)
+    logger.debug "import_row store, #{row_index}"
     region_params = params[:region]
     if region_params
       logger.debug "region: #{region_params}"
@@ -54,9 +55,12 @@ class ImportStore < ImportSheet
 
     store_params = params[:store]
     if store_params
-      logger.debug "store: #{store_params}"
+      logger.debug "import store: #{store_params}"
       if store_params[:code] && store_params[:name]
-        if @region_id
+        if Store.exists?(code: store_params[:code])
+          logger.warn "dup store found, #{store_params}"
+        elsif @region_id
+          logger.debug "create store: #{store_params}"
           store_params[:region_id] = @region_id
           store_params[:import_id] = self.id
           st = Store.create(store_params)

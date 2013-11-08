@@ -1,11 +1,11 @@
-<h1>空间设计</h1>
+<h1>门店空间设计</h1>
 
 <%#= link_to "Test Update init_facing=4", plan_path(@plan, "plan[init_facing]" => 4), method: :put %>
 
 <%# tools:
   set facings for select products.
   check sale_type: 必卖品
-  plan#publish,
+  plan#close,
 %>
 
 <hr>
@@ -16,8 +16,8 @@
   # ["plan-save", "ui-icon-disk"],
   ["plan-save",  "保存当前规划"],
   ["plan-edit-summary", "修改规划基本信息"],
-  ["plan-publish", "发布当前规划"],
-  ["plan-copy-to", "复制规划到其他门店"],     # dup the plan to other model stores
+  ["plan-close", "关闭当前门店规划"],
+  ["plan-copy-to", "复制门店规划"],     # dup the plan to other model stores
   ["position-facing-inc", "增加排面"],
   ["position-facing-dec", "减少排面"],
   ["position-remove", "选中商品下架"],
@@ -111,7 +111,6 @@
 
 <div id="plan-edit-layout-form">
   <%= render 'form_layout' %>
-  <%= render 'form_publish' %>
 </div>
 
 <hr/>
@@ -150,7 +149,7 @@
 </div>
 
 <div id="plan-copy-to-dialog" class="ui-helper-hidden"
-  title="复制空间规划" >
+  title="复制门店规划" >
   <%= render 'form_copy_to' %>
 </div>
 
@@ -164,12 +163,16 @@
   <%= render 'form_positions_divider' %>
 </div>
 
-<div id="plan-publish-confirm" class="ui-helper-hidden"
-  title="发布规划?">
-<p>
-<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！</p>
+<div id="plan-close-confirm" class="ui-helper-hidden"
+  title="关闭门店规划?">
+  <p>
+    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+    退出本样板店(<%= @plan.store_name %>)，回到规划首页！
+  </p>
 </div>
+<%#
+  发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！
+%>
 
 <ul id="showing-colors-menu" class="popup-menu">
   <li><a id="show-brand-color" href="#">品牌颜色</a></li>
@@ -180,3 +183,8 @@
 
 <%#= render 'sortable_test' %>
 <%#= render 'toolbar_test' %>
+
+<div style="visible: hidden">
+<%= link_to "", plan_sets_path, { id: "plan_sets_index" } %>
+</div>
+

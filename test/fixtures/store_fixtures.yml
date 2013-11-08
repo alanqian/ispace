@@ -4,11 +4,11 @@ one:
   code: "xy1122"
   fixture_id: 1
   store_id: 1
-  category_id: 10102
+  category: toothpaste
 
 two:
   code: "xy1123"
   fixture_id: 2
   store_id: 1
-  category_id: 10103
+  category: toothpaste
 

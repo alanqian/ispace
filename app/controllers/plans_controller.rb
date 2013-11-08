@@ -6,12 +6,36 @@ class PlansController < ApplicationController
   # GET /plans
   # GET /plans.json
   def index
-    @plans = Plan.all
+    plan_set = PlanSet.find(params[:plan_set])
+    @plans = Plan.where(plan_set_id: plan_set.id)
+    store_id_list = @plans.map { |plan| plan.store_id }
+    store_map = Store.follow_store_map(store_id_list)
+    render "index", locals: { plan_set: plan_set, store_map: store_map }
   end
 
   # GET /plans/1
   # GET /plans/1.json
   def show
+    if @do == :download_pdf
+      logger.debug "start download_pdf, plan:#{@plan.id}"
+      download_pdf
+    else
+      # default
+    end
+  end
+
+  def download_pdf
+    @store_id = 9
+    @user_id = 100
+    path = @plan.plan_pdf
+    deploy = Deployment.start_download(@plan.id, @store_id)
+    if File.exists?(path) && deploy != nil
+      send_file(path, x_sendfile: true, filename: "#{deploy.plan_set_name}-#{@store_id}.#{@user_id}.pdf")
+      deploy.download(@user_id)
+      logger.info "download plan, plan:#{@plan.id} store:#{@store_id} user:#{@user_id}"
+    else
+      raise ActionController::RoutingError, "resource not found"
+    end
   end
 
   # GET /plans/new
@@ -36,58 +60,87 @@ class PlansController < ApplicationController
   # 5. position edit, by jquery sortable
   def edit
     # check store_fixtures: store + category
-    # _do: :edit_layout, :edit_setup, :edit_summay(:edit)
-    if params[:_do]
-      # :edit_summary here
-      @do = "edit_#{params[:_do]}".downcase.to_sym
-    else
-      @do = :edit
-    end
+    # _do: :layout, :setup, nil
 
     # check positions, if none, initialize; (online tools: #reinitialize position)
     # show layout editor, product index list, tool buttons
     # always ajax requests in :edit_layout mode
-    if @do == :edit_layout
+    if @do == :layout
       @missing_fixture = !@plan.verify_fixture?
-      @do = :edit_setup if (@missing_fixture)
+      @do = :setup if (@missing_fixture)
 
       if @plan.products_changed?
-        @optional_products = @plan.optional_products
-        @do = :edit_setup if @optional_products.any?
+        @do = :setup
       end
     end
 
+    logger.debug "edit plan, do:#{@do}"
     case @do
-    when :edit_setup
+    when :setup
       @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
-      @optional_products ||= @plan.optional_products
-    when :edit_layout
+      @products_opt = @plan.products_opt
+      render "edit_setup"
+    when :layout
       @position = Position.new
-      locals = {
+      render "edit_layout", locals: {
         products: Product.on_sales(@plan.category_id),
         brands_all: Brand.where(["category_id=?", @plan.category_id]),
         suppliers_all: Supplier.where(["category_id=?", @plan.category_id]),
         mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
       }
+    else
+      render "edit"
     end
-    render @do, locals: locals || {}
   end
 
-  # PATCH/PUT /plans/1
-  # PATCH/PUT /plans/1.json
-  # _do: setup, layout, edit(summary), copy_to
-  def update
-    @do = (params[:plan][:_do] || "edit").to_sym
-    logger.debug "plans#update, _do:#{@do}"
+  def update_deploy
+    @store_id = 9
+    @user_id = 100
+    deploy = Deployment.find(params[:deployed])
+    if deploy && deploy.store_id == @store_id && deploy.plan_id == @plan.id
+      deploy.deploy(@user_id)
+      logger.info "plan deployed: plan:#{@plan.id} store:#{@store_id} deploy:#{deploy.id}"
+    end
+    redirect_to plan_sets_path
+  end
 
+  # set basic plan info, init_facing only in current version
+  def update_default
+    logger.debug "update_default"
     respond_to do |format|
       if @plan.update(plan_params)
         format.html {
-          if @do == :setup
-            redirect_to edit_plan_path(@plan, _do: "layout")
-          else
-            redirect_to @plan, notice: 'Plan was successfully updated.'
-          end
+          redirect_to plans_path(plan_set: @plan.plan_set_id)
+        }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_setup
+    respond_to do |format|
+      if @plan.update(plan_params)
+        format.html {
+          redirect_to edit_plan_path(@plan, _do: "layout")
+        }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # ajax call
+  # :layout, :copy_to, :position, :summary
+  def update_others
+    respond_to do |format|
+      if @plan.update(plan_params)
+        format.html {
+          redirect_to @plan, notice: 'Plan was successfully updated.'
         }
         format.json { head :no_content }
         format.js {
@@ -95,7 +148,7 @@ class PlansController < ApplicationController
           render "update_#{@do}"
         }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'edit', _do: "layout" }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
         format.js {
           @version = params[:_version]
@@ -124,6 +177,7 @@ class PlansController < ApplicationController
 
     def set_plan
       @plan = Plan.find(params[:id])
+      @plan._do = @do
     end
 
     def new_plan
@@ -143,7 +197,7 @@ class PlansController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
-        :init_facing, :nominal_size, :base_footage, :usage_percent, :published_at,
+        :init_facing, :nominal_size, :base_footage, :usage_percent,
         :copy_product_only,
         target_plans:[],
         optional_products:[],

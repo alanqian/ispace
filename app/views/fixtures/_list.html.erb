@@ -1,0 +1,18 @@
+<table id="fixtures-table" data-form="#fixtures-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:fixture,
+        :name,
+        :code,
+        :user,
+        :flow_l2r) %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% fixtures.each do |fixture| %>
+      <%= render 'item', fixture: fixture %>
+    <% end %>
+  </tbody>
+</table>

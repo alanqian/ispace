@@ -3,36 +3,31 @@
 
   <div class="inputs">
     <%= f.hidden_field :user_id %>
-    <% if @do == :edit_add_store %>
-      <p><strong>规划名称：</strong><%= @plan_set.name %> (<%= @plan_set.category_name %>)</p>
-      <%= content_tag :p, @plan_set.note %>
-    <% else %>
-      <%= f.input :name %>
-      <%= f.input :note, as: :text  %>
-      <%= f.hidden_field :category_id %>
-      <%= f.input :category_name, input_html: { for: "plan_set_category_id", class: "auto-complete",
-        data: {
-          source: @categories_all.to_json,
-          value: "code",
-          labels: ["name", "pinyin", "code"], }} %>
-    <% end %>
+    <%= f.input :name %>
+    <%= f.hidden_field :category_id %>
+    <%# for, data-value, data-labels is for auto-complete %>
+    <%= f.input :category_name, input_html: { for: "plan_set_category_id", class: "ui-tree-input",
+      data: {
+        cmd: "select-category",
+        tree: @categories_all.to_json,
+        value: "code",
+        labels: ["name", "pinyin", "code"], }} %>
+    <%= f.input :to_deploy_at %>
+    <%= f.input :note, as: :text  %>
+
+    <%# --- add model store --- %>
     <% if @plan_set.id %>
+      <%= f.input :_do, as: :hidden, input_html: { value: "add_store" } %>
       <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>
       <%= field_set_tag "样板店", id: "model-stores" do %>
-        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all %>
+        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all,
+          wrapper_html: { class: "ui-selected-mark" } %>
       <% end %>
       <div id="model-store-info" data-stores="<%= model_store_info.to_json %>">
         <p><span id="store.name"></span>: <span id="store.location"></span>, <span id="store.area"></span>m²</p>
         <p>门店数：<span id="store.ref_count"></span>, 属<span id="store.region_name"></span></p>
       </div>
     <% end %>
-    <!--
-    <%= f.input :num_plans %>
-    <%= f.input :num_stores %>
-    <%= f.input :published_at %>
-    <%= f.input :unpublished_plans %>
-    <%= f.input :undeployed_stores %>
-    -->
   </div>
 
   <div class="actions">
@@ -40,6 +35,5 @@
   </div>
 <% end %>
 
-<ul id="test-menu"></ul>
-<div id="tree1"></div>
+<ul id="ui-tree-input"></ul>
 

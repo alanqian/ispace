@@ -1,7 +1,6 @@
-<p id="notice"><%= notice %></p>
 <p>
   <strong>规划名称: </strong>
-  <%= @plan_set.display_shortname %></p>
+  <%= @plan_set.full_name %></p>
 <p><em>由<%= @plan_set.user_id %>于<%= @plan_set.created_at.localtime %>创建</em></p>
 <p>
   <strong>说明:</strong>
@@ -20,15 +19,15 @@
   <%= @plan_set.num_stores %>
 </p>
 
+<p>
+  <strong>计划部署日期:</strong>
+  <%= @plan_set.to_deploy_at.to_s(:long) %>
+</p>
+
 <hr>
 <p>
   <strong>Published at:</strong>
   <%= @plan_set.published_at %>
-</p>
-
-<p>
-  <strong>Unpublished plans:</strong>
-  <%= @plan_set.unpublished_plans %>
 </p>
 
 <p>

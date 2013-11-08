@@ -42,5 +42,16 @@ module ActiveRecordExtension
   end
 end
 
+module ActiveRecordBaseExtensison
+  attr_accessor :_do
+  def _do=(action)
+    @_do = action.is_a?(String) ?
+      action.underscore.downcase.tr(' ', '_').to_sym :
+      action
+  end
+  alias_method :did, :_do
+end
+
 # include the extension
 ActiveRecord::Relation.send(:include, ActiveRecordExtension)
+ActiveRecord::Base.send(:include, ActiveRecordBaseExtensison)

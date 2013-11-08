@@ -3,13 +3,13 @@ Ispace::Application.routes.draw do
   resources :plan_sets
   resources :plans
 
+  resources :users
   devise_for :users
   devise_scope :user do
     get "sign_in" => "devise/sessions#new", as: :sign_in
     delete "sign_out" => "devise/sessions#destroy", as: :sign_out
   end
 
-  resources :users
   resources :sales
 
   get "mdses/" => "mdses#index"
@@ -22,7 +22,8 @@ Ispace::Application.routes.draw do
 
   resources :fixtures
   resources :stores
-  resources :regions
+  resources :regions, except: [:patch]
+  patch "regions/*id", to: "regions#update", defaults: { format: 'js' }
 
   # removed resources
   # resources :fixture_items
@@ -37,10 +38,6 @@ Ispace::Application.routes.draw do
   post "categories/bulk_update"
   resources :categories
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
   root 'stores#index'
 
   # Example of regular route:

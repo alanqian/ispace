@@ -9,3 +9,10 @@ two:
   region_id: MyString
   name: MyString
   memo: MyString
+
+model_store:
+  id: 10
+  region_id: MyString
+  name: MyString
+  memo: MyString
+  ref_store_id: 10

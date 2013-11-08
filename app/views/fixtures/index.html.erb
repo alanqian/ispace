@@ -1,32 +1,19 @@
 <h1>Listing fixtures</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Code</th>
-      <th>User</th>
-      <th>Flow l2r</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div id="fixtures-list">
+  <%= simple_form_for(fixture_new, method: "patch", remote: true,
+                      data: { url: fixture_path(fixture_new) },
+                      html: { id: "fixtures-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :name %>
+      <%= f.input :code %>
+      <%= f.input :user %>
+      <%= f.input :flow_l2r %>
+    </div>
+    <%= render 'list', fixtures: @fixtures %>
+  <% end %>
 
-  <tbody>
-    <% @fixtures.each do |fixture| %>
-      <tr>
-        <td><%= fixture.name %></td>
-        <td><%= fixture.code %></td>
-        <td><%= fixture.user_id %></td>
-        <td><%= fixture.flow_l2r %></td>
-        <td><%= link_to 'Show', fixture %></td>
-        <td><%= link_to 'Edit', edit_fixture_path(fixture) %></td>
-        <td><%= link_to 'Destroy', fixture, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+</div>
 
 <br>
 
