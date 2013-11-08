@@ -114,7 +114,7 @@ class PlanSetsController < ApplicationController
     respond_to do |format|
       if @plan_set.save
         format.html {
-          redirect_to edit_plan_set_path(@plan_set, _do: :add_store), notice: 'Plan set was successfully created.'
+          redirect_to edit_plan_set_path(@plan_set), notice: 'Plan set was successfully created.'
         }
         format.json { render action: 'show', status: :created, location: @plan_set }
       else

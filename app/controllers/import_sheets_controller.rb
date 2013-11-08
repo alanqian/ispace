@@ -125,11 +125,10 @@ class ImportSheetsController < ApplicationController
   # PATCH/PUT /import_sheets/1
   # PATCH/PUT /import_sheets/1.json
   def update
-    commit = commit_param
     respond_to do |format|
-      if @import_sheet.update(set_do_param(import_sheet_params))
+      if @import_sheet.update(update_file_param(import_sheet_params))
         format.html {
-          if commit == :import
+          if @commit == :import
             redirect_to @import_sheet, notice: 'sheet was successfully imported.'
           else
             redirect_to edit_import_sheet_path(@import_sheet), notice: 'sheet was successfully uploaded.'
@@ -179,18 +178,12 @@ class ImportSheetsController < ApplicationController
       #end
     end
 
-    def set_do_param(param)
+    def update_file_param(param)
       # judge by commit param
-      if commit_param == :import
+      if @commit == :import
         param["_do"] = "import"
         param.delete "file_upload"
       end
       param
     end
-
-    def commit_param
-      @@commits[params[:commit]]
-    end
-
-    @@commits = I18n.t("dict.commits").invert
 end

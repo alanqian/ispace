@@ -106,6 +106,7 @@ class PlansController < ApplicationController
 
   # set basic plan info, init_facing only in current version
   def update_default
+    logger.debug "update_default"
     respond_to do |format|
       if @plan.update(plan_params)
         format.html {

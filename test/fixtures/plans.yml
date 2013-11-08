@@ -6,7 +6,7 @@ one:
   user_id: 1
   store_id: 1
   num_stores: 1
-  fixture_id: 1
+  fixture: one
   init_facing: 1
   nominal_size: 9.99
   base_footage: 9.99
@@ -18,7 +18,7 @@ two:
   user_id: 1
   store_id: 2
   num_stores: 1
-  fixture_id: 1
+  fixture: two
   init_facing: 1
   nominal_size: 9.99
   base_footage: 9.99

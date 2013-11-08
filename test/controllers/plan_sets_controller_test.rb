@@ -47,6 +47,7 @@ class PlanSetsControllerTest < ActionController::TestCase
 
   test "should update plan_set" do
     patch :update, id: @plan_set, plan_set: {
+      _do: "add_store",
       category_id: @plan_set.category_id,
       name: @plan_set.name,
       note: @plan_set.note,
@@ -57,7 +58,7 @@ class PlanSetsControllerTest < ActionController::TestCase
       #unpublished_plans: @plan_set.unpublished_plans,
       user_id: @plan_set.user_id
     }
-    assert_redirected_to plan_set_path(assigns(:plan_set))
+    assert_redirected_to plan_sets_path
   end
 
   test "should destroy plan_set" do

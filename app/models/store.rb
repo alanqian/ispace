@@ -47,6 +47,7 @@ class Store < ActiveRecord::Base
   def update_region_name
     region = Region.find(self.region_id)
     self.region_name = region.name
+  rescue
   end
 end
 

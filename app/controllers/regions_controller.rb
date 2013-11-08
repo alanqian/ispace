@@ -42,12 +42,27 @@ class RegionsController < ApplicationController
   # PATCH/PUT /regions/1
   # PATCH/PUT /regions/1.json
   def update
-    if @region.update(region_params)
-      session[:notice] = 'Region was successfully updated.'
-      set_update_js
-      render "update"
-    else
-      render action: 'edit'
+    respond_to do |format|
+      if @region.update(region_params)
+        format.html {
+          redirect_to @region, notice: 'Region was successfully updated.'
+        }
+        format.js {
+          session[:notice] = 'Region was successfully updated.'
+          set_update_js
+          render "update"
+        }
+      else
+        format.html {
+          render action: 'edit'
+        }
+        format.js {
+          session[:notice] = 'Region can not be updated.'
+          set_update_js
+          render "update"
+        }
+
+      end
     end
   end
 

@@ -6,6 +6,7 @@ class PlansControllerTest < ActionController::TestCase
   fixtures :stores
   fixtures :plans
   fixtures :plan_sets
+  fixtures :fixtures
 
   setup do
     # modify fixtures to fit database relations
@@ -25,7 +26,7 @@ class PlansControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    get :index, plan_set:@plan_set.id
     assert_response :success
     assert_not_nil assigns(:plans)
   end
@@ -61,7 +62,8 @@ class PlansControllerTest < ActionController::TestCase
         plan_set_id: @plan.plan_set_id,
         usage_percent: @plan.usage_percent,
         user_id: @plan.user_id }
-    assert_redirected_to plan_path(assigns(:plan))
+    #assert_redirected_to plan_path(assigns(:plan))
+    assert_redirected_to plans_path(plan_set: @plan.plan_set_id)
   end
 
   test "should destroy plan" do
