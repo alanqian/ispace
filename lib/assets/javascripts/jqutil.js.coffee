@@ -124,6 +124,27 @@ $.util =
   setupAutoCompleteInput: (sel) ->
     AutoCompleteUtil.setupAutoCompleteInput(sel)
 
+  # <%= f.input :category_name, input_html: { class: "ui-tree-input",
+  #   data: {
+  #     cmd: "select-category",
+  #     tree: @categories_all.to_json
+  #   } %>
+  setupTreeInput: (sel) ->
+    $(sel).each (index, el) ->
+      console.log $(el)
+      menu = root.cmdUI.createMenu $(el).data("cmd"), $(el).data("tree"),
+        id: "code"
+        parent: "parent_id"
+        label: "name"
+        rootId: null
+        dom: "#ui-tree-input"
+      $(el).data("uiTreeMenu", menu)
+      $(el).click (e) ->
+        e.stopPropagation()
+        menu = $(this).data("uiTreeMenu")
+        root.cmdUI.popupMenuSelect menu,
+          right: this
+
   initCmdUI: () ->
     root.cmdUI.init()
 
@@ -246,6 +267,7 @@ $.util =
 $ ->
   $.util.initCmdUI()
   $.util.setupDatePicker()
-  $.util.setupAutoCompleteInput(".auto-complete")
+  $.util.setupAutoCompleteInput(".ui-auto-complete")
+  $.util.setupTreeInput("input.ui-tree-input")
   $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
 

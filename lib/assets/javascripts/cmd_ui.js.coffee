@@ -150,6 +150,7 @@ class CmdUI
         parent.ul ||= $("<ul></ul").appendTo(parent.li)
         item.li = $("<li></li>").append("<a data-id='#{id}'>#{item[labelField]}</a>").appendTo(parent.ul)
     @setMenuItemWidth(root.ul)
+    root.ul.hide()
     return root.ul
 
   popupMenuSelect: (menuSel, opts) ->
