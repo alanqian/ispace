@@ -5,8 +5,10 @@
     <%= f.input :username %>
     <%= f.input :employee_id %>
     <%= f.input :email %>
-    <%= f.input :password %>
-    <%= f.input :password_confirmation, label: 'Password confirm' %>
+    <% if @user.id.nil? %>
+      <%= f.input :password %>
+      <%= f.input :password_confirmation, label: 'Password confirm' %>
+    <% end %>
     <%= f.input :telephone %>
   </div>
 
