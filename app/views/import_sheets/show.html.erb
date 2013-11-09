@@ -10,31 +10,33 @@
   5. discard button;
 %>
 
-<p>
-  <strong>Filename:</strong>
-  <%= @import_sheet.filename %>
-</p>
-<p>
-  <strong>Comment:</strong>
-  <%= @import_sheet.comment %>
-</p>
-<p>
-  <strong>Imported:</strong>
-  <%#= @import_sheet.imported.to_json %>
-  <%= render "imported", import_sheet: @import_sheet %>
-  <%= render 'counts', import_sheet: @import_sheet %>
-</p>
-<p>
-  <strong>Date:</strong>
-  <%= @import_sheet.created_at.localtime %>
-</p>
+<div class="import-info">
+  <p>
+    <label for="">文件名</label>
+    <%= @import_sheet.filename %>
+  </p>
+  <p>
+    <label for="">备注</label>
+    <%= @import_sheet.comment %>
+  </p>
+  <p>
+    <label for="">导入内容</label>
+    <%#= @import_sheet.imported.to_json %>
+    <%= render "imported", import_sheet: @import_sheet %>
+    <%= render 'counts', import_sheet: @import_sheet %>
+  </p>
+  <p>
+    <label for="">导入时间</label>
+    <%= @import_sheet.created_at.localtime %>
+  </p>
 
-<hr/>
-<p>
-  <strong>Sheets:</strong>
-  <%#= @import_sheet.sheets %>
-  <%= render 'preview', import_sheet: @import_sheet %>
-</p>
+  <hr/>
+  <p>
+    <strong>Sheets:</strong>
+    <%#= @import_sheet.sheets %>
+    <%= render 'preview', import_sheet: @import_sheet %>
+  </p>
+</div>
 
 <%= link_to 'Edit', edit_import_sheet_path(@import_sheet) %> |
 <%= link_to 'Back', import_sheets_path(_t: @t) %>

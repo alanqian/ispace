@@ -15,7 +15,6 @@ html {
 }
 a {
   color: #0088cc;
-  text-decoration: none;
 }
 a:hover,
 a:focus {
@@ -163,6 +162,11 @@ ul.nav {
 .sidebar {
   width: 160px;
   float: left;
+  nav.sidebar-nav {
+    a {
+      text-decoration: none;
+    }
+  }
 }
 
 .main {
@@ -229,6 +233,10 @@ form {
   }
 }
 
+[disabled] {
+  color: #999 !important;
+}
+
 .entity {
   label {
     @include label;
@@ -251,5 +259,13 @@ div.field_with_errors {
 div.input.file {
   input.file {
     padding-left: 0;
+  }
+}
+
+div.import-info {
+  label {
+    @include label;
+    min-width: 80px;
+    font-weight: bold;
   }
 }
