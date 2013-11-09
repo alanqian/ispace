@@ -17,9 +17,13 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should get update" do
+    patch :update, id: @user, user: { telephone: '13810223997' }
+    assert_redirected_to edit_user_path(@user)
   end
 
   test "should get edit" do
+    get :edit, id: @user
+    assert_response :success
   end
 
   test "should get create" do
