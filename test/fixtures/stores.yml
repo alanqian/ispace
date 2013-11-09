@@ -12,7 +12,7 @@ two:
 
 model_store:
   id: 10
-  region_id: MyString
+  region_id: 1
   name: MyString
   memo: MyString
   ref_store_id: 10

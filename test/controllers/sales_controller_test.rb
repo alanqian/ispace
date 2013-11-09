@@ -7,6 +7,19 @@ class SalesControllerTest < ActionController::TestCase
     @sale = sales(:one)
   end
 
+  test "should redirect to sign in page if not login" do
+    sign_out @user
+
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+
+    patch :update, id: @sale.id
+    assert_redirected_to sign_in_path
+  end
+
   test "should get index" do
     get :index
     assert_response :success

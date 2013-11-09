@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         logger.debug user_params
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to edit_user_path(@user), notice: 'User was successfully updated.' }
         format.json { head :no_content }
         format.js { set_user_update_js }
       else

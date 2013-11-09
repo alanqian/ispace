@@ -5,4 +5,12 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   validate :username, uniqueness: true
   validate :employee_id, uniqueness: true
+
+  def admin?
+    self.role == 'admin'
+  end
+
+  def designer?
+    self.role == 'designer'
+  end
 end

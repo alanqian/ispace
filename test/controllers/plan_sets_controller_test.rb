@@ -10,6 +10,15 @@ class PlanSetsControllerTest < ActionController::TestCase
     @plan_set.category_id = @toothpaste.code # patch bug of rails fixtures identify(label)
   end
 
+  test "should redirect to sign in if not login" do
+    sign_out @user
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+  end
+
   test "should get index" do
     get :index
     assert_response :success

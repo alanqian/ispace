@@ -16,6 +16,16 @@ end
 
 class ActionController::TestCase
   include Devise::TestHelpers
+  fixtures :users
+
+  setup do
+    @user = users(:one)
+    sign_in @user
+  end
+
+  teardown do
+    sign_out @user
+  end
 end
 
 class ActiveRecord::Base

@@ -11,7 +11,7 @@ development:
   pool: 5
   timeout: 3000
   username: root
-  password: mysqlRoot
+  password: '000000'
   host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -28,11 +28,15 @@ development:
 #  password: mysqlRoot
 #  host: localhost
 test:
-  adapter: sqlite3
-# rails 4.0 failed to use memory sqlite, when rake test:prepare
-# database: ":memory:"
-  database: db/test.sqlite3
-  verbosity: quiet
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: ispace_test
+  pool: 5
+  timeout: 3000
+  username: root
+  password: '000000'
+  host: localhost
 
 production:
   adapter: mysql2

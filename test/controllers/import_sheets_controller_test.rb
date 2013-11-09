@@ -2,12 +2,25 @@
 require 'test_helper'
 
 class ImportSheetsControllerTest < ActionController::TestCase
-  fixtures :import_sheets, :categories # for import product
+  fixtures :import_sheets, :categories
 
   setup do
     @logger = Rails.logger
     @import_sheet = import_sheets(:one)
     @types = [nil, "sale", "product", "category", "store"]
+  end
+
+  test "should go to sign in page if not login" do
+    sign_out @user
+
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+
+    patch :update, id: @import_sheet
+    assert_redirected_to sign_in_path
   end
 
   test "a. should get index" do

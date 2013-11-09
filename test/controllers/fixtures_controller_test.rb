@@ -9,6 +9,18 @@ class FixturesControllerTest < ActionController::TestCase
     @fixture = fixtures(:one)
   end
 
+  test "should go to sign in page if not login in" do
+    sign_out @user
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+
+    patch :update, id: @fixture.id
+    assert_redirected_to sign_in_path
+  end
+
   test "should get index" do
     get :index
     assert_response :success

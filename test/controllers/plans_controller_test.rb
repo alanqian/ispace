@@ -7,21 +7,27 @@ class PlansControllerTest < ActionController::TestCase
   fixtures :plans
   fixtures :plan_sets
   fixtures :fixtures
+  fixtures :users
 
   setup do
     # modify fixtures to fit database relations
     @toothpaste = categories(:toothpaste)
-    @plan = plans(:one)
     @plan_set = plan_sets(:one)
     @plan_set.category_id = @toothpaste.code # patch bug of rails fixtures identify(label)
     @plan_set.save
-    store = stores(:one)
+
+    store = stores(:model_store)
     store.region_id = regions(:one).code
-    store.ref_store_id = store.id
     store.save
-    @plan.store_id = store.id
+
+    @plan = plans(:one)
     @plan.plan_set_id = @plan_set.id
+    @plan.store = store
     @plan.save
+
+    @user = users(:one)
+    sign_in @user
+
     @logger = Rails.logger
   end
 
@@ -72,5 +78,9 @@ class PlansControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to plans_path
+  end
+
+  teardown do
+    sign_out @user
   end
 end

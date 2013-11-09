@@ -171,7 +171,6 @@ class PlansController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_commons
-      @user_id = 1
       @store_id = 1
     end
 
@@ -184,7 +183,7 @@ class PlansController < ApplicationController
       plan_set_id = params[:plan_set]
       category_id = params[:cat]
       @plan = Plan.new({
-        user_id: @user_id,
+        user_id: current_user.id,
         plan_set_id: plan_set_id,
         category_id: category_id
       })
