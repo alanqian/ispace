@@ -1,25 +1,26 @@
-<h1>Listing import_sheets</h1>
+<h1>商品数据导入管理</h1>
 
+<!--
 <p>should show:<br>
 <p>  import_date, comment, filename, imported: count..., #show, #discard link
 
 <p>product: category:*, product:* + brand:*, supplier:*, manufacture:*
 <p>sale: sale:*
 <p>test: all fields
-
-<table>
+-->
+<table id="products-table" data-form="#products-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
   <thead>
     <tr>
-      <th>Filename</th>
-      <th>Comment</th>
-      <th>Imported.Sheets</th>
-      <th>Imported.Categories</th>
-      <th>Imported.Products</th>
-      <th>Imported.Brands</th>
-      <th>Imported.Suppliers</th>
-      <th>Imported.Manufacturers</th>
-      <th></th>
-      <th></th>
+      <th>文件名</th>
+      <th>备注</th>
+      <th>导入表</th>
+      <th>类目个数</th>
+      <th>商品个数</th>
+      <th>品牌个数</th>
+      <th>供应商个数</th>
+      <th>生产商个数</th>
+      <th data-no-sort="1">删除导入的数据</th>
     </tr>
   </thead>
 
@@ -28,7 +29,7 @@
       <% count = import_sheet.imported[:count] %>
       <% sheets = import_sheet.imported[:sheets].map {|s| s[:name] } %>
       <tr>
-        <td><%= import_sheet.filename %></td>
+        <td><%= link_to(import_sheet.filename, import_sheet_path(import_sheet, part: "result")) %></td>
         <td><%= import_sheet.comment %></td>
         <td><%= sheets %></td>
         <td><%= count[:category] %></td>
@@ -36,8 +37,7 @@
         <td><%= count[:brand] %></td>
         <td><%= count[:supplier] %></td>
         <td><%= count[:manufacturer] %></td>
-        <td><%= link_to 'Show', import_sheet_path(import_sheet, part: "result") %></td>
-        <td><%= link_to 'Discard', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to "删除", import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
