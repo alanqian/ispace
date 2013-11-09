@@ -247,3 +247,9 @@ div.field_with_errors {
   }
   background-color: pink;
 }
+
+div.input.file {
+  input.file {
+    padding-left: 0;
+  }
+}
