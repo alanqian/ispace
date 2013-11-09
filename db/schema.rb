@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131107165432) do
+ActiveRecord::Schema.define(version: 20131109155103) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 20131107165432) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "code",       limit: 48, default: "", null: false
+    t.datetime "delete_at"
   end
 
   add_index "fixtures", ["code"], name: "index_fixtures_on_code", using: :btree

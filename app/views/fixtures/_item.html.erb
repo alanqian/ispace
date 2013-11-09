@@ -1,8 +1,7 @@
 <tr data-id="<%= fixture.id %>">
-  <%= data_td_list fixture,
-                   :name,
-                   :code,
-                   :user,
-                   :flow_l2r
-  %>
+  <td><%= link_to fixture.name, edit_fixture_path(fixture) %></td>
+  <td><%= fixture.code %></td>
+  <td><%= fixture.user.try(:username) %></td>
+  <td><%= fixture.flow_l2r %></td>
+  <td><%= link_to "删除", fixture_path(fixture), method: :delete, confirm: '确定要删除么' %></td>
 </tr>
