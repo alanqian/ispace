@@ -3,13 +3,10 @@ require 'test_helper'
 class FixturesControllerTest < ActionController::TestCase
   fixtures :fixtures
   fixtures :bays
-  fixtures :users
 
   setup do
     @logger = Rails.logger
     @fixture = fixtures(:one)
-    @user = users(:one)
-    sign_in @user
   end
 
   test "should go to sign in page if not login in" do

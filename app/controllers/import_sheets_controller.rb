@@ -25,7 +25,6 @@ III. discard import: #destroy, (for all imports)
 =end
 
 class ImportSheetsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_import_sheet, only: [:show, :edit, :update, :destroy]
   # respond_to :json
 

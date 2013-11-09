@@ -65,7 +65,6 @@ plans:
 =end
 
 class PlanSetsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_commons
   before_action :set_options, only: [:index, :new, :show, :edit, :create, :update]
   before_action :set_plan_set, only: [:show, :edit, :update, :destroy]

@@ -1,12 +1,10 @@
 require 'test_helper'
 
 class SalesControllerTest < ActionController::TestCase
-  fixtures :sales, :users
+  fixtures :sales
 
   setup do
     @sale = sales(:one)
-    @user = users(:one)
-    sign_in @user
   end
 
   test "should redirect to sign in page if not login" do
@@ -62,9 +60,5 @@ class SalesControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to sales_path
-  end
-
-  teardown do
-    sign_out @user
   end
 end

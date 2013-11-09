@@ -2,14 +2,12 @@
 require 'test_helper'
 
 class ImportSheetsControllerTest < ActionController::TestCase
-  fixtures :import_sheets, :categories, :users # for import product
+  fixtures :import_sheets, :categories
 
   setup do
     @logger = Rails.logger
     @import_sheet = import_sheets(:one)
     @types = [nil, "sale", "product", "category", "store"]
-    @user = users(:one)
-    sign_in @user
   end
 
   test "should go to sign in page if not login" do

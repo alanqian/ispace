@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  # add authentication for non devise controller
+  before_action :authenticate_user! if !is_a?(DeviseController)
   before_action :set_do_param, only: [:index, :new, :show, :edit]
   before_action :set_object_do_param, only: [:update, :create]
   before_action :set_commit_param, only: [:update, :create]

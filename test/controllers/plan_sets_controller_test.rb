@@ -3,14 +3,11 @@ require 'test_helper'
 class PlanSetsControllerTest < ActionController::TestCase
   fixtures :categories
   fixtures :plan_sets
-  fixtures :users
 
   setup do
     @plan_set = plan_sets(:one)
     @toothpaste = categories(:toothpaste)
     @plan_set.category_id = @toothpaste.code # patch bug of rails fixtures identify(label)
-    @user = users(:one)
-    sign_in @user
   end
 
   test "should redirect to sign in if not login" do
