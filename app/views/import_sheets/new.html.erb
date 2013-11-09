@@ -1,5 +1,4 @@
-<h1>generic upload: <%= @import_sheet._target %> </h1>
-
+<h1>数据导入: <%= t("activerecord.models.#{@import_sheet._target}") %> </h1>
 
 <div>
 <%= render 'form', import_sheet: @import_sheet %>
