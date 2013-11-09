@@ -68,7 +68,8 @@ class FixturesController < ApplicationController
   # DELETE /fixtures/1
   # DELETE /fixtures/1.json
   def destroy
-    @fixture.destroy
+    @fixture.delete_at = Time.now
+    @fixture.save
     respond_to do |format|
       format.html { redirect_to fixtures_url }
       format.json { head :no_content }

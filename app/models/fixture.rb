@@ -1,4 +1,5 @@
 class Fixture < ActiveRecord::Base
+  default_scope -> { where('delete_at is NULL') }
   has_many :fixture_items, -> { order(:item_index) }, dependent: :destroy
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
 
