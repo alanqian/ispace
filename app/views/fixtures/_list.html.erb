@@ -1,12 +1,11 @@
 <table id="fixtures-table" data-form="#fixtures-form" data-sinfoempty="请重新选择品类或重新搜索"
-  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
-  <thead>
+  class="dataTable grid-control no-wrap resizable" cellspacing=0> <thead>
     <tr>
-      <%= data_th_list(:fixture,
-        :name,
-        :code,
-        :user,
-        :flow_l2r) %>
+      <th><%= t('activerecord.attributes.fixture.name') %></th>
+      <th><%= t('activerecord.attributes.fixture.code') %></th>
+      <th><%= t('activerecord.attributes.fixture.user') %></th>
+      <th data-no-sort="1"><%= t('activerecord.attributes.fixture.flow_l2r') %></th>
+      <th data-no-sort="1"></th>
     </tr>
   </thead>
 

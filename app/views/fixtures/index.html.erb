@@ -1,18 +1,7 @@
 <h1>Listing fixtures</h1>
 
 <div id="fixtures-list">
-  <%= simple_form_for(fixture_new, method: "patch", remote: true,
-                      data: { url: fixture_path(fixture_new) },
-                      html: { id: "fixtures-form", class: "inplace" }) do |f| %>
-    <div class="inputs">
-      <%= f.input :name %>
-      <%= f.input :code %>
-      <%= f.input :user %>
-      <%= f.input :flow_l2r %>
-    </div>
-    <%= render 'list', fixtures: @fixtures %>
-  <% end %>
-
+  <%= render 'list', fixtures: @fixtures %>
 </div>
 
 <br>
