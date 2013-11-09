@@ -103,8 +103,8 @@
                 <li class="nav-header">数据</li>
                 <li><%= link_to "门店数据导入", new_import_sheet_path(_t: 'store') %></li>
                 <li><%= link_to "品类数据导入", new_import_sheet_path(_t: 'category') %></li>
-                <li><%= link_to "商品数据导入", new_import_sheet_path(_t: 'product') %></li>
-                <li><%= link_to "销售数据导入", new_import_sheet_path(_t: 'sale') %></li>
+                <li><%= link_to "商品数据导入", import_sheets_path(_t: 'product') %></li>
+                <li><%= link_to "销售数据导入", import_sheets_path(_t: 'sale') %></li>
                 <li><%= link_to "分析统计", '#' %></li>
               </ul>
             </nav><!--/.nav-->
