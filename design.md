@@ -2,6 +2,8 @@
 
 解决问题：超市的空间管理(货架商品摆放)
 
+手风琴效果的导航
+
 1. 按门店、品类进行管理；
    Plan = Store + Fixture + Products
 
@@ -22,10 +24,12 @@
   Roles
   -----
   0. 系统管理员，预置，不可删除；admin
+     import store
      duty:
        区域管理；门店管理；用户管理；
 
   1. 空间管理用户(总店): designer
+     import other
      duty:
        品类设置
        商品数据的管理(品牌、生产商、供应商、商品)
@@ -34,6 +38,8 @@
        销售数据管理
 
   2. 门店用户: salesman
+     add store_id
+     import sales
      duty:
        下载本门店的各品类的空间布局图表(准备货品，进行摆放)；
        录入相关货品摆放完成日期(摆放完成后1-2天内)
