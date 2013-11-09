@@ -16,13 +16,11 @@
     <%= f.hidden_field :user_id %>
     <%= f.hidden_field :type %>
     <%= f.hidden_field :_do, value: "upload" %>
-    <%= f.input :comment, input_html: { size: 22, title: t("import_sheet.comment") } %>
+    <%= f.input :comment, input_html: { placeholder: '', title: t("import_sheet.comment") } %>
     <% if edit_mode %>
-      <%= f.input :filename, disabled: true %>
+      <%= f.input :filename, disabled: true, label: t('import_sheet.filename') %>
     <% end %>
-    <%= f.label :file_upload %>
-    <%#= f.label :file_upload, t("import_sheet.file_upload") %> <!-- "请上传商品信息的电子表文件(xls,xlsx,csv)" -->
-    <%= f.file_field :file_upload %>
+    <%= f.input :file_upload, as: :file %>
   </div>
 
   <div class="actions">

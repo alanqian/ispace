@@ -135,6 +135,7 @@ en:
   import_sheet:
     comment: "write comment for this upload file, please"
     file_upload: "上传文件"
+    filename: "文件名"
     title:
       sale: "导入销售数据"
       product: "导入商品"
