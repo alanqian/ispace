@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  layout :layout_by_resource
+  load_and_authorize_resource
 
   # add authentication for non devise controller
   before_action :authenticate_user!, unless: :devise_controller?
@@ -9,6 +11,15 @@ class ApplicationController < ActionController::Base
   before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_form, only: [:edit, :new], unless: :devise_controller?
+
+  def layout_by_resource
+    if devise_controller?
+      "single-column"
+    else
+      "application"
+    end
+  end
+
 
   def set_do_param
     _do = params[:_do]
