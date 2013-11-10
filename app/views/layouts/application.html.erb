@@ -110,10 +110,7 @@
             </nav><!--/.nav-->
           </div><!--/span-->
           <div class="span9 main">
-            <% if notice %>
-              <p id="notice"><%= notice %></p>
-            <% end %>
-
+            <%= flash_contents %>
             <%= yield %>
           </div>
         </div><!--/row-->
