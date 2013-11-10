@@ -11,6 +11,7 @@
       <%= f.input :password_confirmation, label: 'Password confirm', as: :string %>
     <% end %>
     <%= f.input :telephone %>
+    <%= f.input :role, selected: 'sale', collection: [['销售', 'sale' ], ['空间规划', 'designer' ]] %>
   </div>
 
   <div class="actions">
