@@ -68,6 +68,7 @@ class PlanSetsController < ApplicationController
   before_action :set_commons
   before_action :set_options, only: [:index, :new, :show, :edit, :create, :update]
   before_action :set_plan_set, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /plan_sets
   # GET /plan_sets.json

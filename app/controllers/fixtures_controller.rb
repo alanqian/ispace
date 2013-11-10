@@ -1,6 +1,7 @@
 class FixturesController < ApplicationController
   before_action :set_fixture, only: [:show, :edit, :update, :destroy]
   before_action :set_aux, only: [:new, :edit]
+  load_and_authorize_resource
 
   # GET /fixtures
   # GET /fixtures.json

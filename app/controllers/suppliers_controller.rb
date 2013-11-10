@@ -16,6 +16,7 @@
 
 class SuppliersController < ApplicationController
   before_action :set_supplier, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /suppliers
   # GET /suppliers.json

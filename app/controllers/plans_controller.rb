@@ -2,6 +2,7 @@ class PlansController < ApplicationController
   before_action :set_commons
   before_action :set_options, only: [:new, :show, :edit, :update ]
   before_action :set_plan, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /plans
   # GET /plans.json

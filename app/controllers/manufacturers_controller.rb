@@ -15,6 +15,7 @@
 =end
 class ManufacturersController < ApplicationController
   before_action :set_manufacturer, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /manufacturers
   # GET /manufacturers.json
