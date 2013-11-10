@@ -67,3 +67,15 @@ form {
     font-size: 10pt;
   }
 }
+
+.setup-container {
+  form .inputs > span {
+    display: block;
+  }
+}
+
+#products-choose-category {
+  input[name=commit] {
+    margin: 7px 0 0 7px;
+  }
+}
