@@ -4,4 +4,6 @@
 <%= render 'form', import_sheet: @import_sheet %>
 </div>
 
-<%= link_to 'Back', import_sheets_path(_t: @t) %>
+<% if @t == 'sale' or @t == 'product' %>
+  <%= link_to '查看导入历史', import_sheets_path(_t: @t) %>
+<% end %>
