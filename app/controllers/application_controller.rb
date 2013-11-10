@@ -4,11 +4,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # add authentication for non devise controller
-  before_action :authenticate_user! if !is_a?(DeviseController)
-  before_action :set_do_param, only: [:index, :new, :show, :edit]
-  before_action :set_object_do_param, only: [:update, :create]
-  before_action :set_commit_param, only: [:update, :create]
-  before_action :set_form, only: [:edit, :new]
+  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :set_do_param, only: [:index, :new, :show, :edit], unless: :devise_controller?
+  before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
+  before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
+  before_action :set_form, only: [:edit, :new], unless: :devise_controller?
 
   def set_do_param
     _do = params[:_do]
