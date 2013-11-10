@@ -1,5 +1,6 @@
 Ispace::Application.routes.draw do
 
+  get "pages/index"
   resources :plan_sets
   resources :plans
 
@@ -39,7 +40,7 @@ Ispace::Application.routes.draw do
   post "categories/bulk_update"
   resources :categories
 
-  root 'stores#index'
+  root 'pages#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
