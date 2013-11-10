@@ -152,7 +152,7 @@ ul.nav {
 }
 
 .container {
-  width: 1200px;
+  width: 1280px;
   margin: 0 auto;
 }
 .row {
@@ -170,28 +170,37 @@ ul.nav {
 }
 
 .main {
-  width: 1020px;
+  width: 1100px;
   margin-left: 20px;
   float: left;
 }
 
 nav[role="navigation"] {
+  a, a:visited {
+    background-color: transparent;
+    color: inherit;
+  }
+  a:hover {
+    text-decoration: underline;
+    color: inherit;
+  }
   > ul > li {
     width: 90%;
+    padding: 5px;
   }
   ul li a {
     display: block;
-    padding: 5px 15px;
+    padding: 0px 15px;
     font-size: 14px;
     font-weight: bold;
     line-height: 1;
   }
-  ul li a:focus,
-  ul li a:hover {
-    background: #eee;
-  }
-  ul li a:active {
-    background: #ddd;
+  li.nav-header {
+    padding: 5px;
+    background-color: #eee;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 5px 0;
   }
 }
 
