@@ -4,6 +4,7 @@ class BaysController < ApplicationController
   before_action :set_bay, only: [:show, :edit, :update, :destroy]
   before_action :set_extra, only: [:show, :edit]
   before_filter :set_expires
+  load_and_authorize_resource
 
   # GET /bays
   # GET /bays.json

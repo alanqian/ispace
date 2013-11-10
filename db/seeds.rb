@@ -479,7 +479,9 @@ User.delete_all
 User.create(
   email: 't@g.cn',
   password: '00000000',
-  password_confirmation: '00000000'
+  password_confirmation: '00000000',
+  username: 'test',
+  role: 'admin'
 )
 
 __END__

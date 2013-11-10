@@ -26,6 +26,7 @@ III. discard import: #destroy, (for all imports)
 
 class ImportSheetsController < ApplicationController
   before_action :set_import_sheet, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
   # respond_to :json
 
   # GET /import_sheets

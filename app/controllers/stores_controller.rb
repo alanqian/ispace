@@ -1,5 +1,6 @@
 class StoresController < ApplicationController
   before_action :set_store, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /stores
   # GET /stores.json

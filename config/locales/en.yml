@@ -67,6 +67,8 @@ en:
         username: 用户名
         telephone: 电话号码
         employee_id: 员工号码
+        store_id: 所属门店
+        role: 角色
       brand:
         name: "品牌名"
       supplier:

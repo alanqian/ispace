@@ -4,12 +4,14 @@
   <div class="inputs">
     <%= f.input :username %>
     <%= f.input :employee_id %>
+    <%= f.input :store_id, collection: Store.all %>
     <%= f.input :email %>
     <% if @user.id.nil? %>
-      <%= f.input :password %>
-      <%= f.input :password_confirmation, label: 'Password confirm' %>
+      <%= f.input :password, as: :string %>
+      <%= f.input :password_confirmation, label: 'Password confirm', as: :string %>
     <% end %>
     <%= f.input :telephone %>
+    <%= f.input :role, selected: 'sale', collection: [['销售', 'sale' ], ['空间规划', 'designer' ]] %>
   </div>
 
   <div class="actions">

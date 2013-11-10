@@ -5,10 +5,12 @@
                       data: { url: user_path(user_new) },
                       html: { id: "users-form", class: "inplace" }) do |f| %>
     <div class="inputs">
-      <%= f.input :username %>
-      <%= f.input :employee_id %>
-      <%= f.input :email %>
-      <%= f.input :telephone %>
+      <%= f.input :username, input_html: { size: '' } %>
+      <%= f.input :email, input_html: { size: '' } %>
+      <%= f.input :employee_id, input_html: { size: '' } %>
+      <%= f.input :store_id, as: :select, collection: Store.all %>
+      <%= f.input :telephone, input_html: { size: '' } %>
+      <%= f.input :role, collection: [['销售', 'sale' ], ['空间规划', 'designer' ]] %>
     </div>
     <%= render 'list', users: @users %>
   <% end %>

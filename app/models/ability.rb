@@ -4,42 +4,19 @@ class Ability
   def initialize(user)
     if user.blank?
       cannot :manage, :all
-    elsif user.admin?
-      can :manage, :all
-    elsif user.designer?
-      can_manage_plan_related
-      can_manage_product_related
+    else
+      if user.admin?
+        can_manage_store_related
+        can_manage_user_related
+      elsif user.designer?
+        can_manage_product_related
+        can_manage_plan_related
+      elsif user.sale?
+      elsif Rails.env.develop? and user.role == 'superadmin' # for develop
+        can :manage, :all
+      end
     end
 
-    private
-
-    def can_manage_product_related
-      can :manage, Category
-      can :manage, Product
-      can :manage, Brand
-      can :manage, Manufacturer
-      can :manage, Supplier
-      can :manage, Sale
-    end
-
-    def can_manage_plan_related
-      can :manage, Plan
-      can :manage, PlanSet
-      can :manage, Position
-    end
-
-    def can_manage_user_related
-      can :manage, User
-    end
-
-    def can_manage_store_related
-      can :manage, Store
-      can :manage, Region
-
-      can :manage, Fixture
-      can :manage, Bay
-      can :manage, FixtureItem
-    end
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -66,5 +43,34 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
+  end
+
+  protected
+  def can_manage_product_related
+    can :manage, Category
+    can :manage, Product
+    can :manage, Brand
+    can :manage, Manufacturer
+    can :manage, Supplier
+    can :manage, Sale
+  end
+
+  def can_manage_plan_related
+    can :manage, Plan
+    can :manage, PlanSet
+    can :manage, Position
+  end
+
+  def can_manage_user_related
+    can :manage, User
+  end
+
+  def can_manage_store_related
+    can :manage, Store
+    can :manage, Region
+
+    can :manage, Fixture
+    can :manage, Bay
+    can :manage, FixtureItem
   end
 end
