@@ -3,5 +3,5 @@
   <td><%= fixture.code %></td>
   <td><%= fixture.user.try(:username) %></td>
   <td><%= fixture.flow_l2r %></td>
-  <td><%= link_to "删除", fixture_path(fixture), method: :delete, confirm: '确定要删除么' %></td>
+  <td><%= link_to "删除", fixture_path(fixture), method: :delete, data: { confirm: '确定要删除么'} %> </td>
 </tr>
