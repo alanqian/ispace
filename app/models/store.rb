@@ -5,6 +5,7 @@ class Store < ActiveRecord::Base
 
   before_save :update_region_name
 
+  has_many :sales, class_name: 'users', foreign_key: 'store_id'
 
   def self.define_model_store(stores)
     if stores.empty?

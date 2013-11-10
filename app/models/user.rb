@@ -6,11 +6,17 @@ class User < ActiveRecord::Base
   validate :username, uniqueness: true
   validate :employee_id, uniqueness: true
 
+  belongs_to :store
+
   def admin?
     self.role == 'admin'
   end
 
   def designer?
     self.role == 'designer'
+  end
+
+  def store_name
+    self.store.try(:name)
   end
 end
