@@ -5,6 +5,7 @@
       <%= token_tag %>
       <%= f.collection_radio_buttons :sale_type, t("dict.sale_type"), :first, :last %>
       <% if detail_type %>
+        <hr />
         <%= f.input :new_product %>
         <%= f.input :on_promotion %>
       <% end %>
