@@ -104,7 +104,7 @@ class PlanSet < ActiveRecord::Base
         store_id: plan.store_id,
       })
     end
-    plan_set.unpublish
+    plan_set.publish(false, nil)
     plan_set.save!
     plan_set
   end
@@ -120,7 +120,7 @@ class PlanSet < ActiveRecord::Base
 
     # dup all plans
     plan_set.plans = self.plans.map { |plan| plan.deep_copy(plan_set) }
-    plan_set.unpublish
+    plan_set.publish(false, nil)
     plan_set.save!
     plan_set
   end

@@ -65,11 +65,11 @@ def prepare_plan_sets
     puts "Plan #{plan.id} published, plan_set:#{src.id}"
   end
 end
-#prepare_plan_sets
+prepare_plan_sets
 
 def plan_set_publish(plan_set_id)
   plan_set = PlanSet.find(plan_set_id)
-  plan_set.publish
+  plan_set.publish(true, 1)
 end
 plan_set_publish(298486374)
 
