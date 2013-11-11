@@ -31,6 +31,15 @@ module ApplicationHelper
     I18n.t("simple_form.titles.#{controller_name.singularize}.#{item}")
   end
 
+  def simple_confirm(action)
+    I18n.t("simple_form.confirms.#{controller_name.singularize}.#{action}")
+  end
+
+  def simple_label(action_or_field)
+    label(controller_name.singularize, action_or_field)
+    #translate("labels.#{action_or_field}")
+  end
+
   def color_tag(color)
     content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
   end
@@ -199,6 +208,11 @@ module ApplicationHelper
     raw(ths.join("\n"))
   end
 
+  def up_level(value, sep=".")
+    r = value.rindex(sep)
+    r == nil ? value : value[0..r-1]
+  end
+
   # data_array syntax:
   #   [:select_one, :id-field, "sel-group"],
   #   [:field, collection: coll],
@@ -221,7 +235,7 @@ module ApplicationHelper
           content = select_one_check(id, sel_target)
         else
           field = t
-          val = object.send(field)
+          val = field.is_a?(Symbol) ? object.send(field) : field
           opts = { data: {val: val}}
           t = col.shift
           if t.is_a?(Hash)
