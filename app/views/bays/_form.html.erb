@@ -1,7 +1,7 @@
 <%= simple_form_for(@bay) do |f| %>
   <%= f.error_notification %>
 
-  <%= field_set_tag 'BasicInfo', id: "bases" do %>
+  <%= field_set_tag '基本信息', id: "bases" do %>
   <div id="basic" class="inputs">
     <%= f.input :name, wrapper_html: { class: 'foo' } %>
     <br/>
@@ -15,18 +15,22 @@
     <%= f.input :base_height, wrapper_html: { class: 'col_1_4' }  %>
     <%= f.input :base_width, wrapper_html: { class: 'col_1_4' }  %>
     <%= f.input :base_depth, wrapper_html: { class: 'col_1_4' }  %>
-    <%= f.input :base_color, wrapper_html: { class: 'col_4_4' }, :input_html => { class: 'color' } %>
-    <%= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
-    <%= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
+    <%= f.input :base_color, as: :color, wrapper_html: { class: 'col_4_4' } %>
+    <%#= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
+    <%#= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
   </div>
   <% end %>
 
   <br/>
 
-  <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf', title: 'add open shelf', onclick: "addElement(event,this,false);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board', title: 'add peg board', onclick: "addElement(event,this,false);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest', title: "add freezer chest", onclick: "addElement(event,this,true);" %>
-  <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar', title: "add rsb", onclick: "addElement(event,this,false);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf',
+    title: 'add open shelf', onclick: "addElement(event,this,false);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board',
+    title: 'add peg board', onclick: "addElement(event,this,false);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest',
+    title: "add freezer chest", onclick: "addElement(event,this,true);" %>
+  <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar',
+    title: "add rsb", onclick: "addElement(event,this,false);" %>
 
   <div id='accordion'>
   </div>

@@ -44,6 +44,11 @@ zh-CN:
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
   #   validates :email, :presence: true
+  helpers:
+    submit:
+      bay:
+        create: "新建货备"
+
   activerecord:
     models:
       category: 品类
@@ -55,6 +60,7 @@ zh-CN:
       manufacturer: 生产商
       product: 商品
       sale: 销售记录
+      bay: 货备
 
     attributes:
       category:
@@ -115,20 +121,36 @@ zh-CN:
         name: 名称
         code: Code
         user: 用户
-        flow_l2r: Flow l2r
+        flow_l2r: 自左向右
       bay:
+        name: 货备名称
+        back_height: 背板高度
+        back_width: 背板宽度
+        back_thick: 背板厚度
+        back_color: 背板颜色
+        notch_spacing: 槽孔间距
+        notch_1st: 第1槽孔
+        base_height: 货基高
+        base_width: 货基宽度
+        base_depth: 货基深度
+        base_color: 货基颜色
+        takeoff_height: 购物高度
+        show_peg_holes: 显示钉板
+        elem_count: 层数
+      open_shelf:
         name: 名称
-        back_height: Back Height
-        back_width: Back Width
-        back_thick: Back Thick
-        back_color: Back Color
-        notch_spacing: Notch Spacing
-        notch_1st: Notch 1st
-        base_height: Base Height
-        base_width: Base Width
-        base_depth: Base Depth
-        base_color: Base Color
-        elem_count: 商品个数
+        height: 开架高度
+        width: 隔板宽度
+        depth: 隔板深度
+        thick: 隔板厚
+        slope: 隔板倾角
+        riser: 横挡高
+        notch_num: 槽孔号
+        from_base: 距货基高
+        color: 隔板颜色
+        from_back: 距背板
+        finger_space: 插手空间
+        x_position: x-位置
     errors:
       models:
         user:

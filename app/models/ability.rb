@@ -15,7 +15,9 @@ class Ability
       elsif user.designer?
         can_manage_product_related
         can_manage_plan_related
+        can_manage_fixture_related
       elsif user.salesman?
+        # can_manage_for_salesman
       end
     end
 
@@ -61,6 +63,14 @@ class Ability
     can :manage, Plan
     can :manage, PlanSet
     can :manage, Position
+  end
+
+  def can_manage_fixture_related
+    can :manage, Bay
+    can :manage, Fixture
+    can :read, Category
+    can :read, Store
+    can :read, Region
   end
 
   def can_manage_user_related

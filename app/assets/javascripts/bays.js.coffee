@@ -143,6 +143,8 @@ sortByChildElem = (a, b) ->
 
 $ ->
   console.log "bay editor start loading..."
+  $("select.colorpicker").simplecolorpicker
+    picker: true
   $("div .elem_inputs").animate({ marginLeft: 10 }, "fast")
   $("div .elem_inputs").css({"background-color":"#88ff88"})
 
