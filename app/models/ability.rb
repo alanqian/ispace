@@ -2,8 +2,12 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if user.blank?
+    if Rails.env.test?
+      can :manage, :all
+    elsif user.blank?
       cannot :manage, :all
+    elsif Rails.env.development? and user.role == 'superadmin' # for develop
+      can :manage, :all
     else
       if user.admin?
         can_manage_store_related
@@ -11,9 +15,7 @@ class Ability
       elsif user.designer?
         can_manage_product_related
         can_manage_plan_related
-      elsif user.sale?
-      elsif Rails.env.develop? and user.role == 'superadmin' # for develop
-        can :manage, :all
+      elsif user.salesman?
       end
     end
 

@@ -483,6 +483,88 @@ User.create(
   username: 'test',
   role: 'admin'
 )
+User.create(
+  email: 'admin@g.cn',
+  password: '00000000',
+  password_confirmation: '00000000',
+  username: '管理员',
+  role: 'admin'
+)
+User.create(
+  email: 'd@g.cn',
+  password: '00000000',
+  password_confirmation: '00000000',
+  username: '王二',
+  role: 'designer'
+)
+store = Store.where(name: '郑州1号店').first
+User.create(
+  email: 's@g.cn',
+  password: '00000000',
+  password_confirmation: '00000000',
+  username: '李大力',
+  store_id: store.id
+  role: 'salesman'
+)
+__END__
+
+Category.delete_all
+Category.create(
+  code: "1",
+  name: '百货',
+  memo: %{百货})
+
+Category.create(
+  code: "101",
+  parent_id: "1",
+  name: '日用百货',
+  memo: %{日用品})
+
+Category.create(
+  code: '10101',
+  parent_id: "101",
+  name: '牙膏',
+  memo: %{各种品类的牙膏，含特种牙膏})
+
+Category.create(
+  code: '10102',
+  parent_id: "101",
+  name: '纸巾',
+  memo: '')
+
+Region.delete_all
+Store.delete_all
+
+Region.create(code: "cn",
+              name: "中国",
+              consume_type: "B",
+              memo: "中国总部")
+
+Region.create(code: "cn.north",
+              name: "华北区",
+              consume_type: "B",
+              memo: "华北区，含内蒙")
+
+Region.create(code: "cn.north.bj",
+              name: "北京",
+              consume_type: "A+",
+              memo: "北京，含各郊县")
+
+Store.create(region_id: "cn.north.bj",
+             name: "12号店",
+             code: "001",
+             area: 60,
+             location: "市区",
+             memo: "牡丹园，tel: 81231234")
+Store.create(region_id: "cn.north.bj",
+             name: "18号店",
+             code: "002",
+             area: 120,
+             location: "市区",
+             memo: "亚运村，tel: 81231234")
+
+__END__
+
 
 __END__
 Category.delete_all
