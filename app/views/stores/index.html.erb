@@ -1,23 +1,28 @@
-<h1>门店管理</h1>
+<h1>
+  <%= simple_title(:index) %>
+</h1>
 
 <div id="stores-list">
   <%= simple_form_for(store_new, method: "patch", remote: true,
                       data: { url: store_path(store_new) },
                       html: { id: "stores-form", class: "inplace" }) do |f| %>
     <div class="inputs">
-      <%= f.input :name %>
-      <%= f.input :region_id, collection: Region.all %>
+      <%#= f.input :region_id, collection: Region.all %>
       <%= f.input :code  %>
+      <%= f.input :name %>
       <%= f.input :area %>
       <%= f.input :location  %>
-      <%= f.input :ref_store_id, collection: Store.model_store  %>
-      <%= f.input :memo %>
+      <%#= f.input :ref_store_id, collection: Store.model_store  %>
+      <%#= f.input :memo %>
     </div>
-    <%= render 'list', stores: @stores %>
+    <%= render 'list', stores: @stores, regions: @regions %>
   <% end %>
 
 </div>
 
 <br>
 
-<%= link_to 'New Store', new_store_path %>
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_store_path %>
+</div>
+

@@ -1,4 +1,6 @@
-<h1>区域管理</h1>
+<h1>
+  <%= simple_title(:index) %>
+</h1>
 
 <div id="regions-list">
   <%= simple_form_for(region_new, method: 'patch', remote: true,
@@ -17,4 +19,6 @@
 
 <br>
 
-<%= link_to 'New Region', new_region_path %>
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_region_path %>
+</div>

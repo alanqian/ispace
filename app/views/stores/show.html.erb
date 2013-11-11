@@ -1,11 +1,8 @@
+<%= simple_form_for(@store) do |f| %>
 <div class="entity">
+  <%= f.input :region_id, input_html: { disabled: true } %>
   <p>
-    <label>Region:</label>
-    <%= @store.region_id %>
-  </p>
-
-  <p>
-    <label>Code:</label>
+    <%=simple_label :code %>:
     <%= @store.code %>
   </p>
 
@@ -34,6 +31,7 @@
     <%= @store.memo %>
   </p>
 </div>
+<% end %>
 
 <%= link_to 'Edit', edit_store_path(@store) %> |
 <%= link_to 'Back', stores_path %>

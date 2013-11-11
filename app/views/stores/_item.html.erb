@@ -1,11 +1,12 @@
 <tr data-id="<%= store.id %>">
   <%= data_td_list store,
-                   :name,
-                   :region_id,
                    :code,
+                   [up_level(store.region_id), collection: regions_hash ],
+                   [:region_id, collection: regions_hash ],
+                   :name,
                    :area,
+                   "", # :depot_area
                    :location,
-                   [ :ref_store_id ],
-                   :memo
+                   "" # :grade
   %>
 </tr>

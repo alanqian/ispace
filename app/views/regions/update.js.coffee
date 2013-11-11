@@ -1,5 +1,5 @@
   id = "<%= @region.id %>"
-  new_tr = "<%=j render partial: 'item', locals: { region: @region } %>"
+  new_tr = "<%=j render partial: 'item', locals: { region: @region, } %>"
   sel = "#regions-list tr[data-id=#{id}]"
 
 <% if @region.errors.any? %>
