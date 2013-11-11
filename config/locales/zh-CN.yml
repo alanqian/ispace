@@ -19,7 +19,7 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
+zh_CN:
   ago: 前
   date:
     formats:
@@ -97,15 +97,17 @@ en:
         plan_info_rank: 排名
         facings: 排面
       store:
+        code: 编码
         name: 店名
-        region_id: 地址
-        code: Code
-        area: 区域
+        area: 面积
+        depot_area: 仓库面积
         location: 位置
-        ref_store_id: Ref Store Id
+        grade: 等级
+        region_id: 区域
+        ref_store_id: 样板店
         memo: 备注
       region:
-        code: Code
+        code: 编码
         name: 区域
         consume_type: 消费类型
         memo: 备注

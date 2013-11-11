@@ -19,7 +19,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   def set_do_param
     _do = params[:_do]
     @do = _do.to_sym if _do && !_do.empty?
@@ -27,8 +26,10 @@ class ApplicationController < ActionController::Base
 
   def set_object_do_param
     object = controller_name.singularize.to_sym
-    _do = params[object][:_do]
-    @do = _do.to_sym if _do && !_do.empty?
+    if params[object]
+      _do = params[object][:_do]
+      @do = _do.to_sym if _do && !_do.empty?
+    end
   end
 
   def set_form
@@ -59,5 +60,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # = f.label :name, Product.human_attribute_name("labels.name").html_safe
+  # I18n.t("foo", link: "abc")
+  def simple_notice(options={})
+    _do = options[:_do] || @do
+    object = controller_name.singularize
+    notice_text = _do.nil? ? I18n.t("simple_form.notices.#{object}.#{action_name}", options) :
+      I18n.t("simple_form.notices.#{object}.#{action_name}_#{_do}", options)
+  end
+
   @@commit_map = I18n.t("simple_form.commits").invert
+  @@object_label_methods = [:to_label, :name, :title]
 end

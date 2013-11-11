@@ -10,7 +10,7 @@ class StoresController < ApplicationController
     else
       @stores = Store.all
     end
-
+    @regions = Region.all
     render "index", locals: { store_new: Store.new }
   end
 
@@ -32,10 +32,9 @@ class StoresController < ApplicationController
   # POST /stores.json
   def create
     @store = Store.new(store_params)
-
     respond_to do |format|
       if @store.save
-        format.html { redirect_to @store, notice: 'Store was successfully created.' }
+        format.html { redirect_to @store, notice: simple_notice }
         format.json { render action: 'show', status: :created, location: @store }
       else
         format.html { render action: 'new' }
@@ -49,7 +48,7 @@ class StoresController < ApplicationController
   def update
     respond_to do |format|
       if @store.update(store_params)
-        format.html { redirect_to @store, notice: 'Store was successfully updated.' }
+        format.html { redirect_to @store, notice: simple_notice }
         format.json { head :no_content }
         format.js { set_store_update_js }
       else
@@ -82,5 +81,6 @@ class StoresController < ApplicationController
 
     def set_store_update_js
       @store.reload
+      @regions = Region.all
     end
 end

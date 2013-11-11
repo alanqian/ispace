@@ -1,4 +1,4 @@
-en:
+zh_CN:
   simple_form:
     "yes": 'Yes'
     "no": 'No'
@@ -24,6 +24,16 @@ en:
         add_store: 添加样板店
         publish: 发布空间规划
         defaults: 修改空间规划
+      store:
+        index: 门店列表
+        new: 新建门店
+      region:
+        index: 区域设置
+        new: 新建区域
+    notices:
+      store:
+        update: 门店信息更新完毕
+        create: 成功创建了一个门店
 
     required:
       text: 'required'
@@ -46,7 +56,8 @@ en:
       # my customize below here
       defaults:
         category_id: 品类
-
+      store:
+        code: 编码
       import_sheet:
         file_upload: "上传文件"
         comment: "备注"
