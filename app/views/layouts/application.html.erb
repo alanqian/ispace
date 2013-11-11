@@ -70,50 +70,7 @@
         <div class="row">
           <div class="span3 sidebar">
             <nav class="sidebar-nav" role="navigation">
-              <% if current_user.admin? %>
-              <ul class="nav nav-list">
-                <li class="nav-header">门店</li>
-                <li><%= link_to "门店管理", stores_path %></li>
-                <li><%= link_to "样板店管理", stores_path(model_store: true) %></li>
-                <li><%= link_to "区域管理", regions_path %></li>
-              </ul>
-              <ul class="nav nav-list">
-                <li class="nav-header">用户</li>
-                <li><%= link_to "用户管理", users_path %></li>
-                <li><%= link_to "用户审核", '#' %></li>
-              </ul>
-              <% end %>
-              <% if current_user.designer? %>
-              <ul class="nav nav-list">
-                <li class="nav-header">布局</li>
-                <li><%= link_to "空间规划", plan_sets_path %></li>
-              </ul>
-              <% end %>
-              <% if current_user.admin? %>
-              <ul class="nav nav-list">
-                <li class="nav-header">货架</li>
-                <li><%= link_to "货架管理", fixtures_path %></li>
-                <li><%= link_to "货备管理", bays_path %></li>
-              </ul>
-              <% end %>
-              <% if current_user.designer? %>
-              <ul class="nav nav-list">
-                <li class="nav-header">商品</li>
-                <li><%= link_to "品类管理", categories_path %></li>
-                <li><%= link_to "品牌管理", brands_path  %></li>
-                <li><%= link_to "供应商管理", suppliers_path %></li>
-                <li><%= link_to "制造商管理", manufacturers_path %></li>
-                <li><%= link_to "商品管理", products_path %></li>
-              </ul>
-              <ul class="nav nav-list">
-                <li class="nav-header">数据</li>
-                <li><%= link_to "门店数据导入", new_import_sheet_path(_t: 'store') %></li>
-                <li><%= link_to "品类数据导入", new_import_sheet_path(_t: 'category') %></li>
-                <li><%= link_to "商品数据导入", new_import_sheet_path(_t: 'product') %></li>
-                <li><%= link_to "销售数据导入", new_import_sheet_path(_t: 'sale') %></li>
-                <li><%= link_to "分析统计", '#' %></li>
-              </ul>
-              <% end %>
+              <%= render "layouts/nav_#{current_user.role}" %>
             </nav><!--/.nav-->
           </div><!--/span-->
           <div class="span9 main">

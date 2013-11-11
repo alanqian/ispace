@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
     self.role == 'designer'
   end
 
-  def sale?
-    self.role == 'sale'
+  def salesman?
+    self.role == 'salesman'
   end
 
   def store_name
