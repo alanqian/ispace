@@ -6,12 +6,20 @@
   <%= link_to raw("&times"), "#", title:t("dict.removeFreezerChest"), onclick: "removeElement(event,this);", class: 'remove_element' %>
 </h3>
 <div>
-  <%= f.input :height, wrapper_html: { class: 'col_1' }  %>
-  <%= f.input :depth , wrapper_html: { class: 'col_1_2' }%>
-  <%= f.input :inside_height, wrapper_html: { class: 'col_2_2' }%>
-  <%= f.input :wall_thick, wrapper_html: { class: 'col_1_2' } %>
-  <%= f.input :merch_height, wrapper_html: { class: 'col_2_2' }%>
-  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  <div class="row hlabel">
+    <%= f.input :height, wrapper_html: { class: 'span2' }  %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :depth , wrapper_html: { class: 'span2' }%>
+    <%= f.input :inside_height, wrapper_html: { class: 'span2' }%>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :wall_thick, wrapper_html: { class: 'span2' } %>
+    <%= f.input :merch_height, wrapper_html: { class: 'span2' }%>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :color, as: :color, wrapper_html: { class: 'span2'}  %>
+  </div>
   <%= f.hidden_field :notch_num %>
   <%= f.hidden_field :from_base %>
 </div>

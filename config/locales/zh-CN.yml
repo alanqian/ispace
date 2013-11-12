@@ -169,7 +169,23 @@ zh-CN:
         notch_num: 槽孔号
         from_base: 距基底
         color: 颜色
-
+      freezer_chest:
+        height: 高度
+        depth: 深度
+        inside_height: 内部高
+        wall_thick: 腔壁厚
+        merch_height: 商品高度
+        color: 颜色
+      rear_support_bar:
+        height: 高度
+        bar_depth: 条深度
+        bar_thick: 条厚度
+        from_back: 距背板
+        hook_length: 挂钩长
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+        bar_slope: 条倾斜度
     errors:
       models:
         user:

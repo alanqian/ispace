@@ -6,13 +6,24 @@
   <%= link_to raw("&times"), "#", title: t("dict.removeRearSupportBar"), onclick: "removeElement(event,this);", class: 'remove_element' %>
 </h3>
 <div>
-  <%= f.input :height, wrapper_html: { class: 'col_1' }  %>
-  <%= f.input :bar_depth, wrapper_html: { class: 'col_1_2' } %>
-  <%= f.input :bar_thick, wrapper_html: { class: 'col_2_2' } %>
-  <%= f.input :from_back, wrapper_html: { class: 'col_1_2' } %>
-  <%= f.input :hook_length, wrapper_html: { class: 'col_2_2' } %>
-  <%= f.input :notch_num, wrapper_html: { class: 'col_1_2 notch_on' }  %>
-  <%= f.input :from_base, wrapper_html: { class: 'col_1_2 notch_off' } %>
-  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  <div class="row hlabel">
+    <%= f.input :height, wrapper_html: { class: 'span2' }  %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :bar_depth, wrapper_html: { class: 'span2' } %>
+    <%= f.input :bar_thick, wrapper_html: { class: 'span2' } %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :from_back, wrapper_html: { class: 'span2' } %>
+    <%= f.input :hook_length, wrapper_html: { class: 'span2' } %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :notch_num, wrapper_html: { class: 'span2 notch_on' }  %>
+    <%= f.input :from_base, wrapper_html: { class: 'span2 notch_off' } %>
+    <%= f.input :color, as: :color, wrapper_html: { class: 'span2'}  %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :bar_slope, wrapper_html: { class: 'span2' } %>
+  </div>
 </div>
 
