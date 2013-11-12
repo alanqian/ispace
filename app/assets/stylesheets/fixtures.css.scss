@@ -2,7 +2,45 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-tr.active {
-  background-color: #ff0000;
-}
+form.edit_fixture {
+  tr.active {
+    background-color: #0000cc;
+  }
+  table#fixture_metrics {
+    tr {
+      td:first-child {
+        background-color: #dddddd;
+        width: 3em;
+        text-align: center;
+      }
+      td:last-child {
+        background-color: #ffffff;
+        min-width: 4.5em;
+        text-align: left;
+        padding-left: 0.2em;
+      }
+    }
+  }
 
+  table#items {
+    width: 19em;
+    tr {
+      th {
+        width: 3.5em;
+      }
+      th:first-child {
+        width: 10em;
+      }
+      th:last-child {
+        width: 4.5em;
+      }
+    }
+    td>select {
+      width: 95%;
+    }
+    td>input.integer {
+      width: 90%;
+    }
+  }
+
+}

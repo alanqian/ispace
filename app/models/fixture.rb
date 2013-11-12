@@ -1,6 +1,8 @@
 class Fixture < ActiveRecord::Base
   default_scope -> { where('deleted_at is NULL') }
   has_many :fixture_items, -> { order(:item_index) }, dependent: :destroy
+  has_many :store_fixtures
+  has_many :plans
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
 
   def user
@@ -28,7 +30,15 @@ class Fixture < ActiveRecord::Base
   end
 
   def ref_count
-    0
+    self.ref_store.size
+  end
+
+  def ref_store
+    self.store_fixtures.select(:store_id).group(:store_id).count(:store_id).keys
+  end
+
+  def ref_plan_set
+    self.plans.select(:plan_set_id).group(:plan_set_id).count(:plan_set_id).keys
   end
 
   def deep_copy(uid)

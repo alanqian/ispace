@@ -129,7 +129,8 @@ $ ->
     }
 
   console.log "fixture editor start..."
-  if window.bays
+  if $("#fixture_metrics").length > 0
+    window.bays = $("#fixture_metrics").data("bays")
     console.log "#{Object.keys(window.bays).length} bays in system"
 
     # move template outside of the form

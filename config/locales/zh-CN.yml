@@ -21,6 +21,9 @@
 
 zh-CN:
   ago: 前
+  yesno:
+    Yes: 是
+    No: 否
   date:
     formats:
       default: "%Y-%m-%d"
@@ -125,9 +128,12 @@ zh-CN:
         memo: 备注
       fixture:
         name: 名称
-        code: Code
         user: 用户
-        flow_l2r: 自左向右
+        flow_l2r: 向右排货
+      fixture_item:
+        bay_id: 货备
+        num_bays: 货备数
+        continuous: 货备连通
       bay:
         back_height: 背板高度
         back_width: 背板宽度
@@ -199,7 +205,7 @@ zh-CN:
         linear: 长度
         area: 面积
         cube: 体积
-        ref_count: 配置数
+        ref_count: 门店数
         memo: 备注
     errors:
       models:
