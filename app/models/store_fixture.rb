@@ -1,4 +1,8 @@
 class StoreFixture < ActiveRecord::Base
+  belongs_to :store
+  belongs_to :fixture
+  belongs_to :category
+
   def self.verify_store_fixture?(store_id, category_id)
     self.exists?(store_id: store_id, category_id: category_id)
   end

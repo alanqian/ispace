@@ -143,9 +143,8 @@ table.display thead th div.DataTables_sort_wrapper span {
 }
 
 .dataTables_info {
-    display: inline-block;
+  display: inline-block;
 	width: auto;
-	color: #0361ae;
 }
 
 .dataTables_paginate {

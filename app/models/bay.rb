@@ -48,6 +48,22 @@ class Bay < ActiveRecord::Base
     rear_support_bars.where(level: layer).first
   end
 
+  def bay_size
+    "#{back_height}x#{back_width}x#{base_depth}"
+  end
+
+  def ref_fixture
+    self.fixture_items.select(:fixture_id).group(:fixture_id).count(:fixture_id).keys
+  end
+
+  def ref_count
+    ref_fixture.count
+  end
+
+  def num_layers
+    open_shelves.count
+  end
+
   # origin: left/bottom corner
   def to_pdf(pdf)
     num_bays = pdf.ostate.fixture[:num_bays]

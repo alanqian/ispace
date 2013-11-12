@@ -123,34 +123,41 @@ zh-CN:
         user: 用户
         flow_l2r: 自左向右
       bay:
-        name: 货备名称
         back_height: 背板高度
         back_width: 背板宽度
         back_thick: 背板厚度
         back_color: 背板颜色
         notch_spacing: 槽孔间距
         notch_1st: 第1槽孔
-        base_height: 货基高
-        base_width: 货基宽度
-        base_depth: 货基深度
-        base_color: 货基颜色
+        base_height: 基底高
+        base_width: 基底宽度
+        base_depth: 基底深度
+        base_color: 基底颜色
         takeoff_height: 购物高度
         show_peg_holes: 显示钉板
         elem_count: 层数
+        name: 货备名称
+        bay_size: 尺寸(高/宽/深)
+        num_layers: 层数
+        run: 行程
+        linear: 长度
+        area: 面积
+        cube: 体积
+        ref_count: 货架数
       open_shelf:
         name: 名称
-        height: 开架高度
+        height: 隔层高度
         width: 隔板宽度
         depth: 隔板深度
         thick: 隔板厚
         slope: 隔板倾角
         riser: 横挡高
         notch_num: 槽孔号
-        from_base: 距货基高
+        from_base: 距基底高
         color: 隔板颜色
         from_back: 距背板
         finger_space: 插手空间
-        x_position: x-位置
+        x_position: x轴
     errors:
       models:
         user:

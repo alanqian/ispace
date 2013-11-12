@@ -1,28 +1,9 @@
 <h1>货备管理</h1>
 
 <div id="bays-list">
-  <%= simple_form_for(bay_new, method: "patch", remote: true,
-                      data: { url: bay_path(bay_new) },
-                      html: { id: "bays-form", class: "inplace" }) do |f| %>
-    <div class="inputs">
-      <%= f.input :name %>
-      <%= f.input :back_height %>
-      <%= f.input :back_width %>
-      <%= f.input :back_thick %>
-      <%= f.input :back_color, as: :color %>
-      <%= f.input :notch_spacing %>
-      <%= f.input :notch_1st %>
-      <%= f.input :base_height %>
-      <%= f.input :base_width %>
-      <%= f.input :base_depth %>
-      <%= f.input :base_color, as: :color %>
-      <%= f.input :elem_count %>
-    </div>
-    <%= render 'list', bays: @bays %>
-<% end %>
-
+  <%= render 'list', bays: @bays %>
 </div>
 
-<br>
-
-<%= link_to '新建货备', new_bay_path %>
+<div id="dataTable-filter">
+  <%= link_to '新建货备', new_bay_path %>
+</div>
