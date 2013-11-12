@@ -186,6 +186,14 @@ zh-CN:
         from_base: 距基底
         color: 颜色
         bar_slope: 条倾斜度
+      fixture:
+        name: 货架名称
+        num_bays: 货备数
+        run: 行程
+        linear: 长度
+        area: 面积
+        cube: 体积
+        ref_count: 配置数
     errors:
       models:
         user:

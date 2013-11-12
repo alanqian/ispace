@@ -32,7 +32,11 @@ zh-CN:
         new: 新建区域
       bay:
         new: 新建货备
-        edit: 修改货备
+        edit: 编辑货备
+      fixture:
+        index: 货架管理
+        new: 新建货架
+        edit: 编辑货架
     notices:
       store:
         update: 门店信息更新完毕

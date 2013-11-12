@@ -1,7 +1,12 @@
 <tr data-id="<%= fixture.id %>">
-  <td><%= link_to fixture.name, edit_fixture_path(fixture) %></td>
-  <td><%= fixture.code %></td>
-  <td><%= fixture.user.try(:username) %></td>
-  <td><%= fixture.flow_l2r %></td>
-  <td><%= link_to "删除", fixture_path(fixture), method: :delete, data: { confirm: '确定要删除么'} %> </td>
+  <%= data_td_list fixture,
+    link_to(fixture.name, edit_fixture_path(fixture, _do: @do)),
+    :num_bays,
+    :run,
+    :linear,
+    :area,
+    :cube,
+    link_to(fixture.ref_count, edit_fixture_path(fixture, _do: :deploy)),
+    link_to("删除", fixture_path(fixture), method: :delete, data: { confirm: '确定要删除么'})
+  %>
 </tr>

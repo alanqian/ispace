@@ -1,4 +1,6 @@
-<h1>货架管理</h1>
+<h1>
+  <%= simple_title(:index) %>
+</h1>
 
 <div id="fixtures-list">
   <%= render 'list', fixtures: @fixtures %>
@@ -6,4 +8,7 @@
 
 <br>
 
-<%= link_to 'New Fixture', new_fixture_path %>
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_fixture_path %>
+</div>
+

@@ -7,6 +7,30 @@ class Fixture < ActiveRecord::Base
     ''
   end
 
+  def num_bays
+    fixture_items.sum { |it| it.num_bays }
+  end
+
+  def run
+    0.0
+  end
+
+  def linear
+    0.0
+  end
+
+  def area
+    0.0
+  end
+
+  def cube
+    0.0
+  end
+
+  def ref_count
+    0
+  end
+
   def deep_copy(uid)
     # copy self
     new_fixture = self.dup # shallow copy
@@ -16,7 +40,6 @@ class Fixture < ActiveRecord::Base
 
     # copy associations
     copy_assoc_to(new_fixture, :fixture_items)
-
     new_fixture
   end
 
