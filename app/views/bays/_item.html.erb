@@ -1,6 +1,7 @@
 <tr data-id="<%= bay.id %>">
   <%= data_td_list bay,
     link_to("#{bay.name}(#{bay.ref_count})", edit_bay_path(bay)) ,
+    bay_types(bay.types),
     :bay_size,
     :num_layers,
     :run,

@@ -26,6 +26,8 @@ class Bay < ActiveRecord::Base
 
   validates :takeoff_height, presence: true,
     numericality: { greater_than_or_equal_to: 0.0 }
+  before_save :recalc_space_and_types
+
   # types
   # num_layers
   def _num_layers
@@ -184,7 +186,8 @@ class Bay < ActiveRecord::Base
   end
 
   # helper for seeds.rb
-  def recalc_space
+  def recalc_space_and_types
+    # update space metrics
     self.linear = 0.0
     self.area = 0.0
     self.cube = 0.0
@@ -193,7 +196,10 @@ class Bay < ActiveRecord::Base
       self.area += el.width * el.height
       self.cube += el.width * el.height * el.depth
     end
-    save
+    # update num_layers and types
+    test = layers
+    self.num_layers = test.size
+    self.types = test.map { |el| el.class.to_s.underscore }.uniq
   end
 
   def self.template
