@@ -69,7 +69,7 @@ class FixturesController < ApplicationController
   # DELETE /fixtures/1
   # DELETE /fixtures/1.json
   def destroy
-    @fixture.delete_at = Time.now
+    @fixture.deleted_at = Time.now
     @fixture.save
     respond_to do |format|
       format.html { redirect_to fixtures_url }
@@ -97,7 +97,7 @@ class FixturesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def fixture_params
       params.require(:fixture).permit(
-        :name, :code, :user_id, :category_id,
+        :name, :memo, :user_id, :category_id,
         :flow_l2r,
         fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
     end

@@ -128,20 +128,12 @@ class BaysController < ApplicationController
     elem_exists = lambda { |pair| pair[1][:_destroy] == "false" }
 
     if bay_params.permitted?
-      # update elem_type, elem_count correctly
-      elem_type = 0
-      bay_params[:elem_type] = 0 # TODO: check mixed type
-      bay_params[:elem_count] = 0
+      # update notch_spacing
       notch_spacing = bay_params[:notch_spacing].to_f || 1.0
       notch_1st = bay_params[:notch_1st].to_f || 1.0
       [:open_shelves_attributes, :peg_boards_attributes, :freezer_chests_attributes,
         :rear_support_bars_attributes].each do |nested|
         attrs = bay_params[nested]
-        if attrs
-          bay_params[:elem_type] |= (1 << elem_type)
-          bay_params[:elem_count] += attrs.count(&elem_exists)
-        end
-        elem_type += 1
       end
     end
     bay_params
@@ -153,7 +145,7 @@ class BaysController < ApplicationController
       :name, :back_height, :back_width, :back_thick, :back_color,
       :use_notch, :notch_spacing, :notch_1st,
       :base_height, :base_width, :base_depth, :base_color,
-      :takeoff_height, :elem_type, :elem_count,
+      :takeoff_height,
       :show_peg_holes,
       open_shelves_attributes: [:_destroy, :id, :name, :level,
         :height, :width, :depth, :thick,

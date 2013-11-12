@@ -3,6 +3,8 @@
 class Plan < ActiveRecord::Base
   include PdfExtension
 
+  serialize :layers, Array
+
   belongs_to :plan_set
   belongs_to :store
   belongs_to :fixture
@@ -175,6 +177,7 @@ class Plan < ActiveRecord::Base
     self.save!
   end
 
+  # TODO: fixture_version
   def fixture_id=(fixture_id)
     unless fixture_id.kind_of?(Fixnum)
       # create store_fixture

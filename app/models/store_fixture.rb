@@ -2,6 +2,11 @@ class StoreFixture < ActiveRecord::Base
   belongs_to :store
   belongs_to :fixture
   belongs_to :category
+  serialize :layers, Array
+
+  def version
+    updated_at.to_i
+  end
 
   def self.verify_store_fixture?(store_id, category_id)
     self.exists?(store_id: store_id, category_id: category_id)

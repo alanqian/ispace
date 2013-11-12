@@ -62,6 +62,11 @@ zh-CN:
       product: 商品
       sale: 销售记录
       bay: 货备
+      open_shelf: 开架
+      rear_support_bar: 后支撑条
+      freezer_chest: 冰柜
+      peg_board: 钉板
+      heap: 堆头
 
     attributes:
       category:
@@ -145,6 +150,7 @@ zh-CN:
         area: 面积
         cube: 体积
         ref_count: 货架数
+        types: 类型
       open_shelf:
         name: 名称
         height: 隔层高度
@@ -194,6 +200,7 @@ zh-CN:
         area: 面积
         cube: 体积
         ref_count: 配置数
+        memo: 备注
     errors:
       models:
         user:

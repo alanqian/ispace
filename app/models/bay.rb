@@ -1,4 +1,5 @@
 class Bay < ActiveRecord::Base
+  default_scope -> { where('deleted_at is NULL') }
   has_many :fixture_items
 
   has_many :open_shelves
@@ -9,6 +10,7 @@ class Bay < ActiveRecord::Base
   accepts_nested_attributes_for :peg_boards, allow_destroy: true
   accepts_nested_attributes_for :freezer_chests, allow_destroy: true
   accepts_nested_attributes_for :rear_support_bars, allow_destroy: true
+  serialize :types, Array
 
   validates :name, presence: true, length: { maximum: 64 }
   validates :back_height, :back_width, :back_thick, presence: true,
@@ -24,8 +26,12 @@ class Bay < ActiveRecord::Base
 
   validates :takeoff_height, presence: true,
     numericality: { greater_than_or_equal_to: 0.0 }
-  # elem_type
-  # elem_count
+  # types
+  # num_layers
+  def _num_layers
+    open_shelves.count
+  end
+
 
   alias_attribute :run, :back_width
   attr_accessor :use_notch, :show_peg_holes
@@ -58,10 +64,6 @@ class Bay < ActiveRecord::Base
 
   def ref_count
     ref_fixture.count
-  end
-
-  def num_layers
-    open_shelves.count
   end
 
   # origin: left/bottom corner
@@ -208,8 +210,6 @@ class Bay < ActiveRecord::Base
       base_depth: 50.0,
       base_color: '#400040',
       takeoff_height: 190.0,
-      elem_type: 1,
-      elem_count: 1
     )
     bay.open_shelves.concat(OpenShelf.template(bay))
     bay

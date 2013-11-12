@@ -1,5 +1,5 @@
 class Fixture < ActiveRecord::Base
-  default_scope -> { where('delete_at is NULL') }
+  default_scope -> { where('deleted_at is NULL') }
   has_many :fixture_items, -> { order(:item_index) }, dependent: :destroy
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
 
@@ -50,6 +50,10 @@ class Fixture < ActiveRecord::Base
       category_id: category_id,
       code: fixture_code,
     })
+  end
+
+  def version
+    updated_at.to_i
   end
 
   def calc_size
@@ -307,7 +311,7 @@ class Fixture < ActiveRecord::Base
         base_width: bay.base_width,
         base_height: bay.base_height,
         base_color: bay.base_color,
-        num_layers: bay.elem_count,
+        num_layers: bay.num_layers,
         height: bay.back_height,
         width: bay.back_width,
       }
@@ -316,7 +320,7 @@ class Fixture < ActiveRecord::Base
       # [fixture_item:layer, bay_id:run:num_bays:space_height:shelf_height:shelf_color, ...]
       from_base = 0
       height = 0
-      1.upto(bay.elem_count) do |layer|
+      1.upto(bay.num_layers) do |layer|
         elem = bay.get_element(layer)
         if elem
           spaces[fi.id][layer] = {
