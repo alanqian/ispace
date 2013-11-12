@@ -159,6 +159,17 @@ zh-CN:
         from_back: 距背板
         finger_space: 伸手空间
         x_position: x轴
+      peg_board:
+        height: 高度
+        depth: 钉深
+        horz_space: 水平空间
+        vert_space: 垂直空间
+        horz_start: 水平起始
+        vert_start: 垂直起始
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+
     errors:
       models:
         user:
