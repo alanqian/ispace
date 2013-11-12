@@ -44,7 +44,9 @@ root.addElement = (event, el, isChest) ->
     $("#accordion").append(src)
   else
     $("#accordion").prepend(src)
-  $("#accordion").accordion("destroy").accordion({ heightStyle: "content" })
+  $("#accordion").accordion("destroy").accordion
+    collapsible: true
+    heightStyle: "content"
 
   # assume first input is element name
   nameElem = $("#accordion h3 input").first()
@@ -150,7 +152,10 @@ $ ->
 
   count = $("div .elem_inputs").length
   $("div .elem_inputs").sort(sortByChildElem).children().appendTo("#accordion")
-  $("#accordion").accordion({active: -1, heightStyle: "content" })
+  $("#accordion").accordion
+    active: -1
+    heightStyle: "content"
+    collapsible: true
 
   updateElementsLevel = () ->
     elems = $("#accordion h3")

@@ -2,14 +2,82 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#basic {
+.bays {
+  label>abbr {
+    display: none; // hide required mark *
+  }
+  fieldset {
+    background-color: #f0f0f0;
+  }
+
+  .row {
+    margin-left: 0;
+    clear: both;
+  }
+
+  .row.hlabel {
+    div.input {
+      display: inline-block;
+      label {
+        display: inline-block;
+        min-width: 1em;
+        padding: 0 2px;
+      }
+      input {
+        display: inline-block;
+        width: 54px;
+        padding: 0 4px;
+      }
+      input[type="checkbox"] {
+        width: 10px;
+      }
+    }
+    div.input.span2 {
+      label {
+        width: 70px;
+      }
+    }
+  }
+  .row.vlabel {
+    div.input {
+      padding: 0 4px;
+      input {
+        width: 54px;
+        padding: 0;
+      }
+    }
+  }
+  .ui-accordion .ui-accordion-header {
+    padding: .2em .5em .2em .7em;
+  }
+  h3>input {
+    margin-left: 15px;
+  }
+  input[type='submit'] {
+    height: 30px;
+    padding: 7px;
+  }
+  div.actions {
+    padding: 1px;
+    margin: 4px 0;
+  }
+  div.bay_name {
+    label {
+      display: inline-block;
+      min-width: 2em;
+      width: 4.5em;
+    }
+  }
+}
+
+#bay_main1 {
   display: block;
   float: top;
-  width: 360px;
   border: 1px 1px 1px 1px;
   border-color: 0;
-  background-color: #f0f0f0;
+}
 
+#basic {
   div.col_1_4 {
     display: inline-block;
     float: left;
@@ -64,7 +132,7 @@
 
 }
 
-#accordion {
+#accordion1 {
   width: 500px;
 
   div.col_1 {

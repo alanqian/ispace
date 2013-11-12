@@ -6,17 +6,27 @@
   <%= link_to raw("&times"), "#", title: t("dict.removeOpenShelf"), onclick: "removeElement(event,this);", class: 'remove_element' %>
 </h3>
 <div>
-  <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
-  <%= f.input :width, wrapper_html: { class: 'col_2_2' }  %>
-  <%= f.input :depth, wrapper_html: { class: 'col_1_2' }  %>
-  <%= f.input :thick, wrapper_html: { class: 'col_2_2' }   %>
-  <%= f.input :slope, wrapper_html: { class: 'col_1_2' } %>
-  <%= f.input :riser, wrapper_html: { class: 'col_2_2' } %>
-  <%= f.input :notch_num, wrapper_html: { class: 'col_1_2 notch_on' } %>
-  <%= f.input :from_base, wrapper_html: { class: 'col_1_2 notch_off' } %>
-  <%= f.input :color, as: :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
-  <%= f.input :from_back, wrapper_html: { class: 'col_1_2' }  %>
-  <%= f.input :finger_space, wrapper_html: { class: 'col_2_2' } %>
-  <%= f.input :x_position, wrapper_html: { class: 'col_1' }  %>
+  <div class="row hlabel">
+    <%= f.input :height, wrapper_html: { class: 'span2' }  %>
+    <%= f.input :width, wrapper_html: { class: 'span2' }  %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :depth, wrapper_html: { class: 'span2' }  %>
+    <%= f.input :thick, wrapper_html: { class: 'span2' }   %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :slope, wrapper_html: { class: 'span2' } %>
+    <%= f.input :riser, wrapper_html: { class: 'span2' } %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :notch_num, wrapper_html: { class: 'span2 notch_on' } %>
+    <%= f.input :from_base, wrapper_html: { class: 'span2 notch_off' } %>
+    <%= f.input :color, as: :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :from_back, wrapper_html: { class: 'span2' }  %>
+    <%= f.input :finger_space, wrapper_html: { class: 'span2' } %>
+    <%= f.input :x_position, wrapper_html: { class: 'span2' }  %>
+  </div>
 </div>
 

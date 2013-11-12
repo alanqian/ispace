@@ -827,7 +827,8 @@ $ ->
   # resizable, tabs, tabs-bottom, ...
   setSheetUI()
   setInplaceEditUI()
-  $("div.accordion").accordion()
+  $("div.accordion").accordion
+    collapsible: true
 
   console.log "common components loaded"
 

@@ -30,6 +30,9 @@ zh-CN:
       region:
         index: 区域设置
         new: 新建区域
+      bay:
+        new: 新建货备
+        edit: 修改货备
     notices:
       store:
         update: 门店信息更新完毕

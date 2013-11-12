@@ -48,6 +48,7 @@ zh-CN:
     submit:
       bay:
         create: "新建货备"
+        update: "保存"
 
   activerecord:
     models:
@@ -151,12 +152,12 @@ zh-CN:
         depth: 隔板深度
         thick: 隔板厚
         slope: 隔板倾角
-        riser: 横挡高
+        riser: 支撑板高
         notch_num: 槽孔号
         from_base: 距基底高
         color: 隔板颜色
         from_back: 距背板
-        finger_space: 插手空间
+        finger_space: 伸手空间
         x_position: x轴
     errors:
       models:
@@ -177,20 +178,20 @@ zh-CN:
 
   dict:
     colors:
-      default:     '#EEEEEE'
-      green:       '#7bd148'
-      bold_blue:   '#5484ed'
-      blue:        '#a4bdfc'
-      turquoise:   '#46d6db'
-      light_green: '#7ae7bf'
-      bold_green:  '#51b749'
-      yellow:      '#fbd75b'
-      orange:      '#ffb878'
-      red:         '#ff887c'
-      bold_red:    '#dc2127'
-      purple:      '#dbadff'
-      gray:        '#e1e1e1'
-      white:       '#ffffff'
+      默认色:     '#EEEEEE'
+      绿色:       '#7bd148'
+      天蓝色:   '#5484ed'
+      蓝色:        '#a4bdfc'
+      青绿色:   '#46d6db'
+      浅绿色: '#7ae7bf'
+      深绿色:  '#51b749'
+      黄色:      '#fbd75b'
+      棕黄色:      '#ffb878'
+      浅红色:         '#ff887c'
+      红色:    '#dc2127'
+      紫色:      '#dbadff'
+      灰色:        '#e1e1e1'
+      白色:       '#ffffff'
     prices:
       "高": "a"
       "中": "b"
