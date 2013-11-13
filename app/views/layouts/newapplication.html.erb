@@ -38,10 +38,17 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body id="<%= params[:controller].singularize %>" data-action="<%= params[:action] %>" data-do="<%= params[:_do] %>">
-    <%= render "layouts/header", layout: 'single' %>
-    <div class="single">
+    <%= render 'layouts/header', layout: 'application' %>
+    <div class="sidebar">
+      <div class="column">
+        <nav class="sidebar-nav" role="navigation">
+          <%= render "layouts/nav_#{current_user.role}" %>
+        </nav><!--/.nav-->
+      </div>
+    </div><!--/.sidebar-->
+    <div class="main">
       <%= flash_contents %>
       <%= yield %>
-    </div>
+    </div><!--/.main-->
   </body>
 </html>

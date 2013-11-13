@@ -25,3 +25,9 @@
 //= require cmd_ui
 //= require jqutil
 //= require app
+
+$(function () {
+  $(".alert button.close").click(function () {
+    $(this).closest('.alert').remove();
+  });
+});
