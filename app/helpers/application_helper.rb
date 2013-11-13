@@ -271,7 +271,9 @@ module ApplicationHelper
       next unless alert_types.include?(type)
 
       Array(message).each do |msg|
-        text = content_tag(:p, msg.html_safe, :id => "notice", :class => "alert fade in alert-#{type}")
+        text = content_tag(:div,
+                           content_tag(:button, raw("&times;"), :class => "close", "data-dismiss" => "alert") +
+                           msg.html_safe, :class => "alert fade in alert-#{type}")
         flash_messages << text if msg
       end
     end
