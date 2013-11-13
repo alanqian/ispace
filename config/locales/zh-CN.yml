@@ -137,6 +137,11 @@ zh-CN:
         bay_id: 货备
         num_bays: 货备数
         continuous: 货备连通
+      store_fixture:
+        store_id: 配置门店
+        category_id: 部署品类
+        category_name: 部署品类
+        code: 货架编号
       bay:
         back_height: 背板高度
         back_width: 背板宽度

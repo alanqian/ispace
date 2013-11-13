@@ -31,6 +31,10 @@ class FixturesController < ApplicationController
       num_bays: 1,
       item_index: -1,
       continuous: true)
+    @stores_all = Store.all.select(:id, :name)
+    @model_stores_all = Store.model_store.select([:id, :name])
+    @categories_all = Category.all.select(:code, :parent_id, :name)
+    @store_fixture_new = StoreFixture.new(fixture_id: @fixture.id)
   end
 
   # POST /fixtures
@@ -52,7 +56,7 @@ class FixturesController < ApplicationController
 
   # PATCH/PUT /fixtures/1
   # PATCH/PUT /fixtures/1.json
-  def update
+  def update_default
     respond_to do |format|
       if @fixture.update(fixture_params)
         logger.debug fixture_params
@@ -61,6 +65,34 @@ class FixturesController < ApplicationController
         format.js { set_fixture_update_js }
       else
         format.html { render action: 'edit' }
+        format.json { render json: @fixture.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_undeploy
+    store_fixture_id = params[:sf]
+    respond_to do |format|
+      if @fixture.undeploy(store_fixture_id)
+        format.html { redirect_to edit_fixture_path(@fixture, _do: :deploy), notice: 'undeploy ok' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to edit_fixture_path(@fixture, _do: :deploy), notice: 'undeploy error' }
+        format.json { render json: @fixture.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_deploy
+    respond_to do |format|
+      if @fixture.update(fixture_params)
+        logger.debug fixture_params
+        format.html { redirect_to edit_fixture_path(@fixture, _do: :deploy), notice: 'deploy ok' }
+        format.json { head :no_content }
+        format.js { set_fixture_update_js }
+      else
+        logger.warn @fixture.errors.to_json
+        format.html { redirect_to edit_fixture_path(@fixture, _do: :deploy), notice: 'deploy failed' }
         format.json { render json: @fixture.errors, status: :unprocessable_entity }
       end
     end
@@ -99,7 +131,10 @@ class FixturesController < ApplicationController
       params.require(:fixture).permit(
         :name, :memo, :user_id, :category_id,
         :flow_l2r,
-        fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous])
+        :_do,
+        fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous],
+        store_fixtures_attributes: [:_destroy, :id, :fixture_id, :store_id,
+          :category_id, :category_name, :code])
     end
 
     def set_fixture_update_js

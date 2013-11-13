@@ -3,6 +3,13 @@ class StoreFixture < ActiveRecord::Base
   belongs_to :fixture
   belongs_to :category
   serialize :layers, Array
+  validates :store_id, presence: true
+  validates :fixture_id, presence: true
+  validates :category_id, presence: true
+  validates :code, presence: true
+  validates :category_name, presence: true
+
+  attr_accessor :category_name
 
   def version
     updated_at.to_i

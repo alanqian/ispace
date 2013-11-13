@@ -49,5 +49,24 @@ form.edit_fixture {
       width: 90%;
     }
   }
+}
 
+form.edit_fixture_deploy {
+  display: block;
+  div.input {
+    display: block;
+    width: 100%;
+    label {
+      display: inline-block;
+      abbr {
+        display: inline-block;
+      }
+    }
+    select {
+      width: 8em;
+    }
+    input {
+      width: 7em;
+    }
+  }
 }

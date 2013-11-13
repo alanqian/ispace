@@ -1,9 +1,10 @@
 class Fixture < ActiveRecord::Base
   default_scope -> { where('deleted_at is NULL') }
   has_many :fixture_items, -> { order(:item_index) }, dependent: :destroy
-  has_many :store_fixtures
+  has_many :store_fixtures, -> { order(:store_id, :category_id) }
   has_many :plans
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
+  accepts_nested_attributes_for :store_fixtures
 
   def user
     ''
@@ -14,31 +15,38 @@ class Fixture < ActiveRecord::Base
   end
 
   def run
-    0.0
+    fixture_items.sum { |it| it.bay.run * it.num_bays }
   end
 
   def linear
-    0.0
+    fixture_items.sum { |it| it.bay.linear * it.num_bays }
   end
 
   def area
-    0.0
+    fixture_items.sum { |it| it.bay.area * it.num_bays }
   end
 
   def cube
-    0.0
+    fixture_items.sum { |it| it.bay.cube * it.num_bays }
   end
 
   def ref_count
-    self.ref_store.size
+    self.ref_store.keys.size
   end
 
   def ref_store
-    self.store_fixtures.select(:store_id).group(:store_id).count(:store_id).keys
+    self.store_fixtures.select(:store_id).group(:store_id).count(:store_id)
   end
 
   def ref_plan_set
     self.plans.select(:plan_set_id).group(:plan_set_id).count(:plan_set_id).keys
+  end
+
+  def undeploy(store_fixture_id)
+    self.store_fixtures.destroy(store_fixture_id)
+    true
+  rescue
+    false
   end
 
   def deep_copy(uid)
