@@ -52,6 +52,9 @@ zh-CN:
       bay:
         create: "新建货备"
         update: "保存"
+      fixture:
+        create: "新建货架"
+        update: "更新货架"
 
   activerecord:
     models:

@@ -56,7 +56,7 @@ class FixturesController < ApplicationController
     respond_to do |format|
       if @fixture.update(fixture_params)
         logger.debug fixture_params
-        format.html { redirect_to @fixture, notice: 'Fixture was successfully updated.' }
+        format.html { redirect_to fixtures_url, notice: 'Fixture was successfully updated.' }
         format.json { head :no_content }
         format.js { set_fixture_update_js }
       else

@@ -4,9 +4,11 @@
   <div id="fixture_basic" class="inputs">
     <%= f.input :name %>
     <%= f.button :submit %>
+    <%#= f.button :submit, "返回" %>
     <%#= f.input :category_id, collection: @categories %>
+    <hr/>
   </div>
-  <div class="row span8">
+  <div class="row span7">
     <div class="span2">
       <table id="fixture_metrics" border=1 cellspacing=0 cellpadding=2 data-bays="<%= @space.to_json %>">
         <tbody>
@@ -29,7 +31,7 @@
         </tbody>
       </table>
     </div>
-    <div class="span1">
+    <div class="span40p">
       <%= submit_tag "+", class: 'add_element', id: 'add_fixture_item', 'data-id' => '#fixture_item', title: 'add bay', onclick: "addFixtureItem(event,this);" %>
       <%= submit_tag "-", class: 'add_element', id: 'remove_fixture_item', title: 'remove bay', onclick: "removeFixtureItem(event);" %>
     </div>

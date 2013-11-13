@@ -6,6 +6,10 @@ form.edit_fixture {
   tr.active {
     background-color: #0000cc;
   }
+  div.input.fixture_name {
+    display: inline-block;
+    margin-right: 1em;
+  }
   table#fixture_metrics {
     tr {
       td:first-child {
@@ -35,8 +39,11 @@ form.edit_fixture {
         width: 4.5em;
       }
     }
-    td>select {
-      width: 95%;
+    td>select[id$='_bay_id'] {
+      width: 96%;
+    }
+    td>select[id$='_continuous'] {
+      width: 2.5em;
     }
     td>input.integer {
       width: 90%;
