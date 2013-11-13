@@ -221,8 +221,8 @@ nav[role="navigation"] {
 /* basic form style */
 form {
   div.input {
-    margin: 5px 0;
-    line-height: 1.6em;
+    margin: 2px 0;
+    line-height: 1.5em;
     color: #333;
     input {
       line-height: 1.6em;
@@ -292,10 +292,10 @@ div.import-info {
   margin-top: 7px;
 }
 
+// grid system
 .row {
   margin-left: -20px;
   *zoom: 1;
-
   :before, :after {
     display: table;
     line-height: 0;
@@ -310,6 +310,18 @@ div.import-info {
   min-height: 1px;
   margin-left: 20px;
 }
+
+form {
+  .row {
+    margin: 0;
+  }
+  [class*="span"] {
+    float: left;
+    min-height: 1px;
+    margin-left: 10px;
+  }
+}
+
 .span12 {
   width: 940px;
 }
@@ -345,5 +357,32 @@ div.import-info {
 }
 .span1 {
   width: 60px;
+}
+.span10p {
+  width: 10px;
+}
+.span20p {
+  width: 20px;
+}
+.span30p {
+  width: 30px;
+}
+.span40p {
+  width: 40px;
+}
+.span50p {
+  width: 50px;
+}
+.span60p {
+  width: 60px;
+}
+.span70p {
+  width: 70px;
+}
+.span80p {
+  width: 80px;
+}
+.span90p {
+  width: 80px;
 }
 

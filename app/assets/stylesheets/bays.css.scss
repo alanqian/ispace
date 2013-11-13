@@ -12,7 +12,7 @@
 
   .row {
     margin-left: 0;
-    clear: both;
+    // clear: both;
   }
 
   .row.hlabel {
@@ -21,9 +21,10 @@
       label {
         display: inline-block;
         min-width: 1em;
-        padding: 0 2px;
+        padding: 0 4px 0 0;
+        text-align: right;
       }
-      input {
+      input, select {
         display: inline-block;
         width: 54px;
         padding: 0 4px;
@@ -51,7 +52,8 @@
     padding: .2em .5em .2em .7em;
   }
   h3>input {
-    margin-left: 15px;
+    margin-left: 18px;
+    width: 10em;
   }
   input[type='submit'] {
     height: 30px;
@@ -66,109 +68,6 @@
       display: inline-block;
       min-width: 2em;
       width: 4.5em;
-    }
-  }
-}
-
-#bay_main1 {
-  display: block;
-  float: top;
-  border: 1px 1px 1px 1px;
-  border-color: 0;
-}
-
-#basic {
-  div.col_1_4 {
-    display: inline-block;
-    float: left;
-    padding-right: 20px;
-    width: 80px;
-
-    label {
-      display: block;
-      width: 80px;
-    }
-    input {
-      width: 80px;
-    }
-  }
-
-  div.col_4_4 {
-    display: block;
-    float: left;
-    width: 50px;
-
-    label {
-      display: block;
-      width: 50px;
-    }
-    input {
-      width: 50px;
-    }
-  }
-
-  div.col_check {
-    display: inline-block;
-    float: left;
-  }
-
-  div.col_pre {
-    display: inline-block;
-    float: left;
-    input {
-      display: inline-block;
-      width: 50px;
-    }
-  }
-
-  div.col_end {
-    input {
-      width: 50px;
-    }
-  }
-
-  div.notch_on {
-  }
-
-}
-
-#accordion1 {
-  width: 500px;
-
-  div.col_1 {
-    label {
-      display: inline-block;
-      width: 80px;
-    }
-    input {
-      width: 100px;
-    }
-  }
-
-  div.col_1_2 {
-    display: inline-block;
-    float: left;
-    padding-right: 20px;
-
-    label {
-      display: inline-block;
-      width: 100px;
-    }
-    input {
-      display: inline-block;
-      width: 100px;
-    }
-  }
-
-  div.col_2_2 {
-    display: block;
-
-    label {
-      display: inline-block;
-      width: 100px;
-    }
-    input {
-      width: 100px;
     }
   }
 }

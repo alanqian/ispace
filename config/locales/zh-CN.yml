@@ -169,7 +169,7 @@ zh-CN:
         from_base: 距基底高
         color: 隔板颜色
         from_back: 距背板
-        finger_space: 伸手空间
+        finger_space: 插手空间
         x_position: x轴
       peg_board:
         height: 高度
@@ -226,61 +226,61 @@ zh-CN:
 
   dict:
     colors:
-      默认色:     '#EEEEEE'
-      绿色:       '#7bd148'
-      天蓝色:   '#5484ed'
-      蓝色:        '#a4bdfc'
-      青绿色:   '#46d6db'
+      默认色: '#EEEEEE'
+      绿色:   '#7bd148'
+      天蓝色: '#5484ed'
+      蓝色:   '#a4bdfc'
+      青绿色: '#46d6db'
       浅绿色: '#7ae7bf'
-      深绿色:  '#51b749'
-      黄色:      '#fbd75b'
-      棕黄色:      '#ffb878'
-      浅红色:         '#ff887c'
-      红色:    '#dc2127'
-      紫色:      '#dbadff'
-      灰色:        '#e1e1e1'
-      白色:       '#ffffff'
+      深绿色: '#51b749'
+      黄色:   '#fbd75b'
+      棕黄色: '#ffb878'
+      浅红色: '#ff887c'
+      红色:   '#dc2127'
+      紫色:   '#dbadff'
+      灰色:   '#e1e1e1'
+      白色:   '#ffffff'
     prices:
       "高": "a"
       "中": "b"
       "低": "c"
     sale_type:
-      0: "必卖品"
-      1: "可卖品"
-      2: "下架商品"
-    new_product: "新"
-    on_promotion: "促"
-    category: "品类"
-    desc: "备注"
-    color: "颜色"
-    height: "高度"
-    width: "宽度"
-    depth: "深度"
-    weight: "重量"
-    brand: "品牌"
+      0: 必卖品
+      1: 可卖品
+      2: 下架商品
+    new_product: 新
+    on_promotion: 促
+    category: 品类
+    desc: 备注
+    color: 颜色
+    height: 高度
+    width: 宽度
+    depth: 深度
+    weight: 重量
+    brand: 品牌
     unset: 未设置
-    removeOpenShelf: "从货备中删除本层隔板"
-    removePegboard: "从货备中删除本层钉板"
-    removeFreezerChest: "从货备中删除冷冻柜"
-    removeRearSupportBar: "从货备中删除本层悬挂条"
-    removeHeap: "删除堆头"
+    removeOpenShelf: 从货备中删除本层隔板
+    removePegboard: 从货备中删除本层钉板
+    removeFreezerChest: 从货备中删除冷冻柜
+    removeRearSupportBar: 从货备中删除本层悬挂条
+    removeHeap: 删除堆头
     #######################################
-    plan: "规划"
-    plan_set: "规划组"
-    fixture: "货架"
-    bay: "货备"
-    obstacle: "障碍"
-    notch_spacing: "槽空间"
-    takeoff_height: "顶部高度"
-    peg_hole: "钉孔"
-    relative_to_shelf_below: "相对于下层货架的位置"
-    shelf: "隔板"
-    peg_board: "钉板"
-    chest_space: "腔体空间"
-    rsb: "后支撑条"
-    range: "排面"
-    facing: "排面"
-    range_info: "排面"
+    plan: 规划
+    plan_set: 规划组
+    fixture: 货架
+    bay: 货备
+    obstacle: 障碍
+    notch_spacing: 槽空间
+    takeoff_height: 伸手高度
+    peg_hole: 钉孔
+    relative_to_shelf_below: 相对于下层货架的位置
+    shelf: 隔板
+    peg_board: 钉板
+    chest_space: 腔体空间
+    rsb: 后支撑条
+    range: 排面
+    facing: 排面
+    range_info: 排面
 
   categories:
     index:
