@@ -131,13 +131,13 @@ $.util =
   #   } %>
   setupTreeInput: (sel) ->
     $(sel).each (index, el) ->
-      console.log $(el)
+      $(el).attr("autocomplete", "off")
       menu = root.cmdUI.createMenu $(el).data("cmd"), $(el).data("tree"),
         id: "code"
         parent: "parent_id"
         label: "name"
         rootId: null
-        dom: "#ui-tree-input"
+        dom: "body"
       $(el).data("uiTreeMenu", menu)
       $(el).click (e) ->
         e.stopPropagation()

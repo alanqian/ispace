@@ -4,6 +4,13 @@
 
 root = exports ? this
 
+root.onSelectCategory = (el) ->
+  id = $(el).data("id")
+  name = $(el).text()
+  $("#fixture_store_fixtures_attributes_100_category_name").val(name)
+  $("#fixture_store_fixtures_attributes_100_category_id").val(id)
+  return true
+
 root.test = () ->
   foo()
 
@@ -129,7 +136,16 @@ $ ->
     }
 
   console.log "fixture editor start..."
-  if window.bays
+  $("form[data-disabled=true]").each (index, form) ->
+    $(":input[type!=hidden]", form).attr("disabled", true)
+    $("input.enable_form", form).attr("disabled", false)
+    $("input.enable_form").click (e) ->
+      e.preventDefault()
+      $(":input[type!=hidden]", form).attr("disabled", false)
+      $(this).hide()
+
+  if $("#fixture_metrics").length > 0
+    window.bays = $("#fixture_metrics").data("bays")
     console.log "#{Object.keys(window.bays).length} bays in system"
 
     # move template outside of the form

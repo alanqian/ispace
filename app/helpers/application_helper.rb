@@ -278,4 +278,7 @@ module ApplicationHelper
     flash_messages.join("\n").html_safe
   end
 
+  def bay_types(types)
+    types.map { |t| I18n.t("activerecord.models.#{t}") }.join("+")
+  end
 end

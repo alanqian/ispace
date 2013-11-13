@@ -23,7 +23,11 @@ class Category < ActiveRecord::Base
   end
 
   def update_redundancy
-    # display_name
+    # parent_id
+    if self.parent_id && self.parent_id.empty?
+      self.parent_id = nil
+    end
+    # ???: display_name
     # pinyin
     self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)
   end

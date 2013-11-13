@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131110180216) do
+ActiveRecord::Schema.define(version: 20131112020408) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -25,13 +25,14 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.decimal  "base_width",    precision: 6,  scale: 1, null: false
     t.decimal  "base_depth",    precision: 6,  scale: 1, null: false
     t.string   "base_color",                             null: false
-    t.integer  "elem_type"
-    t.integer  "elem_count"
+    t.integer  "num_layers"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.decimal  "linear",        precision: 10, scale: 0
     t.decimal  "area",          precision: 10, scale: 0
     t.decimal  "cube",          precision: 10, scale: 0
+    t.datetime "deleted_at"
+    t.string   "types"
   end
 
   create_table "brands", force: true do |t|
@@ -94,7 +95,7 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.string   "plan_set_name"
     t.string   "plan_set_note"
     t.datetime "published_at",                           null: false
-    t.date     "to_deploy_at",    default: '2013-11-09', null: false
+    t.date     "to_deploy_at",    default: '2013-11-07', null: false
     t.datetime "download_1st_at"
     t.integer  "download_count",  default: 0
     t.integer  "deployed_by",     default: 0
@@ -127,11 +128,10 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.boolean  "flow_l2r"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",       limit: 48, default: "", null: false
-    t.datetime "delete_at"
+    t.datetime "deleted_at"
+    t.string   "memo"
   end
 
-  add_index "fixtures", ["code"], name: "index_fixtures_on_code", using: :btree
   add_index "fixtures", ["name"], name: "index_fixtures_on_name", using: :btree
   add_index "fixtures", ["user_id"], name: "index_fixtures_on_user_id", using: :btree
 
@@ -156,13 +156,13 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.string   "filename"
     t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
-    t.string   "done",       limit: 48
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "done",       limit: 48
   end
 
   add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
@@ -237,7 +237,7 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "category_name"
-    t.date     "to_deploy_at",                       default: '2013-11-09', null: false
+    t.date     "to_deploy_at",                       default: '2013-11-07', null: false
     t.text     "recent_plans",      limit: 16777215
   end
 
@@ -249,24 +249,26 @@ ActiveRecord::Schema.define(version: 20131110180216) do
   add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
 
   create_table "plans", force: true do |t|
-    t.integer  "plan_set_id",                                              null: false
-    t.string   "category_id",                                              null: false
+    t.integer  "plan_set_id",                                                          null: false
+    t.string   "category_id",                                                          null: false
     t.integer  "user_id"
-    t.integer  "store_id",                                                 null: false
-    t.integer  "num_stores",                                   default: 0
-    t.integer  "fixture_id",                                               null: false
-    t.integer  "init_facing",                                  default: 1
-    t.decimal  "nominal_size",        precision: 10, scale: 2
-    t.decimal  "base_footage",        precision: 10, scale: 2
-    t.decimal  "usage_percent",       precision: 10, scale: 2
+    t.integer  "store_id",                                                             null: false
+    t.integer  "num_stores",                                               default: 0
+    t.integer  "fixture_id",                                                           null: false
+    t.integer  "init_facing",                                              default: 1
+    t.decimal  "nominal_size",                    precision: 10, scale: 2
+    t.decimal  "base_footage",                    precision: 10, scale: 2
+    t.decimal  "usage_percent",                   precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "product_version",                              default: 0
+    t.integer  "product_version",                                          default: 0
     t.string   "store_name"
-    t.integer  "num_prior_products",                           default: 0
-    t.integer  "num_normal_products",                          default: 0
-    t.integer  "num_done_priors",                              default: 0
-    t.integer  "num_done_normals",                             default: 0
+    t.integer  "num_prior_products",                                       default: 0
+    t.integer  "num_normal_products",                                      default: 0
+    t.integer  "num_done_priors",                                          default: 0
+    t.integer  "num_done_normals",                                         default: 0
+    t.integer  "fixture_version"
+    t.string   "layers",              limit: 512
   end
 
   add_index "plans", ["category_id"], name: "index_plans_on_category_id", using: :btree
@@ -420,6 +422,8 @@ ActiveRecord::Schema.define(version: 20131110180216) do
     t.string   "category_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "layers"
+    t.string   "passby"
   end
 
   add_index "store_fixtures", ["code"], name: "index_store_fixtures_on_code", using: :btree

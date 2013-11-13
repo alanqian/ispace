@@ -1,6 +1,17 @@
-<h1>更新货架信息</h1>
+<h1>
+  <%= simple_title(@do || :edit) %>
+</h1>
+<hr/>
 
-<%= render 'form' %>
+<%= render 'form', fixture: @fixture %>
 
-<%= link_to 'Show', @fixture %> |
-<%= link_to 'Back', fixtures_path %>
+<hr/>
+<%= render 'deploy_to',
+  fixture: @fixture,
+  store_dict: @stores_all.to_hash(:id, :name),
+  category_dict: @categories_all.to_hash(:code, :name),
+  model_stores_all: @model_stores_all
+%>
+<hr/>
+<%#= link_to 'Show', @fixture %>
+<%#= link_to 'Back', fixtures_path %>

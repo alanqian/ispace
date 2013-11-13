@@ -30,6 +30,14 @@ zh-CN:
       region:
         index: 区域设置
         new: 新建区域
+      bay:
+        new: 新建货备
+        edit: 编辑货备
+      fixture:
+        index: 货架管理
+        new: 新建货架
+        edit: 编辑货架
+        deploy: 货架配置
     notices:
       store:
         update: 门店信息更新完毕

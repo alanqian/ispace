@@ -213,15 +213,16 @@ nav[role="navigation"] {
 }
 
 @mixin label {
-  min-width: 150px;
+  // min-width: 150px;
   display: inline-block;
+  padding-right: 0.3em;
 }
 
 /* basic form style */
 form {
   div.input {
-    margin: 5px 0;
-    line-height: 1.6em;
+    margin: 2px 0;
+    line-height: 1.5em;
     color: #333;
     input {
       line-height: 1.6em;
@@ -290,3 +291,98 @@ div.import-info {
 .dataTables_info {
   margin-top: 7px;
 }
+
+// grid system
+.row {
+  margin-left: -20px;
+  *zoom: 1;
+  :before, :after {
+    display: table;
+    line-height: 0;
+    content: "";
+  }
+  :after {
+    clear: both;
+  }
+}
+[class*="span"] {
+  float: left;
+  min-height: 1px;
+  margin-left: 20px;
+}
+
+form {
+  .row {
+    margin: 0;
+  }
+  [class*="span"] {
+    float: left;
+    min-height: 1px;
+    margin-left: 10px;
+  }
+}
+
+.span12 {
+  width: 940px;
+}
+.span11 {
+  width: 860px;
+}
+.span10 {
+  width: 780px;
+}
+.span9 {
+  width: 700px;
+}
+.span8 {
+  width: 620px;
+}
+.span7 {
+  width: 540px;
+}
+.span6 {
+  width: 460px;
+}
+.span5 {
+  width: 380px;
+}
+.span4 {
+  width: 300px;
+}
+.span3 {
+  width: 220px;
+}
+.span2 {
+  width: 140px;
+}
+.span1 {
+  width: 60px;
+}
+.span10p {
+  width: 10px;
+}
+.span20p {
+  width: 20px;
+}
+.span30p {
+  width: 30px;
+}
+.span40p {
+  width: 40px;
+}
+.span50p {
+  width: 50px;
+}
+.span60p {
+  width: 60px;
+}
+.span70p {
+  width: 70px;
+}
+.span80p {
+  width: 80px;
+}
+.span90p {
+  width: 80px;
+}
+

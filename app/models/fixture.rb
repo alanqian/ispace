@@ -1,10 +1,52 @@
 class Fixture < ActiveRecord::Base
-  default_scope -> { where('delete_at is NULL') }
+  default_scope -> { where('deleted_at is NULL') }
   has_many :fixture_items, -> { order(:item_index) }, dependent: :destroy
+  has_many :store_fixtures, -> { order(:store_id, :category_id) }
+  has_many :plans
   accepts_nested_attributes_for :fixture_items, allow_destroy: true
+  accepts_nested_attributes_for :store_fixtures
 
   def user
     ''
+  end
+
+  def num_bays
+    fixture_items.sum { |it| it.num_bays }
+  end
+
+  def run
+    fixture_items.sum { |it| it.bay.run * it.num_bays }
+  end
+
+  def linear
+    fixture_items.sum { |it| it.bay.linear * it.num_bays }
+  end
+
+  def area
+    fixture_items.sum { |it| it.bay.area * it.num_bays }
+  end
+
+  def cube
+    fixture_items.sum { |it| it.bay.cube * it.num_bays }
+  end
+
+  def ref_count
+    self.ref_store.keys.size
+  end
+
+  def ref_store
+    self.store_fixtures.select(:store_id).group(:store_id).count(:store_id)
+  end
+
+  def ref_plan_set
+    self.plans.select(:plan_set_id).group(:plan_set_id).count(:plan_set_id).keys
+  end
+
+  def undeploy(store_fixture_id)
+    self.store_fixtures.destroy(store_fixture_id)
+    true
+  rescue
+    false
   end
 
   def deep_copy(uid)
@@ -16,7 +58,6 @@ class Fixture < ActiveRecord::Base
 
     # copy associations
     copy_assoc_to(new_fixture, :fixture_items)
-
     new_fixture
   end
 
@@ -27,6 +68,10 @@ class Fixture < ActiveRecord::Base
       category_id: category_id,
       code: fixture_code,
     })
+  end
+
+  def version
+    updated_at.to_i
   end
 
   def calc_size
@@ -284,7 +329,7 @@ class Fixture < ActiveRecord::Base
         base_width: bay.base_width,
         base_height: bay.base_height,
         base_color: bay.base_color,
-        num_layers: bay.elem_count,
+        num_layers: bay.num_layers,
         height: bay.back_height,
         width: bay.back_width,
       }
@@ -293,7 +338,7 @@ class Fixture < ActiveRecord::Base
       # [fixture_item:layer, bay_id:run:num_bays:space_height:shelf_height:shelf_color, ...]
       from_base = 0
       height = 0
-      1.upto(bay.elem_count) do |layer|
+      1.upto(bay.num_layers) do |layer|
         elem = bay.get_element(layer)
         if elem
           spaces[fi.id][layer] = {

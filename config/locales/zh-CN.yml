@@ -21,6 +21,9 @@
 
 zh-CN:
   ago: 前
+  yesno:
+    Yes: 是
+    No: 否
   date:
     formats:
       default: "%Y-%m-%d"
@@ -44,6 +47,15 @@ zh-CN:
   # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
   # In the model user.rb define the validation
   #   validates :email, :presence: true
+  helpers:
+    submit:
+      bay:
+        create: "新建货备"
+        update: "保存"
+      fixture:
+        create: "新建货架"
+        update: "更新货架"
+
   activerecord:
     models:
       category: 品类
@@ -55,6 +67,12 @@ zh-CN:
       manufacturer: 生产商
       product: 商品
       sale: 销售记录
+      bay: 货备
+      open_shelf: 开架
+      rear_support_bar: 后支撑条
+      freezer_chest: 冰柜
+      peg_board: 钉板
+      heap: 堆头
 
     attributes:
       category:
@@ -113,22 +131,90 @@ zh-CN:
         memo: 备注
       fixture:
         name: 名称
-        code: Code
         user: 用户
-        flow_l2r: Flow l2r
+        flow_l2r: 向右排货
+      fixture_item:
+        bay_id: 货备
+        num_bays: 货备数
+        continuous: 货备连通
+      store_fixture:
+        store_id: 配置门店
+        category_id: 部署品类
+        category_name: 部署品类
+        code: 货架编号
       bay:
+        back_height: 背板高度
+        back_width: 背板宽度
+        back_thick: 背板厚度
+        back_color: 背板颜色
+        notch_spacing: 槽孔间距
+        notch_1st: 第1槽孔
+        base_height: 基底高
+        base_width: 基底宽度
+        base_depth: 基底深度
+        base_color: 基底颜色
+        takeoff_height: 购物高度
+        show_peg_holes: 显示钉板
+        elem_count: 层数
+        name: 货备名称
+        bay_size: 尺寸(高/宽/深)
+        num_layers: 层数
+        run: 行程
+        linear: 长度
+        area: 面积
+        cube: 体积
+        ref_count: 货架数
+        types: 类型
+      open_shelf:
         name: 名称
-        back_height: Back Height
-        back_width: Back Width
-        back_thick: Back Thick
-        back_color: Back Color
-        notch_spacing: Notch Spacing
-        notch_1st: Notch 1st
-        base_height: Base Height
-        base_width: Base Width
-        base_depth: Base Depth
-        base_color: Base Color
-        elem_count: 商品个数
+        height: 隔层高度
+        width: 隔板宽度
+        depth: 隔板深度
+        thick: 隔板厚
+        slope: 隔板倾角
+        riser: 支撑板高
+        notch_num: 槽孔号
+        from_base: 距基底高
+        color: 隔板颜色
+        from_back: 距背板
+        finger_space: 插手空间
+        x_position: x轴
+      peg_board:
+        height: 高度
+        depth: 钉深
+        horz_space: 水平空间
+        vert_space: 垂直空间
+        horz_start: 水平起始
+        vert_start: 垂直起始
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+      freezer_chest:
+        height: 高度
+        depth: 深度
+        inside_height: 内部高
+        wall_thick: 腔壁厚
+        merch_height: 商品高度
+        color: 颜色
+      rear_support_bar:
+        height: 高度
+        bar_depth: 条深度
+        bar_thick: 条厚度
+        from_back: 距背板
+        hook_length: 挂钩长
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+        bar_slope: 条倾斜度
+      fixture:
+        name: 货架名称
+        num_bays: 货备数
+        run: 行程
+        linear: 长度
+        area: 面积
+        cube: 体积
+        ref_count: 门店数
+        memo: 备注
     errors:
       models:
         user:
@@ -148,61 +234,61 @@ zh-CN:
 
   dict:
     colors:
-      default:     '#EEEEEE'
-      green:       '#7bd148'
-      bold_blue:   '#5484ed'
-      blue:        '#a4bdfc'
-      turquoise:   '#46d6db'
-      light_green: '#7ae7bf'
-      bold_green:  '#51b749'
-      yellow:      '#fbd75b'
-      orange:      '#ffb878'
-      red:         '#ff887c'
-      bold_red:    '#dc2127'
-      purple:      '#dbadff'
-      gray:        '#e1e1e1'
-      white:       '#ffffff'
+      默认色: '#EEEEEE'
+      绿色:   '#7bd148'
+      天蓝色: '#5484ed'
+      蓝色:   '#a4bdfc'
+      青绿色: '#46d6db'
+      浅绿色: '#7ae7bf'
+      深绿色: '#51b749'
+      黄色:   '#fbd75b'
+      棕黄色: '#ffb878'
+      浅红色: '#ff887c'
+      红色:   '#dc2127'
+      紫色:   '#dbadff'
+      灰色:   '#e1e1e1'
+      白色:   '#ffffff'
     prices:
       "高": "a"
       "中": "b"
       "低": "c"
     sale_type:
-      0: "必卖品"
-      1: "可卖品"
-      2: "下架商品"
-    new_product: "新"
-    on_promotion: "促"
-    category: "品类"
-    desc: "备注"
-    color: "颜色"
-    height: "高度"
-    width: "宽度"
-    depth: "深度"
-    weight: "重量"
-    brand: "品牌"
+      0: 必卖品
+      1: 可卖品
+      2: 下架商品
+    new_product: 新
+    on_promotion: 促
+    category: 品类
+    desc: 备注
+    color: 颜色
+    height: 高度
+    width: 宽度
+    depth: 深度
+    weight: 重量
+    brand: 品牌
     unset: 未设置
-    removeOpenShelf: "从货备中删除本层隔板"
-    removePegboard: "从货备中删除本层钉板"
-    removeFreezerChest: "从货备中删除冷冻柜"
-    removeRearSupportBar: "从货备中删除本层悬挂条"
-    removeHeap: "删除堆头"
+    removeOpenShelf: 从货备中删除本层隔板
+    removePegboard: 从货备中删除本层钉板
+    removeFreezerChest: 从货备中删除冷冻柜
+    removeRearSupportBar: 从货备中删除本层悬挂条
+    removeHeap: 删除堆头
     #######################################
-    plan: "规划"
-    plan_set: "规划组"
-    fixture: "货架"
-    bay: "货备"
-    obstacle: "障碍"
-    notch_spacing: "槽空间"
-    takeoff_height: "顶部高度"
-    peg_hole: "钉孔"
-    relative_to_shelf_below: "相对于下层货架的位置"
-    shelf: "隔板"
-    peg_board: "钉板"
-    chest_space: "腔体空间"
-    rsb: "后支撑条"
-    range: "排面"
-    facing: "排面"
-    range_info: "排面"
+    plan: 规划
+    plan_set: 规划组
+    fixture: 货架
+    bay: 货备
+    obstacle: 障碍
+    notch_spacing: 槽空间
+    takeoff_height: 伸手高度
+    peg_hole: 钉孔
+    relative_to_shelf_below: 相对于下层货架的位置
+    shelf: 隔板
+    peg_board: 钉板
+    chest_space: 腔体空间
+    rsb: 后支撑条
+    range: 排面
+    facing: 排面
+    range_info: 排面
 
   categories:
     index:

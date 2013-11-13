@@ -7,13 +7,21 @@
 </h3>
 
 <div>
-  <%= f.input :height, wrapper_html: { class: 'col_1_2' }  %>
-  <%= f.input :depth, wrapper_html: { class: 'col_2_2' } %>
-  <%= f.input :vert_space, wrapper_html: { class: 'col_1_2' } %>
-  <%= f.input :horz_space , wrapper_html: { class: 'col_2_2' }%>
-  <%= f.input :vert_start , wrapper_html: { class: 'col_1_2' }%>
-  <%= f.input :horz_start , wrapper_html: { class: 'col_2_2' }%>
-  <%= f.input :notch_num, wrapper_html: { class: 'col_1_2 notch_on' } %>
-  <%= f.input :from_base, wrapper_html: { class: 'col_1_2 notch_off' } %>
-  <%= f.input :color, wrapper_html: { class: 'col_2_2'}, input_html: { class: 'color' }  %>
+  <div class="row hlabel">
+    <%= f.input :height, wrapper_html: { class: 'span2' }  %>
+    <%= f.input :depth, wrapper_html: { class: 'span2' } %>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :vert_space, wrapper_html: { class: 'span2' } %>
+    <%= f.input :horz_space , wrapper_html: { class: 'span2' }%>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :vert_start , wrapper_html: { class: 'span2' }%>
+    <%= f.input :horz_start , wrapper_html: { class: 'span2' }%>
+  </div>
+  <div class="row hlabel">
+    <%= f.input :notch_num, wrapper_html: { class: 'span2 notch_on' } %>
+    <%= f.input :from_base, wrapper_html: { class: 'span2 notch_off' } %>
+    <%= f.input :color, as: :color, wrapper_html: { class: 'span2' }  %>
+  </div>
 </div>

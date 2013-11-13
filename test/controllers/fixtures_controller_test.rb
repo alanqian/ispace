@@ -53,7 +53,8 @@ class FixturesControllerTest < ActionController::TestCase
   test "should update fixture" do
     patch :update, id: @fixture, fixture: fixtures(:two).to_new_params
     f = assigns(:fixture)
-    assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
+    # assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
+    assert_redirected_to fixtures_path
   end
 
   test "should destroy fixture" do

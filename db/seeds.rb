@@ -139,7 +139,6 @@ level = 1
   )
   level += 1
 end
-bay.recalc_space
 
 # 120x8层板
 bay = Bay.create(
@@ -179,7 +178,6 @@ level = 1
   )
   level += 1
 end
-bay.recalc_space
 
 bay = Bay.create(
     name: '60x8层板',
@@ -217,7 +215,6 @@ level = 1
   )
   level += 1
 end
-bay.recalc_space
 
 bay = Bay.create(
     name: '60x7层板',
@@ -255,7 +252,6 @@ level = 1
   )
   level += 1
 end
-bay.recalc_space
 
 # peg board
 bay = Bay.create(
@@ -307,7 +303,6 @@ PegBoard.create(
   color: '#dfdfdf',
   level: level,
 )
-bay.recalc_space
 
 # hanging bars
 bay = Bay.create(
@@ -360,7 +355,6 @@ OpenShelf.create(
     level: level,
   )
 end
-bay.recalc_space
 
 # create Bay 'Freezer with shelves',
 bay = Bay.create(
@@ -408,7 +402,6 @@ FreezerChest.create(
     level: level,
   )
 end
-bay.recalc_space
 
 #####################################################################
 # fixtrue data
