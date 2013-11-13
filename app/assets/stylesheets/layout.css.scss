@@ -180,7 +180,12 @@ ul.nav {
 
 .single {
   width: 800px;
-  margin: 0 auto;
+  margin: 0px auto;
+}
+
+.navbar.single {
+  margin-left: 0;
+  width: auto;
 }
 
 nav[role="navigation"] {
@@ -216,6 +221,9 @@ nav[role="navigation"] {
   min-width: 150px;
   display: inline-block;
   padding-right: 0.3em;
+  margin-right: 0.5em;
+  text-align: right;
+  color: #999;
 }
 
 /* basic form style */
@@ -237,7 +245,7 @@ form {
       height: 10em;
     }
   }
-  label {
+  label.email, label.string, label.select, label.tel, label.password {
     @include label;
   }
 
@@ -434,4 +442,31 @@ h1 {
 }
 .main {
   margin-left: 210px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.428571429;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
 }
