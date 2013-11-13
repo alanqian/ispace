@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-form.edit_fixture {
+form.edit_fixture, form.new_fixture {
   tr.active {
     background-color: #0000cc;
   }

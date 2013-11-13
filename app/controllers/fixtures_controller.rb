@@ -34,7 +34,9 @@ class FixturesController < ApplicationController
     @stores_all = Store.all.select(:id, :name)
     @model_stores_all = Store.model_store.select([:id, :name])
     @categories_all = Category.all.select(:code, :parent_id, :name)
-    @store_fixture_new = StoreFixture.new(fixture_id: @fixture.id)
+    if @do == :deploy
+      @store_fixture_new = StoreFixture.new(fixture_id: @fixture.id)
+    end
   end
 
   # POST /fixtures

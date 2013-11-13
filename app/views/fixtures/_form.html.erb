@@ -1,4 +1,5 @@
-<% opt_disabled = fixture.ref_store.any? %>
+<% opt_disabled = (@do == :deploy) %>
+<%# opt_disabled = (@do == :deploy) || fixture.ref_store.any? %>
 <%= simple_form_for(fixture, data: { disabled: opt_disabled }) do |f| %>
   <%= f.error_notification %>
 
@@ -7,7 +8,6 @@
     <%= f.button :submit %>
     <%#= f.button :submit, "返回" %>
     <%#= f.input :category_id, collection: @categories %>
-    <hr/>
   </div>
   <div class="row span7">
     <div class="span2">
