@@ -47,7 +47,7 @@ class FixturesController < ApplicationController
 
     respond_to do |format|
       if @fixture.save
-        format.html { redirect_to @fixture, notice: 'Fixture was successfully created.' }
+        format.html { redirect_to fixtures_path, notice: 'Fixture was successfully created.' }
         format.json { render action: 'show', status: :created, location: @fixture }
       else
         format.html { render action: 'new' }
