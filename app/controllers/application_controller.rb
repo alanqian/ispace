@@ -11,6 +11,12 @@ class ApplicationController < ActionController::Base
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_form, only: [:edit, :new], unless: :devise_controller?
 
+  before_filter do
+    resource = controller_name.singularize.to_sym
+    method = "#{resource}_params"
+    params[resource] &&= send(method) if respond_to?(method, true)
+  end
+
   def layout_by_resource
     if devise_controller?
       "single-column"
