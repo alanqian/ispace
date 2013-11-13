@@ -40,9 +40,11 @@
   <body id="<%= params[:controller].singularize %>" data-action="<%= params[:action] %>" data-do="<%= params[:_do] %>">
     <%= render 'layouts/header', layout: 'application' %>
     <div class="sidebar">
-      <nav class="sidebar-nav" role="navigation">
-        <%= render "layouts/nav_#{current_user.role}" %>
-      </nav><!--/.nav-->
+      <div class="column">
+        <nav class="sidebar-nav" role="navigation">
+          <%= render "layouts/nav_#{current_user.role}" %>
+        </nav><!--/.nav-->
+      </div>
     </div><!--/.sidebar-->
     <div class="main">
       <%= flash_contents %>
