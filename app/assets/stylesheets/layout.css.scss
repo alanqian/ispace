@@ -9,6 +9,8 @@ body {
   line-height: 20px;
   color: #333333;
   background-color: #ffffff;
+  height: 100%;
+  overflow: hidden;
 }
 
 html {
@@ -156,8 +158,8 @@ ul.nav {
 .sidebar {
   background-color: rgb(238, 238, 238);
   width: 160px;
-  float: left;
   box-sizing: border-box;
+  overflow: auto;
   height: 100%;
   border-right: 1px solid gray;
   nav.sidebar-nav {
@@ -170,7 +172,9 @@ ul.nav {
 .main {
   margin-left: 210px;
   width: 1100px;
-  float: left;
+  height: 100%;
+  overflow: auto;
+  position: absolute;
   > h1:first-child {
     margin-top: 10px;
     margin-bottom: 20px;
@@ -188,6 +192,7 @@ ul.nav {
 }
 
 nav[role="navigation"] {
+  @include clearfix;
   a, a:visited {
     background-color: transparent;
   }
@@ -218,8 +223,7 @@ nav[role="navigation"] {
 @mixin label {
   min-width: 150px;
   display: inline-block;
-  padding-right: 0.3em;
-  margin-right: 0.5em;
+  margin-right: 10px;
   text-align: right;
   color: #999;
 }
@@ -230,6 +234,7 @@ form {
     margin: 2px 0;
     line-height: 1.5em;
     color: #333;
+    min-height: 30px;
     input {
       line-height: 1.6em;
       padding: 0 5px;
@@ -242,14 +247,21 @@ form {
       width: 400px;
       height: 10em;
     }
+    span.hint {
+      margin-left: 10px;
+      color: #999;
+    }
   }
-  label.email, label.string, label.select, label.tel, label.password {
+  label.email, label.string, label.select, label.tel, label.password, label.date, label.text {
     @include label;
   }
-
-  div.actions {
+  label.text {
+    vertical-align: top;
+  }
+  div.actions, div.form-actions {
     padding-left: 0 !important;
     margin-top: 0.8em;
+    margin-left: 160px;
     input.button {
       margin-left: 0 !important;
       padding: 5px 8px;
@@ -429,10 +441,7 @@ h1 {
   position: absolute;
   left: 0;
   top: 0;
-  min-height: 100%;
-  .column {
-    margin-top: 41px;
-  }
+  height: 100%;
 }
 
 .btn {
@@ -464,6 +473,7 @@ h1 {
 
 div.alert {
   margin-top: 10px;
+  margin-bottom: 10px;
   padding: 10px;
   border: 1px solid silver;
   border-radius: 3px;

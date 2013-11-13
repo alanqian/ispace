@@ -70,3 +70,11 @@ form.edit_fixture_deploy {
     }
   }
 }
+
+#fixture_basic {
+  box-sizing: border-box;
+  .input label {
+    width: auto;
+    min-width: initial;
+  }
+}
