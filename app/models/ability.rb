@@ -12,10 +12,13 @@ class Ability
       if user.admin?
         can_manage_store_related
         can_manage_user_related
+        can :manage, ImportStore
       elsif user.designer?
         can_manage_product_related
         can_manage_plan_related
         can_manage_fixture_related
+        can :manage, ImportProduct
+        can :manage, ImportCategory
       elsif user.salesman?
         # can_manage_for_salesman
       end
