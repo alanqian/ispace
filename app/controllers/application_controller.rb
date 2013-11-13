@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
     if devise_controller?
       "single-column"
     else
-      "application"
+      "newapplication"
     end
   end
 
