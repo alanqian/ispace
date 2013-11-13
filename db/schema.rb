@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20131112020408) do
     t.string   "plan_set_name"
     t.string   "plan_set_note"
     t.datetime "published_at",                           null: false
-    t.date     "to_deploy_at",    default: '2013-11-07', null: false
+    t.date     "to_deploy_at",    default: '2013-11-09', null: false
     t.datetime "download_1st_at"
     t.integer  "download_count",  default: 0
     t.integer  "deployed_by",     default: 0
@@ -156,13 +156,13 @@ ActiveRecord::Schema.define(version: 20131112020408) do
     t.string   "filename"
     t.string   "type",       limit: 48
     t.text     "sheets",     limit: 2147483647
+    t.string   "done",       limit: 48
     t.text     "mapping",    limit: 16777215
     t.text     "imported"
     t.integer  "store_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "done",       limit: 48
   end
 
   add_index "import_sheets", ["type"], name: "index_import_sheets_on_type", using: :btree
@@ -237,7 +237,7 @@ ActiveRecord::Schema.define(version: 20131112020408) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "category_name"
-    t.date     "to_deploy_at",                       default: '2013-11-07', null: false
+    t.date     "to_deploy_at",                       default: '2013-11-09', null: false
     t.text     "recent_plans",      limit: 16777215
   end
 

@@ -109,9 +109,7 @@ bay = Bay.create(
   base_height: 15.0,
   base_width: 120.0,
   base_depth: 50.0,
-  base_color: '#400040',
-  elem_type: 1,
-  elem_count: 7
+  base_color: '#400040'
 )
 
 # for notch_num
@@ -152,9 +150,7 @@ bay = Bay.create(
     base_height: 15.0,
     base_width: 120.0,
     base_depth: 50.0,
-    base_color: '#400040',
-    elem_type: 1,
-    elem_count: 8
+    base_color: '#400040'
 )
 
 level = 1
@@ -190,9 +186,7 @@ bay = Bay.create(
     base_height: 15.0,
     base_width: 60.0,
     base_depth: 50.0,
-    base_color: '#400040',
-    elem_type: 1,
-    elem_count: 8
+    base_color: '#400040'
 )
 level = 1
 [1.0, 23.0, 45.0, 67.0, 89.0, 111.0, 133.0, 155.0].each do |from_base|
@@ -227,9 +221,7 @@ bay = Bay.create(
     base_height: 15.0,
     base_width: 60.0,
     base_depth: 50.0,
-    base_color: '#400040',
-    elem_type: 1,
-    elem_count: 7
+    base_color: '#400040'
 )
 level = 1
 [1.0, 27.0, 53.0, 79.0, 105.0, 131.0, 157.0].each do |from_base|
@@ -265,9 +257,7 @@ bay = Bay.create(
     base_height: 10.0,
     base_width: 120.0,
     base_depth: 40.0,
-    base_color: '#101010',
-    elem_type: 0,
-    elem_count: 2
+    base_color: '#101010'
 )
 level = 1
 OpenShelf.create(
@@ -316,9 +306,7 @@ bay = Bay.create(
   base_height: 10.0,
   base_width: 120.0,
   base_depth: 40.0,
-  base_color: '#101010',
-  elem_type: 0,
-  elem_count: 4,
+  base_color: '#101010'
 )
 level = 1
 OpenShelf.create(
@@ -368,9 +356,7 @@ bay = Bay.create(
   base_height: 10.0,
   base_width: 120.0,
   base_depth: 40.0,
-  base_color: '#101010',
-  elem_type: 0,
-  elem_count: 3
+  base_color: '#101010'
 )
 FreezerChest.create(
   bay_id: bay.id,
@@ -412,7 +398,6 @@ fixtures = []
 ["120x8层板货架", "5组120层板货架", "4组120层板货架", "3组120层板+1组60层板货架"].each do |name|
   fixtures.push Fixture.create(
     name: name,
-    code: name[0..4],
     user_id: 0,
     flow_l2r: true,
   )
@@ -496,7 +481,7 @@ User.create(
   password: '00000000',
   password_confirmation: '00000000',
   username: '李大力',
-  store_id: store.id
+  store_id: store.id,
   role: 'salesman'
 )
 __END__
