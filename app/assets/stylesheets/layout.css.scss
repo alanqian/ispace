@@ -87,6 +87,10 @@ img {
   }
 }
 
+.clearfix {
+  @include clearfix;
+}
+
 .navbar {
   @include clearfix();
   background-color: #eee;
@@ -171,7 +175,7 @@ ul.nav {
 
 .main {
   margin-left: 210px;
-  width: 1100px;
+  width: 1070px;
   height: 100%;
   overflow: auto;
   position: absolute;
@@ -225,7 +229,6 @@ nav[role="navigation"] {
   display: inline-block;
   margin-right: 10px;
   text-align: right;
-  color: #999;
 }
 
 /* basic form style */
@@ -251,8 +254,13 @@ form {
       margin-left: 10px;
       color: #999;
     }
+    &.hidden {
+      height: 0px;
+      min-height: initial;
+    }
   }
-  label.email, label.string, label.select, label.tel, label.password, label.date, label.text, label.integer, label.color, label.file {
+
+  label {
     @include label;
   }
   label.text {
