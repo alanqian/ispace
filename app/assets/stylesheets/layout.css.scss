@@ -252,7 +252,7 @@ form {
       color: #999;
     }
   }
-  label.email, label.string, label.select, label.tel, label.password, label.date, label.text, label.integer, label.color {
+  label.email, label.string, label.select, label.tel, label.password, label.date, label.text, label.integer, label.color, label.file {
     @include label;
   }
   label.text {

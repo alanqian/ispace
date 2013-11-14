@@ -6,9 +6,12 @@ class Ability
       can :manage, :all
     elsif user.blank?
       cannot :manage, :all
-    elsif Rails.env.development? and user.role == 'superadmin' # for develop
-      can :manage, :all
     else
+      # can manage himself
+      can :manage, User do |u|
+        u.id == user.id
+      end
+
       if user.admin?
         can_manage_store_related
         can_manage_user_related
@@ -20,7 +23,9 @@ class Ability
         can :manage, ImportProduct
         can :manage, ImportCategory
       elsif user.salesman?
-        # can_manage_for_salesman
+        can :manage, ImportSale do |import_sale|
+          user.store_id == import_sale.store_id
+        end
       end
     end
 
