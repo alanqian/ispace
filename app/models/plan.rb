@@ -5,6 +5,7 @@ class Plan < ActiveRecord::Base
 
   serialize :layers, Array
 
+  belongs_to :user
   belongs_to :plan_set
   belongs_to :store
   belongs_to :fixture

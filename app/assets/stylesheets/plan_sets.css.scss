@@ -4,5 +4,40 @@
 
 div#model-store-info {
   visibility: hidden;
+  margin-left: 160px;
+  border: 1px;
+}
+
+form.edit_plan_set {
+  div.inputs {
+    width: 600px;
+    div.input textarea {
+      width: 300px;
+      max-width: 430px;
+    }
+  }
+  fieldset {
+    min-width: 40px;
+    max-width: 800px;
+    width: 140px;
+  }
+  input#plan_set_category_name+span.hint {
+    display: none;
+  }
+}
+
+form {
+  div.input.hidden {
+    display: none;
+    min-height: 0;
+    height: 0;
+  }
+}
+
+div.check_boxes {
+  span.checkbox {
+    display: inline-block;
+    margin-right: 1em;
+  }
 }
 

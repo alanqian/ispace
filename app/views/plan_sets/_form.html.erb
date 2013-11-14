@@ -1,17 +1,23 @@
 <%= simple_form_for(@plan_set) do |f| %>
   <%= f.error_notification %>
+  <% disable_category = @plan_set.plans.any? %>
 
   <div class="inputs">
     <%= f.hidden_field :user_id %>
     <%= f.input :name %>
     <%= f.hidden_field :category_id %>
     <%# for, data-value, data-labels is for auto-complete %>
-    <%= f.input :category_name, input_html: { for: "plan_set_category_id", class: "ui-tree-input",
+    <%= f.input :category_name, input_html: {
+      for: "plan_set_category_id",
+      class: "ui-tree-input",
       data: {
         cmd: "select-category",
         tree: @categories_all.to_json,
         value: "code",
-        labels: ["name", "pinyin", "code"], }} %>
+        labels: ["name", "pinyin", "code"], },
+      disabled: disable_category
+    } %>
+
     <%= f.input :to_deploy_at %>
     <%= f.input :note, as: :text  %>
 
@@ -19,14 +25,12 @@
     <% if @plan_set.id %>
       <%= f.input :_do, as: :hidden, input_html: { value: "add_store" } %>
       <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>
-      <%= field_set_tag "样板店", id: "model-stores" do %>
-        <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all,
-          wrapper_html: { class: "ui-selected-mark" } %>
-      <% end %>
       <div id="model-store-info" data-stores="<%= model_store_info.to_json %>">
-        <p><span id="store.name"></span>: <span id="store.location"></span>, <span id="store.area"></span>m²</p>
-        <p>门店数：<span id="store.ref_count"></span>, 属<span id="store.region_name"></span></p>
+        <p><strong><span id="store_name"></span></strong>：<u><span id="store_location"></span>, <span id="store_area"></span>m²,
+            门店数：<span id="store_ref_count"></span>, 属<span id="store_region_name"></span></u></p>
       </div>
+      <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all,
+        wrapper_html: { class: "ui-selected-mark" } %>
     <% end %>
   </div>
 
