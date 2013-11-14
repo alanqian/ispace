@@ -27,6 +27,7 @@ III. discard import: #destroy, (for all imports)
 class ImportSheetsController < ApplicationController
   before_action :set_import_sheet, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
+  skip_authorize_resource :only => [ :new, :index ]
   # respond_to :json
 
   # GET /import_sheets
@@ -38,7 +39,6 @@ class ImportSheetsController < ApplicationController
   #    :all for design, :this store for sales
   def index
     store_id = 1
-    user_id = 1
     is_designer_user = params[:_designer]
 
     @t = params[:_t] || "sale"
@@ -71,6 +71,7 @@ class ImportSheetsController < ApplicationController
   # -----------------------------------------
   # show import results: for all imports
   def show
+    authorize! :manage, @import_sheet
   end
 
   # GET /import_sheets/new?_t=xxx
@@ -78,8 +79,8 @@ class ImportSheetsController < ApplicationController
   # launch upload page: for all imports
   def new
     @store_id = 1
-
     @import_sheet = new_import_sheet
+    authorize! :manage, @import_sheet
     respond_to do |format|
       if params[:ajax]
         format.html { render partial: 'upload', locals: { import_sheet: @import_sheet }}
@@ -161,12 +162,13 @@ class ImportSheetsController < ApplicationController
     def set_import_sheet
       @import_sheet = ImportSheet.find(params[:id])
       @t = @import_sheet._target
+      @import_sheet = @import_sheet.becomes(@import_sheet.type.constantize)
     end
 
     def new_import_sheet
       @t = params[:_t] || "sale"
       model = "import_#{@t}".classify
-      ImportSheet.new(store_id: @store_id, user_id: current_user.id, type: model)
+      model.constantize.new(store_id: @store_id, user_id: current_user.id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

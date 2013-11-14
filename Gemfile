@@ -46,6 +46,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'factory_girl_rails', group: [:test, :development]
+
 gem 'will_paginate', '~> 3.0'
 
 # Use ActiveModel has_secure_password
