@@ -1,0 +1,51 @@
+<table id="plan_sets_editing"
+  data-sinfo="共_TOTAL_个规划"
+  data-sinfoempty="无空间规划，请重新搜索或新建规划"
+  class="dataTable grid-control no-wrap plan_sets editing" cellspacing=0>
+  <thead>
+    <tr>
+      <%=data_th_list :plan_set,
+        :name,
+        :created_at,
+        :num_stores,
+        [:recent_plans, sort: false],
+        :to_deploy_at,
+        ["", sort: false]
+      %>
+    </tr>
+  </thead>
+  <tbody>
+    <% plan_sets.each do |plan_set| %>
+      <%
+        recent_links = ""
+        plan_set.recent_plans do |plan|
+          recent.links += link_to(plan.name, edit_plan_path(id: plan.id, _do: :layout),
+                                  title: "编辑")
+        end
+        do_links = link_to('删除', plan_set, method: :delete, data: { confirm: 'Are you sure?' })
+        if plan_sets.any?
+          do_links += " "
+          do_links += link_to('发布', edit_plan_set_path(plan_set, _do: :publish))
+        end
+      %>
+      <tr>
+        <%= data_td_list plan_set,
+          link_to(plan_set.full_name, edit_plan_set_path(plan_set), title: "打开"),
+          dt_ago(plan_set.created_at.localtime),
+          link_to("#{plan_set.num_plans}/#{plan_set.num_stores}",
+                  plans_path(cat: plan_set.category_id,
+                             plan_set: plan_set.id),
+                             title: "点击查看样板店规划"),
+          recent_links,
+          :to_deploy_at,
+          do_links
+        %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div id="plan_sets_editing-filter">
+  <%= link_to '新建规划', new_plan_set_path %>
+</div>
+

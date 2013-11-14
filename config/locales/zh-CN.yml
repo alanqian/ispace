@@ -50,11 +50,11 @@ zh-CN:
   helpers:
     submit:
       bay:
-        create: "新建货备"
-        update: "保存"
+        create: 新建货备
+        update: 保存
       fixture:
-        create: "新建货架"
-        update: "更新货架"
+        create: 新建货架
+        update: 更新货架
 
   activerecord:
     models:
@@ -88,28 +88,28 @@ zh-CN:
         store_id: 所属门店
         role: 角色
       brand:
-        name: "品牌名"
+        name: 品牌名
       supplier:
-        name: "供应商名称"
+        name: 供应商名称
       manufacturer:
-        name:  "生产商名称"
+        name:  生产商名称
       product:
-        barcode: "条码"
-        supplier: "供应商"
-        mfr: "生产商"
-        code: "编码"
-        id: "编码"
-        name: "品名"
-        price_zone: "价格带"
-        size_name: "规格"
-        case_pack_name: "包装"
-        color: "颜色"
-        height: "高度"
-        width: "宽度"
-        depth: "深度"
-        weight: "重量"
-        brand_id: "品牌"
-        mfr_id: "生产商"
+        barcode: 条码
+        supplier: 供应商
+        mfr: 生产商
+        code: 编码
+        id: 编码
+        name: 品名
+        price_zone: 价格带
+        size_name: 规格
+        case_pack_name: 包装
+        color: 颜色
+        height: 高度
+        width: 宽度
+        depth: 深度
+        weight: 重量
+        brand_id: 品牌
+        mfr_id: 生产商
         category_id: 品类
         status: 销售
         plan_info_rank: 排名
@@ -215,6 +215,22 @@ zh-CN:
         cube: 体积
         ref_count: 门店数
         memo: 备注
+      plan_set:
+        name: 规划名称
+        category_name: 品类
+        created_at: 开始规划
+        note: 规划说明
+        num_stores: 门店数
+        recent_plans: 最近编辑
+        published_at: 发布
+        undeployed_stores: 未部署
+        to_deploy_at: 计划部署
+        completed_ratio: 完成度
+        deployed: 完成
+        download: 下载
+        downloaded_time: 下载时间
+        deployed_time: 部署时间
+        none: 无操作
     errors:
       models:
         user:

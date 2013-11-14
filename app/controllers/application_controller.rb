@@ -25,6 +25,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_user_role
+    user = self.current_user
+    role = nil
+    if user != nil && user.respond_to?(:role)
+      role = user.role
+    end
+    role = role.to_sym if role.is_a?(String)
+    role
+  end
+
   def set_do_param
     _do = params[:_do]
     @do = _do.to_sym if _do && !_do.empty?

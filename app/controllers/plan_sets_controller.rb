@@ -73,19 +73,25 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets
   # GET /plan_sets.json
   def index
-    @role = :designer
-    case @role
+    role = current_user_role
+    logger.debug "current role: #{role}"
+    case role
     when :designer
       # for designers
-      @designing_sets = PlanSet.designing_sets
-      @recent_plans = Plan.recent_edited
-      @deploying_sets = PlanSet.deploying_sets
-      @deployed_sets = PlanSet.deployed_sets(10)
+      @plan_sets = {
+        design: PlanSet.designing_sets,
+        recent_plans: Plan.recent_edited,
+        deploying: PlanSet.deploying_sets,
+        deployed: PlanSet.deployed_sets(10)
+      }
+      render 'index'
     when :store
       # for stores
       @store_id = 9
-      @recent_plans = Deployment.recent_plans(@store_id)
-      @deployed_plans = Deployment.deployed_plans(@store_id, 100)
+      @deploys = {
+        to_deploy: Deployment.recent_plans(@store_id),
+        deployed: Deployment.deployed_plans(@store_id, 100),
+      }
       render 'index_store'
     end
   end
