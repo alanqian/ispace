@@ -809,6 +809,10 @@ $ ->
   # $.ajaxSettings.dataType = "json"
   $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
   $("table.dataTable").each (index, table) ->
+    # add a container for dataTable to avoid too wide problem
+    container = $("<div></div>").insertAfter(table).addClass("dataTable_container")
+    $(table).appendTo(container)
+
     oTable = $(table).dataTable dataTableUtil.getOpt(table)
     $(table).data("dataTable", oTable)
     if oTable.length > 0
@@ -819,6 +823,14 @@ $ ->
         iLeftColumns: fixedColumns,
         iLeftWidth: $(table).data("left-width")
       )
+
+    # update dataTable filter: custom div inject to dataTable
+    # $("#dataTable-filter").children().appendTo(".dataTables_wrapper .top #data_filter")
+    wrapper = "##{table.id}_wrapper"
+    filterDiv = $("##{table.id}-filter")
+    filterDiv = $("#dataTable-filter") if filterDiv.length == 0
+    if filterDiv.length > 0
+      filterDiv.children().appendTo("div#{wrapper} div.top div#data_filter")
     return true
 
   # update dataTable filter: custom div inject to dataTable
