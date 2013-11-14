@@ -53,11 +53,14 @@ form.edit_fixture, form.new_fixture {
 
 form.edit_fixture_deploy {
   display: block;
+  margin-left: 0;
+  float: none !important;
   div.input {
     display: block;
     width: 100%;
     label {
       display: inline-block;
+      min-width: 70px;
       abbr {
         display: inline-block;
       }
