@@ -731,8 +731,10 @@ root.dataTableUtil =
     console.log opt
     if $(table).data("szerorecords")
       opt.oLanguage.sZeroRecords = $(table).data("szerorecords")
-    if $("table.dataTable").data("sinfoempty")
-      opt.oLanguage.sInfoEmpty = $("table.dataTable").data("sinfoempty")
+    if $(table).data("sinfo")
+      opt.oLanguage.sInfo = $(table).data("sinfo")
+    if $(table).data("sinfoempty")
+      opt.oLanguage.sInfoEmpty = $(table).data("sinfoempty")
     opt.aoColumns = @aoColumns(table)
     opt
 
@@ -761,7 +763,7 @@ root.dataTableUtil =
       sZeroRecords:  "没有匹配结果"
       # sInfo:         "_START_-_END_，共 _TOTAL_ 条"
       sInfo:         "共_TOTAL_条"
-      sInfoEmpty:    $("table.dataTable").data("sinfoempty") || "无结果，请重新搜索"
+      sInfoEmpty:    "无结果，请重新搜索"
       sInfoFiltered: "&#47; _MAX_ 条"
       sInfoPostFix:  ""
       sSearch:       "搜索:"
@@ -832,9 +834,6 @@ $ ->
     if filterDiv.length > 0
       filterDiv.children().appendTo("div#{wrapper} div.top div#data_filter")
     return true
-
-  # update dataTable filter: custom div inject to dataTable
-  $("#dataTable-filter").children().appendTo(".dataTables_wrapper .top #data_filter")
 
   # resizable, tabs, tabs-bottom, ...
   setSheetUI()
