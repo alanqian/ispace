@@ -2,6 +2,7 @@
 
 one:
   fixture_id: 1
+  name: '111'
   bay_id: 1
   num_bays: 1
   item_index: 1
@@ -9,6 +10,7 @@ one:
 
 two:
   fixture_id: 1
+  name: '222'
   bay_id: 1
   num_bays: 1
   item_index: 1

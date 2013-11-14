@@ -56,6 +56,11 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.0.2)
+    factory_girl (4.2.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.2.1)
+      factory_girl (~> 4.2.0)
+      railties (>= 3.0.0)
     hanzi_to_pinyin (0.9.1)
       json
       yamler
@@ -185,6 +190,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   delayed_job_active_record
   devise
+  factory_girl_rails
   hanzi_to_pinyin
   jbuilder (~> 1.2)
   jqgrid_for_rails (~> 1.0.2)

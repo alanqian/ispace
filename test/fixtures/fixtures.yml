@@ -2,12 +2,10 @@
 
 one:
   name: fixture1
-  code: "111"
   user_id: 1
   flow_l2r: false
 
 two:
   name: fixture2
-  code: "222"
   user_id: 1
   flow_l2r: false

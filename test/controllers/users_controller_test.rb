@@ -11,18 +11,22 @@ class UsersControllerTest < ActionController::TestCase
       password: '00000000',
       password_confirmation: '00000000'
     }
+    @admin = create :admin
+    sign_out @user
+    sign_in @admin
   end
 
   test "should get show" do
   end
 
   test "should get update" do
-    patch :update, id: @user, user: { telephone: '13810223997' }
-    assert_redirected_to edit_user_path(@user)
+    assert @admin.admin?
+    patch :update, id: @admin.id, user: { telephone: '13810223997' }
+    assert_redirected_to edit_user_path(@admin)
   end
 
   test "should get edit" do
-    get :edit, id: @user
+    get :edit, id: @admin.id
     assert_response :success
   end
 
