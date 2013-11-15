@@ -26,6 +26,9 @@ zh-CN:
         defaults: 修改空间规划
         open: 空间规划：设计
         deploy: 空间规划：部署情况
+        index: 空间规划
+        index_design: 规划设计
+        index_deploy: 部署管理
       plan:
         edit_setup: 设置门店规划
       store:

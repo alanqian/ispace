@@ -78,13 +78,28 @@ class PlanSetsController < ApplicationController
     case role
     when :designer
       # for designers
-      @plan_sets = {
-        design: PlanSet.designing_sets,
-        recent_plans: Plan.recent_edited,
-        deploying: PlanSet.deploying_sets,
-        deployed: PlanSet.deployed_sets(10)
-      }
-      render 'index'
+      case @do
+      when :design
+        @plan_sets = {
+          design: PlanSet.designing_sets,
+          recent_plans: Plan.recent_edited,
+        }
+        render 'index_design'
+      when :deploy
+        @plan_sets = {
+          deploying: PlanSet.deploying_sets,
+          deployed: PlanSet.deployed_sets(10)
+        }
+        render 'index_deploy'
+      else
+        @plan_sets = {
+          design: PlanSet.designing_sets,
+          recent_plans: Plan.recent_edited,
+          deploying: PlanSet.deploying_sets,
+          deployed: PlanSet.deployed_sets(10)
+        }
+        render 'index'
+      end
     when :store
       # for stores
       @store_id = 9
@@ -99,6 +114,8 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets/1
   # GET /plan_sets/1.json
   def show
+    @do ||= :open
+    set_show
   end
 
   # GET /plan_sets/new

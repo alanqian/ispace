@@ -7,7 +7,7 @@
 <ul class="nav nav-list">
   <li class="nav-header">空间</li>
   <li><%= link_to "空间规划", plan_sets_path %></li>
-  <li><%= link_to "规划设计", new_plan_set_path %></li>
+  <li><%= link_to "规划设计", plan_sets_path(_do: :design) %></li>
   <li><%= link_to "部署管理", plan_sets_path(_do: :deploy) %></li>
 </ul>
 <ul class="nav nav-list">
