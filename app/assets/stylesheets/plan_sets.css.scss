@@ -26,6 +26,8 @@ form.edit_plan_set {
   }
 }
 
+// common styles
+
 form {
   div.input.hidden {
     display: none;
@@ -34,10 +36,50 @@ form {
   }
 }
 
-div.check_boxes {
-  span.checkbox {
+div.check_boxes, div.radio_buttons {
+  span.checkbox, span.radio {
     display: inline-block;
-    margin-right: 1em;
+    margin-right: initial;
   }
 }
 
+li.radio, li.checkbox {
+  margin-left: 0.6em;
+}
+
+label.boolean, label.collection_check_boxes, label.collection_radio_buttons, label.collection_check_box, label.collection_radio_button {
+  text-align: left;
+  display: inline-block;
+  min-width: 1em;
+}
+
+div.input.boolean.compact {
+  min-height: 1em;
+}
+
+div.input.bi_columns {
+  width: 620px;
+  min-height: 3em;
+  max-height: 10em;
+  overflow-y: scroll;
+  li.checked {
+    list-style-type: none;
+    display: inline-block;
+    width: 300px;
+  }
+  li.checked:before {
+    content: "✓  ";
+    padding-left: 2px;
+  }
+
+  span.checkbox, span.radio {
+    width: 300px;
+    vertical-align: top;
+    input.check_boxes, input.radio_buttons {
+      vertical-align: top;
+    }
+    label.collection_check_boxes, label.collection_radio_buttons {
+      max-width: 270px;
+    }
+  }
+}
