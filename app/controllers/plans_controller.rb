@@ -68,17 +68,21 @@ class PlansController < ApplicationController
     # always ajax requests in :edit_layout mode
     if @do == :layout
       @missing_fixture = !@plan.verify_fixture?
-      @do = :setup if (@missing_fixture)
+      if @missing_fixture
+        logger.warn "plan back to setup fixture for missing fixture, plan:#{@plan.id}"
+        edit_update_do(:setup)
+      end
 
       if @plan.products_changed?
-        @do = :setup
+        logger.warn "product changed since last plan revision, plan:#{@plan.id}"
+        edit_update_do(:setup)
       end
     end
 
     logger.debug "edit plan, do:#{@do}"
     case @do
     when :setup
-      @fixtures_all = Fixture.select([:id,:name]).to_hash(:id, :name)
+      @fixtures_all = Fixture.select([:id,:name])
       @products_opt = @plan.products_opt
       render "edit_setup"
     when :layout

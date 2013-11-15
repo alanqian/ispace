@@ -1,9 +1,7 @@
-<h1>选择货架</h1>
+<h1>
+  <%= simple_title :edit_setup %>
+</h1>
 
-<p>
-  <%= @plan.plan_set.full_name %>：
-  <%= @plan.store_name %>
-</p>
 
 <%= simple_form_for(@plan, html: {id: "plan-setup-form"}) do |f| %>
   <%= f.error_notification %>
@@ -12,41 +10,49 @@
     <%= f.hidden_field :user_id %>
     <%= f.input :_do, as: :hidden, input_html: { value: "setup" } %>
 
-    <% if @missing_fixture %>
-      <p>现在还没有为 <em><%= @plan.category.name %></em> 品类设置货架!</p>
-    <% end %>
-    <%= field_set_tag "设置货架", id: "fixtures" do %>
-      <li><%= link_to "新建货架", new_fixture_path %></li>
-      <%= f.collection_radio_buttons :fixture_id, @fixtures_all, :first, :last %>
-    <% end %>
+    <%= f.input :plan_set_name, disabled: true %>
+    <%= f.input :store_name, disabled: true %>
+    <%= f.input :category_name, disabled: true %>
+
+    <hr/>
+
+    <div class="input">设置货架
+      <% if @missing_fixture %>
+        <span class="hint">现在还没有为本规划设置货架</span>
+      <% end %>
+    </div>
+
+    <li class="radio"><%= link_to "新建货架", new_fixture_path %></li>
+    <%= f.input :fixture_id, as: :radio_buttons, collection: @fixtures_all,
+      label: false, wrapper_html: { class: "bi_columns" }
+    %>
 
     <% if @plan.products_changed? %>
-      <% if @plan.has_product? %>
-        <p>商品目录已被更新，请选择新商品(<%= @products_opt.size %>)，加入到本门店规划</p>
-      <% else %>
-        <p>请选择商品(<%= @products_opt.size %>)，加入到本门店规划</p>
-      <% end %>
-      <div class="">
-        <%= select_all_check "plan[optional_products][]"%>
-        <%= label_tag "select-all", "全选" %>
-
-        <%#= f.collection_check_boxes :optional_products, @products_opt, :id, :name,
-          {}, { class: "select-one ui-selected-mark", onclick: "javascript: onClickSelectOne(event, this);",
-            data: {"select-all" => "#SELECT_ALL"}} %>
-
+      <hr/>
+      <div class="input">选择商品
+        <% if @plan.has_product? %>
+          <span class="hint">商品目录已被更新，请选择新商品(<%= @products_opt.size %>)，加入到本门店规划</span>
+        <% else %>
+          <span class="hint">请选择可卖品(<%= @products_opt.size %>)，加入到本门店规划</span>
+        <% end %>
+      </div>
+      <div class="choose-product">
+        <div class="input boolean compact select-all">
+          <%=select_all_check "plan[optional_products][]", label: "全选" %>
+        </div>
         <%= f.input :optional_products, as: :check_boxes, collection: @products_opt,
           label: false, wrapper_html: {
-            class: "select-one ui-selected-mark",
+            class: "bi_columns select-one ui-selected-mark",
             onclick: "javascript: onClickSelectOne(event, this);",
             data: {"select-all" => "#SELECT_ALL"},
           } %>
       </div>
-      <div class="">
-        <ul>
-          <% @plan.prior_products.each do |p| %>
-            <li><%= p.display_name %></li>
-          <% end %>
-        </ul>
+      <hr/>
+      <div class="input">必卖品：<span class="hint">以下是必卖品，会自动加入规划</span></div>
+      <div class="input bi_columns">
+        <% @plan.prior_products.each do |p| %>
+          <li class="checked"><%= p.name %></li>
+        <% end %>
       </div>
     <% end %>
   </div>

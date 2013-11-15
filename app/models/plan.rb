@@ -68,6 +68,13 @@ class Plan < ActiveRecord::Base
     logger.debug("new target plan: #{@target_plans.to_s}")
   end
 
+  def plan_set_name
+    self.plan_set.name
+  end
+  def category_name
+    self.category.name
+  end
+
   def status_s
     # opened status
     st = "#{usage_percent}%"
@@ -145,7 +152,7 @@ class Plan < ActiveRecord::Base
     products.reject! { |p| p.empty? }
 
     # add must on sale products
-    products.concat Product.must_on_sales(self.category_id).map { |p| p.code }
+    products.concat Product.must_on_sales(self.category_id).map { |p| p.id }
 
     marked = positions.to_hash(:product_id, :id)
     products.each do |product_code|
@@ -182,7 +189,7 @@ class Plan < ActiveRecord::Base
   def fixture_id=(fixture_id)
     unless fixture_id.kind_of?(Fixnum)
       # create store_fixture
-      logger.debug "create store_fixture: #{fixture_id.class}, #{fixture_id}"
+      logger.info "create store_fixture, fixture:#{fixture_id} store_id:#{store_id} category_id:#{category_id}"
       StoreFixture.upsert_fixture(store_id, category_id, fixture_id)
     end
     super(fixture_id)

@@ -129,10 +129,6 @@ zh-CN:
         name: 区域
         consume_type: 消费类型
         memo: 备注
-      fixture:
-        name: 名称
-        user: 用户
-        flow_l2r: 向右排货
       fixture_item:
         bay_id: 货备
         num_bays: 货备数
@@ -215,6 +211,8 @@ zh-CN:
         cube: 体积
         ref_count: 门店数
         memo: 备注
+        flow_l2r: 向右排货
+        continuous: 货备连通
       plan_set:
         name: 规划名称
         category_name: 品类
@@ -231,6 +229,10 @@ zh-CN:
         downloaded_time: 下载时间
         deployed_time: 部署时间
         none: 无操作
+      plan:
+        plan_set_name: 规划名称
+        category_name: 规划品类
+        fixture_id: 货架
     errors:
       models:
         user:
