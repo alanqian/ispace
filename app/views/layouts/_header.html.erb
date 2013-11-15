@@ -1,19 +1,21 @@
 <div class="navbar <%= layout %>">
-  <ul class="nav pull-right clearfix">
-    <% if user_signed_in? %>
-      <li class="dropdown">
-      <a class="dropdown-toggle user-option" data-toggle="dropdown" href="#" title="个人主页">
-        <span class="headerTinymanName"><%= current_user.email %> <b class="caret"></b></span>
-      </a>
-      <ul class="dropdown-menu">
-        <li><%= link_to "设置", edit_user_path(current_user) %></li>
-        <li><%= link_to "修改密码", edit_user_registration_path %></li>
-        <li class="divider"></li>
-        <li><%= link_to "退出", sign_out_path, method: :delete %></li>
-      </ul>
-      </li>
-    <% else %>
-      <li><%= link_to "登录", sign_in_path %></li>
-    <% end %>
-  </ul>
+  <div class="navbar-inner clearfix">
+    <ul class="nav pull-right clearfix">
+      <% if user_signed_in? %>
+        <li class="dropdown">
+        <a class="dropdown-toggle user-option" data-toggle="dropdown" href="#" title="个人主页">
+          <span class="headerTinymanName"><%= current_user.email %> <b class="caret"></b></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><%= link_to "设置", edit_user_path(current_user) %></li>
+          <li><%= link_to "修改密码", edit_user_registration_path %></li>
+          <li class="divider"></li>
+          <li><%= link_to "退出", sign_out_path, method: :delete %></li>
+        </ul>
+        </li>
+      <% else %>
+        <li><%= link_to "登录", sign_in_path %></li>
+      <% end %>
+    </ul>
+  </div>
 </div>
