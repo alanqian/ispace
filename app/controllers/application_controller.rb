@@ -35,6 +35,12 @@ class ApplicationController < ActionController::Base
     role
   end
 
+  def edit_update_do(_do)
+    @do = _do
+    @form = "form_#{@do}"
+    params[:_do] = @do.to_s
+  end
+
   def set_do_param
     _do = params[:_do]
     @do = _do.to_sym if _do && !_do.empty?
