@@ -30,12 +30,11 @@
       %>
       <tr>
         <%= data_td_list plan_set,
-          link_to(plan_set.full_name, edit_plan_set_path(plan_set), title: "打开"),
+          link_to(plan_set.full_name, plan_set_path(plan_set, _do: :open), title: "打开"),
           dt_ago(plan_set.created_at.localtime),
           link_to("#{plan_set.num_plans}/#{plan_set.num_stores}",
-                  plans_path(cat: plan_set.category_id,
-                             plan_set: plan_set.id),
-                             title: "点击查看样板店规划"),
+                  edit_plan_set_path(plan_set),
+                             title: "点击修改样板店规划"),
           recent_links,
           :to_deploy_at,
           do_links

@@ -27,7 +27,7 @@
       %>
       <tr>
         <%= data_td_list dpm,
-          link_to(plan_set.full_name, plan_set_path(plan_set)),
+          link_to(plan_set.full_name, plan_set_path(plan_set, _do: :deploy)),
           completed_ratio,
           dt_ago(plan_set.published_at.localtime),
           plan_set.to_deploy_at,

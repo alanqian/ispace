@@ -1,0 +1,40 @@
+<div class="inputs">
+  <p><strong>规划名称：</strong><%= @plan_set.name %> (<%= @plan_set.category_name %>)</p>
+  <p><strong>计划部署：</strong><%= @plan_set.to_deploy_at %></p>
+  <p><strong>规划说明：</strong><%= @plan_set.note %></p>
+
+  <%#
+    plans info for model store:
+    store_full_name | usage_percent | prior_done | normal_done |
+  %>
+
+  <table id="plan_sets_view"
+    data-sinfo="共_TOTAL_个样板店"
+    data-sinfoempty="无搜索结果，请重新搜索或修改规划设置"
+    class="dataTable grid-control no-wrap plan_sets view" cellspacing=0>
+    <thead>
+      <tr>
+        <th>样板店</th>
+        <th>设计者</th>
+        <th>门店数</th>
+        <th>空间使用率</th>
+        <th>必卖品</th>
+        <th>可卖品</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @plan_set.plans.each do |plan| %>
+        <% stat = plan.finish_state %>
+        <% user_name = plan.user.username if plan.user != nil %>
+        <tr>
+          <td><%= link_to plan.store_name, edit_plan_path(plan, _do: :layout) %></td>
+          <td><%= user_name %></td>
+          <td><%= plan.store.ref_count %></td>
+          <td><%= stat[:usage_percent] %>%</td>
+          <td><%= stat[:num_done_priors] %>/<%= stat[:num_prior_products]%></td>
+          <td><%= stat[:num_done_normals] %>/<%= stat[:num_normal_products]%></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -3,6 +3,7 @@ class PlanSet < ActiveRecord::Base
   belongs_to :category
   belongs_to :user
   has_many :plans, dependent: :destroy
+  has_many :deployments, -> { order("deployed_by, download_1st_at") }
 
   attr_accessor :model_stores
   before_save :update_redundancy

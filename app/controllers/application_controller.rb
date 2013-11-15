@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_form, only: [:edit, :new], unless: :devise_controller?
+  before_action :set_show, only: [:show], unless: :devise_controller?
 
   before_filter do
     resource = controller_name.singularize.to_sym
@@ -56,6 +57,10 @@ class ApplicationController < ActionController::Base
 
   def set_form
     @form = @do.nil? ? "form" : "form_#{@do}"
+  end
+
+  def set_show
+    @show = @do.nil? ? "show" : "show_#{@do}"
   end
 
   def set_commit_param
