@@ -8,4 +8,21 @@ body#store {
       color: blue;
     }
   }
+
+  td>input.category {
+    width: 10em;
+  }
+  td>input.code {
+    width: 10em;
+  }
+  td>select.fixture {
+    width: 10em;
+  }
+  td>input.memo {
+    width: 10em;
+  }
+  td>input.parts {
+    width: 4em;
+    display: inline-block;
+  }
 }

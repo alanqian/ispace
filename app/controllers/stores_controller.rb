@@ -33,6 +33,10 @@ class StoresController < ApplicationController
 
   # GET /stores/1/edit
   def edit
+    if @do = :fixture
+      @new_store_fixture = StoreFixture.new(store_id: @store.id)
+      @fixtures_all = Fixture.all
+    end
   end
 
   # POST /stores
@@ -70,7 +74,7 @@ class StoresController < ApplicationController
   def update_default
     respond_to do |format|
       if @store.update(store_params)
-        format.html { redirect_to @store, notice: simple_notice }
+        format.html { redirect_to edit_store_path(@store, _do: @do), notice: simple_notice }
         format.json { head :no_content }
         format.js { set_store_update_js }
       else
@@ -79,6 +83,8 @@ class StoresController < ApplicationController
       end
     end
   end
+
+  alias :update_fixture :update_default
 
   # DELETE /stores/1
   # DELETE /stores/1.json
@@ -98,7 +104,12 @@ class StoresController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def store_params
-      params.require(:store).permit(:_do, :region_id, :code, :name, :ref_store_id, :area, :location, :memo)
+      params.require(:store).permit(:_do,
+        :region_id, :code, :name, :ref_store_id, :area, :location, :memo,
+        rear_support_bars_attributes: [:_destroy, :id,
+          :category_id, :category_name, :fixture_id, :code, :memo,
+          :use_part_fixture, :parts_start, :parts_run]
+      )
     end
 
     def set_store_update_js

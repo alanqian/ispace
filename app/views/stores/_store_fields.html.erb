@@ -1,0 +1,25 @@
+<tr>
+  <td>
+  </td>
+  <td>
+    <%= f.input_field :category_id, class: 'category' %>
+  </td>
+  <td>
+    <%= f.input_field :fixture_id, as: :select, collection: @fixtures_all, class: "fixture" %>
+  </td>
+  <td>
+    <%= f.input_field :code, class: "code" %>
+  </td>
+  <td>
+    <%= f.input_field :use_part_fixture, as: :boolean, title: "钩选使用部分货架", class: "ui-checkbox", for: "parts" %>
+    <%= f.input_field :parts_start, as: :integer, class: "parts start" %>
+    <%= f.input_field :parts_run, as: :integer, class: "parts run" %>
+  </td>
+  <td>
+    <%= f.input_field :memo, class: "memo" %>
+  </td>
+  <td>
+    <%= link_to raw("&times;"), "#", id: "delete_fixture", title: "删除货架" %>
+    <%= link_to raw("&plus;"), "#", id: "add_fixture", title: "增加货架" %>
+  </td>
+</tr>

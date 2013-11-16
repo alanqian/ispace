@@ -1,6 +1,7 @@
-<h1>更新门店信息</h1>
+<h1>
+  <%= simple_title "edit_#{@do}" %>
+</h1>
 
-<%= render 'form' %>
+<%= render @form %>
 
-<%= link_to 'Show', @store %> |
-<%= link_to 'Back', stores_path %>
+<%#= link_to 'Back', stores_path %>

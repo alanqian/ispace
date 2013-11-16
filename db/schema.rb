@@ -424,6 +424,7 @@ ActiveRecord::Schema.define(version: 20131116070815) do
     t.datetime "updated_at"
     t.string   "parts"
     t.string   "passby"
+    t.string   "memo"
   end
 
   add_index "store_fixtures", ["code"], name: "index_store_fixtures_on_code", using: :btree

@@ -2,7 +2,7 @@ class StoreFixture < ActiveRecord::Base
   belongs_to :store
   belongs_to :fixture
   belongs_to :category
-  serialize :parts, Array
+  serialize :parts, Hash
   validates :store_id, presence: true
   validates :fixture_id, presence: true
   validates :category_id, presence: true
@@ -10,6 +10,40 @@ class StoreFixture < ActiveRecord::Base
   validates :category_name, presence: true
 
   attr_accessor :category_name
+  attr_accessor :use_part_fixture
+  attr_accessor :parts_start
+  attr_accessor :parts_run
+
+  def use_part_fixture
+    parts.any?
+  end
+
+  def parts_start
+    parts[:start]
+  end
+
+  def parts_run
+    parts[:run]
+  end
+
+  def parts_prev
+    parts[:prev]
+  end
+
+  def parts_next
+    parts[:next]
+  end
+
+  def update_parts_run
+    if @use_part_fixture
+      self.parts = {
+        start: @parts_start,
+        run: @parts_run,
+      }
+    else
+      self.parts = {}
+    end
+  end
 
   def version
     updated_at.to_i

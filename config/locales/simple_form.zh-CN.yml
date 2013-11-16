@@ -61,6 +61,7 @@ zh-CN:
         create: 成功创建了一个门店
         update_model_store: 样板店设置成功，继续操作
         update_model_store_fail: 样板店设置失败！
+        update_fixture: 成功设置样板店货架！
 
     required:
       text: 'required'
@@ -73,49 +74,7 @@ zh-CN:
       default_message: "Some errors were found, please take a look:"
       # import_sheet: "import sheet error message"
 
-    labels:
-      # password: 'Password'
-      # user:
-      #   new:
-      #     email: 'E-mail para efetuar o sign in.'
-      #   edit:
-      #     email: 'E-mail.'
-      # my customize below here
-      defaults:
-        category_id: 品类
-      store:
-        code: 编码
-      import_sheet:
-        file_upload: "上传文件"
-        comment: "备注"
-
-        upload_sheet: "Please upload product info file(xls,xlsx,csv):"
-        # 请上传商品信息的电子表文件(xls,xlsx,csv)
-        filename: "upload spreadsheet file:"
-
-      brand:
-
-      product:
-        new_product: "新品"
-        on_promotion: "促销"
-
-      plan_set:
-        name: 规划名称：
-        note: 规划说明：
-        category_id: 品类：
-        category_name: 品类：
-        model_stores: 选择包含的样板店：
-        to_deploy_at: 计划部署日期：
-      plan:
-        store_name: 样板店
-        num_stores: 门店数
-        usage_percent: 空间使用率
-        init_facing: 初始排面数
-        positions:
-          leading_gap: 前置间隙
-          leading_divider: 前分隔物
-          middle_divider: 货品间分隔物
-          trail_divider: 后分隔物
+    # labels: move to activerecord.attributes: <model>.<attribute>
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:

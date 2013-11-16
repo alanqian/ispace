@@ -7,6 +7,7 @@ class Store < ActiveRecord::Base
 
   has_many :sales, class_name: 'users', foreign_key: 'store_id'
   has_many :store_fixtures
+  accepts_nested_attributes_for :store_fixtures, allow_destroy: true
 
   def self.define_model_store(stores)
     if stores.empty?

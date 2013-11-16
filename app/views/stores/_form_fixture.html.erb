@@ -1,0 +1,42 @@
+<%= simple_form_for(@store) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%#= f.input :region_id %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "fixture" } %>
+    <%= f.input :code %>
+    <%= f.input :name %>
+    <%= f.input :area %>
+    <%= f.input :location %>
+    <%= f.input :memo %>
+    <div class="input textarea string">
+      <label class="text">同类门店</label>
+      <div class="input check_boxes bi_columns" style="display: inline-block">
+        <% @store.follow_stores.each do |follow| %>
+          <li><%= follow.name %></li>
+        <% end %>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>中类</th>
+          <th>小类</th>
+          <th>货架组</th>
+          <th>货架组编号</th>
+          <th>部分货架(距左侧/长度)</th>
+          <th>备注</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= f.simple_fields_for :store_fixtures do |builder| %>
+          <%= render "store_fields", f: builder %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="actions">
+    <%= f.button :submit, "更新货架配置" %>
+  </div>
+<% end %>

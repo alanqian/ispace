@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :set_do_param, only: [:index, :new, :show, :edit], unless: :devise_controller?
   before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
-  before_action :set_form, only: [:edit, :new], unless: :devise_controller?
+  before_action :set_form, only: [:edit, :new, :update, :create], unless: :devise_controller?
   before_action :set_show, only: [:show], unless: :devise_controller?
   before_action :set_user_info
 
