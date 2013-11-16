@@ -3,7 +3,7 @@
 class Plan < ActiveRecord::Base
   include PdfExtension
 
-  serialize :layers, Array
+  serialize :parts, Array
 
   belongs_to :user
   belongs_to :plan_set

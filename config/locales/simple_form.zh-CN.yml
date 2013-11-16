@@ -48,6 +48,7 @@ zh-CN:
         new: 新建货架
         edit: 编辑货架
         deploy: 货架配置
+        index_store: 门店货架
     notices:
       store:
         update: 门店信息更新完毕

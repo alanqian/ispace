@@ -138,6 +138,13 @@ zh-CN:
         category_id: 部署品类
         category_name: 部署品类
         code: 货架编号
+        name: 货架名称
+        num_bays: 货备数
+        run: 行程
+        linear: 长度
+        area: 面积
+        cube: 体积
+        parts: 备注
       bay:
         back_height: 背板高度
         back_width: 背板宽度

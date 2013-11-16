@@ -2,7 +2,7 @@ class StoreFixture < ActiveRecord::Base
   belongs_to :store
   belongs_to :fixture
   belongs_to :category
-  serialize :layers, Array
+  serialize :parts, Array
   validates :store_id, presence: true
   validates :fixture_id, presence: true
   validates :category_id, presence: true
