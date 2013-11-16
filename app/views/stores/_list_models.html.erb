@@ -1,0 +1,44 @@
+<%# data-form="#stores-form" %>
+<table id="stores-table"
+  data-sinfo="共_TOTAL_个门店"
+  data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:store,
+        ["", sort: false, search: false],
+        :code,
+        :name,
+        ["分公司", input: false],
+        ["片区", input: false],
+        :area,
+        :depot_area,
+        :location,
+        :grade # [ :ref_store_id, sort: false ],
+        ) %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%
+      stores_hash = stores.to_hash(:id, :name)
+      regions_hash = regions.to_hash(:code, :name)
+    %>
+    <% stores.each do |store| %>
+      <tr data-id="<%= store.id %>">
+        <%= data_td_list store,
+          [:select_one, :id, "stores[]"],
+          :code,
+          store.ref_count < 1 ? name_with_mark(store) :
+            link_to(store.name, edit_store_path(store, _do: :fixture)) + raw("<sup>*</sup>"),
+          [up_level(store.region_id), collection: regions_hash ],
+          [:region_id, collection: regions_hash ],
+          :area,
+          "", # :depot_area
+          :location,
+          "" # :grade
+        %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

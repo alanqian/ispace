@@ -18,6 +18,8 @@ zh-CN:
       back: 返回
       publish: 发布
       unpublish: 取消发布
+      set_as_model_store: 设为样板店
+      set_model_store: '设置样板店...'
 
     titles:
       plan_set:
@@ -37,6 +39,10 @@ zh-CN:
       store:
         index: 门店列表
         new: 新建门店
+        index_designer: 门店管理
+        index_activity: 门店动态
+        edit_: 更新门店信息
+        edit_fixture: 门店货架部署
       region:
         index: 区域设置
         new: 新建区域
@@ -53,6 +59,8 @@ zh-CN:
       store:
         update: 门店信息更新完毕
         create: 成功创建了一个门店
+        update_model_store: 样板店设置成功，继续操作
+        update_model_store_fail: 样板店设置失败！
 
     required:
       text: 'required'

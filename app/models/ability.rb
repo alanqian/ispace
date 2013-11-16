@@ -22,6 +22,8 @@ class Ability
         can_manage_fixture_related
         can :manage, ImportProduct
         can :manage, ImportCategory
+        can :manage, Store
+        can :manage, StoreFixture
       elsif user.salesman?
         # plan related
         can :read, Plan
