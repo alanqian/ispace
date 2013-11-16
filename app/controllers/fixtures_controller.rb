@@ -6,8 +6,18 @@ class FixturesController < ApplicationController
   # GET /fixtures
   # GET /fixtures.json
   def index
-    @fixtures = Fixture.all
-    render "index", locals: { fixture_new: Fixture.new }
+    role = current_user_role
+    case role
+    when :design
+      @fixtures = Fixture.all
+      render "index", locals: { fixture_new: Fixture.new }
+    when :salesman
+      store_id = current_user.store_id
+      @store_fixtures = StoreFixture.where(store_id: store_id)
+      @fixtures_map = Fixture.all.to_hash(:id)
+      @categories_map = Category.all.select(:code, :name).to_hash(:code)
+      render "index_store", locals: { fixture_new: Fixture.new }
+    end
   end
 
   # GET /fixtures/1

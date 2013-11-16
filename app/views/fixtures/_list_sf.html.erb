@@ -1,0 +1,42 @@
+<table id="fixtures-table"
+  data-form="#fixtures-form"
+  data-sinfo="共_TOTAL_个品类数据"
+  data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable" cellspacing=0> <thead>
+    <tr>
+      <%=data_th_list :store_fixture,
+        :category_name,
+        :code,
+        :name,
+        :num_bays,
+        :run,
+        :linear,
+        :area,
+        :cube,
+        :parts
+      %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% store_fixtures.each do |sf| %>
+      <%
+        fixture = fixtures_map[sf.fixture_id]
+        category = categories_map[sf.category_id]
+      %>
+      <tr data-id="<%= fixture.id %>">
+        <%= data_td_list sf,
+          category.name,
+          :code,
+          fixture.name,
+          fixture.num_bays,
+          fixture.run,
+          fixture.linear,
+          fixture.area,
+          fixture.cube,
+          "" # :parts
+        %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
