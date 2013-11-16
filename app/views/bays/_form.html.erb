@@ -1,5 +1,5 @@
-<div class="span4 bays">
-  <%= simple_form_for @bay, html: { class: "span4"} do |f| %>
+<div class="span5 bays">
+  <%= simple_form_for @bay, html: { class: "span5"} do |f| %>
   <%= f.error_notification %>
 
   <%= f.input :name  %>
@@ -9,7 +9,7 @@
       <%= f.input :back_height, wrapper_html: { class: 'span1' }  %>
       <%= f.input :back_width, wrapper_html: { class: 'span1' } %>
       <%= f.input :back_thick, wrapper_html: { class: 'span1' } %>
-      <%= f.input :back_color, as: :color, wrapper_html: { class: 'span2' }, label_html: { class: 'span1' } %>
+      <%= f.input :back_color, as: :color, wrapper_html: { class: 'span1' } %>
     </div>
     <div class="row hlabel">
       <%= f.input :use_notch, wrapper_html: { class: 'col_check' }, :as => :boolean, :boolean_style => :inline, :label => false %>
@@ -20,7 +20,7 @@
       <%= f.input :base_height, wrapper_html: { class: 'span1' }  %>
       <%= f.input :base_width, wrapper_html: { class: 'span1' }  %>
       <%= f.input :base_depth, wrapper_html: { class: 'span1' }  %>
-      <%= f.input :base_color, as: :color, wrapper_html: { class: 'span2' }, label_html: { class: 'span1' } %>
+      <%= f.input :base_color, as: :color, wrapper_html: { class: 'span1' } %>
     </div>
     <%#= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
     <%#= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
