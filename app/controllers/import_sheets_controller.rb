@@ -38,7 +38,6 @@ class ImportSheetsController < ApplicationController
   # 2. import sale list,
   #    :all for design, :this store for sales
   def index
-    store_id = 1
     is_designer_user = params[:_designer]
 
     @t = params[:_t] || "sale"
@@ -52,7 +51,7 @@ class ImportSheetsController < ApplicationController
       else
         # imports of his own store
         @import_sheets = ImportSale.where([
-          "done='import' and store_id=?", store_id]).order(created_at: :desc)
+          "done='import' and store_id=?", @current_user_store_id]).order(created_at: :desc)
         render 'index.sales'
       end
     when "product"
@@ -78,7 +77,6 @@ class ImportSheetsController < ApplicationController
   # -----------------------------------------
   # launch upload page: for all imports
   def new
-    @store_id = 1
     @import_sheet = new_import_sheet
     authorize! :manage, @import_sheet
     respond_to do |format|
@@ -168,7 +166,7 @@ class ImportSheetsController < ApplicationController
     def new_import_sheet
       @t = params[:_t] || "sale"
       model = "import_#{@t}".classify
-      model.constantize.new(store_id: @store_id, user_id: current_user.id)
+      model.constantize.new(store_id: @current_user_store_id, user_id: @current_user_id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

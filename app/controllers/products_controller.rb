@@ -29,7 +29,7 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
-    @store_id = 1
+    # @current_user_store_id
     category_id = params[:category] || Category.default_id
 
     @products = Product.where(["category_id=?", category_id])
@@ -77,7 +77,7 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-    @product.user_id = current_user.id
+    @product.user_id = @current_user_id
 
     respond_to do |format|
       if @product.save
