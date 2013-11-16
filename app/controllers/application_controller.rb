@@ -91,10 +91,10 @@ class ApplicationController < ActionController::Base
   # = f.label :name, Product.human_attribute_name("labels.name").html_safe
   # I18n.t("foo", link: "abc")
   def simple_notice(options={})
-    _do = options[:_do] || @do
+    message = options[:message] ||
+      (@do.nil? ? "#{action_name}" : "#{action_name}_#{@do}")
     object = controller_name.singularize
-    notice_text = _do.nil? ? I18n.t("simple_form.notices.#{object}.#{action_name}", options) :
-      I18n.t("simple_form.notices.#{object}.#{action_name}_#{_do}", options)
+    notice_text = I18n.t("simple_form.notices.#{object}.#{message}", options)
   end
 
   @@commit_map = I18n.t("simple_form.commits").invert
