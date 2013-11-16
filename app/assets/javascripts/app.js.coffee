@@ -735,6 +735,8 @@ root.dataTableUtil =
       opt.oLanguage.sInfo = $(table).data("sinfo")
     if $(table).data("sinfoempty")
       opt.oLanguage.sInfoEmpty = $(table).data("sinfoempty")
+    if $(table).data("sscrolly")
+      opt.sScrollY = $(table).data("sscrolly")
     opt.aoColumns = @aoColumns(table)
     opt
 
