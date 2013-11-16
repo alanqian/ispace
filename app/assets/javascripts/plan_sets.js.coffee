@@ -18,8 +18,28 @@ class PlanSetPage
 
   onLoadIndex: () ->
 
+  onLoadEditPublish: () ->
+    true
+
   onLoadEdit: () ->
-    # todo: Add store info when click
+    el = "#model-store-info"
+    stores_info = $(el).data("stores")
+    console.log stores_info
+    $("form.edit_plan_set div.plan_set_model_stores span.checkbox input.check_boxes").click (e) ->
+      store_id = $(this).val()
+      store = stores_info[store_id]
+      store["name"] = $(this).next("label").text()
+      for k,v of store
+        console.log k,v
+        $("span#store_#{k}", el).text(v)
+      $(el).css("visibility", "visible")
+      true
+    @init_category_hint()
+    true
+
+  init_category_hint: () ->
+    if $("input#plan_set_category_name").is(":disabled")
+      $("input#plan_set_category_name").next("span.hint").show()
 
   testTree: () ->
     if $("#plan_set_category_name").length > 0

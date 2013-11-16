@@ -29,7 +29,12 @@ class Deployment < ActiveRecord::Base
   end
 
   def self.recent_plans(store_id)
-    self.where(["store_id = ? AND discarded_at IS NULL AND deployed_at IS NULL", store_id]).
+    self.where(["store_id = ? AND discarded_at IS NULL AND deployed_at IS NULL AND downloaded_at IS NULL", store_id]).
+      order(to_deploy_at: :desc)
+  end
+
+  def self.downloaded_plans(store_id)
+    self.where(["store_id = ? AND discarded_at IS NULL AND deployed_at IS NULL AND downloaded_at IS NOT NULL", store_id]).
       order(to_deploy_at: :desc)
   end
 

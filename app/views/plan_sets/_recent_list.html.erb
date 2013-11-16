@@ -1,0 +1,10 @@
+<% if plan_sets.any? %>
+  <% plan_sets.each do |plan| %>
+    <p>
+      <%= link_to plan.full_name, edit_plan_path(plan, _do: :layout) %>
+      <small><%=dt_ago plan.updated_at %></small>
+    </p>
+  <% end %>
+<% else %>
+  <p>暂无</p>
+<% end %>

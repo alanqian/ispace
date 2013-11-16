@@ -73,19 +73,44 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets
   # GET /plan_sets.json
   def index
-    @role = :designer
-    case @role
+    role = current_user_role
+    logger.debug "current role: #{role}"
+    case role
     when :designer
       # for designers
-      @designing_sets = PlanSet.designing_sets
-      @recent_plans = Plan.recent_edited
-      @deploying_sets = PlanSet.deploying_sets
-      @deployed_sets = PlanSet.deployed_sets(10)
-    when :store
-      # for stores
-      @store_id = 9
-      @recent_plans = Deployment.recent_plans(@store_id)
-      @deployed_plans = Deployment.deployed_plans(@store_id, 100)
+      case @do
+      when :design
+        @plan_sets = {
+          design: PlanSet.designing_sets,
+          recent_plans: Plan.recent_edited,
+        }
+        render 'index_design'
+      when :deploy
+        @plan_sets = {
+          deploying: PlanSet.deploying_sets,
+          deployed: PlanSet.deployed_sets(10)
+        }
+        render 'index_deploy'
+      else
+        @plan_sets = {
+          design: PlanSet.designing_sets,
+          recent_plans: Plan.recent_edited,
+          deploying: PlanSet.deploying_sets,
+          deployed: PlanSet.deployed_sets(10)
+        }
+        render 'index'
+      end
+    when :salesman
+      # for stores' salesman
+      store_id = current_user.store_id
+      case @do
+      when :recent
+        @deploys = Deployment.recent_plans(store_id)
+      when :report
+        @deploys = Deployment.downloaded_plans(store_id)
+      when :deployed
+        @deploys = Deployment.deployed_plans(store_id, 200)
+      end
       render 'index_store'
     end
   end
@@ -93,6 +118,8 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets/1
   # GET /plan_sets/1.json
   def show
+    @do ||= :open
+    set_show
   end
 
   # GET /plan_sets/new

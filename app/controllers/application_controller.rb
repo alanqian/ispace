@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_form, only: [:edit, :new], unless: :devise_controller?
+  before_action :set_show, only: [:show], unless: :devise_controller?
 
   before_filter do
     resource = controller_name.singularize.to_sym
@@ -23,6 +24,22 @@ class ApplicationController < ActionController::Base
     else
       "newapplication"
     end
+  end
+
+  def current_user_role
+    user = self.current_user
+    role = nil
+    if user != nil && user.respond_to?(:role)
+      role = user.role
+    end
+    role = role.to_sym if role.is_a?(String)
+    role
+  end
+
+  def edit_update_do(_do)
+    @do = _do
+    @form = "form_#{@do}"
+    params[:_do] = @do.to_s
   end
 
   def set_do_param
@@ -40,6 +57,10 @@ class ApplicationController < ActionController::Base
 
   def set_form
     @form = @do.nil? ? "form" : "form_#{@do}"
+  end
+
+  def set_show
+    @show = @do.nil? ? "show" : "show_#{@do}"
   end
 
   def set_commit_param

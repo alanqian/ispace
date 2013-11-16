@@ -72,6 +72,7 @@ module ApplicationHelper
   end
 
   def dt_ago(datetime)
+    return "" if datetime.nil?
     now = Time.now()
 
     today = now.beginning_of_day
@@ -124,11 +125,21 @@ module ApplicationHelper
     opts[:data] ||= {}
     opts[:data][:target] ||= sel_target
     if opts.has_key?(:class)
-      opts[:class] = "select-all #{opts[:class]}"
+      opts[:class] = "select-all boolean #{opts[:class]}"
     else
-      opts[:class] = "select-all"
+      opts[:class] = "select-all boolean"
     end
-    check_box_tag(:SELECT_ALL, "1", false, opts) + content_tag("span", "", class: "hint")
+    check_box = check_box_tag(:SELECT_ALL, "1", false, opts)
+    hint = content_tag("span", "", class: "hint")
+    if opts.has_key?(:label)
+      opts.delete(:onclick)
+      label_text = opts.delete(:label)
+      opts[:for] = "SELECT_ALL"
+      label = label_tag "select-all", label_text, opts
+    else
+      label = ""
+    end
+    check_box + label + hint
   end
 
   # data_array syntax:

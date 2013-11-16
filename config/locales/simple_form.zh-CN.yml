@@ -24,6 +24,16 @@ zh-CN:
         add_store: 添加样板店
         publish: 发布空间规划
         defaults: 修改空间规划
+        open: 空间规划：设计
+        deploy: 空间规划：部署情况
+        index: 空间规划
+        index_design: 规划设计
+        index_deploy: 部署管理
+        deploy_recent: 最新规划
+        deploy_report: 完成上报
+        deploy_deployed: 历史规划
+      plan:
+        edit_setup: 设置门店规划
       store:
         index: 门店列表
         new: 新建门店
@@ -110,6 +120,10 @@ zh-CN:
         #category_id: "Category of Product"
       plan:
         init_facing: (对未上架的商品有效)
+        category_name: (新规划才能更改品类)
+
+      plan_set:
+        category_name: (新规划才能更改品类)
 
     # By default, show in EMPTY input element in gray color
     placeholders:

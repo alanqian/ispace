@@ -40,11 +40,9 @@
       <table id="items" border=1 cellspacing=0 cellpadding=2>
       <thead>
       <tr>
-        <%= f.simple_fields_for @fixture_item_new do |builder| %>
-          <th><%= builder.label :bay_id %></th>
-          <th><%= builder.label :num_bays %></th>
-          <th><%= builder.label :continuous %></th>
-        <% end %>
+        <th><%=tf :bay_id %></th>
+        <th><%=tf :num_bays %></th>
+        <th><%=tf :continuous %></th>
       </tr>
       </thead>
       <tbody id="fixture_items">
