@@ -244,6 +244,8 @@ module ApplicationHelper
           # test if it's a field?
           id = object.send(id) if id.is_a?(Symbol)
           content = select_one_check(id, sel_target)
+          opts ||= {}
+          opts[:align] ||= "center"
         else
           field = t
           val = field.is_a?(Symbol) ? object.send(field) : field
