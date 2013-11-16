@@ -100,13 +100,17 @@ class PlanSetsController < ApplicationController
         }
         render 'index'
       end
-    when :store
-      # for stores
-      @store_id = 9
-      @deploys = {
-        to_deploy: Deployment.recent_plans(@store_id),
-        deployed: Deployment.deployed_plans(@store_id, 100),
-      }
+    when :salesman
+      # for stores' salesman
+      store_id = current_user.store_id
+      case @do
+      when :recent
+        @deploys = Deployment.recent_plans(store_id)
+      when :report
+        @deploys = Deployment.downloaded_plans(store_id)
+      when :deployed
+        @deploys = Deployment.deployed_plans(store_id, 200)
+      end
       render 'index_store'
     end
   end

@@ -23,6 +23,14 @@ class Ability
         can :manage, ImportProduct
         can :manage, ImportCategory
       elsif user.salesman?
+        # plan related
+        can :read, Plan
+        can :read, PlanSet
+        can :manage, :deployment
+
+        can :read, Fixture
+        can :read, Bay
+        # import related
         can :manage, ImportSale do |import_sale|
           user.store_id == import_sale.store_id
         end

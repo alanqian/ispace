@@ -72,6 +72,7 @@ module ApplicationHelper
   end
 
   def dt_ago(datetime)
+    return "" if datetime.nil?
     now = Time.now()
 
     today = now.beginning_of_day

@@ -29,6 +29,9 @@ zh-CN:
         index: 空间规划
         index_design: 规划设计
         index_deploy: 部署管理
+        deploy_recent: 最新规划
+        deploy_report: 完成上报
+        deploy_deployed: 历史规划
       plan:
         edit_setup: 设置门店规划
       store:
