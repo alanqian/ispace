@@ -37,7 +37,7 @@ class StoreFixture < ActiveRecord::Base
 
   def update_parts_this
     logger.debug "update_parts_this: #{self.to_json}"
-    if @use_part_fixture
+    if @use_part_fixture && @parts_start && @parts_run
       self.parts = {
         start: @parts_start,
         run: @parts_run,

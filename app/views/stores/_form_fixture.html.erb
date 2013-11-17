@@ -23,16 +23,18 @@
     <table>
       <thead>
         <tr>
-          <th>中类</th>
-          <th>小类</th>
-          <th>货架组</th>
-          <th>货架组编号</th>
-          <th>部分货架(距左侧/长度)</th>
-          <th>备注</th>
-          <th></th>
+          <th class="category_mid">中类</th>
+          <th class="category-name">小类</th>
+          <th class="fixture">货架组</th>
+          <th class="code">货架组编号</th>
+          <th class="parts">半货架(距左侧/长度)</th>
+          <th class="memo">备注</th>
+          <th class="add-remove">
+            <%= link_to raw("&plus;"), "#", id: "add_store_fixture", class: "cmd_ui", title: "增加货架" %>
+          </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="store_fixture_list">
         <% prev_mid_category = "" %>
         <%= f.simple_fields_for :store_fixtures do |builder| %>
           <%
@@ -51,7 +53,26 @@
       </tbody>
     </table>
   </div>
+  <div class="hide">
+    <table>
+      <tbody id="deleted"></tbody>
+    </table>
+  </div>
   <div class="actions">
     <%= f.button :submit, "更新货架配置" %>
   </div>
 <% end %>
+
+<%= simple_form_for(@store) do |f| %>
+  <div id="template">
+    <table>
+      <%= f.simple_fields_for(:store_fixtures, @new_store_fixture, child_index: "new_sf_index") do |builder| %>
+        <%= render "store_fields", f: builder,
+          parent_id: "",
+          hide_class: "",
+          upper_category: "" %>
+      <% end %>
+    </table>
+  </div>
+<% end %>
+

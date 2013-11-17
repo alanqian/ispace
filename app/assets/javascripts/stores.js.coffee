@@ -17,42 +17,42 @@ root.onSelectStoreFixtureCategory = (el) ->
   category_id = $(el).data("id")
   category_name = $(el).text()
   src = "#" + $(el).data("src-element")
-  # category id element
-  el = $(src).prev("input[type=hidden].category_id")
-
-  # set category_id/category_name
-  $(src).val(category_name)
-  $(el).val(category_id)
-
-  # set category_mid
-  dict = $("#category_dict").data("dict")
-  parent_id = dict[category_id].parent_id
   tr = $(src).closest("tr")
+  root.page.updateCategory(tr, category_id, category_name)
+
+root.onRemoveStoreFixture = (el) ->
+  console.log "removeStoreFixture", el
+  # set _destroy to true
+  $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
+
+  # update span.visiblity of next row
+  tr = $(el).closest("tr")
   span = $("td:first>span.category_mid", tr)
-  console.log "update category", span, parent_id, category_id
-  if parent_id != span.data("id").toString()
-    upper = dict[parent_id]
-    span.text(upper.name)
-    span.data("id", parent_id)
+  visible = !span.hasClass("hide")
+  next_tr = tr.nextAll("tr").first()
+  if visible && next_tr.length > 0
+    # visible next row
+    span = $("td:first>span.category_mid", next_tr)
+    span.removeClass("hide")
 
-    # update show/hide of this row
-    span_0 = $("td:first>span.category_mid", tr.prevAll("tr").first())
-    prev_id = span_0.data("id").toString() if span_0.length > 0
-    console.log "prev", span_0, prev_id
-    if parent_id != prev_id
-      span.removeClass("hide")
-    else
-      span.addClass("hide")
+  # move to deleted area
+  tr.appendTo($("tbody#deleted"))
+  return true
 
-    # update next row if necessary
-    span_2 = $("td:first>span.category_mid", tr.nextAll("tr").first())
-    if span_2.length > 0
-      next_id = span_2.data("id").toString()
-      console.log "next", span_2, prev_id
-      if parent_id != next_id
-        span_2.removeClass("hide")
-      else
-        span_2.addClass("hide")
+root.onAddStoreFixture = (el) ->
+  console.log "addStoreFixture", el
+  tr = $(el).closest("tr")
+  if $("tbody#store_fixture_list tr").length == 0
+    root.onAddStoreFixtureAll(tr)
+  else
+    root.page.createStoreFixtureRow(tr)
+  return true
+
+root.onAddStoreFixtureAll = (tr) ->
+  nodes = root.page.getCategoryLeafNodes()
+  for id, node of nodes
+    tr = root.page.createStoreFixtureRow(tr)
+    root.page.updateCategory(tr, id, node.name)
   return true
 
 class StorePage
@@ -77,6 +77,83 @@ class StorePage
 
 
   onLoadEditFixture: () ->
+    @new_sf_index = $("input[type=hidden][name$='[_destroy]']").length + 100
+
+    #$("a#delete_store_fixture").click (e) ->
+    #  root.removeStoreFixture(e, this)
+    #  return false
+
+    #$("a#add_store_fixture").click (e) ->
+    #  root.addStoreFixture(e, this)
+    #  return false
+
+  getCategoryDict: () ->
+    $("#category_dict").data("dict")
+
+  getCategoryLeafNodes: () ->
+    dict = $("#category_dict").data("dict")
+    leaves = {}
+    for k, v of dict
+      if v.parent_id != null
+        leaves[k] = v
+        delete leaves[v.parent_id]
+    return leaves
+
+  createStoreFixtureRow: (tr) ->
+    new_index = root.page.new_sf_index.toString()
+    new_id = "new_store_fixture_#{new_index}"
+    root.page.new_sf_index++
+    # replace new_sf_index
+    re = new RegExp("new_sf_index", "g")
+    src = $("#template tbody").html().replace("\\n", "").replace(re, new_index)
+
+    # add to new table, after the click tr
+    if tr.parent("tbody").length == 0 ## at thead
+      tbody = tr.parent().next()
+      new_tr = $(src).prependTo(tbody).attr("id", new_id)
+    else
+      new_tr = $(src).insertAfter(tr).attr("id", new_id)
+
+    # initialize js
+    root.cmdUI.initCmdUIAnchor()
+    $.util.setupTreeInput("##{new_id} input.category-name")
+    $.util.setupUIGroupCheckbox("##{new_id} input.ui-group-checkbox")
+    new_tr
+
+  updateCategory: (tr, category_id, category_name) ->
+    # set category_id/category_name
+    $("input[name$='[category_id]']", tr).val(category_id)
+    $("input[name$='[category_name]']", tr).val(category_name)
+
+    # set category_mid
+    dict = @getCategoryDict()
+    parent_id = dict[category_id].parent_id
+    span = $("td:first>span.category_mid", tr)
+    console.log "update category", span, parent_id, category_id
+    if parent_id != span.data("id").toString()
+      upper = dict[parent_id]
+      span.text(upper.name)
+      span.data("id", parent_id)
+
+      # update show/hide of this row
+      span_0 = $("td:first>span.category_mid", tr.prevAll("tr").first())
+      prev_id = span_0.data("id").toString() if span_0.length > 0
+      console.log "prev", span_0, prev_id
+      if parent_id != prev_id
+        span.removeClass("hide")
+      else
+        span.addClass("hide")
+
+      # update next row if necessary
+      span_2 = $("td:first>span.category_mid", tr.nextAll("tr").first())
+      if span_2.length > 0
+        next_id = span_2.data("id").toString()
+        console.log "next", span_2, prev_id
+        if parent_id != next_id
+          span_2.removeClass("hide")
+        else
+          span_2.addClass("hide")
+    return true
 
 root.StorePage = StorePage
 

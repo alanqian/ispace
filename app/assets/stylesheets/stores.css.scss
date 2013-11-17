@@ -9,14 +9,33 @@ body#store {
     }
   }
 
-  td>input.category {
-    width: 10em;
+  th.category-name, th.category_mid {
+    width: 7.2em;
+  }
+  th.code {
+    width: 7.2em;
+  }
+  th.fixture {
+    width: 9.2em;
+  }
+  th.memo {
+    width: 10.2em;
+  }
+  th.parts {
+    width: 11.2em;
+  }
+  th.add-remove {
+    width: 2em;
+  }
+
+  td>input.category-name, td>span.category_mid {
+    width: 7em;
   }
   td>input.code {
-    width: 10em;
+    width: 7em;
   }
   td>select.fixture {
-    width: 10em;
+    width: 9em;
   }
   td>input.memo {
     width: 10em;

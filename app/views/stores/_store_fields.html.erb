@@ -5,7 +5,7 @@
   <td>
     <%= f.input_field :category_id, as: :hidden, class: "category_id" %>
     <%= f.input_field :category_name,
-      class: "ui-tree-input",
+      class: "ui-tree-input category-name",
       data: {
         cmd: "select-store-fixture-category",
         tree: @categories_all.to_json
@@ -27,7 +27,8 @@
     <%= f.input_field :memo, class: "memo" %>
   </td>
   <td>
-    <%= link_to raw("&times;"), "#", id: "delete_fixture", title: "删除货架" %>
-    <%= link_to raw("&plus;"), "#", id: "add_fixture", title: "增加货架" %>
+    <%= f.hidden_field :_destroy %>
+    <%= link_to raw("&times;"), "#", id: "remove_store_fixture", class: "cmd_ui", title: "删除货架" %>
+    <%= link_to raw("&plus;"), "#", id: "add_store_fixture", class: "cmd_ui", title: "增加货架" %>
   </td>
 </tr>
