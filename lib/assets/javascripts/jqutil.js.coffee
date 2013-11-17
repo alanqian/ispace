@@ -138,6 +138,7 @@ $.util =
         label: "name"
         rootId: null
         dom: "body"
+        srcElement: el.id
       $(el).data("uiTreeMenu", menu)
       $(el).click (e) ->
         e.stopPropagation()
@@ -264,10 +265,22 @@ $.util =
     $("input.date.datepicker").each (index, el) ->
       self.datepicker el
 
+  setupUIGroupCheckbox: (checkbox_sel) ->
+    $(checkbox_sel).each (_, cb) ->
+      checked = $(cb).is(":checked")
+      followers = $(cb).attr("for")
+      $(cb).siblings(followers).each (_, el) ->
+        $(el).attr("disabled", !checked)
+      $(cb).click (e) ->
+        checked = $(cb).is(":checked")
+        $(cb).siblings(followers).each (_, el) ->
+          $(el).attr("disabled", !checked)
+
 $ ->
   $.util.initCmdUI()
   $.util.setupDatePicker()
   $.util.setupAutoCompleteInput(".ui-auto-complete")
   $.util.setupTreeInput("input.ui-tree-input")
   $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
+  $.util.setupUIGroupCheckbox("input.ui-group-checkbox[type=checkbox]")
 
