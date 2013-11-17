@@ -78,6 +78,18 @@ class CmdUI
       $(this).closest("ul.popup-menu").hide()
       id = $(this).data("id")
       self.handle(this.id, this)
+
+    @initCmdUIAnchor()
+
+
+  initCmdUIAnchor: () ->
+    # handle in-page cmd_ui anchors
+    self = @
+    $("a.cmd_ui[href='#']").click (e) ->
+      e.preventDefault()
+      id = $(this).data("id")
+      self.handle(this.id, this)
+      return false
     return self
 
   setMenuItemWidth: (ul) ->
