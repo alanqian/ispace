@@ -17,6 +17,9 @@
         <% end %>
       </div>
     </div>
+
+    <% categories_dict = @categories_all.to_hash(:id, :name, :parent_id) %>
+    <div id="category_dict" class="hide" data-dict=<%=raw categories_dict.to_json %>></div>
     <table>
       <thead>
         <tr>
@@ -30,8 +33,20 @@
         </tr>
       </thead>
       <tbody>
+        <% prev_mid_category = "" %>
         <%= f.simple_fields_for :store_fixtures do |builder| %>
-          <%= render "store_fields", f: builder %>
+          <%
+            category = categories_dict[builder.object.category_id]
+            builder.object.category_name = category[:name]
+            parent_id = category[:parent_id]
+            upper_category = categories_dict[parent_id][:name]
+            hide_class = (prev_mid_category == upper_category) ? "hide" : ""
+          %>
+          <%= render "store_fields", f: builder,
+            parent_id: parent_id,
+            hide_class: hide_class,
+            upper_category: upper_category %>
+          <% prev_mid_category = upper_category %>
         <% end %>
       </tbody>
     </table>

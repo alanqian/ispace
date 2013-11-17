@@ -36,6 +36,7 @@ class StoresController < ApplicationController
     if @do = :fixture
       @new_store_fixture = StoreFixture.new(store_id: @store.id)
       @fixtures_all = Fixture.all
+      @categories_all = Category.all.select(:code, :parent_id, :name)
     end
   end
 
@@ -78,7 +79,11 @@ class StoresController < ApplicationController
         format.json { head :no_content }
         format.js { set_store_update_js }
       else
-        format.html { render action: 'edit' }
+        logger.warn "store.update failed, errors:#{@store.errors.to_json}"
+        format.html {
+          edit
+          render action: 'edit'
+        }
         format.json { render json: @store.errors, status: :unprocessable_entity }
       end
     end
@@ -106,7 +111,7 @@ class StoresController < ApplicationController
     def store_params
       params.require(:store).permit(:_do,
         :region_id, :code, :name, :ref_store_id, :area, :location, :memo,
-        rear_support_bars_attributes: [:_destroy, :id,
+        store_fixtures_attributes: [:_destroy, :id,
           :category_id, :category_name, :fixture_id, :code, :memo,
           :use_part_fixture, :parts_start, :parts_run]
       )

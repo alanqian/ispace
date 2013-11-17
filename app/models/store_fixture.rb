@@ -6,8 +6,9 @@ class StoreFixture < ActiveRecord::Base
   validates :store_id, presence: true
   validates :fixture_id, presence: true
   validates :category_id, presence: true
-  validates :code, presence: true
   validates :category_name, presence: true
+  validates :code, presence: true
+  before_save :update_parts_this
 
   attr_accessor :category_name
   attr_accessor :use_part_fixture
@@ -34,7 +35,8 @@ class StoreFixture < ActiveRecord::Base
     parts[:next]
   end
 
-  def update_parts_run
+  def update_parts_this
+    logger.debug "update_parts_this: #{self.to_json}"
     if @use_part_fixture
       self.parts = {
         start: @parts_start,

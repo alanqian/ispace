@@ -1,8 +1,16 @@
 <tr>
   <td>
+    <span data-id="<%= parent_id %>" class="category_mid <%= hide_class %>"><%= upper_category %></span>
   </td>
   <td>
-    <%= f.input_field :category_id, class: 'category' %>
+    <%= f.input_field :category_id, as: :hidden, class: "category_id" %>
+    <%= f.input_field :category_name,
+      class: "ui-tree-input",
+      data: {
+        cmd: "select-store-fixture-category",
+        tree: @categories_all.to_json
+      }
+    %>
   </td>
   <td>
     <%= f.input_field :fixture_id, as: :select, collection: @fixtures_all, class: "fixture" %>
@@ -11,9 +19,9 @@
     <%= f.input_field :code, class: "code" %>
   </td>
   <td>
-    <%= f.input_field :use_part_fixture, as: :boolean, title: "钩选使用部分货架", class: "ui-checkbox", for: "parts" %>
-    <%= f.input_field :parts_start, as: :integer, class: "parts start" %>
-    <%= f.input_field :parts_run, as: :integer, class: "parts run" %>
+    <%= f.input_field :use_part_fixture, as: :boolean, title: "钩选使用部分货架", class: "ui-group-checkbox", for: "input.ui-group.parts" %>
+    <%= f.input_field :parts_start, as: :integer, class: "parts start ui-group" %>
+    <%= f.input_field :parts_run, as: :integer, class: "parts run ui-group" %>
   </td>
   <td>
     <%= f.input_field :memo, class: "memo" %>
