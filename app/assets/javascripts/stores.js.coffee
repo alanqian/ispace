@@ -49,10 +49,12 @@ root.onAddStoreFixture = (el) ->
   return true
 
 root.onAddStoreFixtureAll = (tr) ->
+  $("body").css("cursor", "progress")
   nodes = root.page.getCategoryLeafNodes()
   for id, node of nodes
     tr = root.page.createStoreFixtureRow(tr)
     root.page.updateCategory(tr, id, node.name)
+  $("body").css("cursor", "auto")
   return true
 
 class StorePage
