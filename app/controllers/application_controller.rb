@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_form, only: [:edit, :new, :update, :create], unless: :devise_controller?
   before_action :set_show, only: [:show], unless: :devise_controller?
+  before_action :set_full_action
   before_action :set_user_info
 
   before_filter do
@@ -41,6 +42,7 @@ class ApplicationController < ActionController::Base
     @do = _do
     @form = "form_#{@do}"
     params[:_do] = @do.to_s
+    set_full_action
   end
 
   def set_do_param
@@ -72,6 +74,10 @@ class ApplicationController < ActionController::Base
     @do
   end
 
+  def set_full_action
+    @full_action = @do.nil? ? "#{action_name}" : "#{action_name}_#{@do}"
+  end
+
   def update
     logger.debug "#{controller_name}#update, _do:#{@do}"
     update_proc = (@do.nil? ? "update_default" : "update_#{@do}").to_sym
@@ -91,8 +97,7 @@ class ApplicationController < ActionController::Base
   # = f.label :name, Product.human_attribute_name("labels.name").html_safe
   # I18n.t("foo", link: "abc")
   def simple_notice(options={})
-    message = options[:message] ||
-      (@do.nil? ? "#{action_name}" : "#{action_name}_#{@do}")
+    message = options[:message] || @full_action
     object = controller_name.singularize
     notice_text = I18n.t("simple_form.notices.#{object}.#{message}", options)
   end
