@@ -31,6 +31,10 @@ module ApplicationHelper
     I18n.t("simple_form.titles.#{controller_name.singularize}.#{item}")
   end
 
+  def content_for_title(_do)
+    content_for :title, simple_title(_do)
+  end
+
   def simple_confirm(action)
     I18n.t("simple_form.confirms.#{controller_name.singularize}.#{action}")
   end
