@@ -46,7 +46,7 @@ zh-CN:
         new: 新建门店
         index_designer: 门店管理
         index_activity: 门店动态
-        edit_: 更新门店信息
+        edit: 修改门店信息
         edit_fixture: 门店货架部署
       region:
         index: 区域设置
@@ -81,6 +81,7 @@ zh-CN:
       product:
         index: 单品管理
         index_on_sale: 在售商品
+        index_off_sale: 未上架商品
         edit: 更新商品信息
         new: 新建商品
       sale:
@@ -91,9 +92,9 @@ zh-CN:
         new_product: 上传商品文件
         index_product: 商品导入列表
         edit_import_product: 导入商品
-        new_sales: 上传销售数据文件
-        index_sales: 销售数据导入列表
-        edit_import_sales: 销售数据导入
+        new_sale: 上传销售数据文件
+        index_sale: 销售数据导入列表
+        edit_import_sale: 销售数据导入
         new_store: 上传门店信息文件
         index_store: 门店导入列表
         edit_import_store: 门店导入

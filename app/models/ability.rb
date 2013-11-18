@@ -33,8 +33,12 @@ class Ability
         can :read, Fixture
         can :read, Bay
         # import related
+        can :read, Product
         can :manage, ImportSale do |import_sale|
           user.store_id == import_sale.store_id
+        end
+        can :manage, Store do |store|
+          user.store_id == store.id
         end
       end
     end
