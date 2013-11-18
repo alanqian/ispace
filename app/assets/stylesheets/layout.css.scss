@@ -113,8 +113,14 @@ img {
     line-height: 20px;
   }
   .navbar-inner {
-    position: relative;
-    margin-left: -$sidebar_width;
+    display: inline-block;
+    float: right;
+    // margin-left: -$sidebar_width;
+  }
+  .navbar-title {
+    display: inline-block;
+    margin: 10px 0 10px $sidebar_width;
+    padding-left: 10px;
   }
 }
 
@@ -440,7 +446,7 @@ h1 {
 
 .nav {
   height: 40px;
-  background-color: #eee;
+  // background-color: #eee;
   ul {
     list-style: none;
     padding: 0;

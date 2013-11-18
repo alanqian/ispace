@@ -1,5 +1,5 @@
 <div class="navbar <%= layout %>">
-  <div class="navbar-inner clearfix">
+  <div class="navbar-inner">
     <ul class="nav pull-right clearfix">
       <% if user_signed_in? %>
         <li class="dropdown">
@@ -17,5 +17,8 @@
         <li><%= link_to "登录", sign_in_path %></li>
       <% end %>
     </ul>
+  </div>
+  <div class="navbar-title clearfix">
+    <%= yield :title %>
   </div>
 </div>

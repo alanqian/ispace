@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
     if devise_controller? and !current_user
       "single-column"
     else
-      "newapplication"
+      "application"
     end
   end
 
