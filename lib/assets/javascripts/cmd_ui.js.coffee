@@ -85,7 +85,7 @@ class CmdUI
   initCmdUIAnchor: () ->
     # handle in-page cmd_ui anchors
     self = @
-    $("a.cmd_ui[href='#']").click (e) ->
+    $("a.cmd_ui[href='#'][id]").click (e) ->
       e.preventDefault()
       id = $(this).data("id")
       self.handle(this.id, this)
