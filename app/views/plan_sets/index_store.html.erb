@@ -1,6 +1,4 @@
-<h1>
-  <%= simple_title "deploy_#{@do}" %>
-</h1>
+<% content_for_title "deploy_#{@do}" %>
 
 <%= render "deploy_#{@do}", deploys: @deploys %>
 

@@ -31,6 +31,10 @@ module ApplicationHelper
     I18n.t("simple_form.titles.#{controller_name.singularize}.#{item}")
   end
 
+  def content_for_title(_do)
+    content_for :title, simple_title(_do)
+  end
+
   def simple_confirm(action)
     I18n.t("simple_form.confirms.#{controller_name.singularize}.#{action}")
   end
@@ -244,6 +248,8 @@ module ApplicationHelper
           # test if it's a field?
           id = object.send(id) if id.is_a?(Symbol)
           content = select_one_check(id, sel_target)
+          opts ||= {}
+          opts[:align] ||= "center"
         else
           field = t
           val = field.is_a?(Symbol) ? object.send(field) : field

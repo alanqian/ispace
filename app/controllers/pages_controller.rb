@@ -5,6 +5,8 @@ class PagesController < ApplicationController
       redirect_to stores_path
     elsif current_user.designer?
       redirect_to plan_sets_path
+    else current_user.salesman?
+      redirect_to plan_sets_path(_do: :recent)
     end
   end
 end

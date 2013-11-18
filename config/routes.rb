@@ -23,6 +23,7 @@ Ispace::Application.routes.draw do
   resources :import_sheets
 
   resources :fixtures
+  patch "stores/" => "stores#update"
   resources :stores
   resources :regions, except: [:patch]
   patch "regions/*id", to: "regions#update", defaults: { format: 'js' }

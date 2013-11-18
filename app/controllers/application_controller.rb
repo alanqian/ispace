@@ -9,8 +9,10 @@ class ApplicationController < ActionController::Base
   before_action :set_do_param, only: [:index, :new, :show, :edit], unless: :devise_controller?
   before_action :set_object_do_param, only: [:update, :create], unless: :devise_controller?
   before_action :set_commit_param, only: [:update, :create], unless: :devise_controller?
-  before_action :set_form, only: [:edit, :new], unless: :devise_controller?
+  before_action :set_form, only: [:edit, :new, :update, :create], unless: :devise_controller?
   before_action :set_show, only: [:show], unless: :devise_controller?
+  before_action :set_full_action
+  before_action :set_user_info
 
   before_filter do
     resource = controller_name.singularize.to_sym
@@ -22,24 +24,25 @@ class ApplicationController < ActionController::Base
     if devise_controller? and !current_user
       "single-column"
     else
-      "newapplication"
+      "application"
     end
   end
 
-  def current_user_role
+  def set_user_info
     user = self.current_user
-    role = nil
-    if user != nil && user.respond_to?(:role)
-      role = user.role
+    if user != nil
+      role = user.role if user.respond_to?(:role)
+      @current_user_role = role.to_sym if role.is_a?(String)
+      @current_user_id = user.id if user.respond_to?(:id)
+      @current_user_store_id = user.store_id if user.respond_to?(:store_id)
     end
-    role = role.to_sym if role.is_a?(String)
-    role
   end
 
   def edit_update_do(_do)
     @do = _do
     @form = "form_#{@do}"
     params[:_do] = @do.to_s
+    set_full_action
   end
 
   def set_do_param
@@ -71,6 +74,10 @@ class ApplicationController < ActionController::Base
     @do
   end
 
+  def set_full_action
+    @full_action = @do.nil? ? "#{action_name}" : "#{action_name}_#{@do}"
+  end
+
   def update
     logger.debug "#{controller_name}#update, _do:#{@do}"
     update_proc = (@do.nil? ? "update_default" : "update_#{@do}").to_sym
@@ -90,10 +97,9 @@ class ApplicationController < ActionController::Base
   # = f.label :name, Product.human_attribute_name("labels.name").html_safe
   # I18n.t("foo", link: "abc")
   def simple_notice(options={})
-    _do = options[:_do] || @do
+    message = options[:message] || @full_action
     object = controller_name.singularize
-    notice_text = _do.nil? ? I18n.t("simple_form.notices.#{object}.#{action_name}", options) :
-      I18n.t("simple_form.notices.#{object}.#{action_name}_#{_do}", options)
+    notice_text = I18n.t("simple_form.notices.#{object}.#{message}", options)
   end
 
   @@commit_map = I18n.t("simple_form.commits").invert

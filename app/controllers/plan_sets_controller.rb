@@ -65,7 +65,6 @@ plans:
 =end
 
 class PlanSetsController < ApplicationController
-  before_action :set_commons
   before_action :set_options, only: [:index, :new, :show, :edit, :create, :update]
   before_action :set_plan_set, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
@@ -73,9 +72,8 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets
   # GET /plan_sets.json
   def index
-    role = current_user_role
-    logger.debug "current role: #{role}"
-    case role
+    logger.debug "current role: #{@current_user_role}"
+    case @current_user_role
     when :designer
       # for designers
       case @do
@@ -102,14 +100,13 @@ class PlanSetsController < ApplicationController
       end
     when :salesman
       # for stores' salesman
-      store_id = current_user.store_id
       case @do
       when :recent
-        @deploys = Deployment.recent_plans(store_id)
+        @deploys = Deployment.recent_plans(@current_user_store_id)
       when :report
-        @deploys = Deployment.downloaded_plans(store_id)
+        @deploys = Deployment.downloaded_plans(@current_user_store_id)
       when :deployed
-        @deploys = Deployment.deployed_plans(store_id, 200)
+        @deploys = Deployment.deployed_plans(@current_user_store_id, 200)
       end
       render 'index_store'
     end
@@ -161,7 +158,7 @@ class PlanSetsController < ApplicationController
       if @commit == :cancel || @commit == :back
         format.html { redirect_to plan_sets_path }
         format.json { head :no_content }
-      elsif @plan_set.publish(publish_off.to_i == 0, @user_id)
+      elsif @plan_set.publish(publish_off.to_i == 0, @current_user_id)
         format.html { redirect_to plan_sets_path, notice: 'Plan set was successfully published.' }
         format.json { head :no_content }
       else
@@ -198,10 +195,6 @@ class PlanSetsController < ApplicationController
   end
 
   private
-    def set_commons
-      @store_id = 1
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_plan_set
       @plan_set = PlanSet.find(params[:id])
@@ -209,7 +202,7 @@ class PlanSetsController < ApplicationController
     end
 
     def new_plan_set
-      @plan_set = PlanSet.new({user_id: current_user.id})
+      @plan_set = PlanSet.new({user_id: @current_user_id})
     end
 
     def set_options

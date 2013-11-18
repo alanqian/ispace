@@ -1,4 +1,4 @@
-<h1>Editing import:upload: <%= @import_sheet._target %> </h1>
+<% content_for_title "edit_import_#{@import_sheet._target}" %>
 
 <div>
   <%= render 'form', import_sheet: @import_sheet %>

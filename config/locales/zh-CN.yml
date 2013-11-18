@@ -75,6 +75,13 @@ zh-CN:
       heap: 堆头
 
     attributes:
+      defaults:
+        category_id: 品类
+      import_sheet:
+        file_upload: 上传文件
+        comment: 备注
+        upload_sheet: '请上传商品信息的电子表文件(xls,xlsx,csv)'
+        filename: 上传文件
       category:
         code: 品类编码
         name: 品类名称
@@ -114,8 +121,10 @@ zh-CN:
         status: 销售
         plan_info_rank: 排名
         facings: 排面
+        new_product: 新品
+        on_promotion: 促销
       store:
-        code: 编码
+        code: 门店编号
         name: 店名
         area: 面积
         depot_area: 仓库面积
@@ -135,6 +144,7 @@ zh-CN:
         continuous: 货备连通
       store_fixture:
         store_id: 配置门店
+        fixture_id: 货架
         category_id: 部署品类
         category_name: 部署品类
         code: 货架编号
@@ -144,7 +154,7 @@ zh-CN:
         linear: 长度
         area: 面积
         cube: 体积
-        parts: 备注
+        parts: 部分货架
       bay:
         back_height: 背板高度
         back_width: 背板宽度
@@ -222,6 +232,7 @@ zh-CN:
         continuous: 货备连通
       plan_set:
         name: 规划名称
+        category_id: 品类
         category_name: 品类
         created_at: 开始规划
         note: 规划说明
@@ -230,6 +241,7 @@ zh-CN:
         published_at: 发布
         undeployed_stores: 未部署
         to_deploy_at: 计划部署
+        model_stores: 选择样板店
         completed_ratio: 完成度
         deployed: 完成
         download: 下载
@@ -240,6 +252,16 @@ zh-CN:
         plan_set_name: 规划名称
         category_name: 规划品类
         fixture_id: 货架
+        store_name: 样板店
+        num_stores: 门店数
+        usage_percent: 空间使用率
+        init_facing: 初始排面数
+        positions:
+          leading_gap: 前置间隙
+          leading_divider: 前分隔物
+          middle_divider: 货品间分隔物
+          trail_divider: 后分隔物
+
     errors:
       models:
         user:
@@ -330,7 +352,7 @@ zh-CN:
         consume_type: 区域消费类型
         memo: 区域备注
       store:
-        code: 门店代码
+        code: 门店编号
         name: 门店名称
         location: 门店地段
         area: 门店面积
@@ -343,7 +365,7 @@ zh-CN:
       _required:
         region.name: 区域
         region.consume_type: 区域消费类型
-        store.code: 门店代码
+        store.code: 门店编号
         store.name: 门店名称
         store.location: 门店地段
         store.area: 门店面积

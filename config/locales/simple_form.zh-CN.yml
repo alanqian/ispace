@@ -18,9 +18,12 @@ zh-CN:
       back: 返回
       publish: 发布
       unpublish: 取消发布
+      set_as_model_store: 设为样板店
+      set_model_store: '设置样板店...'
 
     titles:
       plan_set:
+        new: 新建空间规划
         add_store: 添加样板店
         publish: 发布空间规划
         defaults: 修改空间规划
@@ -33,26 +36,82 @@ zh-CN:
         deploy_report: 完成上报
         deploy_deployed: 历史规划
       plan:
+        index: 样板店规划
+        new: 空间规划：增加样板店
+        edit: 设置门店参数
         edit_setup: 设置门店规划
+        edit_layout: 门店空间设计
       store:
         index: 门店列表
         new: 新建门店
+        index_designer: 门店管理
+        index_activity: 门店动态
+        edit: 修改门店信息
+        edit_fixture: 门店货架部署
       region:
         index: 区域设置
         new: 新建区域
+        edit: 更新区域信息
       bay:
         new: 新建货备
         edit: 编辑货备
+        index: 货备管理
       fixture:
         index: 货架管理
         new: 新建货架
         edit: 编辑货架
         deploy: 货架配置
         index_store: 门店货架
+      category:
+        index: 品类管理
+        new: 新建品类
+        edit: 更新品类
+      brand:
+        index: 品牌管理
+        edit: 更新品牌信息
+        new: 新建品牌
+      supplier:
+        index: 供应商管理
+        edit: 更新供应商信息
+        new: 新建供应商
+      manufacturer:
+        index: 制造商管理
+        new: 新建制造商
+        edit: 更新制造商信息
+      product:
+        index: 单品管理
+        index_on_sale: 在售商品
+        index_off_sale: 未上架商品
+        edit: 更新商品信息
+        new: 新建商品
+      sale:
+        index: 销售信息管理
+        edit: 更新销售信息
+        new: 新增销售信息
+      import_sheet:
+        new_product: 上传商品文件
+        index_product: 商品导入列表
+        edit_import_product: 导入商品
+        new_sale: 上传销售数据文件
+        index_sale: 销售数据导入列表
+        edit_import_sale: 销售数据导入
+        new_store: 上传门店信息文件
+        index_store: 门店导入列表
+        edit_import_store: 门店导入
+        new_category: 上传品类文件
+        index_category: 品类导入列表
+        edit_import_category: 导入品类
+      user:
+        new: 新建用户
+        edit: 用户信息
+        index: 用户管理
     notices:
       store:
         update: 门店信息更新完毕
         create: 成功创建了一个门店
+        update_model_store: 样板店设置成功，继续操作
+        update_model_store_fail: 样板店设置失败！
+        update_fixture: 成功设置样板店货架！
 
     required:
       text: 'required'
@@ -65,49 +124,7 @@ zh-CN:
       default_message: "Some errors were found, please take a look:"
       # import_sheet: "import sheet error message"
 
-    labels:
-      # password: 'Password'
-      # user:
-      #   new:
-      #     email: 'E-mail para efetuar o sign in.'
-      #   edit:
-      #     email: 'E-mail.'
-      # my customize below here
-      defaults:
-        category_id: 品类
-      store:
-        code: 编码
-      import_sheet:
-        file_upload: "上传文件"
-        comment: "备注"
-
-        upload_sheet: "Please upload product info file(xls,xlsx,csv):"
-        # 请上传商品信息的电子表文件(xls,xlsx,csv)
-        filename: "upload spreadsheet file:"
-
-      brand:
-
-      product:
-        new_product: "新品"
-        on_promotion: "促销"
-
-      plan_set:
-        name: 规划名称：
-        note: 规划说明：
-        category_id: 品类：
-        category_name: 品类：
-        model_stores: 选择包含的样板店：
-        to_deploy_at: 计划部署日期：
-      plan:
-        store_name: 样板店
-        num_stores: 门店数
-        usage_percent: 空间使用率
-        init_facing: 初始排面数
-        positions:
-          leading_gap: 前置间隙
-          leading_divider: 前分隔物
-          middle_divider: 货品间分隔物
-          trail_divider: 后分隔物
+    # labels: move to activerecord.attributes: <model>.<attribute>
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:

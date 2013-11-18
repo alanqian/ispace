@@ -178,14 +178,6 @@ ul#menubar {
   clear: both;
 }
 
-.clearfix:after {
-  content: ".";
-  visibility: hidden;
-  display: block;
-  height: 0;
-  clear: both;
-}
-
 span.error {
   color: red;
 }
@@ -607,4 +599,8 @@ div.input.check_boxes {
       font-weight: bold;
     }
   }
+}
+
+body {
+  background: url("/assets/bg.png") repeat scroll 0% 0% transparent;
 }

@@ -1,0 +1,35 @@
+<% content_for_title :index_designer %>
+
+<div id="stores-list">
+  <p>店名标注<sup>*</sup>的是样板店, 标注<sup>?</sup>的门店尚未设置样板店<br/>
+     点击样板店进行货架配置</p>
+  <% store_new.id = 0 %>
+  <%= simple_form_for(store_new, method: "patch",
+                      html: { id: "set-model-stores-form" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :_do, as: :hidden, input_html: { value: "model_store" } %>
+      <%= f.input :ref_store_id, as: :hidden %>
+      <%#= f.input :region_id, collection: Region.all %>
+      <%#= f.input :code  %>
+      <%#= f.input :name %>
+      <%#= f.input :area %>
+      <%#= f.input :location  %>
+      <%#= f.input :memo %>
+    </div>
+    <%= render 'list_models', stores: @stores, regions: @regions %>
+    <div id="dataTable-filter">
+      <%= f.button :submit, "设为样板店", title: "将选中门店设为样板店" %>
+      <span>&nbsp</span>
+      <%= link_to "设置样板店", "#", id: "setup-model-store", title: "指定选中门店的样板店" %>
+      <%#= f.button :submit, "设置样板店" %>
+    </div>
+  <% end %>
+</div>
+
+<br>
+
+<ul id="select-model-store" class="popup-menu">
+  <% @model_stores.each do |store| %>
+    <li><a id="set-ref-store-id" data-id="<%= store.id %>" href="#"><%= store.name %></a></li>
+  <% end %>
+</ul>

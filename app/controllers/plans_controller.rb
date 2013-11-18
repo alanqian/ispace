@@ -1,5 +1,4 @@
 class PlansController < ApplicationController
-  before_action :set_commons
   before_action :set_options, only: [:new, :show, :edit, :update ]
   before_action :set_plan, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
@@ -26,14 +25,13 @@ class PlansController < ApplicationController
   end
 
   def download_pdf
-    @store_id = 9
-    @user_id = 100
     path = @plan.plan_pdf
-    deploy = Deployment.start_download(@plan.id, @store_id)
+    deploy = Deployment.start_download(@plan.id, @current_user_store_id)
     if File.exists?(path) && deploy != nil
-      send_file(path, x_sendfile: true, filename: "#{deploy.plan_set_name}-#{@store_id}.#{@user_id}.pdf")
-      deploy.download(@user_id)
-      logger.info "download plan, plan:#{@plan.id} store:#{@store_id} user:#{@user_id}"
+      send_file(path, x_sendfile: true, filename:
+                "#{deploy.plan_set_name}-#{@current_user_store_id}.#{@current_user_id}.pdf")
+      deploy.download(@current_user_id)
+      logger.info "download plan, plan:#{@plan.id} store:#{@current_user_store_id} user:#{@current_user_id}"
     else
       raise ActionController::RoutingError, "resource not found"
     end
@@ -99,12 +97,14 @@ class PlansController < ApplicationController
   end
 
   def update_deploy
-    @store_id = 9
-    @user_id = 100
+    if current_user.nil?
+      logger.warn "only use who login in can deploy the plan!"
+      return
+    end
     deploy = Deployment.find(params[:deployed])
-    if deploy && deploy.store_id == @store_id && deploy.plan_id == @plan.id
-      deploy.deploy(@user_id)
-      logger.info "plan deployed: plan:#{@plan.id} store:#{@store_id} deploy:#{deploy.id}"
+    if deploy && deploy.store_id == @current_user_store_id && deploy.plan_id == @plan.id
+      deploy.deploy(current_user.id)
+      logger.info "plan deployed: plan:#{@plan.id} store:#{@current_user_store_id} deploy:#{deploy.id}"
     end
     redirect_to plan_sets_path
   end
@@ -175,10 +175,6 @@ class PlansController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_commons
-      @store_id = 1
-    end
-
     def set_plan
       @plan = Plan.find(params[:id])
       @plan._do = @do
@@ -188,7 +184,7 @@ class PlansController < ApplicationController
       plan_set_id = params[:plan_set]
       category_id = params[:cat]
       @plan = Plan.new({
-        user_id: current_user.id,
+        user_id: @current_user_id,
         plan_set_id: plan_set_id,
         category_id: category_id
       })

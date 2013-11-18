@@ -1,7 +1,4 @@
-<h1>
-  <%= simple_title :edit_setup %>
-</h1>
-
+<% content_for_title :edit_setup %>
 
 <%= simple_form_for(@plan, html: {id: "plan-setup-form"}) do |f| %>
   <%= f.error_notification %>

@@ -1,9 +1,9 @@
 <div class="navbar <%= layout %>">
-  <div class="navbar-inner clearfix">
+  <div class="navbar-inner">
     <ul class="nav pull-right clearfix">
       <% if user_signed_in? %>
         <li class="dropdown">
-        <a class="dropdown-toggle user-option" data-toggle="dropdown" href="#" title="个人主页">
+        <a class="dropdown-toggle user-option" data-toggle="dropdown" href="#">
           <span class="headerTinymanName"><%= current_user.email %> <b class="caret"></b></span>
         </a>
         <ul class="dropdown-menu">
@@ -17,5 +17,8 @@
         <li><%= link_to "登录", sign_in_path %></li>
       <% end %>
     </ul>
+  </div>
+  <div class="navbar-title clearfix">
+    <h1><%= yield :title %></h1>
   </div>
 </div>

@@ -1,6 +1,4 @@
-<h1>
-  <%= simple_title :index_deploy %>
-</h1>
+<% content_for_title @full_action %>
 
 <h3>规划部署</h3>
 <%= render 'deploying_list', deployments: @plan_sets[:deploying] %>

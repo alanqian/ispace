@@ -6,14 +6,12 @@ class FixturesController < ApplicationController
   # GET /fixtures
   # GET /fixtures.json
   def index
-    role = current_user_role
-    case role
+    case @current_user_role
     when :design
       @fixtures = Fixture.all
       render "index", locals: { fixture_new: Fixture.new }
     when :salesman
-      store_id = current_user.store_id
-      @store_fixtures = StoreFixture.where(store_id: store_id)
+      @store_fixtures = StoreFixture.where(store_id: @current_user_store_id)
       @fixtures_map = Fixture.all.to_hash(:id)
       @categories_map = Category.all.select(:code, :name).to_hash(:code)
       render "index_store", locals: { fixture_new: Fixture.new }
@@ -53,7 +51,7 @@ class FixturesController < ApplicationController
   # POST /fixtures.json
   def create
     @fixture = Fixture.new(fixture_params)
-    @fixture.user_id = current_user.id
+    @fixture.user_id = @current_user_id
 
     respond_to do |format|
       if @fixture.save

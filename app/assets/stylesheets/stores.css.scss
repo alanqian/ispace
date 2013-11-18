@@ -1,3 +1,47 @@
 // Place all the styles related to the stores controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body#store {
+  div#stores-list {
+    sup {
+      color: blue;
+    }
+  }
+
+  th.category-name, th.category_mid {
+    width: 7.2em;
+  }
+  th.code {
+    width: 7.2em;
+  }
+  th.fixture {
+    width: 9.2em;
+  }
+  th.memo {
+    width: 10.2em;
+  }
+  th.parts {
+    width: 11.2em;
+  }
+  th.add-remove {
+    width: 2em;
+  }
+
+  td>input.category-name, td>span.category_mid {
+    width: 7em;
+  }
+  td>input.code {
+    width: 7em;
+  }
+  td>select.fixture {
+    width: 9em;
+  }
+  td>input.memo {
+    width: 10em;
+  }
+  td>input.parts {
+    width: 4em;
+    display: inline-block;
+  }
+}

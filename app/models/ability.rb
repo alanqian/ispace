@@ -22,6 +22,8 @@ class Ability
         can_manage_fixture_related
         can :manage, ImportProduct
         can :manage, ImportCategory
+        can :manage, Store
+        can :manage, StoreFixture
       elsif user.salesman?
         # plan related
         can :read, Plan
@@ -31,8 +33,12 @@ class Ability
         can :read, Fixture
         can :read, Bay
         # import related
+        can :read, Product
         can :manage, ImportSale do |import_sale|
           user.store_id == import_sale.store_id
+        end
+        can :manage, Store do |store|
+          user.store_id == store.id
         end
       end
     end
