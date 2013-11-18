@@ -93,8 +93,8 @@ img {
 
 .navbar {
   @include clearfix();
-  background-color: #eee;
-  border-bottom: 1px solid silver;
+  background-color: #b13000;
+  border-bottom: 1px solid black;
   position: fixed;
   width: 100%;
   top: 0;
@@ -149,6 +149,10 @@ ul.nav {
   }
   a.dropdown-toggle {
     float: none;
+    color: white;
+    &:visited {
+      color: white;
+    }
   }
   .dropdown-menu {
     @include list-reset();
@@ -170,7 +174,8 @@ ul.nav {
 }
 
 .sidebar {
-  background-color: rgb(238, 238, 238);
+  // background-color: rgb(238, 238, 238);
+  background-image: url("/assets/bg.png");
   width: 160px;
   box-sizing: border-box;
   overflow: auto;
@@ -181,6 +186,7 @@ ul.nav {
     a {
       text-decoration: none;
     }
+    // background-color: #f2d094;
   }
 }
 .wrapper {
@@ -230,15 +236,16 @@ nav[role="navigation"] {
     padding: 5px 25px;
     font-size: 14px;
     line-height: 1;
-    color: #535353;
+    color: #333333;
     &:hover {
-      background-color: #dcdcdc;
+      background-color: #000000;
+      color: #cdcdcd;
       text-decoration: none;
     }
   }
   li.nav-header {
     padding: 5px 10px;
-    background-color: #eee;
+    // background-color: #eee;
     font-weight: bold;
     font-size: 1.1em;
     margin: 5px 0 0 0;
