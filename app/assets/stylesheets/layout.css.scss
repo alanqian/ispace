@@ -206,12 +206,14 @@ ul.nav {
 
 .single {
   width: 800px;
-  margin: 0px auto;
+  margin: 70px auto;
 }
 
 .navbar.single {
-  margin-left: 0;
-  width: auto;
+  display: block;
+  margin: 0px;
+  //height: 0px;
+  width: 100%;
 }
 
 nav[role="navigation"] {
