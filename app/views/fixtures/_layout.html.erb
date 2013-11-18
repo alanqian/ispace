@@ -1,4 +1,3 @@
-<h3></h3>
 <% shelf_space = fixture.shelf_spaces %>
 <% total_width = shelf_space.sum { |id,spaces| spaces[:width] * spaces[:num_bays] } %>
 
@@ -7,8 +6,8 @@
     <%
       bays_width = spaces[:width] * spaces[:num_bays]
       num_bays = spaces[:num_bays]
-      ratio = bays_width * 99.999 / total_width
-      base_h = spaces[:base_height] * 99.99 / spaces[:height]
+      ratio = bays_width * 99 / total_width
+      base_h = spaces[:base_height] * 99 / spaces[:height]
       base_color = spaces[:base_color]
     %>
     <div id="fixture_<%= item_id %>" class="fixture-item-layout" style="width:<%=ratio%>%;">
@@ -17,10 +16,10 @@
 
       <% spaces[:num_layers].downto(1) do |layer| %>
         <%
-          merch_h = spaces[layer][:merch_height] * 99.99 / spaces[:height]
-          shelf_h = spaces[layer][:shelf_height] * 99.99 / spaces[:height]
+          merch_h = spaces[layer][:merch_height] * 99 / spaces[:height]
+          shelf_h = spaces[layer][:shelf_height] * 99 / spaces[:height]
           blank_width = bays_width - spaces[layer][:merch_width]
-          col_ratio = 99.3 * spaces[layer][:merch_width] / (spaces[:num_bays] * bays_width)
+          col_ratio = 99 * spaces[layer][:merch_width] / (spaces[:num_bays] * bays_width)
           show_splits = (num_bays > 1 || blank_width >= 1.0)
           shelf_color = spaces[layer][:shelf_color]
           space_id = "space-#{item_id}-#{layer}"
@@ -59,7 +58,7 @@
       <% if num_bays > 1 %>
         <div id="base-<%= item_id %>" class="bay-layer bay-base" style="height:<%= base_h %>%">
           <% num_bays.times do |i| %>
-            <% col_ratio = spaces[:base_width] * 99.3 / bays_width %>
+            <% col_ratio = spaces[:base_width] * 99 / bays_width %>
             <div id="base-<%= "#{item_id}-#{i}"%>" class="bay-single bay-base"
               style="width:<%= col_ratio %>%; background-color: <%= base_color %>;"></div>
           <% end %>
