@@ -1,4 +1,8 @@
-<h1>数据导入: <%= t("activerecord.models.#{@import_sheet._target}") %> </h1>
+<% content_for_title "new_#{@import_sheet._target}" %>
+
+<!--
+<h2>数据导入: <%= t("activerecord.models.#{}") %> </h2>
+-->
 
 <div>
 <%= render 'form', import_sheet: @import_sheet %>

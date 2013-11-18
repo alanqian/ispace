@@ -1,6 +1,4 @@
-<h1>
-  <%= simple_title(@do || :edit) %>
-</h1>
+<% content_for_title(@do || :edit) %>
 <hr/>
 
 <%= render 'form', fixture: @fixture %>

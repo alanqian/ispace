@@ -23,6 +23,7 @@ zh-CN:
 
     titles:
       plan_set:
+        new: 新建空间规划
         add_store: 添加样板店
         publish: 发布空间规划
         defaults: 修改空间规划
@@ -35,7 +36,11 @@ zh-CN:
         deploy_report: 完成上报
         deploy_deployed: 历史规划
       plan:
+        index: 样板店规划
+        new: 空间规划：增加样板店
+        edit: 设置门店参数
         edit_setup: 设置门店规划
+        edit_layout: 门店空间设计
       store:
         index: 门店列表
         new: 新建门店
@@ -46,15 +51,59 @@ zh-CN:
       region:
         index: 区域设置
         new: 新建区域
+        edit: 更新区域信息
       bay:
         new: 新建货备
         edit: 编辑货备
+        index: 货备管理
       fixture:
         index: 货架管理
         new: 新建货架
         edit: 编辑货架
         deploy: 货架配置
         index_store: 门店货架
+      category:
+        index: 品类管理
+        new: 新建品类
+        edit: 更新品类
+      brand:
+        index: 品牌管理
+        edit: 更新品牌信息
+        new: 新建品牌
+      supplier:
+        index: 供应商管理
+        edit: 更新供应商信息
+        new: 新建供应商
+      manufacturer:
+        index: 制造商管理
+        new: 新建制造商
+        edit: 更新制造商信息
+      product:
+        index: 单品管理
+        index_on_sale: 在售商品
+        edit: 更新商品信息
+        new: 新建商品
+      sale:
+        index: 销售信息管理
+        edit: 更新销售信息
+        new: 新增销售信息
+      import_sheet:
+        new_product: 上传商品文件
+        index_product: 商品导入列表
+        edit_import_product: 导入商品
+        new_sales: 上传销售数据文件
+        index_sales: 销售数据导入列表
+        edit_import_sales: 销售数据导入
+        new_store: 上传门店信息文件
+        index_store: 门店导入列表
+        edit_import_store: 门店导入
+        new_category: 上传品类文件
+        index_category: 品类导入列表
+        edit_import_category: 导入品类
+      user:
+        new: 新建用户
+        edit: 用户信息
+        index: 用户管理
     notices:
       store:
         update: 门店信息更新完毕
