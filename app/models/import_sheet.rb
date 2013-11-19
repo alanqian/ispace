@@ -10,7 +10,7 @@ class ImportSheet < ActiveRecord::Base
   validates :type, presence: true
   validates :sheets, presence: true
   validates :comment, presence: true
-  validates :file_upload, presence: true
+  validates :file_upload, presence: true, if: "sheets.empty?"
   validate :validate_mapping
   validate :validate_sheets
   before_update :import
@@ -115,8 +115,10 @@ class ImportSheet < ActiveRecord::Base
           to_field = map[i]
           if to_field && row[i] && (!row[i].kind_of?(String) || !row[i].empty?)
             # make a patch for roo, for string/integer fields
-            # strip \.0+ for :string & :integer
             column_type = self.class.map_dict[:_types][to_field]
+            row[i] = row[i].to_s.gsub(/[\u007f\u0080\u00a0-\u00ff]/, "").gsub(/\s*$/, "")
+
+            # strip \.0+ for :string & :integer
             if column_type == :string || column_type == :integer
               row[i] = row[i].to_s.strip.sub(/\.0+$/, '')
             end
@@ -275,6 +277,7 @@ class ImportSheet < ActiveRecord::Base
   def self.load_xls(file, ext)
     logger.debug "load_xls, file:#{file}, ext:#{ext}"
     xls = self.open_spreadsheet(file, ext)
+    logger.debug "open_spreadsheet ok, file:#{file.path} ext:#{ext}"
     sheets = []
     id = 0
     xls.sheets.each do |sheet|
@@ -304,6 +307,7 @@ class ImportSheet < ActiveRecord::Base
       end
       id += 1
     end
+    logger.debug "load_xls ok, file:#{file}, ext:#{ext}"
     return sheets
   end
 
