@@ -758,6 +758,7 @@ root.dataTableUtil =
     # dataTables_paginate
     # dataTables_filter
     #"sDom": '<"top"<"#data_filter">ipf<"clear">>rt<"clear">'
+    aaSorting: []
     sDom: '<"top"<"#data_filter">if<"clear">>rt<"clear">'
     oLanguage:
       sProcessing:   "处理中..."
