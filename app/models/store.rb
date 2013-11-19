@@ -31,8 +31,8 @@ class Store < ActiveRecord::Base
       # store ref_store_id, is a model_store at first
       logger.debug "filter stores"
       # choose stores which is NOT model store itself and not ref to THAT
-      stores = self.where(id: stores_param).where(["ref_store_id != ?", ref_store_id]).
-        where(["ref_store_id != id"]).select(:id, :ref_store_id)
+      stores = self.where(id: stores_param).where(["ref_store_id IS NULL OR ref_store_id != ?", ref_store_id]).
+        where(["ref_store_id IS NULL OR ref_store_id != id"]).select(:id, :ref_store_id)
 
       # decrement ref_count for ref store
       logger.debug "dec ref_count"
@@ -51,7 +51,7 @@ class Store < ActiveRecord::Base
       return true
 
     when :set_as_model_store
-      stores = self.where(["ref_store_id != id"]).where(id: stores_param).select(:id, :ref_store_id)
+      stores = self.where(["ref_store_id IS NULL OR ref_store_id != id"]).where(id: stores_param).select(:id, :ref_store_id)
       logger.info "modify stores as model_store, #{stores.to_json}"
       stores.each do |store|
         store.update_columns(ref_store_id: store.id, ref_count: 1)

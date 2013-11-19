@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131116070815) do
+ActiveRecord::Schema.define(version: 20131119090314) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -312,17 +312,17 @@ ActiveRecord::Schema.define(version: 20131116070815) do
   end
 
   create_table "products", id: false, force: true do |t|
-    t.string   "code",                                                    null: false
+    t.string   "code",                                                          null: false
     t.string   "category_id"
     t.integer  "brand_id"
     t.integer  "mfr_id"
     t.integer  "user_id"
-    t.integer  "import_id",                               default: -1
+    t.integer  "import_id",                                     default: -1
     t.string   "name"
-    t.decimal  "height",         precision: 10, scale: 0
-    t.decimal  "width",          precision: 10, scale: 0
-    t.decimal  "depth",          precision: 10, scale: 0
-    t.decimal  "weight",         precision: 10, scale: 0
+    t.decimal  "height",               precision: 10, scale: 0
+    t.decimal  "width",                precision: 10, scale: 0
+    t.decimal  "depth",                precision: 10, scale: 0
+    t.decimal  "weight",               precision: 10, scale: 0
     t.string   "price_zone"
     t.string   "size_name"
     t.string   "case_pack_name"
@@ -333,9 +333,26 @@ ActiveRecord::Schema.define(version: 20131116070815) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_id"
-    t.integer  "sale_type",                               default: 1
-    t.boolean  "new_product",                             default: false
-    t.boolean  "on_promotion",                            default: false
+    t.integer  "sale_type",                                     default: 1
+    t.boolean  "new_product",                                   default: false
+    t.boolean  "on_promotion",                                  default: false
+    t.string   "abbr_name"
+    t.string   "en_name"
+    t.string   "unit"
+    t.integer  "pack_units"
+    t.string   "sale_season"
+    t.integer  "shelf_life"
+    t.string   "tax_type"
+    t.decimal  "input_price",          precision: 15, scale: 4
+    t.decimal  "input_price_with_tax", precision: 15, scale: 4
+    t.decimal  "input_tax_ratio",      precision: 5,  scale: 3
+    t.decimal  "output_tax_ratio",     precision: 5,  scale: 3
+    t.decimal  "input_sale_price",     precision: 15, scale: 4
+    t.decimal  "input_member_price",   precision: 15, scale: 4
+    t.integer  "shelf_life_input"
+    t.integer  "shelf_life_dist"
+    t.integer  "available"
+    t.integer  "status"
   end
 
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
@@ -433,19 +450,21 @@ ActiveRecord::Schema.define(version: 20131116070815) do
   add_index "store_fixtures", ["store_id", "code"], name: "index_store_fixtures_on_store_id_and_code", unique: true, using: :btree
 
   create_table "stores", force: true do |t|
-    t.string   "region_id",                            null: false
+    t.string   "region_id",                                                    null: false
     t.string   "name"
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "code",         limit: 48
     t.integer  "ref_store_id"
-    t.integer  "area"
+    t.decimal  "area",                    precision: 6, scale: 1
     t.string   "location",     limit: 32
-    t.integer  "import_id",               default: -1
-    t.integer  "ref_count",               default: 0
-    t.string   "region_name",             default: ""
+    t.integer  "import_id",                                       default: -1
+    t.integer  "ref_count",                                       default: 0
+    t.string   "region_name",                                     default: ""
     t.string   "pinyin"
+    t.decimal  "depot_area",              precision: 6, scale: 1
+    t.string   "grade"
   end
 
   add_index "stores", ["area"], name: "index_stores_on_area", using: :btree
