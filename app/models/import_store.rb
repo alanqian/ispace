@@ -17,38 +17,59 @@ class ImportStore < ImportSheet
     true
   end
 
+  def import_region(params)
+    names = params[:name]
+    codes = params[:code]
+    if names.size != 2 && codes != 2
+      logger.debug "invalid region, name.size != 2 or code.size != 2"
+      return nil
+    end
+    parent = Region.where(name: name[0]).first
+    if parent.nil?
+      Region.create()
+    end
+    node_id
+  end
+
   def import_row(params, row_index)
-    logger.debug "import_row store, #{row_index}"
+    logger.debug "import_row store, row:#{row_index}, params: #{params.to_json}"
     region_params = params[:region]
+
     if region_params
       logger.debug "region: #{region_params}"
-      if region_params[:code] && !region_params[:code].empty?
-        if region_params[:code].start_with?(".")
-          abbr_region = true
-          region_params[:code] = "#{@region_pre}#{region_params[:code]}"
-        else
-          abbr_region = false
-        end
-
-        if Region.exists?(region_params[:code])
-          @region_id = region_params[:code]
-          logger.warn "duplicated region updated, code:#{region_params[:code]}"
-          region_params[:consume_type] ||= "B"
-          region_params[:import_id] = self.id
-          Region.update(@region_id, region_params)
-          @region_pre = @region_id unless abbr_region
-        elsif valid_region_code?(region_params[:code])
-          # import it!
-          region_params[:consume_type] ||= "B"
-          region_params[:import_id] = self.id
-          Region.create(region_params)
-          @region_id = region_params[:code]
-          @region_pre = @region_id unless abbr_region
-          @count[:region] += 1
-        else
-          # error row
-          logger.warn "invalid region code, region:#{region_params}"
-          return false
+      regions = []
+      parent = {
+        code: region_params[:code][0],
+        name: region_params[:name][0]
+      }
+      regions.push parent
+      if region_params[:code].size == 2
+        node = {
+          code: region_params[:code].join("."),
+          name: region_params[:name][1]
+        }
+        regions.push node
+      end
+      regions.each do |region_param|
+        if region_param[:code] && !region_param[:code].empty?
+          if Region.exists?(region_param[:code])
+            @region_id = region_param[:code]
+            logger.warn "duplicated region updated, code:#{region_param[:code]}"
+            region_param[:consume_type] ||= "B"
+            region_param[:import_id] = self.id
+            Region.update(@region_id, region_param)
+          elsif valid_region_code?(region_param[:code])
+            # import it!
+            region_param[:consume_type] ||= "B"
+            region_param[:import_id] = self.id
+            Region.create(region_param)
+            @region_id = region_param[:code]
+            @count[:region] += 1
+          else
+            # error row
+            logger.warn "invalid region code, region:#{region_param}"
+            return false
+          end
         end
       end
     end
