@@ -1,16 +1,19 @@
 <% content_for_title :index %>
 
-<div id="categorys-list">
+<div id="categories-list">
   <%= simple_form_for(category_new, method: "patch", remote: true,
                       data: { url: category_path(category_new) },
-                      html: { id: "categorys-form", class: "inplace" }) do |f| %>
+                      html: { id: "categories-form", class: "inplace" }) do |f| %>
     <div class="inputs">
       <%= f.input :code %>
       <%= f.input :name %>
       <%= f.input :parent_id, collection: Category.all %>
       <%= f.input :memo %>
     </div>
-    <%= render 'list', categorys: @categories %>
+    <%= render 'list',
+      num_main_ctg: num_main_ctg,
+      num_sub_ctg: num_sub_ctg,
+      categories: @categories  %>
   <% end %>
 </div>
 

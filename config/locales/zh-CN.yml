@@ -86,7 +86,11 @@ zh-CN:
         code: 品类编码
         name: 品类名称
         parent_id: 上级品类
+        codes: 编码
         memo: 备注
+        name_0: 大类
+        name_1: 中类
+        name_2: 小类
       user:
         email: 邮箱
         username: 用户名
