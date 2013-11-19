@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131119090314) do
+ActiveRecord::Schema.define(version: 20131119165124) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -63,7 +63,6 @@ ActiveRecord::Schema.define(version: 20131119090314) do
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
-  add_index "categories", ["name"], name: "index_categories_on_name", unique: true, using: :btree
   add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
