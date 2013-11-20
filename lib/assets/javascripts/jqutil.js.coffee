@@ -276,8 +276,13 @@ $.util =
         $(cb).siblings(followers).each (_, el) ->
           $(el).attr("disabled", !checked)
 
+  initAlertBox: () ->
+    $(".alert button.close").click () ->
+      $(this).closest('.alert').remove()
+
 $ ->
   $.util.initCmdUI()
+  $.util.initAlertBox()
   $.util.setupDatePicker()
   $.util.setupAutoCompleteInput(".ui-auto-complete")
   $.util.setupTreeInput("input.ui-tree-input")
