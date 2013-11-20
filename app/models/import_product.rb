@@ -125,11 +125,14 @@ class ImportProduct < ImportSheet
     # import brands info
     category_id = params[:category][:code]
     if params[:brand]
-      # make a patch for brand code/name conflict
-      params[:brand].delete :code
-      brand_id = upsert_table(:brand, params, category_id)
-      if brand_id.nil?
-        logger.warn "import brand failed, row:#{row_index}, #{params[:brand].to_json}"
+      brand_name = params[:brand][:name]
+      if !brand_name.empty? && brand_name != "/"
+        # make a patch for brand code/name conflict
+        params[:brand].delete :code
+        brand_id = upsert_table(:brand, params, category_id)
+        if brand_id.nil?
+          logger.warn "import brand failed, row:#{row_index}, #{params[:brand].to_json}"
+        end
       end
     end
 
