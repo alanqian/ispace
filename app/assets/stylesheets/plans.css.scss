@@ -11,6 +11,17 @@
    font-size: 1.8em !important;
 }
 
+div#products-container {
+  margin: 8px 0 10px;
+}
+div#plan-edit-layout-form {
+  height: 0px;
+}
+div#products-data {
+  margin: 4px 0;
+}
+
+
 .toolbar-select {
   max-width: 8em;
   min-width: 3em;
@@ -345,7 +356,7 @@ li.sortable-item {
 div.fixture-layout {
   display: block;
   width: 700px;
-  height: 400px;
+  height: 350px;
   border: 1px solid blue;
 
   div.fixture-item-layout {

@@ -5,9 +5,12 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
-
-    render "index", locals: { category_new: Category.new }
+    @categories = Category.all.order(:code)
+    render "index", locals: {
+      category_new: Category.new,
+      num_main_ctg: @categories.to_a.count { |c| c.code.length <= 2 },
+      num_sub_ctg: @categories.to_a.count { |c| 3 == c.code.length || c.code.length == 4 },
+    }
   end
 
   # GET /categories/1

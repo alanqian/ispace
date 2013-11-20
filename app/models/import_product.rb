@@ -1,5 +1,5 @@
 class ImportProduct < ImportSheet
-  validate :validate_categories
+  #validate :validate_categories
 
   def categories
     imported[:categories]
@@ -10,18 +10,18 @@ class ImportProduct < ImportSheet
 
   # get categories by sheet name
   def on_upload
-    ctg = []
-    sheets.each do |sheet|
-      unless sheet[:empty]
-        code = find_category_code(sheet[:name])
-        if code
-          ctg[sheet[:id]] = code
-        else
-          # self.errors.add :sheets, "worksheet #{sheet[:id]}: #{sheet[:name]} is not a category"
-        end
-      end
-    end
-    self.imported[:categories] = ctg
+    #ctg = []
+    #sheets.each do |sheet|
+    #  unless sheet[:empty]
+    #    code = find_category_code(sheet[:name])
+    #    if code
+    #      ctg[sheet[:id]] = code
+    #    else
+    #      # self.errors.add :sheets, "worksheet #{sheet[:id]}: #{sheet[:name]} is not a category"
+    #    end
+    #  end
+    #end
+    #self.imported[:categories] = ctg
     self.imported[:count] = {
       :brand => 0,
       :manufacturer => 0,
@@ -65,8 +65,9 @@ class ImportProduct < ImportSheet
       :supplier => 0,
       :product => 0,
     }
-    @category_id = categories[sheet[:id]]
+    # @category_id = categories[sheet[:id]]
     @imported_cat = {}
+    @error_rows = {}
     true
   end
 
@@ -80,10 +81,117 @@ class ImportProduct < ImportSheet
       @imported_cat[@category_id] = 1
       self.imported[:count][:category] += 1
     end
+    if @error_rows.any?
+      @error_rows.each do |row_index, error|
+        logger.warn "ImportProduct error, row:#{row_index} #{error.to_json}"
+      end
+    end
     true
   end
 
+  def translate_pair_params(params, *tables)
+    tables.each do |table|
+      if params[table]
+        prm = params[table]
+        if prm.has_key?(:_pair)
+          code, name = prm[:_pair].split(/[-:|\/]/, 2)
+          prm.merge!({
+            code: code,
+            name: name
+          })
+          prm.delete :_pair
+          params[table] = prm
+        end
+      end
+    end
+  end
+
   def import_row(params, row_index)
+    # [_pair] to :code, :name
+    translate_pair_params(params, :brand, :category)
+    logger.debug "import product, row:#{row_index}, params:#{params.to_json}"
+
+    unless params[:category]
+      logger.warn "no category error, row:#{row_index}, params:#{params.to_json}"
+      return false
+    end
+
+    unless Category.exists?(params[:category])
+      logger.warn "category error, row:#{row_index}, #{params[:category].to_json}"
+      @error_rows[row_index] = { category: params[:category] }
+      return true
+    end
+
+    # import brands info
+    category_id = params[:category][:code]
+    if params[:brand]
+      brand_name = params[:brand][:name]
+      if !brand_name.empty? && brand_name != "/"
+        # make a patch for brand code/name conflict
+        params[:brand].delete :code
+        brand_id = upsert_table(:brand, params, category_id)
+        if brand_id.nil?
+          logger.warn "import brand failed, row:#{row_index}, #{params[:brand].to_json}"
+        end
+      end
+    end
+
+    # import product
+    return import_product(params)
+  end
+
+  def normalize_product_params(params)
+    params[:size_name] = params[:size_name].to_s.downcase
+    params[:status] = params.delete(:status_pair).split("-").first
+    # mm -> cm
+    [:width, :height, :depth].each do |attr|
+      params[attr] = params[attr].to_i / 10.0
+    end
+  end
+
+  def import_product(params)
+    return unless params[:product]
+
+    product_params = params[:product]
+    if Product.exists?({ code: product_params[:code]})
+      logger.debug "product import skiped, code:#{product_params[:code]}, import_id:#{self.id}"
+    else
+      normalize_product_params(product_params)
+      product_params[:brand_id] = params[:brand][:id] if params[:brand]
+      product_params.merge!({
+        import_id: self.id,
+        user_id: self.user_id,
+        category_id: params[:category][:code]
+        #mfr_id: mfr_id,
+        #supplier_id: params[:supplier][:id],
+      })
+      product_id = Product.create(product_params).id
+      @count[:product] += 1
+      logger.debug "product imported, id:#{product_id}, import_id:#{self.id}"
+    end
+    return true
+  end
+
+  def upsert_table(table, params, category_id)
+    if params[table]
+      klass = self.class.import_tables[table]
+      prm = params[table]
+      prm[:category_id] = category_id
+      ar = klass.where(prm).first
+      if ar
+        params[table][:id] = ar.id
+      else
+        prm[:import_id] = self.id
+        logger.debug "create #{table}, #{prm.to_json}"
+        params[table][:id] = klass.create(prm).id
+        @count[table] += 1
+      end
+      return params[table][:id]
+    end
+    return nil
+  end
+
+  def import_demo(params, row_index)
     m = {
       category_id: @category_id
     }

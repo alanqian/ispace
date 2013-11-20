@@ -7,9 +7,6 @@
   check sale_type: 必卖品
   plan#close,
 %>
-
-<hr>
-
 <% buttons = [
   # id, text, icon
   #--- the 1st row, 20x18 ---
@@ -113,8 +110,6 @@
   <%= render 'form_layout' %>
 </div>
 
-<hr/>
-
 <%#
 <div id="info-box" class="ui-widget-content ui-corner-all ui-draggable1 ui-resizable1">
   <h3 class="ui-widget-header">Product Info Box</h3>
@@ -140,6 +135,7 @@
       brands_all: brands_all,
       suppliers_all: suppliers_all,
       mfrs_all: mfrs_all,
+      sscrolly: "13em",
       sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
 </div>
 
@@ -171,7 +167,7 @@
   </p>
 </div>
 <%#
-  发布本样板店(<%= @plan.store_name %>)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！
+  发布本样板店(<%= @plan.store_name % >)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！
 %>
 
 <ul id="showing-colors-menu" class="popup-menu">

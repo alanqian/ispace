@@ -4,7 +4,7 @@
       <% if user_signed_in? %>
         <li class="dropdown">
         <a class="dropdown-toggle user-option" data-toggle="dropdown" href="#">
-          <span class="headerTinymanName"><%= current_user.email %> <b class="caret"></b></span>
+          <span class="headerTinymanName"><%= current_user.username %> <b class="caret"></b></span>
         </a>
         <ul class="dropdown-menu">
           <li><%= link_to "设置", edit_user_path(current_user) %></li>

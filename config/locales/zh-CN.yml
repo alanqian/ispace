@@ -86,7 +86,11 @@ zh-CN:
         code: 品类编码
         name: 品类名称
         parent_id: 上级品类
+        codes: 编码
         memo: 备注
+        name_0: 大类
+        name_1: 中类
+        name_2: 小类
       user:
         email: 邮箱
         username: 用户名
@@ -356,20 +360,35 @@ zh-CN:
         name: 门店名称
         location: 门店地段
         area: 门店面积
+        depot_area: 仓库面积
+        grade: 等级
         memo: 门店备注
+      _custom:
+        # customized mapping add here
+        "便利店海信系统编码": "store.code"
+        "加油站简称": "store.name"
+        "地理位置": "store.location"
+        "便利店面积": "store.area"
+        "仓库面积": "store.depot_area"
+        "门店等级": "store.grade"
+        "隶属公司": "region.name[0]"
+        "公司编码": "region.code[0]"
+        "隶属片区": "region.name[1]"
+        "片区编码": "region.code[1]"
       #user:
       #  name: 用户名
       #  email: 用户邮箱
       #  tel: 用户电话
       #  memo: 用户备注
+      # region.consume_type: 区域消费类型
       _required:
-        region.name: 区域
-        region.consume_type: 区域消费类型
+        region.code[0]: 区域编码
+        region.name[0]: 区域
         store.code: 门店编号
         store.name: 门店名称
         store.location: 门店地段
         store.area: 门店面积
-        # user.name: 用户名
+        store.grade: 门店等级
     import_categories:
       category:
         code[0]: 大类代码
@@ -400,17 +419,47 @@ zh-CN:
         name: "供应商"
       manufacturer:
         name: "生产商"
-      _custom:
-        # customized mapping add here
-        "产品标识": "product.code"
-        "名称": "product.name"
-        "大小": "product.size_name"
+      category:
+        code: "编码"
+        name: "名称"
       _required:
         "product.code": "产品标识"
         "product.name": "产品名称"
         "product.height": "高度"
         "product.width": "宽度"
         "product.depth": "深度"
+      _custom:
+        # customized mapping add here
+        "产品标识": "product.code"
+        "名称": "product.name"
+        "大小": "product.size_name"
+        "品牌编码": "brand._pair"
+        "商品|编码": "product.code"
+        "商品|名称": "product.name"
+        "商品|英文名称": "product.en_name"
+        "商品|简称": "product.abbr_name"
+        "商品|条形码": "product.barcode"
+        "单位": "product.unit"
+        "规格": "product.size_name"
+        "重量（克）": "product.weight"
+        "高（毫米）": "product.height"
+        "长（毫米）": "product.width"
+        "宽（毫米）": "product.depth"
+        "多包装单位": "product.pack_units"
+        "销售季节": "product.sale_season"
+        "保质期（天）": "product.shelf_life"
+        "品类": "category._pair"
+        "进项税计算类型": "product.tax_type"
+        "引进时无税进价": "product.input_price"
+        "引进时含税进价": "product.input_price_with_tax"
+        "进项税率(%)": "product.input_tax_ratio"
+        "引进时零售价": "product.input_sale_price"
+        "销项税率(%)": "product.output_tax_ratio"
+        "进货保质期前置": "product.shelf_life_input"
+        "配送保质期前置": "product.shelf_life_dist"
+        "可用": "product.available"
+        "商品状态": "product.status_pair"
+        "引进时会员价": "product.input_member_price"
     import_sales:
       product:
         code: "商品标识"
