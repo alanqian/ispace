@@ -4,6 +4,9 @@
 
 .bays {
   margin-left: 0;
+  .span5 {
+    width: 310px;
+  }
   form {
     margin-left: 0;
   }
@@ -45,7 +48,7 @@
     }
     div.input.span2 {
       label {
-        width: 70px;
+        width: 65px;
       }
     }
   }
