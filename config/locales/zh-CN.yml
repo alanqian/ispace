@@ -184,7 +184,7 @@ zh-CN:
         types: 类型
       open_shelf:
         name: 名称
-        height: 隔层高度
+        height: 商品层高
         width: 隔板宽度
         depth: 隔板深度
         thick: 隔板厚

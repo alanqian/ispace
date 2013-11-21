@@ -85,6 +85,16 @@ input2json = (obName, selector) ->
   # console.log removed
   return data
 
+# take_off_height = base_height + MAX(from_base + height)
+# for open_shelf:
+#   next.from_base = this.from_base + this.height + this.finger_space + next.thick
+#   notch_num/from_base: above the shelf board;
+# for peg_board:
+#   notch_num/from_base: top margin of the pegboard to base
+# for rsb:
+#   notch_num/from_base: top margin of bar
+# for freezer_chest:
+#   notch_num/from_base: NA
 class BayPage
   action: ""
   _do: ""

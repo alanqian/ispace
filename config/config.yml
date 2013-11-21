@@ -28,7 +28,7 @@ all:
       :height: 20.0
       :width: 120.0
       :depth: 50.0
-      :thick: 1.0
+      :thick: 5.0
       :slope: 0.0
       :riser: 0.0
       :notch_num: 1
