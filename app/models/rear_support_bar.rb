@@ -19,9 +19,9 @@ class RearSupportBar < ActiveRecord::Base
     numericality: { greater_than_or_equal_to: 0.0 }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first || self.new
-    r.id = nil
+    r = self.new(APP_CONFIG[:templates][:rear_support_bar])
     r.bay_id = bay.id
+    r.from_base = bay.notch_to(r.notch_num)
     r
   end
 

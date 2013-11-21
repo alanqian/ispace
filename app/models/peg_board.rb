@@ -17,10 +17,10 @@ class PegBoard < ActiveRecord::Base
     message: 'color' }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first || self.new
-    r.id = nil
+    r = self.new(APP_CONFIG[:templates][:peg_board])
     r.bay_id = bay.id
     r.height = bay.back_height
+    r.from_base = bay.notch_to(r.notch_num)
     r
   end
 

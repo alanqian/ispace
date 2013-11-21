@@ -24,8 +24,8 @@ class OpenShelf < ActiveRecord::Base
     numericality: { greater_than_or_equal_to: 0.0 }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first || self.new
-    r.id = nil
+    r = self.new(APP_CONFIG[:templates][:open_shelf])
+    r.from_base = bay.notch_to(r.notch_num)
     r.bay_id = bay.id
     r.width = bay.back_width
     r.depth = bay.base_depth

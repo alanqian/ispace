@@ -203,20 +203,7 @@ class Bay < ActiveRecord::Base
   end
 
   def self.template
-    bay = self.new(
-      name: 'bay ',
-      back_height: 185.0,
-      back_width: 120.0,
-      back_thick: 3.0,
-      back_color: '#ffffff',
-      notch_spacing: 1.0,
-      notch_1st: 1.0,
-      base_height: 15.0,
-      base_width: 120.0,
-      base_depth: 50.0,
-      base_color: '#400040',
-      takeoff_height: 190.0,
-    )
+    bay = self.new(APP_CONFIG[:templates][:bay])
     bay.open_shelves.concat(OpenShelf.template(bay))
     bay
   end
