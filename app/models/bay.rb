@@ -205,6 +205,7 @@ class Bay < ActiveRecord::Base
   def self.template
     bay = self.new(APP_CONFIG[:templates][:bay])
     bay.open_shelves.concat(OpenShelf.template(bay))
+    bay.open_shelves[0].name = APP_CONFIG[:templates][:open_shelf_1st_name]
     bay
   end
 

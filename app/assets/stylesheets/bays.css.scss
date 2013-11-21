@@ -3,9 +3,25 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .bays {
-  margin-left: 0;
+  margin: 0.3em 0 0 0;
   .span5 {
     width: 310px;
+  }
+  div.input.bay_name {
+    margin-left: 1em;
+  }
+  div.inputs.bay_main {
+    padding: 0 1.2em;
+  }
+  hr {
+    margin: 0.3em -1.2em;
+  }
+  div.actions {
+    text-align: center;
+    margin: 0;
+    button {
+      margin: 0 0.3em 0 0.3em;
+    }
   }
   form {
     margin-left: 0;
@@ -19,15 +35,11 @@
   label>abbr {
     display: none; // hide required mark *
   }
-  fieldset {
-    background-color: #f0f0f0;
-  }
 
   .row {
-    margin-left: 0;
+    margin-left: 0em;
     // clear: both;
   }
-
   .row.hlabel {
     div.input {
       display: inline-block;

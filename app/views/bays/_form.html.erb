@@ -2,41 +2,56 @@
   <%= simple_form_for @bay, html: { class: "span5 bay"} do |f| %>
   <%= f.error_notification %>
 
-  <%= f.input :name  %>
-  <%= field_set_tag '主尺寸' do %>
-  <div id="bay_main" class="inputs">
-    <div class="row vlabel">
-      <%= f.input :back_height, wrapper_html: { class: 'span1' }  %>
-      <%= f.input :back_width, wrapper_html: { class: 'span1' } %>
-      <%= f.input :back_thick, wrapper_html: { class: 'span1' } %>
-      <%= f.input :back_color, as: :color, wrapper_html: { class: 'span1' } %>
-    </div>
-    <div class="row hlabel">
-      <%= f.input :use_notch, wrapper_html: { class: 'col_check' }, :as => :boolean, :boolean_style => :inline, :label => false %>
-      <%= f.input :notch_spacing, wrapper_html: { class: 'col_pre notch_on' } %>
-      <%= f.input :notch_1st, wrapper_html: { class: 'col_end notch_on' } %>
-    </div>
-    <div class="row vlabel">
-      <%= f.input :base_height, wrapper_html: { class: 'span1' }  %>
-      <%= f.input :base_width, wrapper_html: { class: 'span1' }  %>
-      <%= f.input :base_depth, wrapper_html: { class: 'span1' }  %>
-      <%= f.input :base_color, as: :color, wrapper_html: { class: 'span1' } %>
-    </div>
-    <%#= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
-    <%#= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
-  </div>
-  <% end %>
+  <div id="bay-form-main" class="ui-widget">
+    <h3 class="ui-accordion-header ui-helper-reset ui-state-default
+      ui-accordion-header-active ui-state-active ui-corner-top">
+      <%= f.input :name %>
+    </h3>
+    <div class="inputs bay_main ui-accordion-content ui-helper-reset ui-widget-content
+      ui-corner-bottom ui-accordion-content-active">
+      <div class="row vlabel">
+        <%= f.input :back_height, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :back_width, wrapper_html: { class: 'span1' } %>
+        <%= f.input :back_thick, wrapper_html: { class: 'span1' } %>
+        <%= f.input :back_color, as: :color, wrapper_html: { class: 'span1' } %>
+      </div>
+      <div class="row hlabel">
+        <%= f.input :use_notch, wrapper_html: { class: 'col_check' }, :as => :boolean, :boolean_style => :inline, :label => false %>
+        <%= f.input :notch_spacing, wrapper_html: { class: 'col_pre notch_on' } %>
+        <%= f.input :notch_1st, wrapper_html: { class: 'col_end notch_on' } %>
+      </div>
+      <div class="row vlabel">
+        <%= f.input :base_height, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_width, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_depth, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_color, as: :color, wrapper_html: { class: 'span1' } %>
+      </div>
+      <hr/>
+      <%#= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
+      <%#= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
 
-  <div class="actions clearfix">
-    <%= submit_tag "", class: 'add_element', id: 'add_open_shelf', 'data-id' => '#open_shelf',
-      title: '添加隔板', onclick: "addElement(event,this,false);" %>
-    <%= submit_tag "", class: 'add_element', id: 'add_peg_board', 'data-id' => '#peg_board',
-      title: '添加钉板', onclick: "addElement(event,this,false);" %>
-    <%= submit_tag "", class: 'add_element', id: 'add_freezer_chest', 'data-id' => '#freezer_chest',
-      title: "添加腔体(冰柜)", onclick: "addElement(event,this,true);" %>
-    <%= submit_tag "", class: 'add_element', id: 'add_rear_supported_bar', 'data-id' => '#rear_support_bar',
-      title: "添加后支撑条", onclick: "addElement(event,this,false);" %>
-    <%= f.button :submit %>
+      <% buttons = [
+        # id, text, icon
+        #--- the 1st row, 20x18 ---
+        # ["plan-save", "ui-icon-disk"],
+        ["add-open-shelf",  "添加隔板"],
+        ['add-peg-board',     '添加钉板'],
+        ['add-freezer-chest', "添加腔体(冰柜)"],
+        ['add-rear-support-bar', "添加后支撑条"],
+      ] %>
+      <div class="actions ui-widget-header-x">
+        <% buttons.each do |btn| %>
+          <%
+            id, text, icon = btn
+            icon ||= "ui-bay-#{id}"
+          %>
+          <%= button_tag text, type: :button, id: id, class: "toolbar-button",
+            data: { icon: icon } %>
+        <% end %>
+        <% save_text = @bay.id.nil? ? "新建货备" : "保存货备" %>
+        <%= button_tag save_text, type: :button, id: "bay-save", class: "toolbar-button" %>
+      </div>
+    </div>
   </div>
 
   <div id='accordion'>

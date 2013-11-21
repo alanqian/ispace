@@ -91,9 +91,12 @@ class BayPage
   bay: null
 
   constructor: (action, _do) ->
-    console.log "create PlanPage"
+    console.log "create BayPage"
     @action = action
     @_do = _do
+
+  onLoadIndex: () ->
+    # do nothing
 
   onLoadEdit: () ->
     @loadBayEditor()
@@ -167,8 +170,9 @@ class BayPage
 
     # assume first input is element name
     nameElem = $("input", $new).first()
+    level = if bottomOne then 1 else $("#accordion h3").length
     if nameElem
-      new_name = "#{@bay.newIndex}.#{nameElem.attr("placeholder")}"
+      new_name = "#{level}.#{nameElem.attr("placeholder")}"
       nameElem.val(new_name)
 
     @bay.newIndex += 1
