@@ -810,6 +810,8 @@ root.dataTableUtil =
     return opts
 
 $ ->
+  $.util.init()
+
   console.log "loading common components..."
   # $.ajaxSettings.dataType = "json"
   $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
@@ -843,6 +845,9 @@ $ ->
   setInplaceEditUI()
   $("div.accordion").accordion
     collapsible: true
-
   console.log "common components loaded"
+
+  # initialize the page
+  $.util.onPageLoad()
+  console.log "page loaded"
 
