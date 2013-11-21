@@ -170,7 +170,7 @@ module ApplicationHelper
     ths = []
     data_array.each do |col|
       if col.is_a?(Array)
-        logger.debug "data col: #{col}"
+        # logger.debug "data col: #{col}"
         # w/ opts
         field = col.shift
         if field == :select_all
