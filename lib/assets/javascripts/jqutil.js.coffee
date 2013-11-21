@@ -22,8 +22,8 @@ class AutoCompleteUtil
   valueField: null
   source: []
 
-  @setupAutoCompleteInput: (sel = ".auto-complete") ->
-    $(sel).each (index, el) ->
+  @setupAutoCompleteInput: (container) ->
+    $(".ui-auto-complete", container).each (index, el) ->
       forAttr = $(el).attr("for")
       idEl = $("##{forAttr}") if forAttr
       ac = new AutoCompleteUtil
@@ -121,16 +121,14 @@ $.util =
   createTreeData: (itemOrderList, opts) ->
     TreeViewUtil.createData(itemOrderList, opts)
 
-  setupAutoCompleteInput: (sel) ->
-    AutoCompleteUtil.setupAutoCompleteInput(sel)
 
   # <%= f.input :category_name, input_html: { class: "ui-tree-input",
   #   data: {
   #     cmd: "select-category",
   #     tree: @categories_all.to_json
   #   } %>
-  setupTreeInput: (sel) ->
-    $(sel).each (index, el) ->
+  treeInput: (sel, container) ->
+    $(sel, container).each (index, el) ->
       $(el).attr("autocomplete", "off")
       menu = root.cmdUI.createMenu $(el).data("cmd"), $(el).data("tree"),
         id: "code"
@@ -246,10 +244,6 @@ $.util =
           if dlgProc.ok?
             dlgProc.ok(dlg)
 
-  markCheckedCollectionItem: (inputDiv) ->
-    $("span.checkbox input[type=checkbox].check_boxes:checked+label.collection_check_boxes",
-      inputDiv).addClass("selected")
-
   datepicker: (el) ->
     $(el).datepicker
       altFormat: "yy-mm-dd"     # rails want it
@@ -260,13 +254,8 @@ $.util =
     $(el).datepicker("option", "dateFormat", dateFormat)
     $(el).datepicker($.datepicker.regional["zh-CN"])
 
-  setupDatePicker: () ->
-    self = @
-    $("input.date.datepicker").each (index, el) ->
-      self.datepicker el
-
-  setupUIGroupCheckbox: (checkbox_sel) ->
-    $(checkbox_sel).each (_, cb) ->
+  initUIGroupCheckbox: (container) ->
+    $("input.ui-group-checkbox[type=checkbox]", container).each (_, cb) ->
       checked = $(cb).is(":checked")
       followers = $(cb).attr("for")
       $(cb).siblings(followers).each (_, el) ->
@@ -276,16 +265,68 @@ $.util =
         $(cb).siblings(followers).each (_, el) ->
           $(el).attr("disabled", !checked)
 
-  initAlertBox: () ->
-    $(".alert button.close").click () ->
-      $(this).closest('.alert').remove()
+  # simple usage:
+  # $.util.init()
+  init: (option, container) ->
+    if option
+      fn = @initializors[option]
+      if fn
+        fn.call(container)
+      else
+        console.log "invalid option: #{option}"
+        return false
+    else
+      for opt, fn of @initializors
+        if opt.indexOf(":") < 0 && fn
+          fn.call(container)
+    return true
 
-$ ->
-  $.util.initCmdUI()
-  $.util.initAlertBox()
-  $.util.setupDatePicker()
-  $.util.setupAutoCompleteInput(".ui-auto-complete")
-  $.util.setupTreeInput("input.ui-tree-input")
-  $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
-  $.util.setupUIGroupCheckbox("input.ui-group-checkbox[type=checkbox]")
+  initializors:
+    "cmd-ui": (container) ->
+      root.cmdUI.init(null, container)
+
+    "cmd-ui:anchor": (container) ->
+      root.cmdUI.init("cmd-ui:anchor", container)
+
+    "cmd-ui:toolbar": (container) ->
+      root.cmdUI.init("cmd-ui:toolbar", container)
+
+    "cmd-ui:popup-menu": (container) ->
+      root.cmdUI.init("cmd-ui:popup-menu", container)
+
+    "alert-box": (container) ->
+      $(".alert button.close", container).click () ->
+        $(this).closest('.alert').remove()
+      return true
+
+    "datapicker": (container) ->
+      self = $.util
+      $("input.date.datepicker", container).each (index, el) ->
+        self.datepicker el
+      return true
+
+    "ui-auto-complete": (container) ->
+      AutoCompleteUtil.setupAutoCompleteInput(container)
+      return true
+
+    "ui-tree-input": (container) ->
+      $.util.treeInput("input.ui-tree-input", container)
+      return true
+
+    "ui-selected-mark-collection": (container = "div.input.ui-selected-mark") ->
+      $("span.checkbox input[type=checkbox].check_boxes:checked+label.collection_check_boxes",
+        container).addClass("selected")
+      return true
+
+    # for("input.ui-group-checkbox[type=checkbox]"
+    "ui-group-checkbox": (container) ->
+      $.util.initUIGroupCheckbox(container)
+      return true
+
+#$->
+# $.util.init()
+# $.util.setupAutoCompleteInput(".ui-auto-complete")
+# $.util.setupTreeInput("input.ui-tree-input")
+# $.util.markCheckedCollectionItem("div.input.ui-selected-mark")
+# $.util.setupUIGroupCheckbox("input.ui-group-checkbox[type=checkbox]")
 
