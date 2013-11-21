@@ -52,10 +52,11 @@ root.moveDivToRB = (div, el) ->
     top: posTo.top + $(el).height() - pos.top
   console.log "new:", $(div).offset()
 
-$ ->
-  console.log "product start"
-  $("form#new_product select#product_color").simplecolorpicker({picker: true})
+class ProductPage
+  onLoad: () ->
+    $("form#new_product select#product_color").simplecolorpicker
+      picker: true
+    moveDivToRB("div.setup-container", "div#setup-place")
+    $("#products-setup").hide()
 
-  moveDivToRB("div.setup-container", "div#setup-place")
-  $("#products-setup").hide()
-
+root.ProductPage = ProductPage

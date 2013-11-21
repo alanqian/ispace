@@ -4,12 +4,3 @@
 #
 root = exports ? this
 
-$ ->
-  console.log "brands.js start"
-  # inplace-edit init
-  # setDataTableListUI() # mv to app.js
-
-  # notes for simple color picker
-  # $('select.colorpicker').simplecolorpicker({picker: true})
-  # simplecolorpicker("destroy")
-

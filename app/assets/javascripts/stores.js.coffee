@@ -4,59 +4,6 @@
 
 root = exports ? this
 
-root.onSetRefStoreId = (el) ->
-  if $("input:checked[name='stores[]']").length == 0
-    alert "请先选中要设置的门店，再进行设置"
-  else
-    store_id = $(el).data("id")
-    $("input[name='store[ref_store_id]']").val(store_id)
-    $("form#set-model-stores-form").submit()
-  return true
-
-root.onSelectStoreFixtureCategory = (el) ->
-  category_id = $(el).data("id")
-  category_name = $(el).text()
-  src = "#" + $(el).data("src-element")
-  tr = $(src).closest("tr")
-  root.page.updateCategory(tr, category_id, category_name)
-
-root.onRemoveStoreFixture = (el) ->
-  console.log "removeStoreFixture", el
-  # set _destroy to true
-  $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
-
-  # update span.visiblity of next row
-  tr = $(el).closest("tr")
-  span = $("td:first>span.category_mid", tr)
-  visible = !span.hasClass("hide")
-  next_tr = tr.nextAll("tr").first()
-  if visible && next_tr.length > 0
-    # visible next row
-    span = $("td:first>span.category_mid", next_tr)
-    span.removeClass("hide")
-
-  # move to deleted area
-  tr.appendTo($("tbody#deleted"))
-  return true
-
-root.onAddStoreFixture = (el) ->
-  console.log "addStoreFixture", el
-  tr = $(el).closest("tr")
-  if $("tbody#store_fixture_list tr").length == 0
-    root.onAddStoreFixtureAll(tr)
-  else
-    root.page.createStoreFixtureRow(tr)
-  return true
-
-root.onAddStoreFixtureAll = (tr) ->
-  $("body").css("cursor", "progress")
-  nodes = root.page.getCategoryLeafNodes()
-  for id, node of nodes
-    tr = root.page.createStoreFixtureRow(tr)
-    root.page.updateCategory(tr, id, node.name)
-  $("body").css("cursor", "auto")
-  return true
-
 class StorePage
   action: ""
   _do: ""
@@ -89,6 +36,59 @@ class StorePage
     #  root.addStoreFixture(e, this)
     #  return false
 
+  onSetRefStoreId = (el) ->
+    if $("input:checked[name='stores[]']").length == 0
+      alert "请先选中要设置的门店，再进行设置"
+    else
+      store_id = $(el).data("id")
+      $("input[name='store[ref_store_id]']").val(store_id)
+      $("form#set-model-stores-form").submit()
+    return true
+
+  onSelectStoreFixtureCategory = (el) ->
+    category_id = $(el).data("id")
+    category_name = $(el).text()
+    src = "#" + $(el).data("src-element")
+    tr = $(src).closest("tr")
+    @updateCategory(tr, category_id, category_name)
+
+  onRemoveStoreFixture = (el) ->
+    console.log "removeStoreFixture", el
+    # set _destroy to true
+    $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
+
+    # update span.visiblity of next row
+    tr = $(el).closest("tr")
+    span = $("td:first>span.category_mid", tr)
+    visible = !span.hasClass("hide")
+    next_tr = tr.nextAll("tr").first()
+    if visible && next_tr.length > 0
+      # visible next row
+      span = $("td:first>span.category_mid", next_tr)
+      span.removeClass("hide")
+
+    # move to deleted area
+    tr.appendTo($("tbody#deleted"))
+    return true
+
+  onAddStoreFixture = (el) ->
+    console.log "addStoreFixture", el
+    tr = $(el).closest("tr")
+    if $("tbody#store_fixture_list tr").length == 0
+      @onAddStoreFixtureAll(tr)
+    else
+      @createStoreFixtureRow(tr)
+    return true
+
+  onAddStoreFixtureAll = (tr) ->
+    $("body").css("cursor", "progress")
+    nodes = @getCategoryLeafNodes()
+    for id, node of nodes
+      tr = @createStoreFixtureRow(tr)
+      @updateCategory(tr, id, node.name)
+    $("body").css("cursor", "auto")
+    return true
+
   getCategoryDict: () ->
     $("#category_dict").data("dict")
 
@@ -102,9 +102,9 @@ class StorePage
     return leaves
 
   createStoreFixtureRow: (tr) ->
-    new_index = root.page.new_sf_index.toString()
+    new_index = @new_sf_index.toString()
     new_id = "new_store_fixture_#{new_index}"
-    root.page.new_sf_index++
+    @new_sf_index++
     # replace new_sf_index
     re = new RegExp("new_sf_index", "g")
     src = $("#template tbody").html().replace("\\n", "").replace(re, new_index)
@@ -117,9 +117,9 @@ class StorePage
       new_tr = $(src).insertAfter(tr).attr("id", new_id)
 
     # initialize js
-    root.cmdUI.initCmdUIAnchor()
-    $.util.setupTreeInput("##{new_id} input.category-name")
-    $.util.setupUIGroupCheckbox("##{new_id} input.ui-group-checkbox")
+    $.util.init("cmd-ui:anchor", new_tr) # for remove anchor
+    $.util.init("ui-tree-input", new_tr) # "##{new_id} input.category-name")
+    $.util.init("ui-group-checkbox", new_tr) #setupUIGroupCheckbox("##{new_id} input.ui-group-checkbox")
     new_tr
 
   updateCategory: (tr, category_id, category_name) ->
@@ -158,7 +158,3 @@ class StorePage
     return true
 
 root.StorePage = StorePage
-
-$ ->
-  $.util.onPageLoad()
-

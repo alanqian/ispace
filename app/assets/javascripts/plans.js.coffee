@@ -1212,7 +1212,3 @@ class PlanPage
     $("#menu").menu().hide()
 
 root.PlanPage = PlanPage
-
-$ ->
-  $.util.onPageLoad()
-

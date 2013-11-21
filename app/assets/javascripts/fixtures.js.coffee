@@ -118,8 +118,10 @@ root.updateControls = (updateMetricOnly) ->
     $("td.fixture_item select", container).change updateFixtureMetrics
   updateFixtureMetrics()
 
-$ ->
-  setFixture = ->
+class FixturePage
+  fixture: null
+
+  setFixture: () ->
     window.fixture = {
       active: -1,
       newIndex: $("td.fixture_item").parent().length + 10,
@@ -135,24 +137,32 @@ $ ->
         return @active
     }
 
-  console.log "fixture editor start..."
-  $("form[data-disabled=true]").each (index, form) ->
-    $(":input[type!=hidden]", form).attr("disabled", true)
-    $("input.enable_form", form).attr("disabled", false)
-    $("input.enable_form").click (e) ->
-      e.preventDefault()
-      $(":input[type!=hidden]", form).attr("disabled", false)
-      $(this).hide()
+  onLoadNew: () ->
+    @loadEditor()
 
-  if $("#fixture_metrics").length > 0
-    window.bays = $("#fixture_metrics").data("bays")
-    console.log "#{Object.keys(window.bays).length} bays in system"
+  onLoadEdit: () ->
+    @loadEditor()
 
-    # move template outside of the form
-    $("form").after($("#template"))
-    setFixture()
-    updateControls(false)
-  else
-    console.log "no bays"
-  console.log "fixture editor loaded."
+  loadEditor: () ->
+    console.log "fixture editor start..."
+    $("form[data-disabled=true]").each (index, form) ->
+      $(":input[type!=hidden]", form).attr("disabled", true)
+      $("input.enable_form", form).attr("disabled", false)
+      $("input.enable_form").click (e) ->
+        e.preventDefault()
+        $(":input[type!=hidden]", form).attr("disabled", false)
+        $(this).hide()
 
+    if $("#fixture_metrics").length > 0
+      window.bays = $("#fixture_metrics").data("bays")
+      console.log "#{Object.keys(window.bays).length} bays in system"
+
+      # move template outside of the form
+      $("form").after($("#template"))
+      @setFixture()
+      updateControls(false)
+    else
+      console.log "no bays"
+    console.log "fixture editor loaded."
+
+root.FixturePage = FixturePage
