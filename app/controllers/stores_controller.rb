@@ -46,7 +46,7 @@ class StoresController < ApplicationController
     @store = Store.new(store_params)
     respond_to do |format|
       if @store.save
-        format.html { redirect_to @store, notice: simple_notice }
+        format.html { redirect_to stores_path, notice: simple_notice(store: @store.name) }
         format.json { render action: 'show', status: :created, location: @store }
       else
         format.html { render action: 'new' }
@@ -75,7 +75,10 @@ class StoresController < ApplicationController
   def update_default
     respond_to do |format|
       if @store.update(store_params)
-        format.html { redirect_to edit_store_path(@store, _do: @do), notice: simple_notice }
+        format.html {
+          redirect_to edit_store_path(@store, _do: @do),
+          notice: simple_notice(store: @store.name)
+        }
         format.json { head :no_content }
         format.js { set_store_update_js }
       else

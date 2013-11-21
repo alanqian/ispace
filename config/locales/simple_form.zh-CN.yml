@@ -107,11 +107,14 @@ zh-CN:
         index: 用户管理
     notices:
       store:
-        update: 门店信息更新完毕
-        create: 成功创建了一个门店
+        update: 门店#{store}信息更新完毕
+        create: 新建了一个门店%{store}
         update_model_store: 样板店设置成功，继续操作
         update_model_store_fail: 样板店设置失败！
         update_fixture: 成功设置样板店货架！
+      bay:
+        create: 创建了货备%{bay}
+        update: 修改了货备%{bay}
 
     required:
       text: 'required'
@@ -153,6 +156,18 @@ zh-CN:
         name: 规划名称
         note: 填写本规划的说明，部署的要求等等；此处说明内容会打印在给门店的规划书的扉页
         category_name: 品类
+      bay:
+        name: 货备名称，如：120x7层板
+        open_shelves:
+          name: 隔板
+        peg_boards:
+          name: 钉板
+        freezer_chests:
+          name: 腔体(冷藏柜)
+        rear_support_bars:
+          name: 后支撑条
+        heaps:
+          name: 堆头
 
     options:
       # struct:: model/field/option: message
