@@ -622,8 +622,10 @@ class PlanEditor
           this.fixture_item_id = -1
           this.layer = -1
           this.seq_num = -1
-          this.facing = 0
-          this.width_units = 0
+          # DON'T clear facing/width_units, will cause drag/drop bug:
+          #   failed to get facing
+          # this.facing = 0
+          # this.width_units = 0
         setPlace: (fixture_item_id, layer, seq_num, product) ->
           this.fixture_item_id = fixture_item_id
           this.layer = layer
