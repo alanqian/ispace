@@ -51,6 +51,7 @@ class BrandsController < ApplicationController
   def index
     category_id = params[:category] || Category.default_id
     @brands = Brand.where(["category_id=?", category_id])
+    @categories_all = Category.all.order(:code)
     brand_new = Brand.new(category_id: category_id)
     render 'index', locals: { categories: Category.all, brand_new: brand_new }
   end

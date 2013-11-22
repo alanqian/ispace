@@ -4,3 +4,11 @@
 #
 root = exports ? this
 
+root.onSelectCategory = (el) ->
+  name = $(el).text()
+  input = $("#brand_category_name")
+  input.val(name)
+  id = $(el).data("id")
+  if id
+    window.location = $(input).data("url") + id
+  return true

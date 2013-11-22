@@ -6,7 +6,7 @@ class Category < ActiveRecord::Base
   before_save :update_redundancy
 
   def self.default_id
-    first = self.all().first
+    first = self.where("length(code) > 4").first
     if first
       first.id
     else
