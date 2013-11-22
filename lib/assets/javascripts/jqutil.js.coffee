@@ -193,6 +193,9 @@ $.util =
   addCmdDelegate: (object) ->
     root.cmdUI.addDelegate(object)
 
+  execCmd: (cmd) ->
+    root.cmdUI.exec(cmd)
+
   popupMenu: (menuSel, el) ->
     root.cmdUI.popupMenu(menuSel, el)
 
