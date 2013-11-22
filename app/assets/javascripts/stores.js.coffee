@@ -36,7 +36,7 @@ class StorePage
     #  root.addStoreFixture(e, this)
     #  return false
 
-  onSetRefStoreId = (el) ->
+  onSetRefStoreId: (el) ->
     if $("input:checked[name='stores[]']").length == 0
       alert "请先选中要设置的门店，再进行设置"
     else
@@ -45,14 +45,14 @@ class StorePage
       $("form#set-model-stores-form").submit()
     return true
 
-  onSelectStoreFixtureCategory = (el) ->
+  onSelectStoreFixtureCategory: (el) ->
     category_id = $(el).data("id")
     category_name = $(el).text()
     src = "#" + $(el).data("src-element")
     tr = $(src).closest("tr")
     @updateCategory(tr, category_id, category_name)
 
-  onRemoveStoreFixture = (el) ->
+  onRemoveStoreFixture: (el) ->
     console.log "removeStoreFixture", el
     # set _destroy to true
     $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
@@ -71,16 +71,17 @@ class StorePage
     tr.appendTo($("tbody#deleted"))
     return true
 
-  onAddStoreFixture = (el) ->
+  onAddStoreFixture: (el) ->
     console.log "addStoreFixture", el
     tr = $(el).closest("tr")
     if $("tbody#store_fixture_list tr").length == 0
-      @onAddStoreFixtureAll(tr)
+      # @onAddStoreFixtureAll(tr)
+      @createStoreFixtureRow(tr)
     else
       @createStoreFixtureRow(tr)
     return true
 
-  onAddStoreFixtureAll = (tr) ->
+  onAddStoreFixtureAll: (tr) ->
     $("body").css("cursor", "progress")
     nodes = @getCategoryLeafNodes()
     for id, node of nodes

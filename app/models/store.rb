@@ -29,19 +29,21 @@ class Store < ActiveRecord::Base
       return false if that.ref_store_id != that.id
 
       # store ref_store_id, is a model_store at first
-      logger.debug "filter stores"
-      # choose stores which is NOT model store itself and not ref to THAT
-      stores = self.where(id: stores_param).where(["ref_store_id IS NULL OR ref_store_id != ?", ref_store_id]).
-        where(["ref_store_id IS NULL OR ref_store_id != id"]).select(:id, :ref_store_id)
+      logger.debug "filter stores, stores:#{stores_param.to_json}"
+      # choose stores which is NOT TRUE model store itself and not ref to THAT
+      stores = self.where(id: stores_param).
+        where(["ref_store_id IS NULL OR ref_store_id != ?", ref_store_id]).
+        where(["ref_store_id IS NULL OR ref_store_id != id OR ref_count = 1"]).
+        select(:id, :ref_store_id)
 
       # decrement ref_count for ref store
-      logger.debug "dec ref_count"
+      logger.debug "dec ref_count, stores:#{stores.to_json}"
       stores.each do |store|
         self.decrement_counter(:ref_count, store.ref_store_id) if store.ref_store_id
       end
 
       # set ref_store
-      logger.debug "set ref_store_id"
+      logger.debug "set ref_store_id, stores:#{stores.to_json}"
       list = stores.map { |store| store.id }
       self.where(id: list).update_all(ref_store_id: ref_store_id)
 
@@ -54,8 +56,10 @@ class Store < ActiveRecord::Base
       stores = self.where(["ref_store_id IS NULL OR ref_store_id != id"]).where(id: stores_param).select(:id, :ref_store_id)
       logger.info "modify stores as model_store, #{stores.to_json}"
       stores.each do |store|
-        store.update_columns(ref_store_id: store.id, ref_count: 1)
+        # dec ref_count of refer_to
         self.decrement_counter(:ref_count, store.ref_store_id) if store.ref_store_id
+        # set self
+        store.update_columns(ref_store_id: store.id, ref_count: 1)
       end
       true
     else
