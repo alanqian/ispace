@@ -34,6 +34,7 @@ class PlanSet < ActiveRecord::Base
           plan_set_id: self.id,
           category_id: self.category_id,
           store_id: store_id,
+          user_id: self.user_id,
         })
         self.plans << plan
         update_recent_plan(plan)
