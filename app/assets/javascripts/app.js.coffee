@@ -852,7 +852,7 @@ $ ->
     filterDiv = $("##{table.id}-filter")
     filterDiv = $("#dataTable-filter") if filterDiv.length == 0
     if filterDiv.length > 0
-      filterDiv.children().appendTo("div#{wrapper} div.top div#data_filter")
+      $("div#{wrapper} div.top div#data_filter").append filterDiv.children()
     return true
 
   # resizable, tabs, tabs-bottom, ...

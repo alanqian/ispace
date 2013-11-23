@@ -366,17 +366,33 @@ div.dataTables_wrapper {
   border-radius: 5px;
 
   div.top {
-    #data_filter {
-      display: inline-block;
+    div#data_filter {
+      a {
+        display: inline-block;
+        margin: 0.5em 0 0 0;
+      }
       float: left;
       padding-top: 0;
-      margin: 7px 4px 0px 4px;
+      margin: 0px 4px 0px 4px;
       //background-color: red;
-      div {
-        display: inline-block;
-      }
-      div.input {
-        float: left;
+      form {
+        div {
+          display: inline-block;
+        }
+        div.input {
+          float: left;
+          display: inline-block;
+          margin-right: 0.5em;
+          label {
+            min-width: 2.4em;
+          }
+          label>abbr {
+            display: none;
+          }
+          input[type=text] {
+            width: 8em;
+          }
+        }
       }
     }
 
@@ -387,10 +403,6 @@ div.dataTables_wrapper {
     }
 
     .dataTables_paginate {
-      padding-top: 0;
-    }
-
-    .dataTables_filter {
       padding-top: 0;
     }
   }
