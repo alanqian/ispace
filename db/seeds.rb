@@ -13,89 +13,11 @@
 
 require 'csv'
 
-def import_from_csv(table)
-  CSV.foreach("db/csvs/#{table}.csv", headers: true) do |row|
-    table.singularize.capitalize.constantize.create! row.to_hash
-  end
-end
-
-Store.delete_all
-import_from_csv('stores')
-
-Category.delete_all
-import_from_csv('categories')
-
-Product.delete_all
-import_from_csv('products')
-
-Sale.delete_all
-import_from_csv('sales')
-
-
 Bay.delete_all
 OpenShelf.delete_all
 PegBoard.delete_all
 FreezerChest.delete_all
 RearSupportBar.delete_all
-
-# create template open_shelf
-OpenShelf.create(
-  bay_id: -1,
-  name: "shelf ",
-  height: 20.0,
-  width: 120.0,
-  depth: 50.0,
-  thick: 1.0,
-  slope: 0.0,
-  riser: 0.0,
-  notch_num: 1,
-  from_base: 1.0,
-  color: '#ffffff',
-  from_back: 0.0,
-  finger_space: 0.0,
-  x_position: 0.0,
-  level: -1,
-)
-PegBoard.create(
-  bay_id: -1,
-  name: "Pegboard ",
-  height: 200.0,
-  depth: 30.0,
-  vert_space: 6.0,
-  horz_space: 6.0,
-  vert_start: 6.0,
-  horz_start: 6.0,
-  notch_num: 1,
-  from_base: 1.0,
-  color: '#dfdfdf',
-  level: -1,
-)
-FreezerChest.create(
-  bay_id: -1,
-  name: 'Chest',
-  height: 90.0,
-  depth: 100.0,
-  wall_thick: 4.0,
-  inside_height: 80.0,
-  merch_height: 70.0,
-  color: '#ffff',
-  level: -1,
-)
-RearSupportBar.create(
-  bay_id: -1,
-  name: "Bar ",
-  height: 30.0,
-  bar_depth: 4.0,
-  bar_thick: 4.0,
-  from_back: 45.0,
-  hook_length: 40.0,
-  notch_num: 20,
-  from_base: 80.0,
-  color: '#ff007f',
-  bar_slope: 0.0,
-  level: -1,
-)
-
 
 # create Bay '120*7层板',
 bay = Bay.create(
@@ -120,7 +42,7 @@ level = 1
 [1.0, 27.0, 53.0, 79.0, 105.0, 131.0, 157.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    name: "shelf #{level}",
+    name: "#{level}.隔板",
     height: 20.0,
     width: 120.0,
     depth: 46.0,
@@ -157,7 +79,7 @@ level = 1
 [1.0, 23.0, 45.0, 67.0, 89.0, 111.0, 133.0, 155.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    name: "shelf #{level}",
+    name: "#{level}.隔板",
     height: 20.0,
     width: 120.0,
     depth: 50.0,
@@ -192,7 +114,7 @@ level = 1
 [1.0, 23.0, 45.0, 67.0, 89.0, 111.0, 133.0, 155.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    name: "shelf #{level}",
+    name: "#{level}.隔板",
     height: 20.0,
     width: 60.0,
     depth: 50.0,
@@ -227,7 +149,7 @@ level = 1
 [1.0, 27.0, 53.0, 79.0, 105.0, 131.0, 157.0].each do |from_base|
   OpenShelf.create(
     bay_id: bay.id,
-    name: "shelf #{level}",
+    name: "#{level}.隔板",
     height: 20.0,
     width: 60.0,
     depth: 48.0,
@@ -247,7 +169,7 @@ end
 
 # peg board
 bay = Bay.create(
-    name: 'Peg board',
+    name: '钉板+133板',
     back_height: 200.0,
     back_width: 133.0,
     back_thick: 4.0,
@@ -262,7 +184,7 @@ bay = Bay.create(
 level = 1
 OpenShelf.create(
   bay_id: bay.id,
-  name: "shelf #{level}",
+  name: "#{level}.隔板",
   height: 30.0,
   width: 133.0,
   depth: 60.0,
@@ -281,22 +203,22 @@ level += 1
 # ???: some errors in peg board
 PegBoard.create(
   bay_id: bay.id,
-  name: "Pegboard #{level}",
+  name: "#{level}.钉板",
   height: 200.0,
   depth: 30.0,
   vert_space: 6.0,
   horz_space: 6.0,
   vert_start: 6.0,
   horz_start: 6.0,
-  notch_num: 9,
-  from_base: bay.notch_to(9),
+  notch_num: 50,
+  from_base: bay.notch_to(50),
   color: '#dfdfdf',
   level: level,
 )
 
 # hanging bars
 bay = Bay.create(
-  name: 'Hanging bars',
+  name: '133挂条',
   back_height: 200.0,
   back_width: 133.0,
   back_thick: 4.0,
@@ -311,7 +233,7 @@ bay = Bay.create(
 level = 1
 OpenShelf.create(
   bay_id: bay.id,
-  name: "shelf #{level}",
+  name: "#{level}.隔板",
   height: 30.0,
   width: 133.0,
   depth: 60.0,
@@ -330,7 +252,7 @@ OpenShelf.create(
   level += 1
   RearSupportBar.create(
     bay_id: bay.id,
-    name: "Bar #{level}",
+    name: "#{level}.后支撑条",
     height: height,
     bar_depth: 4.0,
     bar_thick: 4.0,
@@ -346,7 +268,7 @@ end
 
 # create Bay 'Freezer with shelves',
 bay = Bay.create(
-  name: 'Freezer with shelves',
+  name: '133板+冷藏柜',
   back_height: 200.0,
   back_width: 133.0,
   back_thick: 4.0,
@@ -360,7 +282,7 @@ bay = Bay.create(
 )
 FreezerChest.create(
   bay_id: bay.id,
-  name: 'Chest',
+  name: '冷藏柜',
   height: 90.0,
   depth: 100.0,
   wall_thick: 4.0,
@@ -387,6 +309,11 @@ FreezerChest.create(
     x_position: 0.0,
     level: level,
   )
+end
+
+# to update metrics of each bay
+Bay.all.each do |bay|
+  bay.save!
 end
 
 #####################################################################
@@ -449,6 +376,25 @@ fixture_item = FixtureItem.create(
   continuous: true,
 )
 
+__END__
+
+def import_from_csv(table)
+  CSV.foreach("db/csvs/#{table}.csv", headers: true) do |row|
+    table.singularize.capitalize.constantize.create! row.to_hash
+  end
+end
+
+Store.delete_all
+import_from_csv('stores')
+
+Category.delete_all
+import_from_csv('categories')
+
+Product.delete_all
+import_from_csv('products')
+
+Sale.delete_all
+import_from_csv('sales')
 
 #####################################################################
 # basic admin data
@@ -484,7 +430,6 @@ User.create(
   store_id: store.id,
   role: 'salesman'
 )
-__END__
 
 Category.delete_all
 Category.create(
