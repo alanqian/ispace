@@ -121,28 +121,36 @@ $.util =
   createTreeData: (itemOrderList, opts) ->
     TreeViewUtil.createData(itemOrderList, opts)
 
-
-  # <%= f.input :category_name, input_html: { class: "ui-tree-input",
-  #   data: {
-  #     cmd: "select-category",
-  #     tree: @categories_all.to_json
-  #   } %>
+  # <%= f.input :category_id, as: :tree, cmd: "do-something" %>
+  # <%= tree_input_menu "do-something", tree_list_as_json %>
+  # or, <%= category_menu "do-something" %>
   treeInput: (sel, container) ->
     $(sel, container).each (index, el) ->
+      # make a patch to avoid auto complete confuse in UI
       $(el).attr("autocomplete", "off")
-      menu = root.cmdUI.createMenu $(el).data("cmd"), $(el).data("tree"),
-        id: "code"
-        parent: "parent_id"
-        label: "name"
-        rootId: null
-        dom: "body"
-        srcElement: el.id
-      $(el).data("uiTreeMenu", menu)
+      cmdId = $(el).data("cmd")
+      menu = root.cmdUI.findMenu(cmdId)
+      # if menu not been found, then load menu from the tree-data
+      if !menu
+        tree = $(el).data("tree") ||
+          $("div.ui-tree-input-menu[data-cmd='#{cmdId}']").data("tree")
+        if tree
+          menu = root.cmdUI.createMenu cmdId, tree,
+            id: "code"
+            parent: "parent_id"
+            label: "name"
+            rootId: null
+      if menu == null
+        console.log "cannot load menu: #{cmdId}"
+        return false
+
+      # install click handler
       $(el).click (e) ->
         e.stopPropagation()
-        menu = $(this).data("uiTreeMenu")
         root.cmdUI.popupMenuSelect menu,
           right: this
+          srcElement: this.id
+      return true
 
   initCmdUI: () ->
     root.cmdUI.init()
@@ -193,8 +201,8 @@ $.util =
   addCmdDelegate: (object) ->
     root.cmdUI.addDelegate(object)
 
-  execCmd: (cmd) ->
-    root.cmdUI.exec(cmd)
+  execCmd: (cmd, el) ->
+    root.cmdUI.exec(cmd, el)
 
   popupMenu: (menuSel, el) ->
     root.cmdUI.popupMenu(menuSel, el)
@@ -271,17 +279,18 @@ $.util =
   # simple usage:
   # $.util.init()
   init: (option, container) ->
+    self = @
     if option
       fn = @initializors[option]
       if fn
-        fn.call(container)
+        fn.call(self, container)
       else
         console.log "invalid option: #{option}"
         return false
     else
       for opt, fn of @initializors
         if opt.indexOf(":") < 0 && fn
-          fn.call(container)
+          fn.call(self, container)
     return true
 
   initializors:

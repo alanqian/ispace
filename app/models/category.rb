@@ -14,6 +14,22 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.tree
+    self.all.order(:code).select(:code, :parent_id, :name)
+  end
+
+  def self.nodes
+    self.where("length(code) >= 5").order(:code).select(:code, :parent_id)
+  end
+
+  def upper_code
+    self.code[0..code.length-2]
+  end
+
+  def self.upper_code(code)
+    code[0..code.length-2]
+  end
+
   #TODO: validate parent_id
   # validates_associated :parent_id, if: "code.length<3"
 

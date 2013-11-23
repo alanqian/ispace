@@ -29,8 +29,8 @@ class CmdUI
   send: (cmdId) ->
     $("##{cmdId}").click()
 
-  exec: (cmdId) ->
-    handle(cmdId, null)
+  exec: (cmdId, el) ->
+    @handle(cmdId, el)
 
   handle: (id, el) ->
     test = {}
@@ -115,6 +115,8 @@ class CmdUI
     $(ul).width($(ul).data("maxChild")+ self.menuItemPadding)
 
   showMenu: (menu, opts) ->
+    # hide all other menu visible
+    $("ul.ui-menu[role='menu']").hide()
     pos =
       of: opts.under || opts.above || opts.left || opts.right
     if opts.under
@@ -134,15 +136,33 @@ class CmdUI
       console.log "hide popup menu by", this
       menu.hide()
 
-  createMenu: (menuId, itemOrderList, opts) ->
+  exists: (elementId) ->
+    return document.getElementById(elementId) != null
+
+  getMenuId: (cmdId) ->
+    "ui-cmd-menu-#{cmdId}"
+
+  findMenu: (cmdId) ->
+    menuId = @getMenuId(cmdId)
+    return document.getElementById(menuId)
+
+  destoryMenu: (cmdId) ->
+    menuId = @getMenuId(cmdId)
+    $("##{menuId}").remove()
+
+  createMenu: (cmdId, itemOrderList, opts) ->
     idField = opts.id
     parentIdField = opts.parent
     labelField = opts.label
 
     root = {}
+    menu = @findMenu(cmdId)
+    return menu if menu != null
+
+    menuId = @getMenuId(cmdId)
     root[idField] = opts.rootId
     root[parentIdField] = null
-    root.ul = $("<ul id='#{menuId}'></ul>").appendTo(opts.dom)
+    root.ul = $("<ul id='#{menuId}' data-id='#{cmdId}'></ul>").appendTo(document.body)
     parents = [root]
     for item in itemOrderList
       id = item[idField]
@@ -150,30 +170,33 @@ class CmdUI
       # find parent item
       # console.log "append item", item
       parent = null
-      while node = parents.pop()
+      while parent == null && node = parents.pop()
         if node[idField] == parentId
           parent = node
-          break
       if parent == null
-        console.log "Invalid parent id error:", item
+        console.log "Invalid parent id error:", item, itemOrderList
         return null
       else
         parents.push parent
         parents.push item
         parent.ul ||= $("<ul></ul").appendTo(parent.li)
-        item.li = $("<li></li>").append("<a data-id='#{id}' data-src-element='#{opts['srcElement']}'>#{item[labelField]}</a>").appendTo(parent.ul)
+        item.li = $("<li></li>").append("<a data-id='#{id}'>#{item[labelField]}</a>").appendTo(parent.ul)
     @setMenuItemWidth(root.ul)
     root.ul.hide()
-    return root.ul
+    return root.ul[0]
 
-  popupMenuSelect: (menuSel, opts) ->
+  popupMenuSelect: (el, opts) ->
+    $menu = $(el)
     self = @
-    id = $(menuSel).attr("id")
-    menu = $(menuSel).menu
+    id = $menu.data("id")
+    srcElement = opts.srcElement
+    menu = $menu.menu
       select: (e, ui) ->
-        anchor = ui.item.find("a")[0]
-        self.handle(id, anchor)
-        $(menuSel).hide()
+        $anchor = ui.item.find("a:first-child")
+        if srcElement
+          $anchor.data("src-element", srcElement)
+        self.handle(id, $anchor[0])
+        $menu.hide()
     @showMenu(menu, opts)
 
   popupMenu: (menuSel, opts) ->

@@ -693,6 +693,21 @@ root.onDataTableCategoryChange = (event, el)->
   if $(el).val() != ""
     window.location = $(el).data("url") + $(el).val()
 
+root.onSelectCategory = (el) ->
+  id = $(el).data("id")
+  name = $(el).text()
+  $inputName = $("#" + $(el).data("src-element"))
+  dataType = $inputName.data("type")
+  $inputName.data("id", id)
+  $inputName.val(name)
+
+  inputId = $inputName.prev "input[type=hidden][data-type=#{dataType}]"
+  if inputId.length > 0
+    inputId.val(id)
+    inputId.data("name", name)
+    $.util.execCmd("category-changed", inputId[0])
+  return true
+
 root.onClickSelectAll = (e, el) ->
   target = $(el).data("target")
   if target
