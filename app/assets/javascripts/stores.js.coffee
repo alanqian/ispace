@@ -45,20 +45,32 @@ class StorePage
       $("form#set-model-stores-form").submit()
     return true
 
-  onSelectStoreFixtureCategory: (el) ->
-    category_id = $(el).data("id")
-    category_name = $(el).text()
-    src = "#" + $(el).data("src-element")
-    tr = $(src).closest("tr")
+  onCategoryChanged: (el) ->
+    category_id = $(el).val()
+    category_name = $(el).data("name")
+    tr = $(el).closest("tr")
     @updateCategory(tr, category_id, category_name)
+    return true
+
+  onRemoveStoreNullFixture: (el) ->
+    self = @
+    $("tbody#store_fixture_list tr").each (index, tr) ->
+      fixture_id = $("select[name$='[fixture_id]']", tr).val()
+      fixture_code = $("input[name$='[code]']", tr).val()
+      if fixture_id == "" && fixture_code == ""
+        self.removeStoreFixture $(tr)
+      return true
+    return true
 
   onRemoveStoreFixture: (el) ->
     console.log "removeStoreFixture", el
     # set _destroy to true
     $(el).siblings("input[type=hidden][name$='[_destroy]']").val("1")
+    tr = $(el).closest("tr")
+    @removeStoreFixture(tr)
 
     # update span.visiblity of next row
-    tr = $(el).closest("tr")
+  removeStoreFixture: (tr) ->
     span = $("td:first>span.category_mid", tr)
     visible = !span.hasClass("hide")
     next_tr = tr.nextAll("tr").first()

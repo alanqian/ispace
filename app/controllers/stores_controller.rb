@@ -37,6 +37,16 @@ class StoresController < ApplicationController
       @new_store_fixture = StoreFixture.new(store_id: @store.id)
       @fixtures_all = Fixture.all
       @categories_all = Category.all.select(:code, :parent_id, :name)
+      if @store.store_fixtures.empty?
+        @store.rebuild_all_fixtures
+      else
+        prev_parent_id = nil
+        @store.store_fixtures.each do |sf|
+          parent_id = Category.upper_code(sf.category_id)
+          sf.show_up_dir = (parent_id != prev_parent_id)
+          prev_parent_id = parent_id
+        end
+      end
     end
   end
 

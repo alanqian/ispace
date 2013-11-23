@@ -3,14 +3,8 @@
     <span data-id="<%= parent_id %>" class="category_mid <%= hide_class %>"><%= upper_category %></span>
   </td>
   <td>
-    <%= f.input_field :category_id, as: :hidden, class: "category_id" %>
-    <%= f.input_field :category_name,
-      class: "ui-tree-input category-name",
-      data: {
-        cmd: "select-store-fixture-category",
-        tree: @categories_all.to_json
-      }
-    %>
+    <%= f.input_field :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
   </td>
   <td>
     <%= f.input_field :fixture_id, as: :select, collection: @fixtures_all, class: "fixture" %>

@@ -87,6 +87,21 @@ class Store < ActiveRecord::Base
       select(:id, :name, :ref_store_id).to_hash2(:ref_store_id, :id, :name)
   end
 
+  def rebuild_all_fixtures
+    self.store_fixtures.clear
+    prev_parent_id = nil
+    Category.nodes.each do |category|
+      sf = StoreFixture.new(store_id: self.id, category_id: category.id)
+      if prev_parent_id != category.parent_id
+        sf.show_up_dir = true
+      else
+        sf.show_up_dir = false
+      end
+      self.store_fixtures << sf
+      prev_parent_id = category.parent_id
+    end
+  end
+
   def update_redundancy
     self.region_name = Region.get_display_name(region_id)
     self.pinyin = HanziToPinyin.hanzi_to_pinyin(name)

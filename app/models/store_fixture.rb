@@ -14,6 +14,7 @@ class StoreFixture < ActiveRecord::Base
   attr_accessor :use_part_fixture
   attr_accessor :parts_start
   attr_accessor :parts_run
+  attr_accessor :show_up_dir
 
   def use_part_fixture
     parts.any?
