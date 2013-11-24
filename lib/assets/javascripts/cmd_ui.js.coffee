@@ -154,6 +154,7 @@ class CmdUI
     idField = opts.id
     parentIdField = opts.parent
     labelField = opts.label
+    minInputLevel = opts.minInputLevel || 0
 
     root = {}
     menu = @findMenu(cmdId)
@@ -177,10 +178,11 @@ class CmdUI
         console.log "Invalid parent id error:", item, itemOrderList
         return null
       else
+        level = parents.length
         parents.push parent
         parents.push item
         parent.ul ||= $("<ul></ul").appendTo(parent.li)
-        item.li = $("<li></li>").append("<a data-id='#{id}'>#{item[labelField]}</a>").appendTo(parent.ul)
+        item.li = $("<li></li>").append("<a data-id='#{id}' filter=#{level - minInputLevel}>#{item[labelField]}</a>").appendTo(parent.ul)
     @setMenuItemWidth(root.ul)
     root.ul.hide()
     return root.ul[0]
