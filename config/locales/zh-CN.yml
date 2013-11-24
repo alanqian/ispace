@@ -121,7 +121,8 @@ zh-CN:
         brand_id: 品牌
         mfr_id: 生产商
         category_id: 品类
-        status: 销售
+        grade: 等级
+        status: 新品促销
         plan_info_rank: 排名
         facings: 排面
         new_product: 新品
@@ -302,10 +303,20 @@ zh-CN:
       "高": "a"
       "中": "b"
       "低": "c"
-    sale_type:
-      0: 必卖品
-      1: 可卖品
-      2: 下架商品
+    grades:
+      "A": 必卖品
+      "B": 二级
+      "C": 三级
+      "D": 四级
+      "E": 五级
+      "X": 下架品
+    abbr_grades:
+      "A": 必
+      "B": 二
+      "C": 三
+      "D": 四
+      "E": 五
+      "X": 下
     new_product: 新
     on_promotion: 促
     category: 品类
@@ -409,7 +420,7 @@ zh-CN:
         case_pack_name: "包装"
         barcode: "条形码"
         color: "颜色"
-        sale_type: "销售类型"
+        grade: "等级"
         new_product: "新品"
         on_promotion: "促销"
       brand:

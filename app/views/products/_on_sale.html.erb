@@ -19,7 +19,7 @@
         [:plan_info_rank, width: "3em"],
         [:price_zone, width: "4em"],
         :brand_id,
-        [:sale_type, show: false, search: false]) %>
+        [:grade, show: false, search: false]) %>
     </tr>
   </thead>
   <tbody>
@@ -34,17 +34,17 @@
   <div id="product-toolbar">
     <%
       opt_class = Struct.new(:id, :name)
-      sale_types_opt = [
-        opt_class.new(-1, "全部")
+      grade_opt = [
+        opt_class.new("", "全部")
       ]
-      t("dict.sale_type").each do |type,name|
-        if type <= 1
-          sale_types_opt.push opt_class.new(type, name)
+      t("dict.grades").each do |type, name|
+        if type != "X"
+          grade_opt.push opt_class.new(type, name)
         end
       end
     %>
     <%= select_tag "show-product-sale-type",
-      options_from_collection_for_select(sale_types_opt, "id", "name", -1),
+      options_from_collection_for_select(grade_opt, "id", "name", -1),
       class: "toolbar-select",
       title: "选择显示的单品种类"
     %>

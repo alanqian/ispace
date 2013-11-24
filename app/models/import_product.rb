@@ -677,7 +677,7 @@ class ImportSheet < ActiveRecord::Base
       case_pack_name: "包装",
       bar_code: "条形码",
       color: "颜色",
-      sale_type: "商品类型",
+      grade: "等级",
       new_product: "新品",
       on_promotion: "促销",
     },

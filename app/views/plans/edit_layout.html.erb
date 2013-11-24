@@ -4,7 +4,7 @@
 
 <%# tools:
   set facings for select products.
-  check sale_type: 必卖品
+  check grade: 必卖品
   plan#close,
 %>
 <% buttons = [
@@ -128,7 +128,7 @@
   data-brands="<%= brands_all.to_hash(:id, :color).to_json %>"
   data-mfrs="<%= mfrs_all.to_hash(:id, :color).to_json %>"
   data-suppliers="<%= suppliers_all.to_hash(:id, :color).to_json %>"
-  data-sale-type="<%= products.map { |p| [p.code,p.sale_type] }.to_json %>"
+  data-grade="<%= products.map { |p| [p.code, p.grade] }.to_json %>"
   class="ui-corner-all">
   <%= render "/products/on_sale",
       products: products,

@@ -1,10 +1,11 @@
 <tr data-id="<%= product.id %>">
   <%= data_td_list product,
     [:select_one, :code, "products[]"],
-    sales_status(product),
+    t("dict.grades.#{product.grade}"),
     :code,
     [:brand_id, collection: brands_hash],
     :name,
+    sales_status(product),
     [:color, color_tag(product.color)],
     :height, :width, :depth, :weight,
     [:price_zone, collection: t("dict.prices").invert()],

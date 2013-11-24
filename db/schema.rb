@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131119165124) do
+ActiveRecord::Schema.define(version: 20131124132420) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                   null: false
@@ -332,7 +332,6 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_id"
-    t.integer  "sale_type",                                     default: 1
     t.boolean  "new_product",                                   default: false
     t.boolean  "on_promotion",                                  default: false
     t.string   "abbr_name"
@@ -352,8 +351,10 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.integer  "shelf_life_dist"
     t.integer  "available"
     t.integer  "status"
+    t.string   "grade",                                         default: "B",   null: false
   end
 
+  add_index "products", ["category_id", "grade"], name: "index_products_on_category_id_and_grade", using: :btree
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
   add_index "products", ["code"], name: "index_products_on_code", unique: true, using: :btree
   add_index "products", ["discard_from"], name: "index_products_on_discard_from", using: :btree

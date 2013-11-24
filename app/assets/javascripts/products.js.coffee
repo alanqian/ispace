@@ -39,7 +39,7 @@ class ProductPage
       console.log "invalid selection"
     else
       @fillInputs form,
-        sale_type: grade
+        grade: grade
       form.submit()
     return true
 
@@ -56,7 +56,7 @@ class ProductPage
     form = $("form#products-set-on-sale-form")
     # form: input
     # form.submit
-    if !@validateSelection()
+    if !@validateSelection(form)
       console.log "invalid selection"
     else
       @fillInputs form,

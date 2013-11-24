@@ -318,7 +318,7 @@ class Plan < ActiveRecord::Base
     occupy_run = {} # (fixture_item_id, layer) => run
     total_count = [0, 0]
     done_count = [0, 0]
-    product_map = Product.on_sales(self.category_id).to_hash(:code, :sale_type)
+    product_map = Product.on_sales(self.category_id).to_hash(:code, :grade)
     positions.each do |pos|
       type = product_map[pos.product_id]
       if pos.on_shelf?
@@ -385,10 +385,10 @@ class Plan < ActiveRecord::Base
       prod_a.brand_id <=> prod_b.brand_id
     end
 
-    0.upto(1) do |sale_type|
+    "A".upto("F") do |grade|
       self.positions.map! do |pos|
         prod = product_map[pos.product_id]
-        if !pos.on_shelf? && prod.sale_type == sale_type
+        if !pos.on_shelf? && prod.grade == grade
           run = pos.init_facing * prod.width
           while layer && merch_space[layer].used_space + run > merch_space[layer].merch_width
             layer = layers.shift

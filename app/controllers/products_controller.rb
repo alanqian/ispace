@@ -174,10 +174,10 @@ class ProductsController < ApplicationController
       params.require(:product).permit(:_do, :user_id, :category_id, :code, :brand_id,
         :mfr_id, :supplier_id, :id, :name, :height, :width, :depth, :weight, :price_zone,
         :size_name, :case_pack_name, :barcode, :color,
-        :sale_type, :new_product, :on_promotion)
+        :grade, :new_product, :on_promotion)
     end
 
     def product_attr_params
-      params.require(:product).permit(:sale_type, :new_product, :on_promotion)
+      params.require(:product).permit(:grade, :new_product, :on_promotion)
     end
 end

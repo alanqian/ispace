@@ -59,7 +59,7 @@
                     url: product_path(product_new),
                     html: { id: "products-set-grade-form"}) do |f| %>
   <div class="inputs">
-    <%= f.input_field :sale_type, as: :hidden %>
+    <%= f.input_field :grade, as: :hidden %>
   </div>
   <%= hidden_field_tag "products[]" %>
 <% end %>
@@ -74,7 +74,7 @@
 
 <%# popup-menu %>
 <ul id="select-products-grade-menu" class="popup-menu">
-  <% I18n.t("dict.sale_type").each do |grade, label| %>
+  <% I18n.t("dict.grades").each do |grade, label| %>
     <li>
       <%= link_to label, "#", id: "set-products-grade", data: { grade: grade } %>
     </li>

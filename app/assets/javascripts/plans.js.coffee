@@ -995,17 +995,17 @@ class ProductTable
   planEditor: null
   table: null
   selected: []
-  show_sale_type: -1
-  productData: [] # [code,sale_type]
+  show_grade: ""
+  productData: [] # [code,grade]
   productIndex: {}
   maxRank: 1
 
   onShowProductSaleType: (el) ->
     self = @
-    sale_type = parseInt(el.value)
-    if self.show_sale_type != sale_type
-      self.show_sale_type = sale_type
-      console.log "show sale_type:", self.show_sale_type
+    grade = el.value
+    if self.show_grade != grade
+      self.show_grade = grade
+      console.log "show grade:", self.show_grade
       if self.table
         oTable = self.table.dataTable()
         if oTable
@@ -1038,14 +1038,14 @@ class ProductTable
     @table = $(tableId)
     @initFieldMapping()
     @initProductList()
-    # initialize dataTable sale_type filter
+    # initialize dataTable grade filter
     $.fn.dataTableExt.afnFiltering.push (oSettings, aData, iDataIndex) ->
-      # filter sale_type
+      # filter grade
       # console.log "filter: ", iDataIndex, aData
-      if self.show_sale_type == -1
+      if self.show_grade == ""
         return true
-      # if not show all, then show select sale_type
-      return self.productData[iDataIndex][1] == self.show_sale_type
+      # if not show all, then show selected grade
+      return self.productData[iDataIndex][1] == self.show_grade
 
     $("tr", @table).click (e) ->
       console.log "select product", this
