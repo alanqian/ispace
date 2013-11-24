@@ -696,6 +696,9 @@ root.onDataTableCategoryChange = (event, el)->
 root.onSelectCategory = (el) ->
   id = $(el).data("id")
   name = $(el).text()
+  filter = $(el).attr("filter")
+  if filter < 0
+    return true
   $inputName = $("#" + $(el).data("src-element"))
   dataType = $inputName.data("type")
   $inputName.data("id", id)

@@ -140,6 +140,7 @@ $.util =
             parent: "parent_id"
             label: "name"
             rootId: null
+            minInputLevel: $(el).data("min_input_level") || 0
       if menu == null
         console.log "cannot load menu: #{cmdId}"
         return false
