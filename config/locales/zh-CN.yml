@@ -75,8 +75,6 @@ zh-CN:
       heap: 堆头
 
     attributes:
-      defaults:
-        category_id: 品类
       import_sheet:
         file_upload: 上传文件
         comment: 备注

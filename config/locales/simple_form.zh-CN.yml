@@ -127,7 +127,10 @@ zh-CN:
       default_message: "Some errors were found, please take a look:"
       # import_sheet: "import sheet error message"
 
-    # labels: move to activerecord.attributes: <model>.<attribute>
+    labels:
+      defaults:
+        category_id: 品类
+      #others: move to activerecord.attributes: <model>.<attribute>
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:
