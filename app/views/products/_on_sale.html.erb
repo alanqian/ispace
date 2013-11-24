@@ -1,0 +1,56 @@
+<%#
+  product#default
+    facings, name
+  product#performance-info
+    facings, name,price-zone,brand,psi,prod-id, plan-info-rank, plan-info-price
+%>
+<table id="products-table" data-sinfoempty="<%= sinfoempty %>"
+  data-sscrolly="<%= sscrolly %>"
+  class="dataTable grid-control no-wrap resizable" cellspacing=0>
+  <thead>
+    <tr>
+      <%= data_th_list(:product,
+        # [:select_all, "products[]", sort: false],
+        # [:status, input: false, sort: false],
+        [:facings, width: "3em"],
+        [:name, width: "4em"],
+        :size_name,
+        :code,
+        [:plan_info_rank, width: "3em"],
+        [:price_zone, width: "4em"],
+        :brand_id,
+        [:grade, show: false, search: false]) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% products.each do |product| %>
+      <%= render '/products/item_on_sale', product: product,
+        brands_hash: brands_all.to_hash(:id, :name) %>
+    <% end %>
+  </tbody>
+</table>
+
+<div id="dataTable-filter">
+  <div id="product-toolbar">
+    <%
+      opt_class = Struct.new(:id, :name)
+      grade_opt = [
+        opt_class.new("", "全部")
+      ]
+      t("dict.grades").each do |type, name|
+        if type != "X"
+          grade_opt.push opt_class.new(type, name)
+        end
+      end
+    %>
+    <%= select_tag "show-product-sale-type",
+      options_from_collection_for_select(grade_opt, "id", "name", -1),
+      class: "toolbar-select",
+      title: "选择显示的单品种类"
+    %>
+    <%= button_tag "选中商品上架", type: :button, id: "products-add-to-shelf", class: "toolbar-button",
+      data: { icon: "ui-icon-arrowthick-1-n" } %>
+    <%= button_tag "选中商品下架", type: :button, id: "products-remove-from-shelf", class: "toolbar-button",
+      data: { icon: "ui-icon-arrowthick-1-s" } %>
+  </div>
+</div>

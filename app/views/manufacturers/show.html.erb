@@ -1,0 +1,23 @@
+
+<p>
+  <strong>Name:</strong>
+  <%= @manufacturer.name %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @manufacturer.category_id %>
+</p>
+
+<p>
+  <strong>Desc:</strong>
+  <%= @manufacturer.desc %>
+</p>
+
+<p>
+  <strong>Color:</strong>
+  <%= @manufacturer.color %>
+</p>
+
+<%= link_to 'Edit', edit_manufacturer_path(@manufacturer) %> |
+<%= link_to 'Back', manufacturers_path %>

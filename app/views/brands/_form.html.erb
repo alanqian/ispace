@@ -1,0 +1,15 @@
+<%= simple_form_for(@brand) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
+    <%= f.input :name, as: :text, label: "请输入品牌名，每行一个：",
+      input_html: { rows: 8, cols: 26 },
+      wrapper_html: { class: 'brands-new-name'} %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

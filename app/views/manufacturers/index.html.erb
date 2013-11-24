@@ -1,0 +1,48 @@
+<% content_for_title :index %>
+
+<div id="manufacturers-list">
+  <%= simple_form_for(manufacturer_new, method: "patch", remote: true,
+                      data: { url: manufacturer_path(manufacturer_new) },
+                      html: { id: "manufacturers-form", class: "inplace", },
+                     ) do |f| %>
+    <div class="inputs">
+      <%= f.input :name %>
+      <%= f.input :desc %>
+      <%= f.input :color, as: :color %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+    <table id="manufacturers-table" data-form="#manufacturers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <th class="name" data-input="manufacturer[name]"><%=tf :name %></th>
+          <th class="color" data-input="manufacturer[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
+          <th class="desc" data-input="manufacturer[desc]"><%=tf :desc %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @manufacturers.each do |manufacturer| %>
+          <%= render 'item', manufacturer: manufacturer %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div id="dataTable-filter" class="template">
+  <%= simple_form_for(manufacturer_new, remote:true,
+                      url: "#",
+                      html: { id: "manufacturers-choose-category" }) do |f| %>
+    <%= f.input :category_id, collection: categories, prompt: "选择品类",
+      label: "",
+      input_html: {
+        data: { url: manufacturers_path(category: "") },
+        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
+    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+  <% end %>
+</div>
+
+<br>
+
+<%= link_to 'New Manufacturer', new_manufacturer_path %>

@@ -1,0 +1,53 @@
+
+<p>
+  <strong>Plan set:</strong>
+  <%= @plan.plan_set_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @plan.category_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @plan.user_id %>
+</p>
+
+<p>
+  <strong>Store:</strong>
+  <%= @plan.store_id %>
+</p>
+
+<p>
+  <strong>Num stores:</strong>
+  <%= @plan.num_stores %>
+</p>
+
+<p>
+  <strong>Fixture:</strong>
+  <%= @plan.fixture_id %>
+</p>
+
+<p>
+  <strong>Init facing:</strong>
+  <%= @plan.init_facing %>
+</p>
+
+<p>
+  <strong>Nominal size:</strong>
+  <%= @plan.nominal_size %>
+</p>
+
+<p>
+  <strong>Base footage:</strong>
+  <%= @plan.base_footage %>
+</p>
+
+<p>
+  <strong>Usage percent:</strong>
+  <%= @plan.usage_percent %>
+</p>
+
+<%= link_to 'Edit', edit_plan_path(@plan) %> |
+<%= link_to 'Back', plans_path %>

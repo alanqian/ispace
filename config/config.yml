@@ -1,0 +1,158 @@
+test:
+  perform_authentication: false
+
+production:
+  perform_authentication: true
+
+development:
+  perform_authentication: false
+
+all:
+  :templates:
+    :bay:
+      :name: ''
+      :back_height: 185.0
+      :back_width: 120.0
+      :back_thick: 3.0
+      :back_color: '#ffffff'
+      :notch_spacing: 1.0
+      :notch_1st: 1.0
+      :base_height: 15.0
+      :base_width: 120.0
+      :base_depth: 50.0
+      :base_color: '#400040'
+      :takeoff_height: 190.0
+    :open_shelf_1st_name: 1.隔板
+    :open_shelf:
+      :name: ""
+      :height: 20.0
+      :width: 120.0
+      :depth: 50.0
+      :thick: 5.0
+      :slope: 0.0
+      :riser: 0.0
+      :notch_num: 1
+      :from_base: 1.0
+      :color: '#ffffff'
+      :from_back: 0.0
+      :finger_space: 0.0
+      :x_position: 0.0
+    :peg_board:
+      :name: ""
+      :height: 200.0
+      :depth: 30.0
+      :vert_space: 6.0
+      :horz_space: 6.0
+      :vert_start: 6.0
+      :horz_start: 6.0
+      :notch_num: 1
+      :from_base: 1.0
+      :color: '#dfdfdf'
+    :freezer_chest:
+      :name: ''
+      :height: 90.0
+      :depth: 100.0
+      :wall_thick: 4.0
+      :inside_height: 80.0
+      :merch_height: 70.0
+      :color: '#ffff'
+    :rear_support_bar:
+      name: ""
+      height: 30.0
+      bar_depth: 4.0
+      bar_thick: 4.0
+      from_back: 45.0
+      hook_length: 40.0
+      notch_num: 20
+      from_base: 80.0
+      color: '#ff007f'
+      bar_slope: 0.0
+
+  pdf_fonts:
+    :font_families:
+      XiHei:
+        :normal: "#{Rails.root}/config/fonts/stxihei.ttf"
+      DejaVuSans:
+        :normal: "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
+      Kai:
+        :normal: "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
+    :fallbacks:
+      - XiHei
+      - DejaVuSans
+      - Times-Roman
+    :built_ins:
+      - Courier
+      - Courier-Bold
+      - Courier-Oblique
+      - Courier-BoldOblique
+      - Helvetica
+      - Helvetica-Bold
+      - Helvetica-Oblique
+      - Helvetica-BoldOblique
+      - Times-Roman
+      - Times-Bold
+      - Times-Italic
+      - Times-BoldItalic
+      - Symbol
+      - ZapfDingbats
+    :unsupported:
+      Song:
+        :normal: "#{Rails.root}/config/fonts/AdobeHeitiStd-Regular.otf"
+      Hei:
+        :normal: "#{Rails.root}/config/fonts/AdobeSongStd-Light.otf"
+  pdf_options:
+    :label_font: XiHei
+    :text_font: XiHei
+    :number_font: Courier
+    :ascii_font: DejaVuSans
+    :left_overflow_text: "<\n<\n<\n<"
+    :right_overflow_text: ">\n>\n>\n>"
+    :bay_left_width: 20
+    :bay_spacing: 8
+    :distance_above: 10
+    :distance_left: 10
+    :scale_size: 12
+    :scale_font_size: 10
+    :mdse_fields:
+      - :seq_num
+      - :id
+      - :name
+      - :facing
+      - :rank
+      - :depth_units
+      - :height_units
+      - :width_units
+      - :checker
+    :mdse_fields_name:
+      - №
+      - 编号
+      - 品名
+      - 排面
+      - 排名
+      - 深
+      - 高
+      - 宽
+      - ☑
+    :summary_field:
+      - :name
+      - :count
+      - :run
+      - :spercent
+    :summary_header:
+      - 供应商
+      - 位置
+      - 总排面
+      - 百分比(%)
+    :title:
+      :cover: 品类规划
+      :toc: 目录
+      :blocked_plan: 规划概要图
+      :normal_plan: 规划详图
+      :fixture: 货架图
+      :mdse: 单品排面明细表
+      :summary: 商品汇总表
+    :open_shelf:
+      :shelf_text: "第#{level}层, 深度: #{depth}厘米"
+      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}cm"
+      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}cm"
+

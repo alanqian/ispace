@@ -1,0 +1,84 @@
+<% hier_ctg = hier_categories(@categories_all) %>
+<%= simple_form_for(@store) do |f| %>
+  <%= f.error_notification %>
+  <div class="inputs">
+    <%#= f.input :region_id %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "fixture" } %>
+    <%= f.input :code %>
+    <%= f.input :name %>
+    <%= f.input :area %>
+    <%= f.input :location %>
+    <%= f.input :grade %>
+    <%= f.input :memo %>
+    <div class="input textarea string">
+      <label class="text">同类门店</label>
+      <div class="input check_boxes bi_columns" style="display: inline-block">
+        <% @store.follow_stores.each do |follow| %>
+          <li><%= follow.name %></li>
+        <% end %>
+      </div>
+    </div>
+
+    <% categories_dict = @categories_all.to_hash(:id, :name, :parent_id) %>
+    <div id="category_dict" class="hide" data-dict=<%=raw categories_dict.to_json %>></div>
+    <table>
+      <thead>
+        <tr>
+          <th class="category_mid">中类</th>
+          <th class="category-name">小类</th>
+          <th class="fixture">货架组</th>
+          <th class="code">货架组编号</th>
+          <th class="parts">半货架(距左侧/长度)</th>
+          <th class="memo">备注</th>
+          <th class="add-remove">
+            <%= link_to raw("&times;"), "#", id: "remove_store_null_fixture", class: "cmd_ui", title: "删除空货架" %>
+            <%= link_to raw("&plus;"), "#", id: "add_store_fixture", class: "cmd_ui", title: "增加货架" %>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="store_fixture_list">
+        <%= f.simple_fields_for :store_fixtures do |builder| %>
+          <%
+            category = categories_dict[builder.object.category_id]
+            builder.object.category_name = category[:name]
+            parent_id = category[:parent_id]
+            upper_category = categories_dict[parent_id][:name]
+            hide_class = builder.object.show_up_dir ? "" : "hide"
+          %>
+          <%= render "store_fields", f: builder,
+            category_id: nil,
+            category_name: nil,
+            parent_id: parent_id,
+            hide_class: hide_class,
+            upper_category: upper_category %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="hide">
+    <table>
+      <tbody id="deleted"></tbody>
+    </table>
+  </div>
+  <div class="actions">
+    <%= f.button :submit, "更新货架配置" %>
+  </div>
+<% end %>
+
+<%= simple_form_for(@store) do |f| %>
+  <div id="template">
+    <table>
+      <%= f.simple_fields_for(:store_fixtures, @new_store_fixture, child_index: "new_sf_index") do |builder| %>
+        <%= render "store_fields", f: builder,
+          category_id: nil,
+          category_name: nil,
+          parent_id: "",
+          hide_class: "",
+          upper_category: "" %>
+      <% end %>
+    </table>
+  </div>
+<% end %>
+
+<%= category_menu "select-category" %>
+

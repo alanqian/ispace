@@ -1,0 +1,26 @@
+<% content_for_title :index %>
+
+<div id="stores-list">
+  <%= simple_form_for(store_new, method: "patch", remote: true,
+                      data: { url: store_path(store_new) },
+                      html: { id: "stores-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%#= f.input :region_id, collection: Region.all %>
+      <%= f.input :code  %>
+      <%= f.input :name %>
+      <%= f.input :area %>
+      <%= f.input :location  %>
+      <%#= f.input :ref_store_id, collection: Store.model_store  %>
+      <%#= f.input :memo %>
+    </div>
+    <%= render 'list', stores: @stores, regions: @regions %>
+  <% end %>
+
+</div>
+
+<br>
+
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_store_path %>
+</div>
+

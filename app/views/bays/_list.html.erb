@@ -1,0 +1,23 @@
+<table id="bays-table"
+  data-sinfoempty="请重新搜索或新建货备"
+  class="dataTable grid-control no-wrap" cellspacing=0>
+  <thead>
+    <tr>
+      <%=data_th_list :bay,
+        :name,
+        :types,
+        [:bay_size, sort: false],
+        :num_layers,
+        :run,
+        :linear,
+        :area,
+        :cube
+      %>
+    </tr>
+  </thead>
+  <tbody>
+    <% bays.each do |bay| %>
+      <%= render 'item', bay: bay %>
+    <% end %>
+  </tbody>
+</table>

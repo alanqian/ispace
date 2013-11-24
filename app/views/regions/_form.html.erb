@@ -1,0 +1,14 @@
+<%= simple_form_for(@region) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :code %>
+    <%= f.input :name %>
+    <%= f.input :consume_type %>
+    <%= f.input :memo %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit, "创建区域" %>
+  </div>
+<% end %>

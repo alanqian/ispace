@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: fixture1
+  user_id: 1
+  flow_l2r: false
+
+two:
+  name: fixture2
+  user_id: 1
+  flow_l2r: false

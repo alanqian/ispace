@@ -1,0 +1,44 @@
+<% content_for_title :index %>
+
+<div id="brands-list">
+  <%= simple_form_for(brand_new, method: "patch", remote: true,
+                      data: { url: brand_path(brand_new) },
+                      html: { id: "brands-form", class: "inplace", },
+                     ) do |f| %>
+    <div class="inputs">
+      <%= f.input :name %>
+      <%= f.input :color, as: :color %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+    <table id="brands-table" data-form="#brands-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <th data-input="brand[name]"><%=tf :name %></th>
+          <th data-input="brand[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @brands.each do |brand| %>
+          <%= render 'item', brand: brand %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div id="dataTable-filter" class="template">
+  <%= simple_form_for(brand_new, remote:true,
+                      url: "#",
+                      html: { id: "brands-choose-category" }) do |f| %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category",
+      data: { url: brands_path(category: "") } %>
+  <% end %>
+</div>
+
+<%= category_menu "select-category" %>
+<br />
+
+<%#= link_to 'New Brand', new_brand_path %>

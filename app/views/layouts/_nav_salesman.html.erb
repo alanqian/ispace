@@ -1,0 +1,25 @@
+<ul class="nav nav-list">
+  <li class="nav-header">空间</li>
+  <li><%= link_to "最新规划", plan_sets_path(_do: :recent) %></li>
+  <li><%= link_to "完成上报", plan_sets_path(_do: :report) %></li>
+  <li><%= link_to "历史规划", plan_sets_path(_do: :deployed) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">货架</li>
+  <li><%= link_to "门店货架", fixtures_path(store: current_user.store_id) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">商品</li>
+  <li><%= link_to "在售商品", products_path(_do: :on_sale) %></li>
+  <li><%= link_to "未上架商品", products_path(_do: :off_sale) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">数据</li>
+  <li><%= link_to "上传销售数据", new_import_sheet_path(_t: 'sales') %></li>
+  <li><%= link_to "上传列表", import_sheets_path(_t: 'sales') %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">设置</li>
+  <li><%= link_to "用户信息", edit_user_path(current_user) %></li>
+  <li><%= link_to "门店信息", edit_store_path(current_user.store_id) %></li>
+</ul>

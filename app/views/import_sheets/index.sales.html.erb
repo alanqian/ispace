@@ -1,0 +1,43 @@
+<% content_for_title :index_sales %>
+
+<!--
+<p>should show:<br>
+<p>  import_date, comment, filename, imported: count..., #show, #discard link
+
+<p>product: category:*, product:* + brand:*, supplier:*, manufacture:*
+<p>sale: sale:*
+<p>test: all fields
+-->
+
+<table id="sales-table" data-form="#sales-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <th>文件名</th>
+      <th>备注</th>
+      <th>用户</th>
+      <th>导入表名称</th>
+      <th>导入数据个数</th>
+      <th data-no-sort="1">删除导入的数据</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @import_sheets.each do |import_sheet| %>
+      <% count = import_sheet.imported[:count] %>
+      <% sheets = import_sheet.imported[:sheets].map {|s| s[:name] } .join(", ") %>
+      <tr>
+        <td><%= link_to import_sheet.filename, import_sheet_path(import_sheet, part: "result") %></td>
+        <td><%= import_sheet.comment %></td>
+        <td><%= import_sheet.user_id %></td>
+        <td><%= sheets %></td>
+        <td><%= count[:sale] %></td>
+        <td><%= link_to "删除", import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to '导入新的数据', new_import_sheet_path(_t: @t) %>

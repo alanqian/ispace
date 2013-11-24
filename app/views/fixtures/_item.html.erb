@@ -1,0 +1,12 @@
+<tr data-id="<%= fixture.id %>">
+  <%= data_td_list fixture,
+    link_to(fixture.name, edit_fixture_path(fixture, _do: @do)),
+    :num_bays,
+    :run,
+    :linear,
+    :area,
+    :cube,
+    link_to(fixture.ref_count, edit_fixture_path(fixture, _do: :deploy)),
+    link_to("删除", fixture_path(fixture), method: :delete, data: { confirm: '确定要删除么'})
+  %>
+</tr>

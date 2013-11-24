@@ -1,0 +1,16 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: 11月促销
+  category: toothpaste
+  to_deploy_at: 2013-11-13
+  note: "blah blah, deploy asap"
+  user_id: 1
+
+two:
+  name: 11月11日活动
+  category: :toothpaste
+  to_deploy_at: 2013-11-13
+  note: "blah blah, deploy asap"
+  user_id: 1
+

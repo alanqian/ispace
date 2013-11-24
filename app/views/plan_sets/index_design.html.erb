@@ -1,0 +1,9 @@
+<% content_for_title :index_design %>
+
+<h3>最新规划</h3>
+<%# == new plan_set, order by create_time %>
+<%= render 'editing_list', plan_sets: @plan_sets[:design] %>
+
+<h3>快捷链接</h3>
+<%= render 'recent_list', plan_sets: @plan_sets[:recent_plans]  %>
+

@@ -1,0 +1,13 @@
+<% content_for_title :index %>
+<hr/>
+
+<div id="fixtures-list">
+  <%= render 'list', fixtures: @fixtures %>
+</div>
+
+<br>
+
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_fixture_path %>
+</div>
+

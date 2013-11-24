@@ -1,0 +1,31 @@
+<table id="plan_sets_deployed"
+  data-sinfo="共找到_TOTAL_个规划"
+  data-sinfoempty="未找到已完成的规划，请重新搜索"
+  class="dataTable grid-control no-wrap plan_sets deployed" cellspacing=0>
+  <thead>
+    <tr>
+      <%=data_th_list :plan_set,
+        :name,
+        :published_at,
+        :downloaded_time,
+        :deployed_time
+      %>
+    </tr>
+  </thead>
+  <tbody>
+    <% deployments.each do |it| %>
+      <%
+        dpm = OpenStruct.new(it)
+        plan_set = dpm.plan_set
+      %>
+      <tr>
+        <%= data_td_list dpm,
+          link_to(plan_set.full_name, plan_set_path(plan_set)),
+          dt_ago(plan_set.published_at.localtime),
+          "#{humanize dpm.download_1st} ~ #{humanize dpm.download_last}",
+          "#{humanize dpm.deployed_1st} ~ #{humanize dpm.deployed_last}"
+        %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

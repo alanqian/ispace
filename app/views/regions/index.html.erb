@@ -1,0 +1,22 @@
+<% content_for_title :index %>
+
+<div id="regions-list">
+  <%= simple_form_for(region_new, method: 'patch', remote: true,
+                      data: { url: region_path(region_new) },
+                      html: { id: "regions-form", class: "inplace" }) do |f| %>
+    <div class="inputs">
+      <%= f.input :code %>
+      <%= f.input :name %>
+      <%= f.input :consume_type %>
+      <%= f.input :memo %>
+    </div>
+    <%= render 'list', regions: @regions %>
+  <% end %>
+
+</div>
+
+<br>
+
+<div id="dataTable-filter">
+  <%= link_to simple_title(:new), new_region_path %>
+</div>

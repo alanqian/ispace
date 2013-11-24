@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>test css display/float/clear</title>
+    <link rel="stylesheet" type="text/css" href="sheet1.css" media="all" />
+    <style type="text/css">
+      div#container {
+        display: block;
+        width: 600px;
+        background-color: #CCCCCC;
+      }
+      div#left {
+        display: inline-block;
+        width: 200px;
+        float: left;
+        background-color: red;
+      }
+      div#right {
+        display: inline-block;
+        width: 200px;
+        float: right;
+        background-color: blue;
+      }
+      div#clear {
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <!-- text stream floats outside the float divs. -->
+      <div id="left">float: left; div wraped in text stream at LEFT</div>
+      <div id="right">float: right; div wraped in text stream at RIGHT</div>
+      <!-- followed by a clear div; -->
+      <div id="clear"></div>
+    </div>
+    <ul>
+      <li>test1</li>
+      <li>test2</li>
+      <li>test3</li>
+    </ul>
+    see also
+    <a href="http://css-tricks.com/all-about-floats/">All About Floats</a>
+  </body>
+</html>

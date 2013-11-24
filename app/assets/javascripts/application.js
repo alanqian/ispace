@@ -11,6 +11,17 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require jquery.ui.all
+//= require jquery.ui.datepicker-zh-CN.js
 //= require jquery_ujs
-//= require turbolinks
-//= require_tree .
+//= require jquery.remotipart
+//= require underscore.string.min.js
+//= require splitter-152.js
+//= require jquery.dataTables.js
+//= require colResizable-1.3.source.js
+//= require jquery.simplecolorpicker.js
+//= require tree.jquery.js
+//= require raphael-min.js
+//= require cmd_ui
+//= require jqutil
+//= require app

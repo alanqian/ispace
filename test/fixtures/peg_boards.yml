@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: peg_board_1
+  height: 9.99
+  depth: 9.99
+  vert_space: 9.99
+  horz_space: 9.99
+  vert_start: 9.99
+  horz_start: 9.99
+  from_base: 3.22
+  notch_num: 1
+  color: "#ffffff"
+
+two:
+  name: peg_board_2
+  height: 9.99
+  depth: 9.99
+  vert_space: 9.99
+  horz_space: 9.99
+  vert_start: 9.99
+  horz_start: 9.99
+  from_base: 3.22
+  notch_num: 1
+  color: "#ffffff"

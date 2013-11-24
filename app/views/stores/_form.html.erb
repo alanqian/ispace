@@ -1,0 +1,17 @@
+<%= simple_form_for(@store) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :region_id %>
+    <%= f.input :code %>
+    <%= f.input :name %>
+    <%= f.input :area %>
+    <%= f.input :location %>
+    <%= f.input :ref_store_id %>
+    <%= f.input :memo %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit, "创建门店" %>
+  </div>
+<% end %>

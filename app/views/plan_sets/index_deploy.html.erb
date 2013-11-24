@@ -1,0 +1,8 @@
+<% content_for_title @full_action %>
+
+<h3>规划部署</h3>
+<%= render 'deploying_list', deployments: @plan_sets[:deploying] %>
+
+<h3>完成规划</h3>
+<%= render 'deployed_list', deployments: @plan_sets[:deployed] %>
+

@@ -1,0 +1,9 @@
+<% content_for_title :index_store %>
+<hr/>
+
+<div id="fixtures-list">
+  <%= render 'list_sf',
+    store_fixtures: @store_fixtures,
+    fixtures_map: @fixtures_map,
+    categories_map: @categories_map %>
+</div>

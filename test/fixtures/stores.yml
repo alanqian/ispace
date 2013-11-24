@@ -1,0 +1,18 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  region_id: MyString
+  name: MyString
+  memo: MyString
+
+two:
+  region_id: MyString
+  name: MyString
+  memo: MyString
+
+model_store:
+  id: 10
+  region_id: 1
+  name: MyString
+  memo: MyString
+  ref_store_id: 10

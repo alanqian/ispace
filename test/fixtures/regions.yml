@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: "cn"
+  name: "中国"
+  consume_type: "B"
+  memo: "中国总部"
+
+two:
+  code: "cn.north"
+  name: "华北区"
+  consume_type: "B"
+  memo: "华北区，含内蒙"
+
+three:
+  code: "cn.north.bj"
+  name: "北京"
+  consume_type: "A+"
+  memo: "北京，含各郊县"

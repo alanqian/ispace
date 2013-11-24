@@ -1,0 +1,20 @@
+<%= simple_form_for(@user) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :username %>
+    <%= f.input :employee_id %>
+    <%= f.input :store_id, collection: Store.all %>
+    <%= f.input :email %>
+    <% if @user.id.nil? %>
+      <%= f.input :password, as: :string %>
+      <%= f.input :password_confirmation, label: 'Password confirm', as: :string %>
+    <% end %>
+    <%= f.input :telephone %>
+    <%= f.input :role, selected: 'salesman', collection: [['门店销售', 'salesman' ], ['总部设计', 'designer' ]] %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

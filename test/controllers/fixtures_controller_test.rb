@@ -1,0 +1,67 @@
+require 'test_helper'
+
+class FixturesControllerTest < ActionController::TestCase
+  fixtures :fixtures
+  fixtures :bays
+
+  setup do
+    @logger = Rails.logger
+    @fixture = fixtures(:one)
+  end
+
+  test "should go to sign in page if not login in" do
+    sign_out @user
+    get :index
+    assert_redirected_to sign_in_path
+
+    post :create
+    assert_redirected_to sign_in_path
+
+    patch :update, id: @fixture.id
+    assert_redirected_to sign_in_path
+  end
+
+  test "should get index" do
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:fixtures)
+  end
+
+  test "should get new" do
+    get :new
+    assert_response :success
+  end
+
+  test "should create fixture" do
+    assert_difference('Fixture.count') do
+      post :create, fixture: @fixture.to_new_params
+    end
+
+    assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
+  end
+
+  test "should show fixture" do
+    get :show, id: @fixture
+    assert_response :success
+  end
+
+  test "should get edit" do
+    get :edit, id: @fixture
+    assert_response :success
+  end
+
+  test "should update fixture" do
+    patch :update, id: @fixture, fixture: fixtures(:two).to_new_params
+    f = assigns(:fixture)
+    # assert_redirected_to Rails.application.routes.url_helpers.fixture_path(assigns(:fixture))
+    assert_redirected_to fixtures_path
+  end
+
+  test "should destroy fixture" do
+    assert_difference('Fixture.count', -1) do
+      delete :destroy, id: @fixture
+    end
+
+    assert_redirected_to fixtures_path
+  end
+end

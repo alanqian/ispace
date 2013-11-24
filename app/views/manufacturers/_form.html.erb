@@ -1,0 +1,14 @@
+<%= simple_form_for(@manufacturer) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :category_id, collection: categories, label: "选择品类" %>
+    <%= f.input :name, as: :text, label: "请输入生产商名称，每行一个：",
+      input_html: { rows: 8, cols: 26 },
+      wrapper_html: { class: 'manufacturers-new-name'} %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

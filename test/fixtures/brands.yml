@@ -1,0 +1,12 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: 宝洁
+  category: toothpaste
+  color: #ffffff
+
+two:
+  name: 联合利华
+  category: toothpaste
+  color: #ff0000
+

@@ -1,0 +1,53 @@
+<% content_for_title :index %>
+
+<h2>
+  <%= link_to plan_set.full_name, plan_set_path(plan_set) %>
+</h2>
+<p>
+  <%= plan_set.note %>
+</p>
+
+<table id="plans-table" data-form="#plans-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+  <thead>
+    <tr>
+      <th>样板店</th>
+      <th>包含门店</th>
+      <th data-no-sort="1">货架</th>
+      <th>使用率</th>
+      <th data-no-sort="1">初始排面</th>
+      <th data-no-sort="1"></th>
+      <%#
+        <th>Nominal size</th>
+        <th>Base footage</th>
+      %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @plans.each do |plan| %>
+      <%
+        stores = store_map[plan.store_id]
+        stores.delete(plan.store_id)
+      %>
+      <tr>
+        <td>
+          <%= link_to plan.store.name, edit_plan_path(plan) %>
+        </td>
+        <td>
+          <%#= plan.num_stores %>
+          <% stores.each do |store_id, store_name| %>
+            <%= store_name %><br>
+          <% end %>
+        </td>
+        <td><%= plan.fixture.name %></td>
+        <td><%= plan.usage_percent %></td>
+        <td><%= plan.init_facing %></td>
+        <td>
+          <%= link_to raw('&times;'), plan, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

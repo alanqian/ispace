@@ -1,0 +1,186 @@
+<% content_for_title :edit_layout %>
+
+<%#= link_to "Test Update init_facing=4", plan_path(@plan, "plan[init_facing]" => 4), method: :put %>
+
+<%# tools:
+  set facings for select products.
+  check grade: 必卖品
+  plan#close,
+%>
+<% buttons = [
+  # id, text, icon
+  #--- the 1st row, 20x18 ---
+  # ["plan-save", "ui-icon-disk"],
+  ["plan-save",  "保存当前规划"],
+  ["plan-edit-summary", "修改规划基本信息"],
+  ["plan-close", "关闭当前门店规划"],
+  ["plan-copy-to", "复制门店规划"],     # dup the plan to other model stores
+  ["position-facing-inc", "增加排面"],
+  ["position-facing-dec", "减少排面"],
+  ["position-remove", "选中商品下架"],
+  ["positions-reorder", "选中商品重排"],# Products can be repositioned in a different order
+                      # within a shelf or from a combination of shelves.
+                      # Select the products in the order that you want them to appear on
+                      # the shelf. (The first product selected will be first in traffic flow).
+  ["position-edit-leading-gaps", "设置货品间隙"],  # ?: show dialog
+  ["position-edit-dividers", "设置货品分隔"], # ?: show dialog
+
+  #"switch-product-information", ""], # switch the info on right/bottom/hide
+  #"sort", ""], # ??
+  #"select-showing-information", ""], # product infobox or product list on bottom
+  ["switch-show-colors", "选择显示颜色"], # (brand/manufacture/product/supplier)
+] %>
+
+<%# [
+  #--- without image ---
+  "position-new",
+  "shelf-combine",
+  "shelf-break",
+  "peg-equalize-spacing",
+  "peg-close-up-spacing",
+  "peg-line-up-spacing",
+  "chest-auto-pack",
+  "chest-repack",
+  "chest-repack-all",
+  "chest-options",
+  "switch-peg-holes",
+  "undo",
+] %>
+
+<div id="plan_toolbar" class="ui-widget-header ui-corner-all">
+  <%= select_tag "plan-switch-model-store",
+    options_from_collection_for_select(@plan.plan_set.model_stores_opt, "id", "name", @plan.id),
+    class: "toolbar-select",
+    title: "切换门店"
+  %>
+  <% buttons.each do |btn| %>
+    <%
+      id, text, icon = btn
+      icon ||= "ui-#{id}"
+      %>
+    <%= button_tag text, type: :button, id: id, class: "toolbar-button",
+      data: { icon: icon } %>
+  <% end %>
+</div>
+
+<%#
+  fixture view:
+    from left to right: bay 1 -> bay 2 -> ...
+    from top to bottom: space, shelf, space, shelf, ..., space, shelf, base
+%>
+<div id="products-container">
+  <%= render "/fixtures/layout", fixture: @plan.fixture %>
+</div>
+
+<%#
+  all positions are stored in ajax-form; #plan-layout-form
+  init:
+    position slots;
+    create LIs from positions, move to proper slots(fixture_item_id, layer) in fixtures;
+  edit:
+    when sortable changed, we mark the form dirty;
+  save(submit):
+    save all positions by the items in fixture slots, than submit;
+  auto_save:
+    auto_save by a timer, save every 1 minute;
+
+  # slot:
+  <ul id="slot-4-6" data-container="#space-4-6"
+      data-fixture-item="4"
+      data-layer="6"
+      data-space="{&quot;merch_width&quot;:&quot;120.0&quot;,&quot;merch_depth&quot;:&quot;46.0&quot;,&quot;merch_height&quot;:&quot;20.0&quot;,&quot;shelf_height&quot;:&quot;5.0&quot;,&quot;from_base&quot;:&quot;131.0&quot;,&quot;shelf_color&quot;:&quot;#dfdfdf&quot;}"
+      class="sortable-editor sortable-container ui-sortable"
+      style="width: 600.3333333730698px; height: 40.33333337306976px; top: 341.9375px; left: 434.58331298828125px;"></ul>
+  # input:
+  <input id="plan_positions_attributes_0_id"
+    name="plan[positions_attributes][0][id]" type="hidden" value="96">
+  # ==>
+  # group by (fixture_item_id, layer), sort by seq_num
+  <li id="pos_0" class="sortable-item"
+    title="" # by product id
+    data-id="#{position_id}">
+    <table>..</table>
+  </li>
+
+  <input id="plan_positions_attributes_0_fixture_item_id"
+         name="plan[positions_attributes][0][fixture_item_id]" type="hidden" value="-1">
+%>
+
+<div id="plan-edit-layout-form">
+  <%= render 'form_layout' %>
+</div>
+
+<%#
+<div id="info-box" class="ui-widget-content ui-corner-all ui-draggable1 ui-resizable1">
+  <h3 class="ui-widget-header">Product Info Box</h3>
+  <p>blah, blah</p>
+</div>
+%>
+
+<%#
+  product#default
+    facings, name
+  product#performance-info
+    facings, name,price-zone,brand,psi,prod-id, plan-info-rank, plan-info-price
+%>
+<div id="products-data"
+  data-products="<%= products.to_hash(:id, :code, :name, :price_zone, :height, :width, :depth, :color, :supplier_id, :brand_id, :mfr_id).to_json %>"
+  data-brands="<%= brands_all.to_hash(:id, :color).to_json %>"
+  data-mfrs="<%= mfrs_all.to_hash(:id, :color).to_json %>"
+  data-suppliers="<%= suppliers_all.to_hash(:id, :color).to_json %>"
+  data-grade="<%= products.map { |p| [p.code, p.grade] }.to_json %>"
+  class="ui-corner-all">
+  <%= render "/products/on_sale",
+      products: products,
+      brands_all: brands_all,
+      suppliers_all: suppliers_all,
+      mfrs_all: mfrs_all,
+      sscrolly: "13em",
+      sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
+</div>
+
+<div id="plan-edit-summary-dialog" class="ui-helper-hidden"
+  title="修改规划基本信息" >
+  <%= render 'form_summary' %>
+</div>
+
+<div id="plan-copy-to-dialog" class="ui-helper-hidden"
+  title="复制门店规划" >
+  <%= render 'form_copy_to' %>
+</div>
+
+<div id="plan-positions-gap-dialog" class="ui-helper-hidden"
+  title="修改货品间隙" >
+  <%= render 'form_positions_gap' %>
+</div>
+
+<div id="plan-positions-divider-dialog" class="ui-helper-hidden"
+  title="设置货品分隔物" >
+  <%= render 'form_positions_divider' %>
+</div>
+
+<div id="plan-close-confirm" class="ui-helper-hidden"
+  title="关闭门店规划?">
+  <p>
+    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+    退出本样板店(<%= @plan.store_name %>)，回到规划首页！
+  </p>
+</div>
+<%#
+  发布本样板店(<%= @plan.store_name % >)的空间规划，发布后将结束编辑状态，相应的门店可以下载，请确认！
+%>
+
+<ul id="showing-colors-menu" class="popup-menu">
+  <li><a id="show-brand-color" href="#">品牌颜色</a></li>
+  <li><a id="show-product-color" href="#">产品颜色</a></li>
+  <li><a id="show-manufacturer-color" href="#">生产商颜色</a></li>
+  <li><a id="show-supplier-color" href="#">供应商颜色</a></li>
+</ul>
+
+<%#= render 'sortable_test' %>
+<%#= render 'toolbar_test' %>
+
+<div style="visible: hidden">
+<%= link_to "", plan_sets_path, { id: "plan_sets_index" } %>
+</div>
+

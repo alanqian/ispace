@@ -1,0 +1,7 @@
+<%= simple_form_for(@plan, remote: true, html: { id: "positions-divider-form"}) do |f| %>
+  <%= f.simple_fields_for(:positions, @position, child_index: "") do |nf| %>
+    <%= nf.input :leading_divider %>
+    <%= nf.input :middle_divider, as: :boolean %>
+    <%= nf.input :trail_divider, as: :boolean %>
+  <% end %>
+<% end %>
