@@ -4,11 +4,13 @@
 #
 root = exports ? this
 
-root.onSelectCategory = (el) ->
-  name = $(el).text()
-  input = $("#brand_category_name")
-  input.val(name)
-  id = $(el).data("id")
-  if id
-    window.location = $(input).data("url") + id
-  return true
+class BrandPage
+  onCategoryChanged: (el) ->
+    id = $(el).val()
+    url = $(el).data("url")
+    # only for index page, the input element has data url
+    if url && id
+      window.location = url + id
+    return true
+
+root.BrandPage = BrandPage

@@ -115,6 +115,9 @@ zh-CN:
       bay:
         create: 创建了货备%{bay}
         update: 修改了货备%{bay}
+      product:
+        update_ex: 更新了%{count}个单品
+        update_fail: 没有更新单品
 
     required:
       text: 'required'

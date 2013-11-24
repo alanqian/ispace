@@ -100,8 +100,7 @@ class ProductsController < ApplicationController
       products = Product.where(code: @products).update_all(product_attr_params)
       respond_to do |format|
         format.html {
-          redirect_to products_url, notice:
-            '#{products.size} products were successfully updated.'
+          redirect_to products_url, notice: simple_notice(count: @products.size)
         }
         format.js {
           set_products_ex_js
@@ -110,7 +109,7 @@ class ProductsController < ApplicationController
     else
       logger.error "no product has been selected!"
       respond_to do |format|
-        format.html { redirect_to products_url, notice: 'No product has been selected!' }
+        format.html { redirect_to products_url, notice: simple_notice(message: :update_fail) }
         format.js
       end
     end
@@ -118,7 +117,7 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json
-  def update
+  def update_default
     respond_to do |format|
       if @product.update(product_params)
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
@@ -151,7 +150,9 @@ class ProductsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-      @product = Product.find(params[:id])
+      if params[:id] != "[]"
+        @product = Product.find(params[:id])
+      end
     end
 
     def set_products_ex_js
@@ -170,7 +171,10 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:category_id, :code, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_zone, :size_name, :case_pack_name, :barcode, :color)
+      params.require(:product).permit(:_do, :user_id, :category_id, :code, :brand_id,
+        :mfr_id, :supplier_id, :id, :name, :height, :width, :depth, :weight, :price_zone,
+        :size_name, :case_pack_name, :barcode, :color,
+        :sale_type, :new_product, :on_promotion)
     end
 
     def product_attr_params

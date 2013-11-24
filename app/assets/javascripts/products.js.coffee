@@ -3,60 +3,92 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 root = exports ? this
 
-root.onProductCategoryChange = (event, el) ->
-  form = $(el).closest("form.product")
-  selDatas = $(el).data("selects")
-  for sel of selDatas
-    select = form.find(sel)
-    coll = $(el).data(selDatas[sel])[$(el).val()]
-    console.log sel, coll
-    select.find("option[value!='']").remove()
-    select = form.find(sel)
-    for id of coll
-      select.append("<option value=#{id}>#{coll[id]}</option>")
-  console.log "change category to", $(el).val()
-
-root.onCancelSetup = (event, el) ->
-  event.preventDefault()
-  $(el).closest("form").closest("div").hide()
-
-root.onClickSales = (event, el) ->
-  event.preventDefault()
-  inputName = "products[]"
-  products = window.dataTableUtil.getSelection("table.dataTable", inputName)
-  form = "form#products-setup-form"
-  if products.length == 0
-    alert("请先选择单品，再进行设置")
-  else
-    $(form).closest("div").show()
-
-    # remove old selection
-    $(form).find("input[name='#{inputName}']").remove()
-    # setup new selection
-    for id in products
-      attrs =
-        type: "hidden"
-        id: "product__#{id}"
-        name: inputName
-        value: "#{id}"
-      $('<input>').attr(attrs).appendTo(form)
-    console.log "sale_type setup completed"
-  return false
-
-root.moveDivToRB = (div, el) ->
-  posTo = $(el).offset()
-  pos = $(div).offset()
-  console.log "to:", posTo, $(el).width(), $(el).height()
-  $(div).css
-    left: posTo.left + $(el).width() - pos.left
-    top: posTo.top + $(el).height() - pos.top
-  console.log "new:", $(div).offset()
-
 class ProductPage
+  action: ""
+  _do: ""
+
+  constructor: (action, _do) ->
+    console.log "create PlanPage"
+    @action = action
+    @_do = _do
+
   onLoad: () ->
     $("form#new_product select#product_color").simplecolorpicker
       picker: true
-    moveDivToRB("div.setup-container", "div#setup-place")
-    $("#products-setup").hide()
+    return true
+
+  onCategoryChanged: (el) ->
+    id = $(el).val()
+    url = $(el).data("url")
+    # only for index page, the input element has data url
+    if url && id
+      window.location = url + id
+    return true
+
+  onSelectProductsGrade: (el) ->
+    if @validateSelection()
+      $.util.popupMenu "#select-products-grade-menu",
+        under: el
+    return true
+
+  onSetProductsGrade: (el) ->
+    grade = $(el).data("grade")
+    console.log "set grade to #{grade}"
+    form = $("form#products-set-grade-form")
+    if !@validateSelection(form)
+      console.log "invalid selection"
+    else
+      @fillInputs form,
+        sale_type: grade
+      form.submit()
+    return true
+
+  onSelectProductsOnSale: (el) ->
+    if @validateSelection()
+      $.util.popupMenu "#select-products-on-sale-menu",
+        under: el
+    return true
+
+  onSetProductsOnSale: (el) ->
+    new_product = $(el).data("new_product")
+    on_promotion = $(el).data("on_promotion")
+    console.log "set product to new:#{new_product}, pro:#{on_promotion}"
+    form = $("form#products-set-on-sale-form")
+    # form: input
+    # form.submit
+    if !@validateSelection()
+      console.log "invalid selection"
+    else
+      @fillInputs form,
+        new_product: new_product
+        on_promotion: on_promotion
+      form.submit()
+    return true
+
+  fillInputs: (form, inputs) ->
+    for attr, value of inputs
+      $("input[name='product[#{attr}]']", form).val(value)
+    return true
+
+  validateSelection: (form) ->
+    inputName = "products[]"
+    products = root.dataTableUtil.getSelection("table.dataTable", inputName)
+    if products.length == 0
+      alert("请先选择单品，再进行设置")
+      return false
+    else
+      if form # update form inputs
+        inputs = $("input[name='products[]']", form)
+        # extract input template
+        tmpl = inputs.first().clone()
+        # clear all old selections
+        $("input[name='products[]']", form).remove()
+        # add selections to input value
+        for id in products
+          input = tmpl.clone().val(id)
+          form.append(input)
+        # remove template
+        tmpl.remove()
+      return true
 
 root.ProductPage = ProductPage
