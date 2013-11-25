@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.bays {
+div.bays {
   margin: 0.3em 0 0 0;
   .span5 {
     width: 310px;
@@ -98,6 +98,19 @@
       width: 4.5em;
     }
   }
+}
+
+div.bays.form {
+  display: inline-block;
+  float: left;
+  min-height: 560px;
+}
+
+div.bays.preview {
+  display: inline-block;
+  width: 60%;
+  // background-color: blue;
+  clear: both;
 }
 
 #dummy, #template {
