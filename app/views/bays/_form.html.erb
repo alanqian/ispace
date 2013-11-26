@@ -49,11 +49,11 @@
             data: { icon: icon } %>
         <% end %>
         <% save_text = @bay.id.nil? ? "新建货备" : "保存货备" %>
-        <%= button_tag save_text, type: :button, id: "bay-save", class: "toolbar-button" %>
+        <%#= button_tag save_text, type: :button, id: "bay-save", class: "toolbar-button" %>
+        <%= f.submit save_text %>
       </div>
     </div>
   </div>
-
   <div id='accordion'>
   </div>
 

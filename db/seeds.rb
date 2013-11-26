@@ -288,7 +288,7 @@ FreezerChest.create(
   wall_thick: 40,
   inside_height: 800,
   merch_height: 700,
-  color: '#ffff',
+  color: '#ffffff',
   level: 1,
 )
 [[1, 31, 4800], [2, 43, 0]].each do |level, notch_num, from_back|

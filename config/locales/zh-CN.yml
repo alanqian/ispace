@@ -286,7 +286,10 @@ zh-CN:
       红色:   '#dc2127'
       紫色:   '#dbadff'
       灰色:   '#e1e1e1'
+      银灰色: '#dfdfdf'
       白色:   '#ffffff'
+      暗黑色: '#101010'
+      深紫色: '#400040'
     prices:
       "高": "a"
       "中": "b"
@@ -475,3 +478,12 @@ zh-CN:
         "名称": "product.name"
         "大小": "product.size_name"
         "排面": "sale.facing"
+    import_bays:
+      bay:
+        name: "名称"
+        sizes: "规格"
+        element: "模块"
+        elem_count: ""
+      _custom:
+        "类别": "bay.types"
+        "模块数量": "bay.elem_count"

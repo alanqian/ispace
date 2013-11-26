@@ -116,7 +116,7 @@ class ImportSheet < ActiveRecord::Base
           if to_field && row[i] && (!row[i].kind_of?(String) || !row[i].empty?)
             # make a patch for roo, for string/integer fields
             column_type = self.class.map_dict[:_types][to_field]
-            row[i] = row[i].to_s.gsub(/[\u007f\u0080\u00a0-\u00ff]/, "").gsub(/\s*$/, "")
+            row[i] = row[i].to_s.gsub(/[\u007f\u0080\u00a0\u00ff]/, "").gsub(/\s*$/, "")
 
             # strip \.0+ for :string & :integer
             if column_type == :string || column_type == :integer
@@ -378,8 +378,10 @@ class ImportSheet < ActiveRecord::Base
         map.each do |k, v|
           field = "#{table}.#{k}"
           unless types[field]
-            column = k.to_s.gsub(/(\[\d+\])+/, '')
-            types[field] = klass.columns_hash[column].type
+            column_name = k.to_s.gsub(/(\[\d+\])+/, '')
+            column = klass.columns_hash[column_name]
+            types[field] = column.nil? ? String : column.type
+            logger.warn "Unknown column for #{table}, column:#{k}"
           end
           field_mapping[v] = field
           fields.push ["#{table}.#{k}", v]

@@ -387,6 +387,7 @@ class Bay
 
   constructor: (data, focusName) ->
     @bay = data.bay
+    @bay.open_shelves ||= []
     @focus_name = focusName
 
   draw: (paper, cx, cy) ->
@@ -421,11 +422,11 @@ class Bay
 
     height = @bay.back_height + @bay.base_height
     depths = @bay.open_shelves.map (x) -> x.depth
-    max_depth = depths.reduce (x, y) -> Math.max(x, y)
+    max_depth = depths.reduce ((x, y) -> Math.max(x, y)), 0
     widths = @bay.open_shelves.map (x) -> x.width
-    max_width = widths.reduce (x, y) -> Math.max(x, y)
+    max_width = widths.reduce ((x, y) -> Math.max(x, y)), 0
     heights = @bay.open_shelves.map (x) -> x.height + x.from_base
-    @bay.takeoff_height = heights.reduce (x, y) -> Math.max(x, y)
+    @bay.takeoff_height = heights.reduce ((x, y) -> Math.max(x, y)), 0
     console.log max_depth, max_width, @bay.takeoff_height
 
     sideview_width = Math.max @bay.base_depth, @bay.back_thick + (max_depth || 0)
