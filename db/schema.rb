@@ -11,20 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131124132420) do
+ActiveRecord::Schema.define(version: 20131126075853) do
 
   create_table "bays", force: true do |t|
-    t.string   "name",                                   null: false
-    t.decimal  "back_height",   precision: 6,  scale: 1, null: false
-    t.decimal  "back_width",    precision: 7,  scale: 1, null: false
-    t.decimal  "back_thick",    precision: 6,  scale: 1, null: false
-    t.string   "back_color",                             null: false
-    t.decimal  "notch_spacing", precision: 6,  scale: 1
-    t.decimal  "notch_1st",     precision: 6,  scale: 1
-    t.decimal  "base_height",   precision: 6,  scale: 1, null: false
-    t.decimal  "base_width",    precision: 6,  scale: 1, null: false
-    t.decimal  "base_depth",    precision: 6,  scale: 1, null: false
-    t.string   "base_color",                             null: false
+    t.string   "name",                                                null: false
+    t.integer  "back_height",                                         null: false
+    t.integer  "back_width",                                          null: false
+    t.integer  "back_thick",                                          null: false
+    t.string   "back_color",                                          null: false
+    t.integer  "notch_spacing",                          default: 20, null: false
+    t.integer  "notch_1st",                              default: 20, null: false
+    t.integer  "base_height",                                         null: false
+    t.integer  "base_width",                                          null: false
+    t.integer  "base_depth",                                          null: false
+    t.string   "base_color",                                          null: false
     t.integer  "num_layers"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -137,15 +137,15 @@ ActiveRecord::Schema.define(version: 20131124132420) do
   create_table "freezer_chests", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",        precision: 6, scale: 1,             null: false
-    t.decimal  "depth",         precision: 6, scale: 1,             null: false
-    t.decimal  "wall_thick",    precision: 6, scale: 1,             null: false
-    t.decimal  "inside_height", precision: 6, scale: 1,             null: false
-    t.decimal  "merch_height",  precision: 6, scale: 1,             null: false
+    t.integer  "height",                    null: false
+    t.integer  "depth",                     null: false
+    t.integer  "wall_thick",                null: false
+    t.integer  "inside_height",             null: false
+    t.integer  "merch_height",              null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                                 default: 0, null: false
+    t.integer  "level",         default: 0, null: false
   end
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
@@ -186,18 +186,18 @@ ActiveRecord::Schema.define(version: 20131124132420) do
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",       precision: 6, scale: 1,             null: false
-    t.decimal  "width",        precision: 6, scale: 1,             null: false
-    t.decimal  "depth",        precision: 6, scale: 1,             null: false
-    t.decimal  "thick",        precision: 6, scale: 1,             null: false
+    t.integer  "height",                                           null: false
+    t.integer  "width",                                            null: false
+    t.integer  "depth",                                            null: false
+    t.integer  "thick",                                            null: false
     t.decimal  "slope",        precision: 4, scale: 1,             null: false
-    t.decimal  "riser",        precision: 6, scale: 1,             null: false
+    t.integer  "riser",                                            null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",    precision: 6, scale: 1,             null: false
+    t.integer  "from_base",                                        null: false
     t.string   "color"
-    t.decimal  "from_back",    precision: 6, scale: 1,             null: false
-    t.decimal  "finger_space", precision: 6, scale: 1,             null: false
-    t.decimal  "x_position",   precision: 6, scale: 1,             null: false
+    t.integer  "from_back",                                        null: false
+    t.integer  "finger_space",                                     null: false
+    t.integer  "x_position",                                       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "level",                                default: 0, null: false
@@ -208,18 +208,18 @@ ActiveRecord::Schema.define(version: 20131124132420) do
   create_table "peg_boards", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",     precision: 6, scale: 1,             null: false
-    t.decimal  "depth",      precision: 6, scale: 1,             null: false
-    t.decimal  "vert_space", precision: 6, scale: 1,             null: false
-    t.decimal  "horz_space", precision: 6, scale: 1,             null: false
-    t.decimal  "vert_start", precision: 6, scale: 1,             null: false
-    t.decimal  "horz_start", precision: 6, scale: 1,             null: false
+    t.integer  "height",                 null: false
+    t.integer  "depth",                  null: false
+    t.integer  "vert_space",             null: false
+    t.integer  "horz_space",             null: false
+    t.integer  "vert_start",             null: false
+    t.integer  "horz_start",             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",  precision: 6, scale: 1,             null: false
+    t.integer  "from_base",              null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                              default: 0, null: false
+    t.integer  "level",      default: 0, null: false
   end
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
@@ -280,11 +280,11 @@ ActiveRecord::Schema.define(version: 20131124132420) do
   create_table "positions", force: true do |t|
     t.integer  "plan_id"
     t.integer  "store_id"
-    t.string   "product_id",                                             null: false
+    t.string   "product_id",                    null: false
     t.integer  "layer"
     t.integer  "seq_num"
     t.integer  "facing"
-    t.decimal  "run",              precision: 10, scale: 1
+    t.integer  "run"
     t.integer  "units"
     t.integer  "height_units"
     t.integer  "width_units"
@@ -292,22 +292,22 @@ ActiveRecord::Schema.define(version: 20131124132420) do
     t.string   "oritentation"
     t.string   "merch_style"
     t.string   "peg_style"
-    t.decimal  "top_cap_width",    precision: 10, scale: 1
-    t.decimal  "top_cap_depth",    precision: 10, scale: 1
-    t.decimal  "bottom_cap_width", precision: 10, scale: 1
-    t.decimal  "bottom_cap_depth", precision: 10, scale: 1
-    t.decimal  "left_cap_width",   precision: 10, scale: 1
-    t.decimal  "left_cap_depth",   precision: 10, scale: 1
-    t.decimal  "right_cap_width",  precision: 10, scale: 1
-    t.decimal  "right_cap_depth",  precision: 10, scale: 1
-    t.decimal  "leading_gap",      precision: 10, scale: 1
-    t.decimal  "leading_divider",  precision: 10, scale: 1
-    t.decimal  "middle_divider",   precision: 10, scale: 1
-    t.decimal  "trail_divider",    precision: 10, scale: 1
+    t.integer  "top_cap_width"
+    t.integer  "top_cap_depth"
+    t.integer  "bottom_cap_width"
+    t.integer  "bottom_cap_depth"
+    t.integer  "left_cap_width"
+    t.integer  "left_cap_depth"
+    t.integer  "right_cap_width"
+    t.integer  "right_cap_depth"
+    t.integer  "leading_gap"
+    t.integer  "leading_divider"
+    t.integer  "middle_divider"
+    t.integer  "trail_divider"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "fixture_item_id",                           default: -1, null: false
-    t.integer  "init_facing",                                            null: false
+    t.integer  "fixture_item_id",  default: -1, null: false
+    t.integer  "init_facing",                   null: false
   end
 
   create_table "products", id: false, force: true do |t|
@@ -318,9 +318,9 @@ ActiveRecord::Schema.define(version: 20131124132420) do
     t.integer  "user_id"
     t.integer  "import_id",                                     default: -1
     t.string   "name"
-    t.decimal  "height",               precision: 10, scale: 0
-    t.decimal  "width",                precision: 10, scale: 0
-    t.decimal  "depth",                precision: 10, scale: 0
+    t.integer  "height",                                                        null: false
+    t.integer  "width",                                                         null: false
+    t.integer  "depth",                                                         null: false
     t.decimal  "weight",               precision: 10, scale: 0
     t.string   "price_zone"
     t.string   "size_name"
@@ -365,18 +365,18 @@ ActiveRecord::Schema.define(version: 20131124132420) do
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",      precision: 6, scale: 1,             null: false
-    t.decimal  "bar_depth",   precision: 6, scale: 1,             null: false
-    t.decimal  "bar_thick",   precision: 6, scale: 1,             null: false
-    t.decimal  "from_back",   precision: 6, scale: 1,             null: false
-    t.decimal  "hook_length", precision: 6, scale: 1,             null: false
+    t.integer  "height",                  null: false
+    t.integer  "bar_depth",               null: false
+    t.integer  "bar_thick",               null: false
+    t.integer  "from_back",               null: false
+    t.integer  "hook_length",             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",   precision: 6, scale: 1,             null: false
+    t.integer  "from_base",               null: false
     t.string   "color"
-    t.decimal  "bar_slope",   precision: 4, scale: 1,             null: false
+    t.integer  "bar_slope",               null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                               default: 0, null: false
+    t.integer  "level",       default: 0, null: false
   end
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
@@ -405,7 +405,7 @@ ActiveRecord::Schema.define(version: 20131124132420) do
     t.integer  "import_id",                            default: -1
     t.decimal  "price",       precision: 10, scale: 2
     t.integer  "facing"
-    t.decimal  "run",         precision: 10, scale: 2
+    t.integer  "run"
     t.integer  "volume"
     t.integer  "volume_rank"
     t.decimal  "value",       precision: 10, scale: 0

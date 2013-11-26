@@ -196,7 +196,7 @@ class Fixture < ActiveRecord::Base
         bay = fi.bay
         bay.layers.each do |layer|
           key = Position.layer_key(fi.id, layer.layer)
-          # "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}cm"
+          # "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}mm"
           k = self.flow_l2r ? :l2r_layer_name : :r2l_layer_name
           layer_name[key] = pdf.ostate.options[:open_shelf][k].template(
             fixture: self, bay: bay, layer: layer)

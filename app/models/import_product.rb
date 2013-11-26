@@ -143,10 +143,6 @@ class ImportProduct < ImportSheet
   def normalize_product_params(params)
     params[:size_name] = params[:size_name].to_s.downcase
     params[:status] = params.delete(:status_pair).split("-").first
-    # mm -> cm
-    [:width, :height, :depth].each do |attr|
-      params[attr] = params[attr].to_i / 10.0
-    end
   end
 
   def import_product(params)

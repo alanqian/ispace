@@ -10,7 +10,7 @@ module ApplicationHelper
     else
       model = controller_name.classify.downcase
     end
-    prefixs = ["activerecord.attributes.#{model}", "dict"]
+    prefixs = ["activerecord.attributes.#{model}", "simple_form.labels.defaults", "dict"]
     prefixs.each do |prefix|
       s = I18n.t("#{prefix}.#{field}", default: '')
       return s unless s.empty?

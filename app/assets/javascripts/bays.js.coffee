@@ -243,6 +243,8 @@ root.BayPage = class BayPage
 
   initFormElement: (container = "form.simple_form.bay") ->
     self = @
+    for name in ["height", "width", "depth", "thick", "space"]
+      $("input.numeric.integer[id$='#{name}']").attr("step", 10).attr("min", 0)
     $("select.colorpicker", container).simplecolorpicker
       picker: true
     $(":input", container).focus () ->
@@ -493,10 +495,10 @@ class Bay
       cy = shelf.thick * scale
       paper.rect(x, y, cx, cy).attr("fill", shelf.color)
       x0 = x + cx / 2
-      paper.text(x0, y + cy / 2, shelf.name)
+      #paper.text(x0, y + cy / 2, shelf.name)
       # draw depth metrics
-      y0 = y - cy / 2
-      paper.hruler(x, y0, x + cx, 40, 20, "#{shelf.depth}cm")
+      y0 = y - cy
+      paper.hruler(x, y0, x + cx, 40, 20, "#{shelf.depth}mm")
       # el.attr("stroke", "red")
       return true
 
@@ -508,7 +510,7 @@ class Bay
       cx = shelf.width * scale
       cy = shelf.thick * scale
       paper.rect(x, y, cx, cy).attr("fill", shelf.color)
-      paper.text(x + cx / 2, y + cy / 2, "#{shelf.name} #{shelf.width}cm")
+      paper.text(x + cx / 2, y + cy / 2, "#{shelf.name} #{shelf.width}mm")
       return true
 
   drawTakeoffHeight: (paper) ->

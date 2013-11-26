@@ -14,18 +14,18 @@ class Bay < ActiveRecord::Base
 
   validates :name, presence: true, length: { maximum: 64 }
   validates :back_height, :back_width, :back_thick, presence: true,
-    numericality: { greater_than: 0.1 }
+    numericality: { greater_than: 0 }
   validates :back_color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/,
     message: 'color' }
 
   validates :notch_spacing, :notch_1st, presence: true,
-    numericality: { greater_than_or_equal_to: 1.0 }
+    numericality: { greater_than_or_equal_to: 1 }
   validates :base_height, :base_width, :base_depth, presence: true,
-    numericality: { greater_than: 0.1 }
+    numericality: { greater_than: 0 }
   validates :base_color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/ }
 
   validates :takeoff_height, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
   before_save :update_metrics
 
   # types

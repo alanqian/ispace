@@ -154,10 +154,6 @@ zh-CN:
         code: 货架编号
         name: 货架名称
         num_bays: 货备数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         parts: 部分货架
       bay:
         back_height: 背板高度
@@ -176,10 +172,6 @@ zh-CN:
         name: 货备名称
         bay_size: 尺寸(高/宽/深)
         num_layers: 层数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         ref_count: 货架数
         types: 类型
       open_shelf:
@@ -226,10 +218,6 @@ zh-CN:
       fixture:
         name: 货架名称
         num_bays: 货备数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         ref_count: 门店数
         memo: 备注
         flow_l2r: 向右排货

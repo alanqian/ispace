@@ -153,6 +153,6 @@ all:
       :summary: 商品汇总表
     :open_shelf:
       :shelf_text: "第#{level}层, 深度: #{depth}厘米"
-      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}cm"
-      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}cm"
+      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}mm"
+      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}mm"
 

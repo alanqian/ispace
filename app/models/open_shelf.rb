@@ -225,7 +225,7 @@ class OpenShelf < ActiveRecord::Base
 
     when :text
       # write text on shelf
-      #text = "第#{level}层, 深度: #{depth}cm"
+      #text = "第#{level}层, 深度: #{depth}mm"
       cx *= num_bays
       text = pdf.ostate.options[:open_shelf][:shelf_text].template(level: level, depth: depth)
       size = 100

@@ -104,10 +104,14 @@ root.updateFixtureMetrics = ->
         window.fixture.linear += bay.linear * num_bays
         window.fixture.area += bay.area * num_bays
         window.fixture.cube += bay.cube * num_bays
-  $("#run").html(window.fixture.run)
-  $("#linear").html(window.fixture.linear)
-  $("#area").html(window.fixture.area)
-  $("#cube").html(window.fixture.cube)
+  window.fixture.run *= 0.001
+  window.fixture.linear *= 0.001
+  window.fixture.area *= 0.000001
+  window.fixture.cube *= 0.000000001
+  $("#run").html(window.fixture.run.toFixed(2) + "m")
+  $("#linear").html(window.fixture.linear.toFixed(2) + "m")
+  $("#area").html(window.fixture.area.toFixed(2) + "m²")
+  $("#cube").html(window.fixture.cube.toFixed(2) + "m³")
 
 root.updateControls = (updateMetricOnly) ->
   if !updateMetricOnly

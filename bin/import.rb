@@ -3,6 +3,12 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
 
 imports = {
+  "product" => {
+    #files: "商品档案1.csv",
+    files: "尺寸.csv",
+    klass: Brand,
+  },
+  "sale" => "",
   "category" => {
     files: "分类.xlsx",
   },
@@ -10,11 +16,6 @@ imports = {
     files: "便利店基础信息.xlsx",
     klass: Region,
   },
-  "product" => {
-    files: "商品档案1.csv",
-    klass: Brand,
-  },
-  "sale" => "",
   #"product" => ["商品档案1.xlsx",
   #  "商品档案2.xlsx",
   #  "商品档案3.xlsx",
