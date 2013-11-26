@@ -34,15 +34,13 @@
   <%= simple_form_for(manufacturer_new, remote:true,
                       url: "#",
                       html: { id: "manufacturers-choose-category" }) do |f| %>
-    <%= f.input :category_id, collection: categories, prompt: "选择品类",
-      label: "",
-      input_html: {
-        data: { url: manufacturers_path(category: "") },
-        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
-    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category",
+      data: { url: manufacturers_path(category: "") } %>
   <% end %>
 </div>
 
+<%= category_menu "select-category" %>
 <br>
 
-<%= link_to 'New Manufacturer', new_manufacturer_path %>
+<%#= link_to 'New Manufacturer', new_manufacturer_path %>

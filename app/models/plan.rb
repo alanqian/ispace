@@ -71,8 +71,9 @@ class Plan < ActiveRecord::Base
   def plan_set_name
     self.plan_set.name
   end
+
   def category_name
-    self.category.name
+    self.category.nil? ? "" : self.category.name
   end
 
   def status_s

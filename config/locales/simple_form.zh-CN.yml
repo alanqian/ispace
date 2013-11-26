@@ -150,7 +150,7 @@ zh-CN:
         category_name: (新规划才能更改品类)
 
       plan_set:
-        category_name: (新规划才能更改品类)
+        category_id: (新规划才能更改品类)
 
     # By default, show in EMPTY input element in gray color
     placeholders:
@@ -161,7 +161,7 @@ zh-CN:
       plan_set:
         name: 规划名称
         note: 填写本规划的说明，部署的要求等等；此处说明内容会打印在给门店的规划书的扉页
-        category_name: 品类
+        category_id: 品类
       bay:
         name: 货备名称，如：120x7层板
         open_shelves:

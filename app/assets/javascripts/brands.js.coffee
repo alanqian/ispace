@@ -4,7 +4,7 @@
 #
 root = exports ? this
 
-class BrandPage
+root.BrandPage = class BrandPage
   onCategoryChanged: (el) ->
     id = $(el).val()
     url = $(el).data("url")
@@ -13,4 +13,3 @@ class BrandPage
       window.location = url + id
     return true
 
-root.BrandPage = BrandPage

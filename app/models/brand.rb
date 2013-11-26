@@ -5,7 +5,7 @@ class Brand < ActiveRecord::Base
   attr_accessor :category_name
 
   def category_name
-    self.category.name
+    self.category.nil? ? "" : self.category.name
   end
 
   def self.validate_attribute(attr, value)
