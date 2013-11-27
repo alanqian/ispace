@@ -100,6 +100,8 @@ class OpenShelf < ActiveRecord::Base
           valign: :center
       end
     end
+  rescue Exception => e
+    logger.warn "failed in position_to_pdf, e: #{e}, #{e.backtrace}"
   end
 
   # origin=base
