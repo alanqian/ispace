@@ -321,13 +321,14 @@ class Plan < ActiveRecord::Base
     done_count = [0, 0]
     product_map = Product.on_sales(self.category_id).to_hash(:code, :grade)
     positions.each do |pos|
-      type = product_map[pos.product_id]
+      prod_type = product_map[pos.product_id]
+      index = prod_type == 'A' ? 0 : 1
       if pos.on_shelf?
-        done_count[type] += 1
+        done_count[index] += 1
         occupy_run[pos.layer_key] ||= 0
         occupy_run[pos.layer_key] += pos.run
       end
-      total_count[type] += 1
+      total_count[index] += 1
     end
 
     self.num_prior_products = total_count[0]
@@ -461,7 +462,7 @@ class Plan < ActiveRecord::Base
       init_deployment
     end
   rescue Exception => e
-    logger.warn "failed in to_pdf, e: #{e}"
+    logger.warn "failed in to_pdf, e: #{e}, #{e.backtrace}"
   end
 
   def to_pdf

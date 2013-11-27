@@ -123,7 +123,7 @@ class StoresController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def store_params
       params.require(:store).permit(:_do,
-        :region_id, :code, :name, :ref_store_id, :area, :location, :memo,
+        :region_id, :code, :name, :ref_store_id, :area, :location, :memo, :grade,
         store_fixtures_attributes: [:_destroy, :id,
           :category_id, :category_name, :fixture_id, :code, :memo,
           :use_part_fixture, :parts_start, :parts_run]

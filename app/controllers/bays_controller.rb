@@ -146,7 +146,7 @@ class BaysController < ApplicationController
       :use_notch, :notch_spacing, :notch_1st,
       :base_height, :base_width, :base_depth, :base_color,
       :takeoff_height,
-      :show_peg_holes,
+      :show_peg_holes, :linear, :area, :cube,
       open_shelves_attributes: [:_destroy, :id, :name, :level,
         :height, :width, :depth, :thick,
         :slope, :riser, :notch_num, :from_base, :color, :from_back,

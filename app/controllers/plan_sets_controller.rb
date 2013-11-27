@@ -226,7 +226,8 @@ class PlanSetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_set_params
-      params.require(:plan_set).permit(:_do, :name, :note, :category_id, :category_name, :to_deploy_at, :user_id, model_stores:[] )
+      params.require(:plan_set).permit(:_do, :name, :note, :category_id, :category_name,
+                                       :to_deploy_at, :user_id, :off, model_stores:[] )
     end
 
     def set_fixture_update_js

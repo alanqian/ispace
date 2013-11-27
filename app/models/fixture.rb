@@ -11,23 +11,23 @@ class Fixture < ActiveRecord::Base
   end
 
   def num_bays
-    fixture_items.sum { |it| it.num_bays }
+    fixture_items.to_a.sum { |it| it.num_bays }
   end
 
   def run
-    fixture_items.sum { |it| it.bay.run * it.num_bays }
+    fixture_items.to_a.sum { |it| it.bay.run * it.num_bays }
   end
 
   def linear
-    fixture_items.sum { |it| it.bay.linear * it.num_bays }
+    fixture_items.to_a.sum { |it| it.bay.linear * it.num_bays }
   end
 
   def area
-    fixture_items.sum { |it| it.bay.area * it.num_bays }
+    fixture_items.to_a.sum { |it| it.bay.area * it.num_bays }
   end
 
   def cube
-    fixture_items.sum { |it| it.bay.cube * it.num_bays }
+    fixture_items.to_a.sum { |it| it.bay.cube * it.num_bays }
   end
 
   def ref_count
