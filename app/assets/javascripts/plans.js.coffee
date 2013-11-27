@@ -1000,7 +1000,7 @@ class ProductTable
   productIndex: {}
   maxRank: 1
 
-  onShowProductSaleType: (el) ->
+  onShowProductGrade: (el) ->
     self = @
     grade = el.value
     if self.show_grade != grade
@@ -1085,7 +1085,7 @@ class ProductTable
 
   initProductList: () ->
     @productIndex = {}
-    @productData = $("#products-data").data("sale-type")
+    @productData = $("#products-data").data("grade")
     @maxRank = @productData.length
     index = 0
     for data in @productData

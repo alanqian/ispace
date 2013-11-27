@@ -6,6 +6,7 @@ class PlanSet < ActiveRecord::Base
   has_many :deployments, -> { order("deployed_by, download_1st_at") }
 
   attr_accessor :model_stores
+  attr_accessor :store_name  # by search
   before_save :update_redundancy
 
   def model_stores

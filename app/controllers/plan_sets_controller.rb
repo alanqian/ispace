@@ -83,12 +83,13 @@ class PlanSetsController < ApplicationController
           recent_plans: Plan.recent_edited,
         }
         render 'index_design'
-      when :deploy
+      when :deploy, :search
         @plan_sets = {
           deploying: PlanSet.deploying_sets,
           deployed: PlanSet.deployed_sets(10)
         }
         render 'index_deploy'
+        # render 'index_search'
       else
         @plan_sets = {
           design: PlanSet.designing_sets,
@@ -116,7 +117,6 @@ class PlanSetsController < ApplicationController
   # GET /plan_sets/1.json
   def show
     @do ||= :open
-    set_show
   end
 
   # GET /plan_sets/new
@@ -135,17 +135,29 @@ class PlanSetsController < ApplicationController
   # POST /plan_sets
   # POST /plan_sets.json
   def create
-    @plan_set = PlanSet.new(plan_set_params)
-    respond_to do |format|
-      if @plan_set.save
-        format.html {
-          redirect_to edit_plan_set_path(@plan_set), notice: 'Plan set was successfully created.'
-        }
-        format.json { render action: 'show', status: :created, location: @plan_set }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @plan_set.errors, status: :unprocessable_entity }
+    if params[:plan_set][:_do] == "search"
+      search
+    else
+      @plan_set = PlanSet.new(plan_set_params)
+      respond_to do |format|
+        if @plan_set.save
+          format.html {
+            redirect_to edit_plan_set_path(@plan_set), notice: 'Plan set was successfully created.'
+          }
+          format.json { render action: 'show', status: :created, location: @plan_set }
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @plan_set.errors, status: :unprocessable_entity }
+        end
       end
+    end
+  end
+
+  def search
+    @store_name = @plan_set.store_name
+    logger.debug "search: #{@plan_set.store_name}"
+    respond_to do |format|
+      format.html { redirect_to plan_sets_path(_do: 'search', store_id: "abc") }
     end
   end
 
@@ -202,7 +214,8 @@ class PlanSetsController < ApplicationController
     end
 
     def new_plan_set
-      @plan_set = PlanSet.new({user_id: @current_user_id})
+      @plan_set = PlanSet.new({user_id: @current_user_id,
+                              to_deploy_at: (Time.now + 2.days).to_date})
     end
 
     def set_options
