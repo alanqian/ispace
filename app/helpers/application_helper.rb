@@ -344,4 +344,10 @@ module ApplicationHelper
     content_tag :div, "", class: "ui-tree-input-menu hide", data: {
       cmd: cmd, tree: tree }
   end
+
+  def deploy_stores(dpm, item)
+    # [#<struct PlanDeploy plan_id=2, store_id=1, store_name="安庆大龙山加油站", downloaded_at=nil, deployed_at=nil>]
+    list = dpm[item]
+    list.map { |e| e.store_name } .join(", ")
+  end
 end

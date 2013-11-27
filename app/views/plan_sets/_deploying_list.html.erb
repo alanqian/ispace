@@ -31,9 +31,9 @@
           completed_ratio,
           dt_ago(plan_set.published_at.localtime),
           plan_set.to_deploy_at,
-          :deployed,
-          :download,
-          :none,
+          deploy_stores(dpm, :deployed),
+          deploy_stores(dpm, :download),
+          deploy_stores(dpm, :none),
           link_to("撤销发布", edit_plan_set_path(plan_set, _do: :publish, off: 1))
         %>
       </tr>

@@ -3,6 +3,7 @@
   <p><strong>发布时间：</strong><%=dt_ago @plan_set.published_at %></p>
   <p><strong>计划部署：</strong><%= @plan_set.to_deploy_at %></p>
   <p><strong>规划说明：</strong><%= @plan_set.note %></p>
+  <%= link_to "下载规划", plan_path(_do: :download_pdf), target: :_blank %>
 
   <%#
     plans info for model store:
