@@ -21,9 +21,13 @@
 .sass-cache
 /public/system/*
 /public/sheets/*
-/public/downloads/*
+/public/downloads/*.pdf
 rerun.txt
 pickle-email-*.html
+
+# Ignore project debug files
+*.log
+*.tgz
 
 # ignore test files
 capybara-*.html
