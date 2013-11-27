@@ -26,15 +26,27 @@ class PlansController < ApplicationController
 
   def download_pdf
     path = @plan.plan_pdf
+    logger.debug "download pdf file, file:#{path}, user:#{@current_user_id} store:#{@current_user_store_id}"
+    if !File.exists?(path)
+      logger.warn "Cannot find pdf file: #{path}"
+      raise ActionController::RoutingError, "resource not found"
+    end
+
     deploy = Deployment.start_download(@plan.id, @current_user_store_id)
-    if File.exists?(path) && deploy != nil
+    if (deploy == nil && @current_user_role != :designer)
+      logger.warn "unsecure download denied"
+      raise ActionController::RoutingError, "resource not found"
+    end
+
+    if deploy != nil
       send_file(path, x_sendfile: true, filename:
                 "#{deploy.plan_set_name}-#{@current_user_store_id}.#{@current_user_id}.pdf")
       deploy.download(@current_user_id)
-      logger.info "download plan, plan:#{@plan.id} store:#{@current_user_store_id} user:#{@current_user_id}"
     else
-      raise ActionController::RoutingError, "resource not found"
+      send_file(path, x_sendfile: true, filename:
+                "#{@plan.plan_set.full_name}-#{@plan.store_name}-#{@current_user_id}.pdf")
     end
+    logger.info "download plan, plan:#{@plan.id} store:#{@current_user_store_id} user:#{@current_user_id}"
   end
 
   # GET /plans/new
