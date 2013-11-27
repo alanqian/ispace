@@ -256,16 +256,18 @@ class Plan < ActiveRecord::Base
       if p.on_shelf?
         product = product_map[p.product_id]
         attr = attr_map[product[attr_id]]
-        block = PlanBlock.by_attr(product, attr, p)
-        key = attr[:id]
-        total_run += block.run
-        total_count += 1
-        if blocks[key]
-          blocks[key].count += 1
-          blocks[key].run += block.run
-        else
-          block.count = 1
-          blocks[key] = block
+        if attr != nil
+          block = PlanBlock.by_attr(product, attr, p)
+          key = attr[:id]
+          total_run += block.run
+          total_count += 1
+          if blocks[key]
+            blocks[key].count += 1
+            blocks[key].run += block.run
+          else
+            block.count = 1
+            blocks[key] = block
+          end
         end
       end
     end
