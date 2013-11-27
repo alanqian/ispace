@@ -113,6 +113,8 @@ zh-CN:
         update_model_store: 样板店设置成功，继续操作
         update_model_store_fail: 样板店设置失败！
         update_fixture: 成功设置样板店货架！
+        update_delete: 门店%{store}已删除!
+        update_delete_fail: 门店%{store}删除失败!
       bay:
         create: 创建了货备%{bay}
         update: 修改了货备%{bay}

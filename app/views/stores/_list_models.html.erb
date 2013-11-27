@@ -15,7 +15,8 @@
         :area,
         :depot_area,
         :location,
-        :grade # [ :ref_store_id, sort: false ],
+        :grade, # [ :ref_store_id, sort: false ],
+        ""
         ) %>
     </tr>
   </thead>
@@ -37,7 +38,8 @@
           :area,
           :depot_area,
           :location,
-          :grade
+          :grade,
+          link_to("删除", store_path(store, "store[_do]" => :delete), method: :put, data: { confirm: "确定删除门店？" } )
         %>
       </tr>
     <% end %>

@@ -65,6 +65,20 @@ class StoresController < ApplicationController
     end
   end
 
+  def update_delete
+    respond_to do |format|
+      if @store.update(deleted_at: Time.now)
+        format.html { redirect_to stores_path, notice: simple_notice(store: @store.name) }
+      else
+        format.html do
+          redirect_to stores_path,
+            notice: simple_notice(message: :update_delete_failed,
+                                  store: @store.name)
+        end
+      end
+    end
+  end
+
   def update_model_store
     @commit ||= :set_model_store # js call no commit parameter
     logger.debug "stores: #{params[:stores]}"

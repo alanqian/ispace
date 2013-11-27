@@ -1,6 +1,7 @@
 class Region < ActiveRecord::Base
   self.primary_key = "code"
   before_save :update_redundancy
+  scope :sub_regions, -> { where('locate(".", code)') }
 
   has_many :stores
 

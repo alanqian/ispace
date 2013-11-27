@@ -1,5 +1,6 @@
 class Store < ActiveRecord::Base
   scope :model_store, -> { where('ref_store_id = id') }
+  default_scope -> { where('deleted_at is NULL') }
 
   has_one :region
 

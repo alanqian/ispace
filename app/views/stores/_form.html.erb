@@ -2,12 +2,12 @@
   <%= f.error_notification %>
 
   <div class="inputs">
-    <%= f.input :region_id %>
+    <%= f.input :region_id, collection: Region.sub_regions %>
     <%= f.input :code %>
     <%= f.input :name %>
     <%= f.input :area %>
+    <%= f.input :depot_area %>
     <%= f.input :location %>
-    <%= f.input :ref_store_id %>
     <%= f.input :memo %>
   </div>
 

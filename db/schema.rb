@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131126075853) do
+ActiveRecord::Schema.define(version: 20131127071008) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                                null: false
@@ -465,6 +465,8 @@ ActiveRecord::Schema.define(version: 20131126075853) do
     t.string   "pinyin"
     t.decimal  "depot_area",              precision: 6, scale: 1
     t.string   "grade"
+    t.datetime "deleted_at"
+    t.string   "image_file"
   end
 
   add_index "stores", ["area"], name: "index_stores_on_area", using: :btree
