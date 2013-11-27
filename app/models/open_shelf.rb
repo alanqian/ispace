@@ -142,8 +142,12 @@ class OpenShelf < ActiveRecord::Base
       for i in start..(stop - 1)
         # draw full position
         block = blocks[i]
-        position_to_pdf(pdf, block, horz)
-        horz += block.run
+        if block
+          position_to_pdf(pdf, block, horz)
+          horz += block.run
+        else
+          logger.warn "nil block, #{start}..#{stop-1}, i:#{i}"
+        end
       end
       #logger.debug "horz: #{left_run-left}, #{horz}"
 
