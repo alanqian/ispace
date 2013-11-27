@@ -139,14 +139,16 @@ class OpenShelf < ActiveRecord::Base
       # draw each positions
       #logger.debug "draw positions, width:#{width} start:#{start} stop:#{stop} left_run:#{left_run} left:#{left}"
       horz = left_run - left
-      for i in start..(stop - 1)
-        # draw full position
-        block = blocks[i]
-        if block
-          position_to_pdf(pdf, block, horz)
-          horz += block.run
-        else
-          logger.warn "nil block, #{start}..#{stop-1}, i:#{i}"
+      if start >= 0
+        for i in start..(stop - 1)
+          # draw full position
+          block = blocks[i]
+          if block
+            position_to_pdf(pdf, block, horz)
+            horz += block.run
+          else
+            logger.warn "nil block, #{start}..#{stop-1}, i:#{i}"
+          end
         end
       end
       #logger.debug "horz: #{left_run-left}, #{horz}"
