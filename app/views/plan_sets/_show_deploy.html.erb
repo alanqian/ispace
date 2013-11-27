@@ -3,7 +3,6 @@
   <p><strong>发布时间：</strong><%=dt_ago @plan_set.published_at %></p>
   <p><strong>计划部署：</strong><%= @plan_set.to_deploy_at %></p>
   <p><strong>规划说明：</strong><%= @plan_set.note %></p>
-  <%= link_to "下载规划", plan_path(_do: :download_pdf), target: :_blank %>
 
   <%#
     plans info for model store:
@@ -17,20 +16,21 @@
     <thead>
       <tr>
         <th>门店</th>
-        <th>下载</th>
-        <th>部署</th>
-        <th>上报</th>
-        <th>样板店</th>
+        <th>下载时间</th>
+        <th>部署时间</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <% @plan_set.deployments.each do |dp| %>
         <tr>
-          <td><%= dp.store.name %></td>
+          <td><%= dp.store.name %>
+          </td>
           <td><%= dp.download_1st_at %></td>
           <td><%= dp.deployed_at %></td>
-          <td><%= dp.deployed_by %></td>
-          <td><%= dp.plan_id %></td>
+          <td>
+            <%= link_to "下载", plan_path(dp.plan_id, _do: :download_pdf), target: :_blank %>
+          </td>
         </tr>
       <% end %>
     </tbody>
