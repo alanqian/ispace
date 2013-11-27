@@ -10,6 +10,17 @@ class Store < ActiveRecord::Base
   has_many :store_fixtures
   accepts_nested_attributes_for :store_fixtures, allow_destroy: true
 
+  def image_file=(upload_file)
+    # super(upload_file.original_filename)
+    # logger.debug "upload_file image_file, file:#{image_file}"
+    ext = File.extname(File.basename(upload_file.original_filename).downcase)
+    filename = "#{id}#{ext}"
+    File.open("#{Rails.root}/public/store_images/#{filename}", "wb") do |f|
+      f.write(upload_file.read)
+    end
+    super(filename)
+  end
+
   def self.define_model_store(stores)
     if stores.empty?
       logger.warn "cannot define model_store for null"

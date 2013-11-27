@@ -44,4 +44,32 @@ body#store {
     width: 4em;
     display: inline-block;
   }
+  div.input.file {
+    input.file {
+      display: inline-block;
+      margin-left: 5.5em;
+    }
+  }
 }
+
+div#store_fixture_form {
+  display: inline-block;
+  float: left;
+  width: 400px;
+}
+
+div#store_fixture_legend {
+  display: inline-block;
+  width: 400px;
+  min-height: 300px;
+}
+
+div#store_fixture_zoom_legend {
+  position: absolute;
+  z-index: 1;
+  top: 110px;
+  left: 20px;
+  width: 800px;
+  height: 600px;
+}
+

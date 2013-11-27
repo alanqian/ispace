@@ -1,7 +1,7 @@
 <% hier_ctg = hier_categories(@categories_all) %>
 <%= simple_form_for(@store) do |f| %>
   <%= f.error_notification %>
-  <div class="inputs">
+  <div id="store_fixture_form" class="inputs">
     <%#= f.input :region_id %>
     <%= f.input :_do, as: :hidden, input_html: { value: "fixture" } %>
     <%= f.input :code %>
@@ -10,15 +10,23 @@
     <%= f.input :location %>
     <%= f.input :grade %>
     <%= f.input :memo %>
+    <%= f.input :image_file, as: :file %>
     <div class="input textarea string">
       <label class="text">同类门店</label>
-      <div class="input check_boxes bi_columns" style="display: inline-block">
+      <div class="input check_boxes" style="display: inline-block">
         <% @store.follow_stores.each do |follow| %>
           <li><%= follow.name %></li>
         <% end %>
       </div>
     </div>
-
+  </div>
+  <div id="store_fixture_legend">
+    <% if @store.image_file != nil %>
+      <%= link_to image_tag("/store_images/#{@store.image_file}"), "#", id: "show-zoom-legend", class: "cmd_ui" %>
+    <% end %>
+  </div>
+  <div class="clearfix"></div>
+  <div class="inputs">
     <% categories_dict = @categories_all.to_hash(:id, :name, :parent_id) %>
     <div id="category_dict" class="hide" data-dict=<%=raw categories_dict.to_json %>></div>
     <table>
@@ -64,6 +72,7 @@
     <%= f.button :submit, "更新货架配置" %>
   </div>
 <% end %>
+</div>
 
 <%= simple_form_for(@store) do |f| %>
   <div id="template">
@@ -82,3 +91,8 @@
 
 <%= category_menu "select-category" %>
 
+<div id="store_fixture_zoom_legend">
+  <% if @store.image_file != nil %>
+    <%= image_tag("/store_images/#{@store.image_file}") %>
+  <% end %>
+</div>

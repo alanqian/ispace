@@ -27,6 +27,8 @@ class StorePage
 
   onLoadEditFixture: () ->
     @new_sf_index = $("input[type=hidden][name$='[_destroy]']").length + 100
+    $("#store_fixture_zoom_legend").hide()
+    $("#store_fixture_legend").show()
 
     #$("a#delete_store_fixture").click (e) ->
     #  root.removeStoreFixture(e, this)
@@ -35,6 +37,15 @@ class StorePage
     #$("a#add_store_fixture").click (e) ->
     #  root.addStoreFixture(e, this)
     #  return false
+
+  onShowZoomLegend: (el) ->
+    div = $("#store_fixture_zoom_legend")
+    if div.is(":visible")
+      div.hide()
+    else
+      div.animate({ height: 'show', opacity: 'show' }, 'slow')
+      $(document).one "click", ()->
+        div.hide()
 
   onSetRefStoreId: (el) ->
     if $("input:checked[name='stores[]']").length == 0

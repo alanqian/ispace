@@ -57,11 +57,8 @@ div.input.boolean.compact {
   min-height: 1em;
 }
 
-div.input.bi_columns {
+div.input.checkboxes.bi_columns {
   width: 620px;
-  min-height: 3em;
-  max-height: 10em;
-  overflow-y: scroll;
   li.checked {
     list-style-type: none;
     display: inline-block;

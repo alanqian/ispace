@@ -136,6 +136,7 @@ zh-CN:
         grade: 等级
         region_id: 区域
         ref_store_id: 样板店
+        image_file: 布局图
         memo: 备注
       region:
         code: 编码
