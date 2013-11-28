@@ -161,14 +161,12 @@ class PlansController < ApplicationController
         }
         format.json { head :no_content }
         format.js {
-          @version = params[:_version]
           render "update_#{@do}"
         }
       else
         format.html { render action: 'edit', _do: "layout" }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
         format.js {
-          @version = params[:_version]
           render "update_#{@do}"
         }
       end
@@ -210,11 +208,11 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent,
-        :copy_product_only,
+        :copy_product_only, :version, :min_product_grade,
         target_plans:[],
         optional_products:[],
         positions_attributes: [:_destroy, :id,
-          :product_id, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
+          :product_id, :version, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
           :run, :units, :height_units, :width_units, :depth_units, :oritentation,
           :merch_style, :peg_style,
           :top_cap_height, :top_cap_depth, :bottom_cap_height, :bottom_cap_depth,

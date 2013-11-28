@@ -131,13 +131,24 @@
   data-grade="<%= products.map { |p| [p.code, p.grade] }.to_json %>"
   class="ui-corner-all">
   <%= render "/products/on_sale",
-      products: products,
-      brands_all: brands_all,
-      suppliers_all: suppliers_all,
-      mfrs_all: mfrs_all,
-      sscrolly: "13em",
-      sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
+    min_grade: @plan.min_product_grade,
+    products: products,
+    brands_all: brands_all,
+    suppliers_all: suppliers_all,
+    mfrs_all: mfrs_all,
+    sscrolly: "13em",
+    sinfoempty: "无结果，试试更改搜索词，重新搜索" %>
 </div>
+
+<!--
+<div id="layout-nav">
+ <ol class="selectable single-select">
+   <li class="ui-widget-content" data-cmd-id="show-store-layout">布局图</li>
+   <li class="ui-widget-content" data-cmd-id="show-fixture" data-fixture="">货架1</li>
+   <li class="ui-widget-content" data-cmd-id="show-fixture" data-fixture="">货架2</li>
+ </ol>
+</div>
+-->
 
 <div id="plan-edit-summary-dialog" class="ui-helper-hidden"
   title="修改规划基本信息" >

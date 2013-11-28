@@ -139,10 +139,15 @@ all:
       - :run
       - :spercent
     :summary_header:
-      - 供应商
+      - :summary_names
       - 位置
       - 总排面
       - 百分比(%)
+    :summary_by: :brand
+    #:summary_by: :supplier
+    :summary_names:
+      :brand: 品牌
+      :supplier: 供应商
     :title:
       :cover: 品类规划
       :toc: 目录

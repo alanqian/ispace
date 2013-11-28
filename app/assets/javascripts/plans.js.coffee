@@ -1,19 +1,124 @@
 root = exports ? this
 
+class Position
+  @newIndex: 0
+  @layout_fields:
+    product_id: "?"
+    version: 0
+    fixture_item_id: -1
+    layer: -1
+    seq_num: -1
+    run: 0
+    init_facing: 1
+    facing: 1
+    height_units: 0
+    width_units: 0
+    depth_units: 0
+    leading_gap: 0
+    leading_divider: 0
+    middle_divider: 0
+    trail_divider: 0
+
+  constructor: (index) ->
+    @index = index
+    @newIndex = @index + 1
+    @prefix = "plan_positions_attributes_#{index}"  # id = plan_positions_attributes_0_id
+    @id = null
+    @index
+    Position.newIndex = index + 1
+
+  load: (el) ->
+    for f,v of Position.layout_fields
+      val = $("##{@prefix}_#{f}").val() || v
+      val = parseFloat(val) if typeof v == "number"
+      @[f] = val
+    @id = parseInt(el.value)
+    @run = 0
+    @rank = -1
+    @
+
+  store: (version) ->
+    for f, _ of Position.layout_fields
+      $("##{@prefix}_#{f}").val(@[f])
+    $("##{@prefix}_version").val(version)
+    true
+
+  removeNull: () ->
+    if @new && !@isOnShelf()
+      $("input[id^=#{@prefix}_]").remove()
+      @
+    else
+      null
+
+  dup: () ->
+    position = new Position(Position.newIndex)
+
+    form = $("#plan-layout-form")
+    fields = Position.layout_fields
+    fields.id = null # add a field of id
+    for f, _ of fields
+      # dup property
+      position[f] = @[f]
+      # dup form input element
+      el = $("##{@prefix}_#{f}").clone().appendTo(form)
+      el.attr("id", "#{position.prefix}_#{f}")
+      el.attr("name", "plan[positions_attributes][#{position.index}][#{f}]")
+    position.id = null   # the
+    el = $("##{position.prefix}_id")
+    el.val(null)
+    position.layer = -1
+    position.rank = -1
+    position.seq_num = -1
+    position.fixture_item_id = -1
+    position.run = 0
+    position.new = true
+    position
+
+  isOnShelf: () ->
+    @fixture_item_id > 0 && @layer > 0 && @seq_num >= 0
+
+  offShelf: () ->
+    @fixture_item_id = -1
+    @layer = -1
+    @seq_num = -1
+    # DON'T clear facing/width_units, will cause drag/drop bug:
+    #   failed to get facing
+    # this.facing = 0
+    # this.width_units = 0
+
+  setPlace: (fixture_item_id, layer, seq_num, product) ->
+    @fixture_item_id = fixture_item_id
+    @layer = layer
+    @seq_num = seq_num
+    return @recalcRun(product)
+
+  getLi: () ->
+    $("li[data-id=#{@index}]")
+
+  recalcRun: (product) ->
+    # TODO: add precious version for calculate run
+    if @isOnShelf()
+      @leading_gap + @leading_divider +
+        product.width * @facing +
+        @middle_divider * (@facing - 1) +
+        @trail_divider
+    else
+      0
+
 class PlanEditor
+  @foo: 0
   slotMap: {}     # slot => [ul, space]
   positionMap: {} # position id => position
   sortedPositions: [] # position
-  productMap: {}  # product_id => position_id, code, name, :price_zone, height, width, depth
+  productMap: {}  # product_id => position_index, code, name, :price_zone, height, width, depth
   showingColor: "color" # product color
   debug: true
   editVersion: 0 # for plan layout editor
   savedVersion: 0 # for plan layout editor
   liIndex: 0
   activeSlotUL: null
-  selectedItems: [] # [li, position_id]
+  selectedItems: [] # [li, position_index]
   dataTable: null
-
   layout_fields:
     product_id: "?"
     fixture_item_id: -1
@@ -53,8 +158,8 @@ class PlanEditor
   initDataTable: (dataTable) ->
     @dataTable = dataTable
     @updateTableRanks()
-    for id,position of @positionMap
-      @updateTableFacing(position)
+    for _, position of @positionMap
+      @updateTableFacing(position.product_id)
 
   initHandler: () ->
     console.log "init handlers"
@@ -89,7 +194,7 @@ class PlanEditor
     brands = $("#products-data").data("brands")
     mfrs = $("#products-data").data("mfrs")
     suppliers = $("#products-data").data("suppliers")
-    for id,product of @productMap
+    for _, product of @productMap
       product.color ||= "#CC0000"
       product.brand_color = brands[product.brand_id] || "#CCCC00"
       product.mfr_color = mfrs[product.mfr_id] || "#CC00CC"
@@ -204,7 +309,7 @@ class PlanEditor
     for slot, item of @slotMap
       ul = item.ul
       ul.empty() # remove all LIs at first
-      positions = slotPosition[slot] # [position_id, seq_num, ..]
+      positions = slotPosition[slot] # [position_index, seq_num, ..]
       # add items if exists
       if positions
         positions.sort (a, b) ->
@@ -214,7 +319,7 @@ class PlanEditor
     @setSaved(@editVersion)
 
   newSlotItem: (position, ul) ->
-    li = $("<li id='pos_#{@liIndex++}' class='sortable-item' data-id='#{position.id}'></li>").appendTo(ul)
+    li = $("<li id='pos_#{@liIndex++}' class='sortable-item' data-id='#{position.index}'></li>").appendTo(ul)
     # set default position for new item to slot
     product_id = position.product_id
     product = @productMap[product_id]
@@ -235,8 +340,8 @@ class PlanEditor
     #      update all items in slot, include his one;
     #    else
     #      update this item only
-    position_id = $(li).data("id")
-    position = @positionMap[position_id]
+    position_index = $(li).data("id")
+    position = @positionMap[position_index]
     product = @productMap[position.product_id]
     new_run = position.setPlace($(ul).data("fixture-item"), $(ul).data("layer"), 0, product)
     @updatePositionRun(position, new_run)
@@ -245,8 +350,8 @@ class PlanEditor
   removeItemFromSlot: (li, ul) ->
     # 1. unset place info for position: fixture-item/layer
     # 2.+3. very like above addItemToSlot work flow
-    position_id = $(li).data("id")
-    position = @positionMap[position_id]
+    position_index = $(li).data("id")
+    position = @positionMap[position_index]
     old_run = position.run
     position.offShelf()
     @updatePositionRun(position, 0)
@@ -332,8 +437,8 @@ class PlanEditor
     if Math.abs(position.run - new_run) < 0.1
       return false
 
-    if position.id == "105"
-      console.log "break"
+    #if position.id == "105"
+    #  console.log "break"
     max = @sortedPositions.length - 1
 
     # when delete old, items in (old_index, max], rank -= 1
@@ -401,9 +506,21 @@ class PlanEditor
         @dataTable.updateProductRank(pos)
     return true
 
-  updateTableFacing: (position) ->
+  updateTableFacing: (product_id) ->
     if @dataTable != null
-      @dataTable.updateProductFacing(position)
+      product = @productMap[product_id]
+      positions = product.position_index
+      init_facing = null
+      if (positions && positions.length > 0)
+        facing = 0
+        for i in positions
+          position = @positionMap[i]
+          if position
+            init_facing ||= position.init_facing
+            if position.isOnShelf()
+              facing += position.facing
+      if init_facing
+        @dataTable.updateProductFacing(product_id, init_facing, facing)
 
   updateSlotSpace: (ul, old_run, li, position) ->
     @setDirty()
@@ -517,8 +634,8 @@ class PlanEditor
     total = @getSlotWidths(ul)
     width = $(ul).width() - 2 - total.extra # for borders and margins
     $("li", ul).each (index, el) ->
-      position_id = $(el).data("id")
-      position = self.positionMap[position_id]
+      position_index = $(el).data("id")
+      position = self.positionMap[position_index]
       self.resizeSlotItemVert(ul, $(el), position, space)
       pixel = Math.floor(width * position.run / virt_width)
       self.resizeSlotItemHorz($(el), position, pixel)
@@ -549,8 +666,8 @@ class PlanEditor
     runs_total = 0
     self = @
     $("li", ul).each (index, el) ->
-      position_id = $(el).data("id")
-      runs_total += self.positionMap[position_id].run
+      position_index = $(el).data("id")
+      runs_total += self.positionMap[position_index].run
       extras_total += $(el).outerWidth(true) - $(el).width()
       pixels_width += $(el).width()
       true
@@ -566,7 +683,7 @@ class PlanEditor
     li.attr("title", title)
 
     # resize vert
-    slotKey = position.slotKey()
+    slotKey = @slotKey(position.fixture_item_id, position.layer)
     space = @slotMap[slotKey]
     @resizeSlotItemVert(ul, li, position, space)
 
@@ -588,12 +705,12 @@ class PlanEditor
       @selectedItems = []
     if el?
       li = $(el)
-      position_id = $(el).data("id")
+      position_index = $(el).data("id")
       @selectedItems.push
         li: el
-        position_id: position_id
+        position_index: position_index
       li.addClass("ui-selected")
-      position = @positionMap[position_id]
+      position = @positionMap[position_index]
       #@resetSlotItemGrid(li, position, li.width()) # for yellow margin
 
   getActiveSlotItem: () ->
@@ -605,64 +722,24 @@ class PlanEditor
   # load initial positions from form/input
   loadPosition: () ->
     self = @
+    @editVersion = parseInt $("#plan_version").val()
     console.log "init position"
     @positionMap = {}
     slotPosition = {}
     $("#plan-layout-form input[name^='plan[positions_attributes]['][name$='[id]']").each (index,el) ->
-      prefix = el.id.replace(/_id$/, "")
-      id = el.value
-      position =
-        id: id
-        run: 0
-        input_id: (f)->
-          "##{prefix}_#{f}"
-        isOnShelf: () ->
-          this.fixture_item_id > 0 && this.layer > 0 && this.seq_num >= 0
-        offShelf: () ->
-          this.fixture_item_id = -1
-          this.layer = -1
-          this.seq_num = -1
-          # DON'T clear facing/width_units, will cause drag/drop bug:
-          #   failed to get facing
-          # this.facing = 0
-          # this.width_units = 0
-        setPlace: (fixture_item_id, layer, seq_num, product) ->
-          this.fixture_item_id = fixture_item_id
-          this.layer = layer
-          this.seq_num = seq_num
-          return this.recalcRun(product)
-        slotKey: () ->
-          self.slotKey(this.fixture_item_id, this.layer)
-        getLi: () ->
-          $("li[data-id=#{this.id}]")
-        recalcRun: (product) ->
-          # TODO: add precious version for calculate run
-          if this.isOnShelf()
-            this.leading_gap + this.leading_divider +
-              product.width * this.facing +
-              this.middle_divider * (this.facing - 1) +
-              this.trail_divider
-          else
-            0
+      # load, then add to positionMap
+      position = new Position(index)
+      position.load(el)
+      self.positionMap[position.index] = position
 
-      for f,v of self.layout_fields
-        val = $("##{prefix}_#{f}").val() || v
-        val = parseFloat(val) if typeof v == "number"
-        position[f] = val
-      # initial state, run=0, rank=-1
-      position.run = 0
-      position.rank = -1
-
-      # add to positionMap
-      self.positionMap[el.value] = position
-
-      # mark position to product
+      # mark position to productMap
       product_id = position.product_id
       self.productMap[product_id] ||= {}
-      self.productMap[product_id]["position_id"] = id
+      self.productMap[product_id].position_index ||= []
+      self.productMap[product_id].position_index.push position.index
 
       # save position to slotPosition
-      slot = position.slotKey()
+      slot = self.slotKey(position.fixture_item_id, position.layer)
       slotPosition[slot] ||= []
       slotPosition[slot].push position
       true
@@ -674,7 +751,8 @@ class PlanEditor
     # by order of slot items
     self = @
     # store edit version
-    $("#plan_layout_version").val(@editVersion)
+    version = @editVersion
+    $("#plan_version").val(version)
     for slot,item of @slotMap
       ul = item.ul
       fixture_item = ul.data("fixture-item")
@@ -683,17 +761,24 @@ class PlanEditor
       console.log fixture_item, layer
       seq_num = 1
       $("li", ul).each (index, el) ->
-        position_id = $(el).data("id")
-        position = self.positionMap[position_id]
+        position_index = $(el).data("id")
+        position = self.positionMap[position_index]
         product = self.productMap[position.product_id]
-        # self.log "setPlace", position_id, fixture_item, layer, seq_num
+        # self.log "setPlace", position_index, fixture_item, layer, seq_num
         position.setPlace(fixture_item, layer, seq_num++, product)
         true
 
     # store positions to form INPUTs
-    for position_id, position of @positionMap
-      for f,v of @layout_fields
-        $(position.input_id(f)).val(position[f])
+    for _, position of @positionMap
+      if position.removeNull()
+        # remove from index maps
+        indice = @productMap[position.product_id].position_index
+        i = indice.indexOf(position.index)
+        if i >= 0
+          indice.splice(i, 1)
+        @positionMap[position.index] = null
+      else
+        position.store(version)
     return true
 
   save: () ->
@@ -766,57 +851,80 @@ class PlanEditor
   onProductOnShelf: (product_id) ->
     self = @
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
+    positions = product.position_index
+    if positions == null
       console.log "new product, refresh page"
       return false
-    if position.isOnShelf()
-      @log "new position ignored, already on shelf", product_id, position
-    else if @activeSlotUL == null
+    if @activeSlotUL == null
       @log "new position ignored, no active slot", product_id
     else
-      @log "new position added", product_id, @activeSlotUL
-      @newSlotItem(position, @activeSlotUL)
-      position.getLi().click (e) ->
-        self.selectSlotItem(this, e.ctrlKey)
-        self.setActiveSlot(this.parentElement, e.ctrlKey && self.selectedItems.length > 1)
-        e.stopPropagation()
-      @updateTableFacing(position)
+      layer = $(@activeSlotUL).data("layer")
+      isOnLayer = false
+      position = null
+      for index in positions
+        p = @positionMap[index]
+        if p
+          if p.layer == layer
+            isOnLayer = true
+          if position == null && !p.isOnShelf()
+            position = p
+      if isOnLayer
+        @log "new position ignored, already on shelf", product_id, layer, positions
+      else
+        if position == null
+          # no null position available, dup it
+          @log "dup a position to layer", layer, positions[0]
+          position = @positionMap[positions[0]].dup()
+          @positionMap[position.index] = position
+          @productMap[product_id].position_index.push position.index
+          @log "position duped:", position
+        @log "new position added", product_id, @activeSlotUL
+        @newSlotItem(position, @activeSlotUL)
+        position.getLi().click (e) ->
+          self.selectSlotItem(this, e.ctrlKey)
+          self.setActiveSlot(this.parentElement, e.ctrlKey && self.selectedItems.length > 1)
+          e.stopPropagation()
+        @updateTableFacing(product_id)
     return true
 
   onProductOffShelf: (product_id) ->
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
-      console.log "new product, refresh page"
-      return false
-    if !position.isOnShelf()
-      @log "position ignored, already off shelf", product_id, position
-    else
-      @log "position removed", product_id
-      @removePosition(position)
-      @updateTableFacing(position)
-    return true
+    return unless product.position_index
+    for i in product.position_index
+      position = @positionMap[i]
+      if position == null
+        console.log "new product or removed position, do nothing"
+      else if !position.isOnShelf()
+        @log "position ignored, already off shelf", product_id, position
+      else
+        @log "position removed", product_id
+        @removePosition(position)
+        @updateTableFacing(product_id)
+      return true
 
   removePosition: (position) ->
     if !position.isOnShelf()
       return
-    skey = position.slotKey()
+    skey = @slotKey(position.fixture_item_id, position.layer)
     ul = @slotMap[skey].ul
     li = position.getLi()
     li.remove() # remove LI element
     @removeItemFromSlot(li.get(0), ul)
-    @updateTableFacing(position)
+    @updateTableFacing(position.product_id)
     @selectedItems = []
 
   onProductSelect: (product_id) ->
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
-      console.log "new product, refresh"
-      return false
-    li = $("li[data-id='#{product.position_id}']").get(0)
-    @selectSlotItem(li, false)
+    return unless product.position_index
+    addSelect = false
+    for index in product.position_index
+      position = @positionMap[index]
+      if position == null
+        console.log "new product or removed position, do nothing"
+        return false
+      li = $("li[data-id='#{index}']").get(0)
+      @selectSlotItem(li, addSelect)
+      addSelect = true
     return true
 
   onPositionRemove: () ->
@@ -824,27 +932,27 @@ class PlanEditor
       console.log "no selected items"
     for item in @selectedItems
       el = item.li
-      position = @positionMap[item.position_id]
+      position = @positionMap[item.position_index]
       ul = el.parentNode
       $(el).remove() # remove LI element
       @removeItemFromSlot(el, ul)
-      @updateTableFacing(position)
+      @updateTableFacing(position.product_id)
     @selectedItems = []
     true
 
   onPositionFacingInc: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item.position_id
-      position = @positionMap[position_id]
+      position_index = item.position_index
+      position = @positionMap[position_index]
       @changePositionFacing(item.li, position, 1)
     true
 
   onPositionFacingDec: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item.position_id
-      position = @positionMap[position_id]
+      position_index = item.position_index
+      position = @positionMap[position_index]
       if position.facing > 1
         @changePositionFacing(item.li, position, -1)
     true
@@ -855,11 +963,11 @@ class PlanEditor
     position.facing += delta
     position.width_units += delta
     new_run = position.recalcRun(product)
-    slotKey = position.slotKey()
+    slotKey = @slotKey(position.fixture_item_id, position.layer)
     slotUL = @slotMap[slotKey].ul
     @updatePositionRun(position, new_run)
     @updateSlotSpace(slotUL, old_run, $(li), position)
-    @updateTableFacing(position)
+    @updateTableFacing(position.product_id)
 
   onPositionsReorder: () ->
     if @selectedItems.length <= 1
@@ -883,7 +991,7 @@ class PlanEditor
     $(el).insertAfter(target.li)
     # update the item/slot space relation
     if ulFrom != ulTo
-      console.log el, item.position_id, "change slot"
+      console.log el, item.position_index, "change slot"
       @removeItemFromSlot(el, ulFrom)
       @addItemToSlot(el, ulTo)
 
@@ -897,7 +1005,7 @@ class PlanEditor
         console.log "init"
         # fill the form input with 1st selectedItem
         item = self.selectedItems[0]
-        position = self.positionMap[item.position_id]
+        position = self.positionMap[item.position_index]
         $(elId).val(position.leading_gap)
 
       ok: (dlg) ->
@@ -905,7 +1013,7 @@ class PlanEditor
         new_gap = parseFloat $(elId).val()
         # set each position of selected items
         for item in self.selectedItems
-          position = self.positionMap[item.position_id]
+          position = self.positionMap[item.position_index]
           product = self.productMap[position.product_id]
           old_run = position.recalcRun(product)
           if new_gap != position.leading_gap
@@ -925,7 +1033,7 @@ class PlanEditor
         console.log "init"
         # fill the form input with 1st selectedItem
         item = self.selectedItems[0]
-        position = self.positionMap[item.position_id]
+        position = self.positionMap[item.position_index]
         $("#{prefix}_leading_divider").val(position.leading_divider)
         $("#{prefix}_middle_divider").prop("checked", position.middle_divider > 0)
         $("#{prefix}_trail_divider").prop("checked", position.trail_divider > 0)
@@ -942,7 +1050,7 @@ class PlanEditor
 
         # set each position of selected items
         for item in self.selectedItems
-          position = self.positionMap[item.position_id]
+          position = self.positionMap[item.position_index]
           product = self.productMap[position.product_id]
           old_run = position.recalcRun(product)
           # set new divider
@@ -984,8 +1092,8 @@ class PlanEditor
       # update color of all slot items with @showingColor
       for ul,space of @slotMap
         $("li", space.ul).each (index, li) ->
-          position_id = $(li).data("id")
-          position = self.positionMap[position_id]
+          position_index = $(li).data("id")
+          position = self.positionMap[position_index]
           self.updateSlotItemColor(li, position)
     true
 
@@ -1142,25 +1250,23 @@ class ProductTable
     return true
 
   # update facing/init_facing
-  updateProductFacing: (position) ->
+  updateProductFacing: (product_id, init_facing, facing) ->
     facing_index = @fieldsMap["facings"]
     if facing_index < 0
       console.log "cannot find facings field"
       return false
 
-    product_id = position.product_id
     oTable = @table.dataTable()
     tr = oTable.$("tr[data-id='#{product_id}']")
     # console.log tr
-    facing = if position.isOnShelf() then position.facing else 0
-    facing_text = "#{facing}»#{position.init_facing}"
+    facing_text = "#{facing}»#{init_facing}"
     if tr && tr.length > 0
       tds = $("td", tr)
       tds.eq(facing_index).text(facing_text)
 
     row = @productIndex[product_id]
     data = oTable.fnSettings().aoData[row]
-    facing = facing + 1 / (position.init_facing + 2)
+    facing = facing + 1 / (init_facing + 2)
     data._aData[facing_index] = facing
     data._aSortData[facing_index] = facing
     return true
@@ -1182,6 +1288,14 @@ class PlanPage
     root.productTable = new ProductTable
     root.productTable.init("#products-table").bind(root.planEditor)
     $.util.addCmdDelegate(root.productTable)
+
+    # init jqueryui selected
+    $("ol.selectable.single-select").selectable
+      selected: (e, ui) ->
+        $(this).find("li").removeClass("ui-selected")
+        $(ui.selected).addClass("ui-selected")
+        $.util.execCmd $(ui.selected).data("cmd-id"), ui.selected
+
     console.log "plans inited"
     return true
 

@@ -18,9 +18,11 @@ class Plan < ActiveRecord::Base
   validates :init_facing, numericality: { greater_than_or_equal_to: 1 }
   validates :plan_set_id, presence: true
 
-  before_save :update_redundancy, if: :do_init?
-  before_save :do_copy_to, if: :do_copy_to?
-  before_save :calc_positions_done, if: :do_layout?
+  before_save :update_redundancy, if: "did.nil?"
+
+  before_save :do_copy_to, if: "did == :copy_to"
+  before_save :calc_positions_done, if: "did == :layout"
+  after_save :clear_stale_position, if: "did == :layout"
   after_save :update_plan_set
 
   attr_accessor :new_products
@@ -35,18 +37,6 @@ class Plan < ActiveRecord::Base
 
   def has_product?
     positions.any?
-  end
-
-  def do_init?
-    did.nil?
-  end
-
-  def do_copy_to?
-    did == :copy_to
-  end
-
-  def do_layout?
-    did == :layout
   end
 
   def copy_product_only
@@ -247,8 +237,11 @@ class Plan < ActiveRecord::Base
   def get_summary(by = :supplier)
     # by_supplier
     product_map = Product.on_sales(category_id).to_hash(:id, :id, :brand_id, :supplier_id, :width, :height, :depth)
-    attr_map = Supplier.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
-    attr_id = :supplier_id
+
+    attr_id = "#{by}_id".to_sym
+    attr_klass = by.to_s.classify.constantize
+    attr_map = attr_klass.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
+
     blocks = {}
     total_run = 0
     total_count = 0
@@ -312,6 +305,11 @@ class Plan < ActiveRecord::Base
     positions.empty?
   end
 
+  def clear_stale_position
+    #logger.debug "clear_stale_position"
+    self.positions.where(["version < ?", self.version]).delete_all()
+  end
+
   def calc_positions_done
     # type, count, done
     # type:
@@ -322,15 +320,22 @@ class Plan < ActiveRecord::Base
     total_count = [0, 0]
     done_count = [0, 0]
     product_map = Product.on_sales(self.category_id).to_hash(:code, :grade)
+    # add two dict to detect positions on different layers
+    done_dict = {}
+    total_dict = {}
     positions.each do |pos|
       prod_type = product_map[pos.product_id]
       index = prod_type == 'A' ? 0 : 1
-      if pos.on_shelf?
+      if pos.on_shelf? && !done_dict.key?(pos.product_id)
         done_count[index] += 1
         occupy_run[pos.layer_key] ||= 0
         occupy_run[pos.layer_key] += pos.run
+        done_dict[pos.product_id] = 1
       end
-      total_count[index] += 1
+      if !total_dict.key?(pos.product_id)
+        total_count[index] += 1
+        total_dict[pos.product_id] = 1
+      end
     end
 
     self.num_prior_products = total_count[0]
@@ -389,7 +394,7 @@ class Plan < ActiveRecord::Base
       prod_a.brand_id <=> prod_b.brand_id
     end
 
-    "A".upto("F") do |grade|
+    "A".upto(self.min_product_grade) do |grade|
       self.positions.map! do |pos|
         prod = product_map[pos.product_id]
         if !pos.on_shelf? && prod.grade == grade
@@ -621,10 +626,12 @@ class Plan < ActiveRecord::Base
   # color, supplier, facings, run, run%
   # show tables, and with bar on right side
   def make_pdf_summary(pdf)
-    summary = get_summary(:supplier)
+    summary_by = pdf.ostate.options[:summary_by]
+    summary = get_summary(summary_by)
     title = pdf.ostate.options[:title][:summary]
     fields = pdf.ostate.options[:summary_field]
     thead = pdf.ostate.options[:summary_header]
+    thead[0] = pdf.ostate.options[thead[0]][summary_by]
     tdata = [thead]
     tdata.concat summary.map { |block| fields.map { |f| block.send(f) } }
     top_percent = summary.first.percentage

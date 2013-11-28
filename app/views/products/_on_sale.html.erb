@@ -38,7 +38,7 @@
         opt_class.new("", "全部")
       ]
       t("dict.grades").each do |type, name|
-        if type != "X"
+        if type.to_s <= min_grade
           grade_opt.push opt_class.new(type, name)
         end
       end
