@@ -44,6 +44,7 @@ class ChangeUnitToMm < ActiveRecord::Migration
     change_column :products, :height, :integer, null: false
     change_column :products, :width, :integer, null: false
     change_column :products, :depth, :integer, null: false
+    change_column :products, :grade, :string, limit: 2, null: false
 
     change_column :positions,:run,              :integer
     change_column :positions,:top_cap_width,    :integer
