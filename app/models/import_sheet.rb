@@ -380,8 +380,12 @@ class ImportSheet < ActiveRecord::Base
           unless types[field]
             column_name = k.to_s.gsub(/(\[\d+\])+/, '')
             column = klass.columns_hash[column_name]
-            types[field] = column.nil? ? String : column.type
-            logger.warn "Unknown column for #{table}, column:#{k}"
+            if column.nil?
+              logger.warn "Unknown column for #{table}, column:#{k}"
+              types[field] = :string
+            else
+              types[field] = column.type
+            end
           end
           field_mapping[v] = field
           fields.push ["#{table}.#{k}", v]
