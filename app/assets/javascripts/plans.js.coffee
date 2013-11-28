@@ -679,7 +679,8 @@ class PlanEditor
   updateSlotItemView: (li, position, ul) ->
     # update title of LI
     product = @productMap[position.product_id]
-    title = "#{product.name} #{product.price_zone}"
+    title = "#{product.code} #{product.name}"
+    title += " #{product.price_zone}" if product.price_zone
     li.attr("title", title)
 
     # resize vert
