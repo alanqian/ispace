@@ -11,7 +11,7 @@ total_facings = 0
 total_positions = 0
 brands.each do |brand|
   stat = Stat.new(
-    name: "品类排面统计",
+    name: "品牌排面统计(品类：干果炒货)",
     job_id: 1,
     stat_type: "品类统计",
     category_id: "830506",
