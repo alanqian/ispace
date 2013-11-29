@@ -631,7 +631,7 @@ class Plan < ActiveRecord::Base
     title = pdf.ostate.options[:title][:summary]
     fields = pdf.ostate.options[:summary_field]
     thead = pdf.ostate.options[:summary_header]
-    thead[0] = pdf.ostate.options[thead[0]][summary_by]
+    thead[0] = pdf.ostate.options[:summary_names][summary_by]
     tdata = [thead]
     tdata.concat summary.map { |block| fields.map { |f| block.send(f) } }
     top_percent = summary.first.percentage

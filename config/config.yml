@@ -139,7 +139,7 @@ all:
       - :run
       - :spercent
     :summary_header:
-      - :summary_names
+      - look_at summary_names
       - 位置
       - 总排面
       - 百分比(%)
