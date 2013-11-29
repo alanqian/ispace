@@ -1,5 +1,7 @@
 Ispace::Application.routes.draw do
 
+  resources :stats
+
   get "pages/index"
   resources :plan_sets
   resources :plans

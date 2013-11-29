@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131128112010) do
+ActiveRecord::Schema.define(version: 20131129025341) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                                null: false
@@ -434,6 +434,23 @@ ActiveRecord::Schema.define(version: 20131128112010) do
   add_index "sales", ["started_at"], name: "index_sales_on_started_at", using: :btree
   add_index "sales", ["store_id"], name: "index_sales_on_store_id", using: :btree
   add_index "sales", ["updated_at"], name: "index_sales_on_updated_at", using: :btree
+
+  create_table "stats", force: true do |t|
+    t.string   "name"
+    t.integer  "job_id"
+    t.string   "stat_type"
+    t.string   "category_id"
+    t.integer  "plan_set_id"
+    t.string   "rel_model"
+    t.integer  "agg_id"
+    t.integer  "num_positions"
+    t.integer  "run"
+    t.integer  "num_facings"
+    t.decimal  "outcome",       precision: 15, scale: 4
+    t.decimal  "percentage",    precision: 5,  scale: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "store_fixtures", force: true do |t|
     t.string   "code",        null: false

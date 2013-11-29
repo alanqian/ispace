@@ -22,6 +22,9 @@ zh-CN:
       set_model_store: '设置样板店...'
 
     titles:
+      stat:
+        index: 分析统计
+
       plan_set:
         new: 新建空间规划
         add_store: 添加样板店

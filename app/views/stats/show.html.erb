@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @stat.name %>
+</p>
+
+<p>
+  <strong>Job:</strong>
+  <%= @stat.job_id %>
+</p>
+
+<p>
+  <strong>Stat type:</strong>
+  <%= @stat.stat_type %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @stat.category_id %>
+</p>
+
+<p>
+  <strong>Plan set:</strong>
+  <%= @stat.plan_set_id %>
+</p>
+
+<p>
+  <strong>Rel model:</strong>
+  <%= @stat.rel_model %>
+</p>
+
+<p>
+  <strong>Agg:</strong>
+  <%= @stat.agg_id %>
+</p>
+
+<p>
+  <strong>Num positions:</strong>
+  <%= @stat.num_positions %>
+</p>
+
+<p>
+  <strong>Run:</strong>
+  <%= @stat.run %>
+</p>
+
+<p>
+  <strong>Num facings:</strong>
+  <%= @stat.num_facings %>
+</p>
+
+<p>
+  <strong>Outcome:</strong>
+  <%= @stat.outcome %>
+</p>
+
+<p>
+  <strong>Percentage:</strong>
+  <%= @stat.percentage %>
+</p>
+
+<%= link_to 'Edit', edit_stat_path(@stat) %> |
+<%= link_to 'Back', stats_path %>

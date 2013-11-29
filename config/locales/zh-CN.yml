@@ -254,7 +254,11 @@ zh-CN:
           leading_divider: 前分隔物
           middle_divider: 货品间分隔物
           trail_divider: 后分隔物
-
+      stat:
+        agg_id: 品牌
+        num_facings: 排面
+        num_positions: 商品数量
+        percentage: 排面百分比%
     errors:
       models:
         user:
