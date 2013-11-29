@@ -243,8 +243,8 @@ root.BayPage = class BayPage
 
   initFormElement: (container = "form.simple_form.bay") ->
     self = @
-    for name in ["height", "width", "depth", "thick", "space"]
-      $("input.numeric.integer[id$='#{name}']").attr("step", 10).attr("min", 0)
+    # for name in ["height", "width", "depth", "thick", "space"]
+    #  $("input.numeric.integer[id$='#{name}']").attr("step", 10).attr("min", 0)
     $("select.colorpicker", container).simplecolorpicker
       picker: true
     $(":input", container).focus () ->
