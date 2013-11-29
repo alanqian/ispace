@@ -178,7 +178,7 @@ class PlanSet < ActiveRecord::Base
         deployeds = []
         downloads = []
         nones = []
-        deploys.select { |dp| dp.plan_set_id = plan_set.id }.each do |d|
+        deploys.select { |dp| dp.plan_set_id == plan_set.id }.each do |d|
           pd = d.to_plan_deploy
           if pd.deployed_at != nil
             deployeds.push pd
