@@ -135,7 +135,7 @@ zh-CN:
         location: 位置
         grade: 等级
         region_id: 区域
-        ref_store_id: 样板店
+        ref_store_id: 标准店
         image_file: 布局图
         memo: 备注
       region:
@@ -234,7 +234,7 @@ zh-CN:
         published_at: 发布
         undeployed_stores: 未部署
         to_deploy_at: 计划部署
-        model_stores: 选择样板店
+        model_stores: 选择标准店
         completed_ratio: 完成度
         deployed: 完成
         download: 下载
@@ -245,7 +245,7 @@ zh-CN:
         plan_set_name: 规划名称
         category_name: 规划品类
         fixture_id: 货架
-        store_name: 样板店
+        store_name: 标准店
         num_stores: 门店数
         usage_percent: 空间使用率
         init_facing: 初始排面数
