@@ -22,6 +22,8 @@
 //= require jquery.simplecolorpicker.js
 //= require tree.jquery.js
 //= require raphael-min.js
+//= require ispace
+//= require form_helpers
 //= require cmd_ui
 //= require jqutil
 //= require app
