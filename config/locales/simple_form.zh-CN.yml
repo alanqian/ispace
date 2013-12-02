@@ -124,6 +124,8 @@ zh-CN:
       product:
         update_ex: 更新了%{count}个单品
         update_fail: 没有更新单品
+      plan_set:
+        create: 创建空间规划%{plan_set}第一步完成，接下来请选择规划包含的标准店...
 
     required:
       text: 'required'

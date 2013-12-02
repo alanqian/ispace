@@ -5,6 +5,14 @@ class PlanSet < ActiveRecord::Base
   has_many :plans, dependent: :destroy
   has_many :deployments, -> { order("deployed_by, download_1st_at") }
 
+  validates :name, presence: true
+  validates :name, length: { minimum: 2 }
+  validates :to_deploy_at, presence: true
+  validates :category_id, presence: true
+  validates :category_name, presence: true
+  validates :note, presence: true
+  validates :model_stores, presence: true, on: :update
+
   attr_accessor :model_stores
   attr_accessor :store_name  # by search
   before_save :update_redundancy
