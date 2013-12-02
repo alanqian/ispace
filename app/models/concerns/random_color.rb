@@ -5,7 +5,8 @@ module RandomColor
     def set_random_colors(colors)
       options = colors.shuffle
       count = 0
-      self.select(:category_id, :id, :color).order(:category_id).each do |brand|
+      pkey = self.primary_key.to_sym
+      self.select(pkey, :category_id, :color).order(:category_id).each do |brand|
         brand.update_column(:color, options[count % options.size])
         count += 1
       end
