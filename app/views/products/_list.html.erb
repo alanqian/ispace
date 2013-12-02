@@ -2,16 +2,21 @@
   class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
   <thead>
     <tr>
-      <%= data_th_list(:product,
+      <%= data_th_list :product,
         [:select_all, "products[]"],
         [:grade, input: false],
-        :code,
-        :brand_id,
-        :name,
+        [:code, input: false],
+        [:brand_id, input: false],
+        [:name, input: false],
         [:status, input: false, sort: false],
         [:color, sort: false, search: false],
         :height, :width, :depth, :weight, :price_zone,
-        :size_name, :case_pack_name, :barcode, :supplier_id, :mfr_id) %>
+        [:size_name, input: false],
+        [:case_pack_name, input: false],
+        [:barcode, input: false],
+        [:supplier_id, input: false],
+        [:mfr_id, input: false]
+      %>
     </tr>
   </thead>
   <tbody>

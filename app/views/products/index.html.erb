@@ -5,20 +5,12 @@
                       data: { url: product_path(product_new) },
                       html: { id: "products-form", class: "inplace", }) do |f| %>
     <div class="inputs">
-      <%= f.input :code %>
-      <%= f.input :brand_id, collection: brands_all %>
-      <%= f.input :name %>
       <%= f.input :height %>
       <%= f.input :width %>
       <%= f.input :depth %>
       <%= f.input :weight %>
       <%= f.input :price_zone, collection: t("dict.prices") %>
-      <%= f.input :size_name %>
-      <%= f.input :case_pack_name %>
-      <%= f.input :barcode %>
       <%= f.input :color, as: :color %>
-      <%= f.input :supplier_id, collection: suppliers_all %>
-      <%= f.input :mfr_id, collection: mfrs_all %>
     </div>
     <%= render 'list',
       products: @products,

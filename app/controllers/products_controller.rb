@@ -32,18 +32,16 @@ class ProductsController < ApplicationController
     # @current_user_store_id
     category_id = params[:category] || Category.default_id
 
-    @products = Product.where(["category_id=?", category_id])
-    product_new = Product.new(category_id: category_id)
-    brands_all = Brand.where(category_id: category_id)
-    suppliers_all = Supplier.where(category_id: category_id)
-    mfrs_all = Manufacturer.where(category_id: category_id)
-
+    if @do == :on_shelf
+      @products = Product.under(category_id).can_on_shelf
+    else
+      @products = Product.under(category_id)
+    end
     render 'index', locals: {
-      categories_all: Category.all,
-      brands_all: brands_all,
-      mfrs_all: mfrs_all,
-      suppliers_all: suppliers_all,
-      product_new: product_new,
+      brands_all: Brand.under(category_id).select(:id, :name),
+      mfrs_all: Manufacturer.under(category_id).select(:id, :name),
+      suppliers_all: Supplier.under(category_id).select(:id, :name),
+      product_new: Product.new(category_id: category_id),
     }
   end
 

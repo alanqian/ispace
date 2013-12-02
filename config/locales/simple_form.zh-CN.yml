@@ -84,8 +84,8 @@ zh-CN:
         edit: 更新制造商信息
       product:
         index: 单品管理
-        index_on_sale: 在售商品
-        index_off_sale: 未上架商品
+        index_on_shelf: 在售商品
+        index_off_shelf: 未上架商品
         edit: 更新商品信息
         new: 新建商品
       sale:

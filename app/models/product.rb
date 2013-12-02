@@ -1,11 +1,12 @@
 class Product < ActiveRecord::Base
+  include RandomColor
+  include UnderCategory
+
+  scope :can_on_shelf, -> { where("grade < 'X'") }
+  scope :must_on_shelf, -> { where("grade = 'A'") }
+
   belongs_to :category
   self.primary_key = "code"
-  attr_accessor :category_name
-
-  def category_name
-    self.category.nil? ? "" : self.category.name
-  end
 
   def self.version
     last_update_time = self.maximum(:updated_at) || 0
