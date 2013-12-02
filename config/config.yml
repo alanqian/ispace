@@ -20,7 +20,7 @@ all:
       :base_height: 150
       :base_width: 1200
       :base_depth: 500
-      :base_color: '#400040'
+      :base_color: '#8b0000'
       :takeoff_height: 1900
     :open_shelf_1st_name: 1.隔板
     :open_shelf:
@@ -47,7 +47,7 @@ all:
       :horz_start: 60
       :notch_num: 1
       :from_base: 10
-      :color: '#dfdfdf'
+      :color: '#dcdcdc'
     :freezer_chest:
       :name: ''
       :height: 900
@@ -55,7 +55,7 @@ all:
       :wall_thick: 40
       :inside_height: 800
       :merch_height: 700
-      :color: '#ffff'
+      :color: '#c0c0c0'
     :rear_support_bar:
       name: ""
       height: 300
@@ -65,7 +65,7 @@ all:
       hook_length: 400
       notch_num: 20
       from_base: 800
-      color: '#ff007f'
+      color: '#ff00ff'
       bar_slope: 0
 
   pdf_fonts:
