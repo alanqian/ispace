@@ -6,8 +6,8 @@
                       html: { id: "manufacturers-form", class: "inplace", },
                      ) do |f| %>
     <div class="inputs">
-      <%= f.input :name %>
-      <%= f.input :desc %>
+      <%#= f.input :name %>
+      <%#= f.input :desc %>
       <%= f.input :color, as: :color %>
     </div>
     <div class="actions">
@@ -16,9 +16,8 @@
     <table id="manufacturers-table" data-form="#manufacturers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th class="name" data-input="manufacturer[name]"><%=tf :name %></th>
+          <th class="name"><%=tf :name %></th>
           <th class="color" data-input="manufacturer[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
-          <th class="desc" data-input="manufacturer[desc]"><%=tf :desc %></th>
         </tr>
       </thead>
       <tbody>

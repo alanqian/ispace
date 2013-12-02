@@ -21,13 +21,8 @@ class ManufacturersController < ApplicationController
   # GET /manufacturers.json
   def index
     category_id = params[:category] || Category.default_id
-    @manufacturers = Manufacturer.where([
-      "category_id=?", category_id])
-    manufacturer_new = Manufacturer.new(category_id: category_id)
-    render 'index', locals: {
-      categories: Category.all,
-      manufacturer_new: manufacturer_new
-    }
+    @manufacturers = Manufacturer.under(category_id)
+    render 'index', locals: { manufacturer_new: Manufacturer.new(category_id: category_id) }
   end
 
   # GET /manufacturers/1
@@ -118,6 +113,6 @@ class ManufacturersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def manufacturer_params
-      params.require(:manufacturer).permit(:name, :category_id, :desc, :color)
+      params.require(:manufacturer).permit(:color)
     end
 end
