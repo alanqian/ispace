@@ -22,10 +22,8 @@ class SuppliersController < ApplicationController
   # GET /suppliers.json
   def index
     category_id = params[:category] || Category.default_id
-    @suppliers = Supplier.where([
-      "category_id=?", category_id])
-    supplier_new = Supplier.new(category_id: category_id)
-    render 'index', locals: { categories: Category.all, supplier_new: supplier_new }
+    @suppliers = Supplier.under(category_id)
+    render 'index', locals: { supplier_new: Supplier.new(category_id: category_id) }
   end
 
   # GET /suppliers/1
@@ -115,6 +113,6 @@ class SuppliersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supplier_params
-      params.require(:supplier).permit(:name, :category_id, :desc, :color)
+      params.require(:supplier).permit(:color)
     end
 end

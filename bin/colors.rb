@@ -6,6 +6,7 @@ colors = I18n.t("dict.colors").values
 
 models = [
   Brand,
+  Supplier,
 ]
 
 models.each do |klass|
