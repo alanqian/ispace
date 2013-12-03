@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131129025341) do
+ActiveRecord::Schema.define(version: 20131203081044) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                                null: false
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 20131129025341) do
     t.integer  "import_id",               default: -1
     t.string   "pinyin"
     t.string   "display_name"
+    t.string   "color"
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree

@@ -33,7 +33,7 @@ all:
       :riser: 0
       :notch_num: 1
       :from_base: 10
-      :color: '#ffffff'
+      :color: '#dcdcdc'
       :from_back: 0
       :finger_space: 0
       :x_position: 0

@@ -45,6 +45,7 @@ module ApplicationHelper
   end
 
   def color_tag(color)
+    return "" unless color && !color.empty?
     content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
   end
 

@@ -38,6 +38,33 @@ class Category < ActiveRecord::Base
     # TODO: add reference check
   end
 
+  def self.set_random_colors(colors)
+    count = 0
+    options = colors.shuffle
+    parents = self.where("length(code) <= 4").select(:code, :color)
+    parents.each do |ctg|
+      ctg.update_column(:color, options[count % options.size])
+      count += 1
+    end
+    parents = self.where("length(code) <= 4")
+      .select(:code, :color, :parent_id)
+      .to_hash(:code)
+
+    leaves = self.where("length(code) >= 5").order(:code).select(:code, :parent_id, :color)
+    opt = count
+    leaves.each do |ctg|
+      p1 = parents[ctg.parent_id]
+      p2 = parents[p1.parent_id]
+      while options[opt % options.size] == p1.color ||
+        options[opt % options.size] == p2.color
+        opt += 1
+      end
+      ctg.update_column(:color, options[opt % options.size])
+      opt += 1
+      count += 1
+    end
+  end
+
   def update_redundancy
     # parent_id
     if self.parent_id && self.parent_id.empty?
