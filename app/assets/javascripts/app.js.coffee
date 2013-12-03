@@ -335,10 +335,35 @@ root.wizardProc = (jq_sel) ->
       console.log "close wizard dialog, then destroy"
       $("div#import-wizard").dialog('destroy')
 
+root.updateDataTableRow = (trSel, rowData, highlightColor) ->
+  tr = $(trSel)
+  if tr.length != 1
+    console.log "cannot find row or too many rows: #{trSel}"
+    return
+
+  oTable = tr.closest("table").dataTable()
+  oTable.fnUpdate rowData, tr[0]
+
+root.updateDataTableCell = (trSel, colName, cellData, highlightColor) ->
+  tr = $(trSel)
+  if tr.length != 1
+    console.log "cannot find row or too many rows: #{trSel}"
+    return
+
+  table = tr.closest("table")
+  ths = table.find("thead tr th")
+  th = table.find("thead tr th[data-col='#{colName}']")
+  oTable = table.dataTable()
+  iCol = ths.index(th)
+  if oTable && iCol >= 0
+    oTable.fnUpdate cellData, tr[0], iCol
+
 root.refreshDataTr = (trSel, html, highlightColor) ->
   tr = $(trSel)
   clazz = tr.attr("class")
   bgColor = tr.css("background-color")
+  rowData = $(html).find("td").map (index, el) -> el.innerText
+  updateDataTableRow trSel, $.makeArray(rowData)
   tr.replaceWith(html)
   tr = $(trSel).attr("class", clazz)
 
