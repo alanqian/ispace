@@ -390,7 +390,7 @@ class Plan < ActiveRecord::Base
 
     # place force on sale products first, then normal ones
     layer = layers.shift
-    product_map = on_shelves.select(:code, :grade, :width, :height, :depth)
+    product_map = on_shelves.select(:code, :grade, :brand_id, :width, :height, :depth)
       .to_hash(:code)
 
     # order position by brand_id
@@ -408,7 +408,13 @@ class Plan < ActiveRecord::Base
           while layer && merch_space[layer].used_space + run > merch_space[layer].merch_width
             layer = layers.shift
           end
-          if layer && merch_space[layer].used_space + run <= merch_space[layer].merch_width
+          if layer && merch_space[layer]
+            height_units = (merch_space[layer].merch_height / prod.height).floor
+          else
+            height_units = 0
+          end
+          if height_units > 0 &&
+            merch_space[layer].used_space + run <= merch_space[layer].merch_width
             pos.fixture_item_id = merch_space[layer].fixture_item
             pos.layer = merch_space[layer].layer
             pos.seq_num = merch_space[layer].count + 1

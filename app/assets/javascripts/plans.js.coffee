@@ -72,6 +72,7 @@ class Position
     position.fixture_item_id = -1
     position.run = 0
     position.new = true
+    position.product = @product
     position
 
   isOnShelf: () ->
@@ -105,11 +106,110 @@ class Position
     else
       0
 
+  getWidth: () ->
+    return 0 unless @isOnShelf()
+    return @leading_gap + @leading_divider + @product.width * @facing +
+      @middle_divider * (@facing - 1) + @trail_divider
+
+  getHeight: () ->
+    return 0 unless @isOnShelf()
+    @product.height * @height_units
+
+  getDepth: () ->
+    return 0 unless @isOnShelf()
+    @product.depth * @depth_units
+
+  updateColor: (animate) ->
+    if @bbox
+      @bbox.attr("fill", @product.showingColor)
+    if @border
+      if $("li[data-id=#{@index}]").hasClass("ui-selected")
+        @border.attr("stroke", "yellow").attr("stroke-width", 2)
+      else
+        @border.attr("stroke", "").attr("stroke-width", 0)
+
+  draw: (li, options) ->
+    cx = $(li).width()
+    cy = $(li).height()
+    paper = Raphael(li, cx, cy)
+    paper.clear
+
+    # draw block bounding box
+    @bbox = paper.rect(0, 0, cx, cy)
+      .attr("fill", @product.showingColor)
+
+    xRatio = cx / @getWidth()
+    yRatio = cy / @getHeight()
+    console.log "ratio, x:#{xRatio}, y:#{yRatio}"
+
+    # draw a rows x cols table in LI
+    # leading_gap, leading_divider, col, middle_divider, col, trail_divider
+    rows = @height_units
+    cols = @width_units
+    x = @leading_gap * xRatio # skip leading_gap
+
+    # draw leading divider
+    if @leading_divider > 0
+      width = @leading_divider * xRatio
+      paper.rect(x, cy / 2, width, cy / 2).attr("fill", "black")
+      paper.line(x + width / 2, 0, x + width / 2, cy).attr("stroke", "black")
+      x += width
+
+    # draw block rect
+    width = (@product.width * cols + @middle_divider * (cols - 1)) * xRatio
+    paper.rect(x, 0, width, cy)
+      .attr("stroke", "black")
+
+    run = @product.width + (@product.width + @middle_divider) * (cols - 1)
+    x1 = x
+    x2 = x + run * xRatio
+
+    # draw units grid: vert line
+    for i in [1..cols - 1] by 1
+      x = x1 + @product.width * i * xRatio
+      paper.line(x, 0, x, cy)
+        .attr("stroke", "black")
+    xpos = []
+    if @middle_divider > 0
+      xpos.push [x1, x1 + @product.width * xRatio]
+      for i in [1..cols - 1] by 1
+        x = x1 + (@product.width + @middle_divider) * i * xRatio
+        paper.line(x, 0, x, cy)
+          .attr("stroke", "black")
+        xpos.push [x, x1 + @product.width * (i + 1) * xRatio]
+      xpos.push [x2 - @product.width * xRatio, x2]
+
+    # draw units grid: horz line
+    y = 0
+    if @middle_divider > 0
+      for i in [1..rows - 1] by 1
+        y = (@product.height * i) * yRatio
+        for x in xpos
+          paper.line(x[0], y, x[1], y)
+            .attr("stroke", "black")
+    else
+      for i in [1..rows - 1] by 1
+        y = (@product.height * i) * yRatio
+        paper.line(x1, y, x2, y)
+          .attr("stroke", "black")
+
+    # trail_divider
+    if @trail_divider > 0
+      width = @trail_divider * xRatio
+      paper.rect(x2, cy / 2, width, cy / 2)
+        .attr("fill", "black")
+      paper.line(x2 + width / 2, 0, x2 + width / 2, cy / 2)
+        .attr("stroke", "black")
+
+    # draw border to indicate selected
+    @border = paper.rect(0, 0, cx, cy)
+    return
+
 class PlanEditor
   @foo: 0
   slotMap: {}     # slot => [ul, space]
   positionMap: {} # position id => position
-  sortedPositions: [] # position
+  sortedProducts: [] # product with run/rank
   productMap: {}  # product_id => position_index, code, name, :price_zone, height, width, depth
   showingColor: "color" # product color
   debug: true
@@ -157,9 +257,10 @@ class PlanEditor
 
   initDataTable: (dataTable) ->
     @dataTable = dataTable
-    @updateTableRanks()
     for _, position of @positionMap
       @updateTableFacing(position.product_id)
+    for _, product of @productMap
+      @dataTable.updateProductRank(product)
 
   initHandler: () ->
     console.log "init handlers"
@@ -199,6 +300,9 @@ class PlanEditor
       product.brand_color = brands[product.brand_id] || "#CCCC00"
       product.mfr_color = mfrs[product.mfr_id] || "#CC00CC"
       product.supplier_color = suppliers[product.supplier_id] || "#00CCCC"
+      product.showingColor = product.color
+      product.run = 0
+      product.rank = -1
 
   initSlotMap: () ->
     console.log "build slots"
@@ -394,7 +498,7 @@ class PlanEditor
       (id: 3, run: 0, rank: -1 )
       (id: 4, run: 0, rank: -1 )
     ]
-    @sortedPositions = []
+    @sortedProducts = []
     for pos in tests
       map[pos.id] = pos
 
@@ -411,16 +515,16 @@ class PlanEditor
       @updatePositionRun(p, pos.new_run)
       console.log "updateRun", p, p.rank, ":", pos._rank
 
-      console.log "verified err:", err, @sortedPositions
+      console.log "verified err:", err, @sortedProducts
     true
 
-  verifyPositionRank: () ->
-    return true if @sortedPositions.length == 0
+  verifyProductRank: () ->
+    return true if @sortedProducts.length == 0
     err = 0
     prev_rank = 0
-    prev_run = @sortedPositions[0].run
+    prev_run = @sortedProducts[0].run
     index = 0
-    for position in @sortedPositions
+    for position in @sortedProducts
       if position.run > prev_run
         console.log "wrong run", position, position.run, ":", prev_run
         err++
@@ -439,88 +543,96 @@ class PlanEditor
 
     #if position.id == "105"
     #  console.log "break"
-    max = @sortedPositions.length - 1
+    product = position.product
+    updated_run = product.run + new_run - position.run
+    max = @sortedProducts.length - 1
 
     # when delete old, items in (old_index, max], rank -= 1
     # expand old rank to min_index, max_index
-    if position.rank >= 0
-      max_index = min_index = position.rank # the 1st position with same rank
-      while max_index < max && @sortedPositions[max_index + 1].rank == position.rank
+    if product.rank >= 0
+      max_index = min_index = product.rank # the 1st position with same rank
+      while max_index < max && @sortedProducts[max_index + 1].rank == product.rank
         max_index++
       # find the true old index
-      old_index = @sortedPositions.indexOf(position, min_index)
+      old_index = @sortedProducts.indexOf(product, min_index)
     else
       max_index = max + 1 # out of the end of list
       old_index = -1
 
     # when insert new, items in [new_index, max], rank += 1
     # therefore, expand insert point to right when posible
-    if new_run < 0.1 || max < 0 || @sortedPositions[max].run >= new_run
+    if updated_run < 0.1 || max < 0 || @sortedProducts[max].run >= updated_run
       new_index = max + 1 # to the end of list
     else
-      new_index = @binarySearch @sortedPositions, (pos) ->
-        pos.run - new_run # in desc order
-      while new_index <= max && @sortedPositions[new_index].run >= new_run # float==
+      new_index = @binarySearch @sortedProducts, (pos) ->
+        pos.run - updated_run # in desc order
+      while new_index <= max && @sortedProducts[new_index].run >= updated_run # float==
         new_index++
 
     # calculate new rank
-    if new_run < 0.1
+    if updated_run < 0.1
       new_rank = -1
-    else if new_index == 0 || @sortedPositions[new_index - 1].run > new_run
+    else if new_index == 0 || @sortedProducts[new_index - 1].run > updated_run
       new_rank = new_index
     else
-      new_rank = @sortedPositions[new_index - 1].rank
+      new_rank = @sortedProducts[new_index - 1].rank
 
     # update ranks of the modified items by insert/delete
     # (max_index, new_index) --, or,  [new_index, max_index] ++
     if max_index < new_index
       new_rank--
       for i in [(max_index + 1)...new_index] by 1
-        @sortedPositions[i].rank--
+        @sortedProducts[i].rank--
     else
       rindex = Math.min(max_index, max)
       for i in [new_index..rindex] by 1
-        @sortedPositions[i].rank++
+        @sortedProducts[i].rank++
 
     # modify the array
     if old_index != new_index
       # insert new
       if new_rank >= 0
-        @sortedPositions.splice(new_index, 0, position)
+        @sortedProducts.splice(new_index, 0, product)
 
       # than remove old
       if old_index >= 0
         if old_index > new_index
           old_index++
-        @sortedPositions.splice(old_index, 1)
+        @sortedProducts.splice(old_index, 1)
 
-    #console.log @sortedPositions.length, "update rank, id:", position.id, "new_run:", new_run, "rank:", new_rank
+    #console.log @sortedProducts.length, "update rank, id:", position.id, "new_run:", new_run, "rank:", new_rank
+    product.run = updated_run
+    product.rank = new_rank
     position.run = new_run
-    position.rank = new_rank
     @updateTableRanks()
 
   updateTableRanks: () ->
     # update rank for all positions to dataTable
     if @dataTable != null
-      for pos in @sortedPositions
-        @dataTable.updateProductRank(pos)
+      for product in @sortedProducts
+        @dataTable.updateProductRank(product)
     return true
 
   updateTableFacing: (product_id) ->
     if @dataTable != null
       product = @productMap[product_id]
-      positions = product.position_index
+
+    if product
+      indices = product.position_index
       init_facing = null
-      if (positions && positions.length > 0)
+      if indices
+        run = 0
         facing = 0
-        for i in positions
-          position = @positionMap[i]
+        for index in indices
+          position = @positionMap[index]
           if position
             init_facing ||= position.init_facing
             if position.isOnShelf()
               facing += position.facing
+              run += position.getWidth()
       if init_facing
         @dataTable.updateProductFacing(product_id, init_facing, facing)
+        product.run = run
 
   updateSlotSpace: (ul, old_run, li, position) ->
     @setDirty()
@@ -557,73 +669,6 @@ class PlanEditor
       # update the changed item only
       @updateSlotItemView(li, position, ul)
 
-  # update item view: height,width/title/grids/align_bottom
-  updateSlotItemColor: (li, position) ->
-    product = @productMap[position.product_id]
-    $("div.mdse-col", li).css "background-color", product[@showingColor]
-
-  resetSlotItemGrid: (li, position, width_total) ->
-    # create a rows x cols table in LI
-    # leading_gap, leading_divider, col, middle_divider, col, trail_divider
-    self = @
-    li.empty()
-
-    # fairly distribute the height
-    rows = position.height_units
-    height_total = li.height() + 1 # for mdse-col, top-border-width
-    row_heights = []
-    rows_remain = rows
-    row = "<div class='mdse-unit'></div>"
-    for i in [1..rows] by 1
-      pixel = Math.floor(height_total / rows_remain)
-      # border-bottom-width: 1px
-      row_heights.push pixel - 1
-      height_total -= pixel
-      rows_remain--
-
-    # fairly distribute the width
-    width_total-- # mdse-col: border 1px on both sides
-    run_total = position.run
-    getWidth = (run, extra = 0) ->
-      pixel = Math.floor(run * width_total / run_total)
-      width_total -= pixel
-      run_total -= run
-      pixel - extra
-
-    # leading_gap
-    if position.leading_gap > 0
-      gap = "<div class='mdse-gap'></div>"
-      $(gap).appendTo(li).width getWidth(position.leading_gap)
-
-    # leading_divider
-    divider = "<div class='mdse-divider'><div class='top-half'></div><div class='bottom-half'></div></div>"
-    if position.leading_divider > 0
-      $(divider).appendTo(li).width getWidth(position.leading_divider)
-
-    # columns
-    product = @productMap[position.product_id]
-    col_run = product.width
-    cols = position.width_units
-    col = "<div class='mdse-col'></div>"
-    for i in [1..cols] by 1
-      rowDivs = Array(rows+1).join(row)
-      colDiv = $(col).appendTo(li).append(rowDivs).css
-        "width": getWidth(col_run, 1)
-        "background-color": product[self.showingColor]
-      if i < cols
-        if position.middle_divider > 0
-          $(divider).appendTo(li).width getWidth(position.middle_divider)
-        else
-          colDiv.addClass("collapse")
-      # set property: height of each mdse-unit
-      $("div.mdse-unit", colDiv).each (index, el)->
-        $(el).height row_heights[index]
-
-    # trail_divider
-    if position.trail_divider > 0
-        width = (position.trail_divider * li_width / run).toFixed(1)
-        $(divider).appendTo(li).width getWidth(position.trail_divider)
-
   # update all items in slot
   resizeAllSlotItems: (ul) ->
     self = @
@@ -657,8 +702,8 @@ class PlanEditor
     old_width = li.width()
     if old_width != width
       li.width(width)
-      # resize items inside LI
-      @resetSlotItemGrid(li, position, width)
+      li.empty()
+      position.draw(li[0])
 
   getSlotWidths: (ul) ->
     pixels_width = 0
@@ -700,9 +745,14 @@ class PlanEditor
     @resizeSlotItemHorz(li, position, width)
 
   selectSlotItem: (el, addMode) ->
+    changed = []
     if !addMode
       for item in @selectedItems
         $(item.li).removeClass("ui-selected")
+        position = @positionMap[item.position_index]
+        if position
+          position.updateColor()
+
       @selectedItems = []
     if el?
       li = $(el)
@@ -712,7 +762,8 @@ class PlanEditor
         position_index: position_index
       li.addClass("ui-selected")
       position = @positionMap[position_index]
-      #@resetSlotItemGrid(li, position, li.width()) # for yellow margin
+      if position
+        position.updateColor(true)
 
   getActiveSlotItem: () ->
     if @selectedItems.length == 1
@@ -733,8 +784,11 @@ class PlanEditor
       position.load(el)
       self.positionMap[position.index] = position
 
-      # mark position to productMap
+      # link with product
       product_id = position.product_id
+      position.product = self.productMap[product_id]
+
+      # mark position to productMap
       self.productMap[product_id] ||= {}
       self.productMap[product_id].position_index ||= []
       self.productMap[product_id].position_index.push position.index
@@ -1090,13 +1144,16 @@ class PlanEditor
     self = @
     if @showingColor != color
       @showingColor = color
+      for _, product of @productMap
+        product.showingColor = product[@showingColor]
       # update color of all slot items with @showingColor
-      for ul,space of @slotMap
+      for ul, space of @slotMap
         $("li", space.ul).each (index, li) ->
           position_index = $(li).data("id")
           position = self.positionMap[position_index]
-          self.updateSlotItemColor(li, position)
-    true
+          if position
+            position.updateColor()
+    return true
 
 class ProductTable
   fields: []
@@ -1230,24 +1287,24 @@ class ProductTable
     if @planEditor != null
       @planEditor.onProductOffShelf(product_id)
 
-  updateProductRank: (position) ->
+  updateProductRank: (product) ->
     rank_index = @fieldsMap["plan_info_rank"] || -1
     if rank_index < 0
       console.log "cannot find rank field"
       return false
 
-    product_id = position.product_id
+    product_id = product.code
     oTable = @table.dataTable()
     tr = oTable.$("tr[data-id='#{product_id}']")
     if tr && tr.length > 0
       tds = $("td", tr)
-      rank_text = if position.rank >= 0 then position.rank + 1 else ""
+      rank_text = if product.rank >= 0 then product.rank + 1 else ""
       tds.eq(rank_index).text("#{rank_text}")
 
     row = @productIndex[product_id]
     data = oTable.fnSettings().aoData[row]
     data._aData[rank_index] = rank_text
-    data._aSortData[rank_index] = if position.rank >= 0 then position.rank else @maxRank
+    data._aSortData[rank_index] = if product.rank >= 0 then product.rank else @maxRank
     return true
 
   # update facing/init_facing
@@ -1272,7 +1329,7 @@ class ProductTable
     data._aSortData[facing_index] = facing
     return true
 
-class PlanPage
+root.PlanPage = class PlanPage
   action: ""
   _do: ""
 
@@ -1328,4 +1385,3 @@ class PlanPage
 
     $("#menu").menu().hide()
 
-root.PlanPage = PlanPage
