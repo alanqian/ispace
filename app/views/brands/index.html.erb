@@ -6,17 +6,18 @@
                       html: { id: "brands-form", class: "inplace", },
                      ) do |f| %>
     <div class="inputs">
-      <%#= f.input :name %>
       <%= f.input :color, as: :color %>
     </div>
     <div class="actions">
       <%= f.submit %>
     </div>
-    <table id="brands-table" data-form="#brands-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+    <table id="brands-table" data-form="#brands-form"
+      data-sinfoempty="请重新选择品类或重新搜索"
+      class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th><%=tf :name %></th>
-          <th data-input="brand[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
+          <th data-col="name"><%=tf :name %></th>
+          <th data-col="color" data-input="brand[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
         </tr>
       </thead>
       <tbody>

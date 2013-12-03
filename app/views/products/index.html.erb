@@ -12,13 +12,37 @@
       <%= f.input :price_zone, collection: t("dict.prices") %>
       <%= f.input :color, as: :color %>
     </div>
-    <%= render 'list',
-      products: @products,
-      brands_all: brands_all,
-      suppliers_all: suppliers_all,
-      mfrs_all: mfrs_all,
-      sinfoempty: "请重新选择品类或重新搜索"
-    %>
+    <table id="products-table" data-form="#products-form"
+      data-sinfoempty="请重新选择品类或重新搜索"
+      class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <%= data_th_list :product,
+            [:select_all, "products[]"],
+            [:grade, input: false],
+            [:code, input: false],
+            [:brand_id, input: false],
+            [:name, input: false],
+            [:status, input: false, sort: false],
+            [:color, sort: false, search: false],
+            :height, :width, :depth, :weight, :price_zone,
+            [:size_name, input: false],
+            [:case_pack_name, input: false],
+            [:barcode, input: false],
+            [:supplier_id, input: false],
+            [:mfr_id, input: false]
+          %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <%= render '/products/item', product: product,
+            brands_hash: brands_all.to_hash(:id, :name),
+            suppliers_hash: suppliers_all.to_hash(:id, :name),
+            mfrs_hash: mfrs_all.to_hash(:id, :name) %>
+        <% end %>
+      </tbody>
+    </table>
   <% end %>
 </div>
 
