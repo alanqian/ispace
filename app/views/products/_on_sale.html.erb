@@ -32,19 +32,9 @@
 
 <div id="dataTable-filter">
   <div id="product-toolbar">
-    <%
-      opt_class = Struct.new(:id, :name)
-      grade_opt = [
-        opt_class.new("", "全部")
-      ]
-      t("dict.grades").each do |type, name|
-        if type.to_s <= min_grade
-          grade_opt.push opt_class.new(type, name)
-        end
-      end
-    %>
+    <% grade_opts = product_grade_options(min_product_grade, "全部") %>
     <%= select_tag "show-product-grade",
-      options_from_collection_for_select(grade_opt, "id", "name", -1),
+      options_from_collection_for_select(grade_opts, :last, :first, -1),
       class: "toolbar-select",
       title: "选择显示的单品种类"
     %>

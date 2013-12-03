@@ -2,6 +2,7 @@
 
 class Plan < ActiveRecord::Base
   include PdfExtension
+  include ActiveModel::Dirty
 
   serialize :parts, Array
 
@@ -22,21 +23,12 @@ class Plan < ActiveRecord::Base
 
   before_save :do_copy_to, if: "did == :copy_to"
   before_save :calc_positions_done, if: "did == :layout"
+  before_save :update_products, if: :init_facing_changed?
   after_save :clear_stale_position, if: "did == :layout"
   after_save :update_plan_set
 
-  attr_accessor :new_products
-
   def verify_fixture?
     StoreFixture.verify_store_fixture?(store_id, category_id)
-  end
-
-  def products_changed?
-    product_version != Product.version
-  end
-
-  def has_product?
-    positions.any?
   end
 
   def copy_product_only
@@ -119,41 +111,42 @@ class Plan < ActiveRecord::Base
     self.fixture.shelf_spaces
   end
 
-  def products_opt
-    Product.should_on_sales(category_id)
+  def on_shelves
+    Product.under(self.category_id).on_shelf(self.min_product_grade)
   end
 
-  def prior_products
-    Product.must_on_sales(self.category_id)
+  def update_init_facing
+    if init_facing_changed?
+      self.positions.not_on_shelf.update_all(init_facing: self.init_facing)
+    end
   end
 
-  # return array of product code
-  # current optional products
-  def optional_products
-    on_shelf = positions.to_hash(:product_id, :id)
-    options = Product.should_on_sales(self.category_id)
-    options.select { |opt| on_shelf[opt.id] } .map { |opt| opt.id }
-  end
+  # update products if necessary
+  def update_products
+    return if !min_product_grade_changed? && product_version == Product.version
+    logger.info "update_products, plan:#{id} min_product_grade:#{min_product_grade}, category:#{category_id}"
 
-  # products: array of product code as string
-  def optional_products=(products)
-    logger.debug "setup optional products: #{products.to_s}"
-    positions.to_hash(:product_id, :id)
+    # get products can on shelf
+    products = on_shelves.select(:code).order(:code).map { |p| p.code }
+    # remove unused positions: mark and sweep
+    marked = self.positions.select([:id, :product_id]).order(:product_id).to_a
+    staled = []
 
-    products.reject! { |p| p.empty? }
+    pcode = products.shift
+    pos = marked.shift
+    while pcode != nil
+      while pos != nil && pos.product_id < pcode
+        # staled product
+        staled.push pos
+        pos = marked.shift
+      end
 
-    # add must on sale products
-    products.concat Product.must_on_sales(self.category_id).map { |p| p.id }
-
-    marked = positions.to_hash(:product_id, :id)
-    products.each do |product_code|
-      if marked[product_code]
-        marked.delete(product_code)
-      else
+      if pos.nil? || pcode < pos.product_id
+        # pocde not equal, new product
         positions << Position.create({
           plan_id: self.id,
           store_id: self.store_id,
-          product_id: product_code,
+          product_id: pcode,
           init_facing: self.init_facing,
           facing: self.init_facing,
           leading_gap: 0.0,
@@ -161,16 +154,25 @@ class Plan < ActiveRecord::Base
           middle_divider: 0.0,
           trail_divider: 0.0,
         })
+      else
+        # equal pcode, next position
+        while pos != nil && pos.product_id == pcode
+          pos = marked.shift
+        end
       end
+
+      # next product
+      pcode = products.shift
     end
 
     # delete unselected products
-    if marked.any?
-      self.positions.delete(marked.values)
+    staled.concat(marked)
+    if staled.any?
+      self.positions.delete(staled)
     end
 
-    logger.debug "optional products initialized"
-    if positions.any?
+    logger.debug "plan products initialized"
+    if self.positions.any?
       self.update_column(:product_version, Product.version)
     end
     self.save!
@@ -187,7 +189,8 @@ class Plan < ActiveRecord::Base
   end
 
   def positions_by_layer
-    product_map = Product.on_sales(category_id).to_hash(:id, :code, :name, :color, :width, :height, :depth)
+    product_map = on_shelves.select(:code, :name, :color, :width, :height, :depth)
+      .to_hash(:id, :code, :name, :color, :width, :height, :depth)
     blocks = {}
     # update position rank
     rank = 1
@@ -211,7 +214,8 @@ class Plan < ActiveRecord::Base
   end
 
   def blocks_by_brand
-    product_map = Product.on_sales(category_id).to_hash(:id, :id, :brand_id, :width, :height, :depth)
+    product_map = on_shelves.select(:code, :name, :brand_id, :color, :width, :height, :depth)
+      .to_hash(:id, :id, :brand_id, :width, :height, :depth)
     brand_map = Brand.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
     blocks = {}
     positions.each do |p|
@@ -236,7 +240,8 @@ class Plan < ActiveRecord::Base
 
   def get_summary(by = :supplier)
     # by_supplier
-    product_map = Product.on_sales(category_id).to_hash(:id, :id, :brand_id, :supplier_id, :width, :height, :depth)
+    product_map = on_shelves.select(:code, :brand_id, :supplier_id, :width, :height, :depth)
+      .to_hash(:id, :id, :brand_id, :supplier_id, :width, :height, :depth)
 
     attr_id = "#{by}_id".to_sym
     attr_klass = by.to_s.classify.constantize
@@ -319,7 +324,7 @@ class Plan < ActiveRecord::Base
     occupy_run = {} # (fixture_item_id, layer) => run
     total_count = [0, 0]
     done_count = [0, 0]
-    product_map = Product.on_sales(self.category_id).to_hash(:code, :grade)
+    product_map = on_shelves.select(:code, :grade).to_hash(:code, :grade)
     # add two dict to detect positions on different layers
     done_dict = {}
     total_dict = {}
@@ -385,7 +390,8 @@ class Plan < ActiveRecord::Base
 
     # place force on sale products first, then normal ones
     layer = layers.shift
-    product_map = Product.on_sales(self.category_id).to_hash(:code)
+    product_map = on_shelves.select(:code, :grade, :width, :height, :depth)
+      .to_hash(:code)
 
     # order position by brand_id
     self.positions.sort! do |a, b|
@@ -478,7 +484,10 @@ class Plan < ActiveRecord::Base
       logger.warn "failed to output pdf because plan_set has not been published, plan:#{id}"
       return
     end
+    _to_pdf
+  end
 
+  def _to_pdf
     ostate = OutputState.new({
       origin: [0, 0],
       scale: 1.0,
@@ -551,9 +560,13 @@ class Plan < ActiveRecord::Base
       :size => 18,
       :align => :center
 
+    published_at = self.plan_set.published_at != nil ?
+      self.plan_set.published_at.localtime.to_formatted_s(:db) : ""
+    to_deploy_at = self.plan_set.to_deploy_at != nil ?
+      self.plan_set.to_deploy_at.to_formatted_s(:db) : ""
     info = "设计：John Denver\n" +
-           "发布：#{self.plan_set.published_at.localtime.to_formatted_s(:db)}\n" +
-           "实施：#{self.plan_set.to_deploy_at.to_formatted_s(:db)}\n"
+           "发布：#{published_at}\n" +
+           "实施：#{to_deploy_at}\n"
     pdf.text_box info,
       :size => 16,
       :at => [150,300],

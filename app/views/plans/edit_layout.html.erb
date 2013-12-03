@@ -131,7 +131,7 @@
   data-grade="<%= products.map { |p| [p.code, p.grade] }.to_json %>"
   class="ui-corner-all">
   <%= render "/products/on_sale",
-    min_grade: @plan.min_product_grade,
+    min_product_grade: @plan.min_product_grade,
     products: products,
     brands_all: brands_all,
     suppliers_all: suppliers_all,

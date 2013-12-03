@@ -10,6 +10,8 @@
     <%= f.input :plan_set_name, disabled: true %>
     <%= f.input :store_name, disabled: true %>
     <%= f.input :category_id, as: :tree, class: "category_name", disabled: true %>
+    <%= f.input :init_facing %>
+    <%= f.input :min_product_grade, collection: product_grade_options %>
 
     <hr/>
 
@@ -23,35 +25,6 @@
     <%= f.input :fixture_id, as: :radio_buttons, collection: @fixtures_all,
       label: false, wrapper_html: { class: "bi_columns" }
     %>
-
-    <% if @plan.products_changed? %>
-      <hr/>
-      <div class="input">选择商品
-        <% if @plan.has_product? %>
-          <span class="hint">商品目录已被更新，请选择新商品(<%= @products_opt.size %>)，加入到本门店规划</span>
-        <% else %>
-          <span class="hint">请选择可卖品(<%= @products_opt.size %>)，加入到本门店规划</span>
-        <% end %>
-      </div>
-      <div class="choose-product">
-        <div class="input boolean compact select-all">
-          <%=select_all_check "plan[optional_products][]", label: "全选" %>
-        </div>
-        <%= f.input :optional_products, as: :check_boxes, collection: @products_opt,
-          label: false, wrapper_html: {
-            class: "bi_columns select-one ui-selected-mark",
-            onclick: "javascript: onClickSelectOne(event, this);",
-            data: {"select-all" => "#SELECT_ALL"},
-          } %>
-      </div>
-      <hr/>
-      <div class="input">必卖品：<span class="hint">以下是必卖品，会自动加入规划</span></div>
-      <div class="input bi_columns">
-        <% @plan.prior_products.each do |p| %>
-          <li class="checked"><%= p.name %></li>
-        <% end %>
-      </div>
-    <% end %>
   </div>
 
   <div class="actions">

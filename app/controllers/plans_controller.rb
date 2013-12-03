@@ -82,26 +82,24 @@ class PlansController < ApplicationController
         logger.warn "plan back to setup fixture for missing fixture, plan:#{@plan.id}"
         edit_update_do(:setup)
       end
-
-      if @plan.products_changed?
-        logger.warn "product changed since last plan revision, plan:#{@plan.id}"
-        edit_update_do(:setup)
-      end
     end
 
     logger.debug "edit plan, do:#{@do}"
     case @do
     when :setup
       @fixtures_all = Fixture.select([:id,:name])
-      @products_opt = @plan.products_opt
       render "edit_setup"
     when :layout
+      @plan.update_products
       @position = Position.new
       render "edit_layout", locals: {
-        products: Product.on_sales(@plan.category_id),
-        brands_all: Brand.where(["category_id=?", @plan.category_id]),
-        suppliers_all: Supplier.where(["category_id=?", @plan.category_id]),
-        mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
+        products: @plan.on_shelves
+          .select(:name, :size_name, :code, :price_zone, :brand_id,
+                  :width, :height, :depth, :color, :grade,
+                  :supplier_id, :mfr_id),
+        brands_all: Brand.under(@plan.category_id),
+        suppliers_all: Supplier.under(@plan.category_id),
+        mfrs_all: Manufacturer.under(@plan.category_id),
       }
     else
       render "edit"
@@ -209,8 +207,7 @@ class PlansController < ApplicationController
       params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent,
         :copy_product_only, :version, :min_product_grade,
-        target_plans:[],
-        optional_products:[],
+        target_plans: [],
         positions_attributes: [:_destroy, :id,
           :product_id, :version, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
           :run, :units, :height_units, :width_units, :depth_units, :oritentation,

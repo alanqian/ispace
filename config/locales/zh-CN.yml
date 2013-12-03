@@ -249,6 +249,7 @@ zh-CN:
         num_stores: 门店数
         usage_percent: 空间使用率
         init_facing: 初始排面数
+        min_product_grade: 商品最低等级
         positions:
           leading_gap: 前置间隙
           leading_divider: 前分隔物

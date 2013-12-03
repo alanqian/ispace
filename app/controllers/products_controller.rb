@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
     category_id = params[:category] || Category.default_id
 
     if @do == :on_shelf
-      @products = Product.under(category_id).can_on_shelf
+      @products = Product.under(category_id).on_shelf
     else
       @products = Product.under(category_id)
     end

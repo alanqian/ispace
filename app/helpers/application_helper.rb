@@ -109,6 +109,14 @@ module ApplicationHelper
     end
   end
 
+  def product_grade_options(grade = "Q", all_grade = nil)
+    opts = {}
+    if all_grade
+      opts[all_grade] = ""
+    end
+    opts.merge I18n.t("dict.grades").select { |a,_| a.to_s <= grade.to_s } .invert
+  end
+
   def select_one_check(id, sel_target, opts = {})
     opts ||= {}
     opts[:onclick] ||= "javascript: onClickSelectOne(event, this);"

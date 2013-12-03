@@ -161,6 +161,7 @@ zh-CN:
       plan:
         init_facing: (对未上架的商品有效)
         category_name: (新规划才能更改品类)
+        min_product_grade: (至少达到此等级的商品才能上架)
 
       plan_set:
         category_id: (新规划才能更改品类)

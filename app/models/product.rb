@@ -2,8 +2,7 @@ class Product < ActiveRecord::Base
   include RandomColor
   include UnderCategory
 
-  scope :can_on_shelf, -> { where("grade < 'X'") }
-  scope :must_on_shelf, -> { where("grade = 'A'") }
+  scope :on_shelf, ->(grade = 'Q') { where(["grade <= ?", grade]) }
 
   belongs_to :category
   self.primary_key = "code"
@@ -19,21 +18,5 @@ class Product < ActiveRecord::Base
 
   def to_opt
     Option.new(code, display_name)
-  end
-
-  def self.on_sales(category_id)
-    self.where(["category_id=? AND grade < 'X'", category_id])
-  end
-
-  # return array of options
-  def self.should_on_sales(category_id)
-    self.where(["category_id=? AND grade < 'X' AND grade > 'A'", category_id]).
-      select(:code, :name, :size_name, :case_pack_name).map { |p| p.to_opt }
-  end
-
-  # return array of options
-  def self.must_on_sales(category_id)
-    self.where(["category_id=? AND grade = 'A'", category_id]).
-      select(:code, :name, :size_name, :case_pack_name).map { |p| p.to_opt }
   end
 end
