@@ -362,8 +362,8 @@ root.refreshDataTr = (trSel, html, highlightColor) ->
   tr = $(trSel)
   clazz = tr.attr("class")
   bgColor = tr.css("background-color")
-  rowData = $(html).find("td").map (index, el) -> el.innerText
-  updateDataTableRow trSel, $.makeArray(rowData)
+  #rowData = $(html).find("td").map (index, el) -> el.innerText
+  #updateDataTableRow trSel, $.makeArray(rowData)
   tr.replaceWith(html)
   tr = $(trSel).attr("class", clazz)
 
@@ -531,7 +531,7 @@ class InplaceEditor
     return null
 
   isParentTD: (el) ->
-    el.parentElement.tagName == "TD"
+    el.parentElement != null && el.parentElement.tagName == "TD"
 
   unbind: ()->
     console.log "unbinding..."
