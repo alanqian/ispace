@@ -94,9 +94,9 @@ class PlansController < ApplicationController
       @position = Position.new
       render "edit_layout", locals: {
         products: @plan.on_shelves
-          .select(:name, :size_name, :code, :price_zone, :brand_id,
-                  :width, :height, :depth, :color, :grade,
-                  :supplier_id, :mfr_id),
+          .select(:name, :size_name, :code, :price_zone, :grade, :merch_style,
+                  :width, :height, :depth, :color, :image_file,
+                  :brand_id, :supplier_id, :mfr_id),
         brands_all: Brand.under(@plan.category_id),
         suppliers_all: Supplier.under(@plan.category_id),
         mfrs_all: Manufacturer.under(@plan.category_id),

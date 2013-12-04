@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131203081044) do
+ActiveRecord::Schema.define(version: 20131203143206) do
 
   create_table "bays", force: true do |t|
     t.string   "name",                                                null: false
@@ -315,16 +315,16 @@ ActiveRecord::Schema.define(version: 20131203081044) do
   end
 
   create_table "products", id: false, force: true do |t|
-    t.string   "code",                                                                    null: false
+    t.string   "code",                                                                      null: false
     t.string   "category_id"
     t.integer  "brand_id"
     t.integer  "mfr_id"
     t.integer  "user_id"
     t.integer  "import_id",                                               default: -1
     t.string   "name"
-    t.integer  "height",                                                                  null: false
-    t.integer  "width",                                                                   null: false
-    t.integer  "depth",                                                                   null: false
+    t.integer  "height",                                                                    null: false
+    t.integer  "width",                                                                     null: false
+    t.integer  "depth",                                                                     null: false
     t.decimal  "weight",                         precision: 10, scale: 0
     t.string   "price_zone"
     t.string   "size_name"
@@ -355,7 +355,9 @@ ActiveRecord::Schema.define(version: 20131203081044) do
     t.integer  "shelf_life_dist"
     t.integer  "available"
     t.integer  "status"
-    t.string   "grade",                limit: 2,                          default: "B",   null: false
+    t.string   "grade",                limit: 2,                          default: "B",     null: false
+    t.string   "image_file"
+    t.string   "merch_style",                                             default: "stack", null: false
   end
 
   add_index "products", ["category_id", "grade"], name: "index_products_on_category_id_and_grade", using: :btree
