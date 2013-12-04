@@ -45,6 +45,10 @@ class ProductsController < ApplicationController
     }
   end
 
+  def upload
+    @product = Product.new
+  end
+
   # GET /products/1
   # GET /products/1.json
   def show
@@ -75,17 +79,25 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-    @product.user_id = @current_user_id
-
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @product }
-        format.js
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-        format.js
+    if @product.did == :upload
+      @product.process_upload
+      logger.debug "uploaded, files:#{@product.image_file.to_json}"
+      count = @product.image_file.count
+      respond_to do |format|
+        format.html { redirect_to products_path, notice: simple_notice(count: count) }
+      end
+    else
+      @product.user_id = @current_user_id
+      respond_to do |format|
+        if @product.save
+          format.html { redirect_to @product, notice: 'Product was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @product }
+          format.js
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+          format.js
+        end
       end
     end
   end
@@ -171,7 +183,7 @@ class ProductsController < ApplicationController
     def product_params
       params.require(:product).permit(:_do, :user_id, :category_id, :code, :brand_id,
         :mfr_id, :supplier_id, :id, :name, :height, :width, :depth, :weight, :price_zone,
-        :size_name, :case_pack_name, :barcode, :color,
+        :size_name, :case_pack_name, :barcode, :color, :image_upload,
         :grade, :new_product, :on_promotion)
     end
 

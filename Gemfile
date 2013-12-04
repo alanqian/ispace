@@ -11,6 +11,7 @@ gem 'mysql2'
 gem 'roo'
 gem 'yaml_db'
 gem 'hanzi_to_pinyin'
+gem 'rubyzip'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'

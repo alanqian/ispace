@@ -88,6 +88,7 @@ zh-CN:
         index_off_shelf: 未上架商品
         edit: 更新商品信息
         new: 新建商品
+        upload: 商品图片上传
       sale:
         index: 销售信息管理
         edit: 更新销售信息
@@ -124,6 +125,7 @@ zh-CN:
       product:
         update_ex: 更新了%{count}个单品
         update_fail: 没有更新单品
+        create_upload: 商品图片上传完成，共更新了%{count}个商品的图片
       plan_set:
         create: 创建空间规划%{plan_set}第一步完成，接下来请选择规划包含的标准店...
 

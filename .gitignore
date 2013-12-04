@@ -22,9 +22,10 @@
 /public/system/*
 /public/sheets/*
 /public/downloads/*.pdf
-/public/store_images/*.jpg
-/public/store_images/*.png
-/public/store_images/*.gif
+/public/images/*/*.jpg
+/public/images/*/*.png
+/public/images/*/*.gif
+/public/images/products/*/*.jpg
 rerun.txt
 pickle-email-*.html
 

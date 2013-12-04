@@ -127,6 +127,8 @@ zh-CN:
         facings: 排面
         new_product: 新品
         on_promotion: 促销
+        image_file: 商品图片
+        image_upload: 选择商品图片文件或压缩包
       store:
         code: 门店编号
         name: 店名
