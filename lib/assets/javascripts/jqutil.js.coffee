@@ -1,5 +1,16 @@
 root = exports ? this
 
+$.fn.animateBgColor = (highlightColor, duration = 1500) ->
+  highlightColor ||= "#FFFF9C"
+  originalBg = this.css("backgroundColor")
+  this.stop().css("background-color", highlightColor)
+    .animate({backgroundColor: originalBg}, duration)
+
+$.fn.flash = (duration = 500, times = 3) ->
+  for i in [1..times] by 1
+    this.fadeOut(duration).fadeIn(duration)
+  this
+
 # For category input, a user can type this:
 #   category code, :value
 #   category name, :label
