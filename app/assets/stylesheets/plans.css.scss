@@ -291,66 +291,23 @@ ul.sortable-editor {
     border: 0px none transparent;
     //padding: 1px;
     background-color: transparent;
+    cursor: pointer;
   }
   li:last-child {
     margin-right: 1px;
   }
   li.ui-selected {
-    margin-left: 0;
-    margin-right: 0;
-    border: 1px solid yellow;
-    background-color: #000088;
-
-    div.mdse-col {
-      border-color: yellow;
-    }
+    //margin-left: 0;
+    //margin-right: 0;
+    // border: 1px solid yellow;
+    // #background-color: #000088;
+    //div.mdse-col {
+    //  border-color: yellow;
+    //}
   }
 }
 
 li.sortable-item {
-  div.mdse-gap {
-    display: inline-block;
-    float: left;
-    height: 100%;
-    border: 0;
-    background-color: transparent;
-  }
-  div.mdse-divider {
-    display: inline-block;
-    float: left;
-    min-width: 3px;
-    height: 100%;
-    border: 0;
-    background-color: transparent;
-    div.top-half {
-      border: 0px solid black;
-      border-right-width: 2px;
-      width: 47%;
-      height: 50%;
-    }
-    div.bottom-half {
-      width: 99%;
-      height: 50%;
-      background-color: black;
-    }
-  }
-  div.mdse-col.collapse {
-    border-right-width: 0px;
-  }
-  div.mdse-col {
-    display: inline-block;
-    height: 100%;
-    float: left;
-    border: 1px solid black;
-
-    div.mdse-unit {
-      display: block;
-      width: 100%;
-      border: 0px solid black;
-      border-bottom-width: 1px;
-      background-color: transparent;
-    }
-  }
 }
 
 div.fixture-layout {
