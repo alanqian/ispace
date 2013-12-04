@@ -82,6 +82,7 @@ class Position
     @fixture_item_id = -1
     @layer = -1
     @seq_num = -1
+    @run = 0
     # DON'T clear facing/width_units, will cause drag/drop bug:
     #   failed to get facing
     # this.facing = 0
@@ -91,7 +92,7 @@ class Position
     @fixture_item_id = fixture_item_id
     @layer = layer
     @seq_num = seq_num
-    return @recalcRun(product)
+    @recalcRun(product)
 
   getLi: () ->
     $("li[data-id=#{@index}]")
@@ -99,12 +100,12 @@ class Position
   recalcRun: (product) ->
     # TODO: add precious version for calculate run
     if @isOnShelf()
-      @leading_gap + @leading_divider +
+      @run = @leading_gap + @leading_divider +
         product.width * @facing +
         @middle_divider * (@facing - 1) +
         @trail_divider
     else
-      0
+      @run = 0
 
   getWidth: () ->
     return 0 unless @isOnShelf()
@@ -124,86 +125,147 @@ class Position
       @bbox.attr("fill", @product.showingColor)
     if @border
       if $("li[data-id=#{@index}]").hasClass("ui-selected")
-        @border.attr("stroke", "yellow").attr("stroke-width", 2)
+        @border.attr("stroke-width", 3).attr("stroke", "yellow")
       else
-        @border.attr("stroke", "").attr("stroke-width", 0)
+        @border.attr("stroke-width", 1).attr("stroke", "black")
 
-  draw: (li, options) ->
-    cx = $(li).width()
-    cy = $(li).height()
-    paper = Raphael(li, cx, cy)
+  @display:
+    draw: "drawImage"
+    options: {}
+
+  draw: () ->
+    li = @getLi()
+    if li.length != 1
+      console.log "no li or too many li found, count:#{li.length}"
+      return false
+
+    cx = li.width()
+    cy = li.height()
+    paper = Raphael(li[0], cx, cy)
     paper.clear
-
-    # draw block bounding box
     @bbox = paper.rect(0, 0, cx, cy)
-      .attr("fill", @product.showingColor)
 
-    xRatio = cx / @getWidth()
-    yRatio = cy / @getHeight()
-    console.log "ratio, x:#{xRatio}, y:#{yRatio}"
-
-    # draw a rows x cols table in LI
-    # leading_gap, leading_divider, col, middle_divider, col, trail_divider
-    rows = @height_units
-    cols = @width_units
-    x = @leading_gap * xRatio # skip leading_gap
-
-    # draw leading divider
-    if @leading_divider > 0
-      width = @leading_divider * xRatio
-      paper.rect(x, cy / 2, width, cy / 2).attr("fill", "black")
-      paper.line(x + width / 2, 0, x + width / 2, cy).attr("stroke", "black")
-      x += width
-
-    # draw block rect
-    width = (@product.width * cols + @middle_divider * (cols - 1)) * xRatio
-    paper.rect(x, 0, width, cy)
-      .attr("stroke", "black")
-
-    run = @product.width + (@product.width + @middle_divider) * (cols - 1)
-    x1 = x
-    x2 = x + run * xRatio
-
-    # draw units grid: vert line
-    for i in [1..cols - 1] by 1
-      x = x1 + @product.width * i * xRatio
-      paper.line(x, 0, x, cy)
-        .attr("stroke", "black")
-    xpos = []
-    if @middle_divider > 0
-      xpos.push [x1, x1 + @product.width * xRatio]
-      for i in [1..cols - 1] by 1
-        x = x1 + (@product.width + @middle_divider) * i * xRatio
-        paper.line(x, 0, x, cy)
-          .attr("stroke", "black")
-        xpos.push [x, x1 + @product.width * (i + 1) * xRatio]
-      xpos.push [x2 - @product.width * xRatio, x2]
-
-    # draw units grid: horz line
-    y = 0
-    if @middle_divider > 0
-      for i in [1..rows - 1] by 1
-        y = (@product.height * i) * yRatio
-        for x in xpos
-          paper.line(x[0], y, x[1], y)
-            .attr("stroke", "black")
-    else
-      for i in [1..rows - 1] by 1
-        y = (@product.height * i) * yRatio
-        paper.line(x1, y, x2, y)
-          .attr("stroke", "black")
-
-    # trail_divider
-    if @trail_divider > 0
-      width = @trail_divider * xRatio
-      paper.rect(x2, cy / 2, width, cy / 2)
-        .attr("fill", "black")
-      paper.line(x2 + width / 2, 0, x2 + width / 2, cy / 2)
-        .attr("stroke", "black")
+    @fn[Position.display.draw].call(this, paper, cx, cy)
 
     # draw border to indicate selected
     @border = paper.rect(0, 0, cx, cy)
+      .attr("fill", "none")
+      .attr("stroke", "black")
     return
+
+  fn:
+    drawImage: (paper, cx, cy) ->
+      # image_file = "https://duckduckgo.com/assets/logo_homepage.normal.v102.png"
+      image_file = @product.image_file
+      if image_file && image_file != "" && cx > 10 && cy > 10
+        @bbox.attr("fill", @product.showingColor)
+        img = paper.image(image_file, 0, 0, cx, cy)
+        img[0].preserveAspectRatio.baseVal.align = 6 # (1 = off, 6 = xMidYMid)
+        img[0].preserveAspectRatio.baseVal.meetOrSlice = 1 # (1 = meet, 2 = slice)
+        return true
+      else
+        return @fn.drawName.call(this, paper, cx, cy)
+
+    drawName: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+      return if cy < 8 # too short to hold name
+
+      # try to output several names
+      names = [
+        "#{@product.code}\n#{@product.name}",
+        "#{@product.code} #{@product.name}",
+        @product.name,
+      ]
+      fontSize = Math.min((cy - 3) / 2, 12)
+      for name in names
+        elText = paper.text(cx / 2, cy / 2, name)
+          .attr("font-size", fontSize)
+        bbox = elText.getBBox()
+        if bbox.width <= cx && bbox.height <= cy
+          break # fit
+        else
+          elText.remove()
+          elText = null
+      if elText == null
+        # no fit, show product.code
+        elText = paper.text(cx / 2, cy / 2, @product.code)
+          .attr("font-size", fontSize)
+        bbox = elText.getBBox()
+      # draw text background as white
+      paper.rect(bbox.x, bbox.y, bbox.width, bbox.height)
+        .attr("fill", "white")
+        .insertBefore(elText)
+      return
+
+    drawBlock: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+
+    drawUnits: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+
+      xRatio = cx / @getWidth()
+      yRatio = cy / @getHeight()
+      # console.log "ratio, x:#{xRatio}, y:#{yRatio}"
+
+      # draw a rows x cols table in LI
+      # leading_gap, leading_divider, col, middle_divider, col, trail_divider
+      rows = @height_units
+      cols = @width_units
+      x = @leading_gap * xRatio # skip leading_gap
+
+      # draw leading divider
+      if @leading_divider > 0
+        width = @leading_divider * xRatio
+        paper.rect(x, cy / 2, width, cy / 2).attr("fill", "black")
+        paper.line(x + width / 2, 0, x + width / 2, cy).attr("stroke", "black")
+        x += width
+
+      # draw block rect
+      width = (@product.width * cols + @middle_divider * (cols - 1)) * xRatio
+      paper.rect(x, 0, width, cy)
+        .attr("stroke", "black")
+
+      run = @product.width + (@product.width + @middle_divider) * (cols - 1)
+      x1 = x
+      x2 = x + run * xRatio
+
+      # draw units grid: vert line
+      for i in [1..cols - 1] by 1
+        x = x1 + @product.width * i * xRatio
+        paper.line(x, 0, x, cy)
+          .attr("stroke", "black")
+      xpos = []
+      if @middle_divider > 0
+        xpos.push [x1, x1 + @product.width * xRatio]
+        for i in [1..cols - 1] by 1
+          x = x1 + (@product.width + @middle_divider) * i * xRatio
+          paper.line(x, 0, x, cy)
+            .attr("stroke", "black")
+          xpos.push [x, x1 + @product.width * (i + 1) * xRatio]
+        xpos.push [x2 - @product.width * xRatio, x2]
+
+      # draw units grid: horz line
+      y = 0
+      if @middle_divider > 0
+        for i in [1..rows - 1] by 1
+          y = (@product.height * i) * yRatio
+          for x in xpos
+            paper.line(x[0], y, x[1], y)
+              .attr("stroke", "black")
+      else
+        for i in [1..rows - 1] by 1
+          y = (@product.height * i) * yRatio
+          paper.line(x1, y, x2, y)
+            .attr("stroke", "black")
+
+      # trail_divider
+      if @trail_divider > 0
+        width = @trail_divider * xRatio
+        paper.rect(x2, cy / 2, width, cy / 2)
+          .attr("fill", "black")
+        paper.line(x2 + width / 2, 0, x2 + width / 2, cy / 2)
+          .attr("stroke", "black")
+      return
 
 class PlanEditor
   @foo: 0
@@ -447,8 +509,9 @@ class PlanEditor
     position_index = $(li).data("id")
     position = @positionMap[position_index]
     product = @productMap[position.product_id]
-    new_run = position.setPlace($(ul).data("fixture-item"), $(ul).data("layer"), 0, product)
-    @updatePositionRun(position, new_run)
+    old_run = position.run
+    position.setPlace($(ul).data("fixture-item"), $(ul).data("layer"), 0, product)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(ul, 0, $(li), position)
 
   removeItemFromSlot: (li, ul) ->
@@ -458,7 +521,7 @@ class PlanEditor
     position = @positionMap[position_index]
     old_run = position.run
     position.offShelf()
-    @updatePositionRun(position, 0)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(ul, old_run, null, position)
 
   dumpSlot: (ulId) ->
@@ -512,7 +575,9 @@ class PlanEditor
     ]
     for pos in tests
       p = map[pos.id]
-      @updatePositionRun(p, pos.new_run)
+      old_run = p.run
+      p.run = pos.new_run
+      @updatePositionRun(p, old_run)
       console.log "updateRun", p, p.rank, ":", pos._rank
 
       console.log "verified err:", err, @sortedProducts
@@ -537,14 +602,14 @@ class PlanEditor
     console.log "position rank array verified, err:", err
     return err == 0
 
-  updatePositionRun: (position, new_run) ->
-    if Math.abs(position.run - new_run) < 0.1
+  updatePositionRun: (position, old_run) ->
+    if Math.abs(position.run - old_run) < 0.1
       return false
 
     #if position.id == "105"
     #  console.log "break"
     product = position.product
-    updated_run = product.run + new_run - position.run
+    updated_run = product.run - old_run + position.run
     max = @sortedProducts.length - 1
 
     # when delete old, items in (old_index, max], rank -= 1
@@ -600,10 +665,9 @@ class PlanEditor
           old_index++
         @sortedProducts.splice(old_index, 1)
 
-    #console.log @sortedProducts.length, "update rank, id:", position.id, "new_run:", new_run, "rank:", new_rank
+    #console.log @sortedProducts.length, "update rank, id:", position.id, "old_run:", old_run, "rank:", new_rank
     product.run = updated_run
     product.rank = new_rank
-    position.run = new_run
     @updateTableRanks()
 
   updateTableRanks: () ->
@@ -703,7 +767,7 @@ class PlanEditor
     if old_width != width
       li.width(width)
       li.empty()
-      position.draw(li[0])
+      position.draw()
 
   getSlotWidths: (ul) ->
     pixels_width = 0
@@ -1020,10 +1084,10 @@ class PlanEditor
     old_run = position.recalcRun(product)
     position.facing += delta
     position.width_units += delta
-    new_run = position.recalcRun(product)
+    position.recalcRun(product)
     slotKey = @slotKey(position.fixture_item_id, position.layer)
     slotUL = @slotMap[slotKey].ul
-    @updatePositionRun(position, new_run)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(slotUL, old_run, $(li), position)
     @updateTableFacing(position.product_id)
 
@@ -1076,8 +1140,8 @@ class PlanEditor
           old_run = position.recalcRun(product)
           if new_gap != position.leading_gap
             position.leading_gap = new_gap
-            new_run = position.recalcRun(product)
-            self.updatePositionRun(position, new_run)
+            position.recalcRun(product)
+            self.updatePositionRun(position, old_run)
             self.updateSlotSpace($(item.li).parent(), old_run, $(item.li), position)
         return true
     true
@@ -1118,8 +1182,8 @@ class PlanEditor
               position[f] = pos[f]
               changed = true
           if changed
-            new_run = position.recalcRun(product)
-            self.updatePositionRun(position, new_run)
+            position.recalcRun(product)
+            self.updatePositionRun(position, old_run)
             self.updateSlotSpace($(item.li).parent(), old_run, $(item.li), position)
         console.log "ok"
         return true
