@@ -15,7 +15,7 @@ class Store < ActiveRecord::Base
     # logger.debug "upload_file image_file, file:#{image_file}"
     ext = File.extname(File.basename(upload_file.original_filename).downcase)
     filename = "#{id}#{ext}"
-    File.open("#{Rails.root}/public/store_images/#{filename}", "wb") do |f|
+    File.open("#{Rails.root}/public/images/stores/#{filename}", "wb") do |f|
       f.write(upload_file.read)
     end
     super(filename)

@@ -22,7 +22,7 @@
   </div>
   <div id="store_fixture_legend">
     <% if @store.image_file != nil %>
-      <%= link_to image_tag("/store_images/#{@store.image_file}"), "#", id: "show-zoom-legend", class: "cmd_ui" %>
+      <%= link_to image_tag("/images/stores/#{@store.image_file}"), "#", id: "show-zoom-legend", class: "cmd_ui" %>
     <% end %>
   </div>
   <div class="clearfix"></div>
@@ -93,6 +93,6 @@
 
 <div id="store_fixture_zoom_legend">
   <% if @store.image_file != nil %>
-    <%= image_tag("/store_images/#{@store.image_file}") %>
+    <%= image_tag("/images/stores/#{@store.image_file}") %>
   <% end %>
 </div>
