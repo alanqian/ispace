@@ -747,14 +747,16 @@ class PlanEditor
   selectSlotItem: (el, addMode) ->
     changed = []
     if !addMode
+      # empty old selection
       for item in @selectedItems
         $(item.li).removeClass("ui-selected")
         position = @positionMap[item.position_index]
         if position
           position.updateColor()
-
       @selectedItems = []
+
     if el?
+      # add to selection
       li = $(el)
       position_index = $(el).data("id")
       @selectedItems.push
@@ -979,6 +981,7 @@ class PlanEditor
         return false
       li = $("li[data-id='#{index}']").get(0)
       @selectSlotItem(li, addSelect)
+      $(li).flash()
       addSelect = true
     return true
 
