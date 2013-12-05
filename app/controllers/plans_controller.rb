@@ -26,15 +26,27 @@ class PlansController < ApplicationController
 
   def download_pdf
     path = @plan.plan_pdf
+    logger.debug "download pdf file, file:#{path}, user:#{@current_user_id} store:#{@current_user_store_id}"
+    if !File.exists?(path)
+      logger.warn "Cannot find pdf file: #{path}"
+      raise ActionController::RoutingError, "resource not found"
+    end
+
     deploy = Deployment.start_download(@plan.id, @current_user_store_id)
-    if File.exists?(path) && deploy != nil
+    if (deploy == nil && @current_user_role != :designer)
+      logger.warn "unsecure download denied"
+      raise ActionController::RoutingError, "resource not found"
+    end
+
+    if deploy != nil
       send_file(path, x_sendfile: true, filename:
                 "#{deploy.plan_set_name}-#{@current_user_store_id}.#{@current_user_id}.pdf")
       deploy.download(@current_user_id)
-      logger.info "download plan, plan:#{@plan.id} store:#{@current_user_store_id} user:#{@current_user_id}"
     else
-      raise ActionController::RoutingError, "resource not found"
+      send_file(path, x_sendfile: true, filename:
+                "#{@plan.plan_set.full_name}-#{@plan.store_name}-#{@current_user_id}.pdf")
     end
+    logger.info "download plan, plan:#{@plan.id} store:#{@current_user_store_id} user:#{@current_user_id}"
   end
 
   # GET /plans/new
@@ -70,26 +82,24 @@ class PlansController < ApplicationController
         logger.warn "plan back to setup fixture for missing fixture, plan:#{@plan.id}"
         edit_update_do(:setup)
       end
-
-      if @plan.products_changed?
-        logger.warn "product changed since last plan revision, plan:#{@plan.id}"
-        edit_update_do(:setup)
-      end
     end
 
     logger.debug "edit plan, do:#{@do}"
     case @do
     when :setup
       @fixtures_all = Fixture.select([:id,:name])
-      @products_opt = @plan.products_opt
       render "edit_setup"
     when :layout
+      @plan.update_products
       @position = Position.new
       render "edit_layout", locals: {
-        products: Product.on_sales(@plan.category_id),
-        brands_all: Brand.where(["category_id=?", @plan.category_id]),
-        suppliers_all: Supplier.where(["category_id=?", @plan.category_id]),
-        mfrs_all: Manufacturer.where(["category_id=?", @plan.category_id]),
+        products: @plan.on_shelves
+          .select(:name, :size_name, :code, :price_zone, :grade, :merch_style,
+                  :width, :height, :depth, :color, :image_file,
+                  :brand_id, :supplier_id, :mfr_id),
+        brands_all: Brand.under(@plan.category_id),
+        suppliers_all: Supplier.under(@plan.category_id),
+        mfrs_all: Manufacturer.under(@plan.category_id),
       }
     else
       render "edit"
@@ -149,14 +159,12 @@ class PlansController < ApplicationController
         }
         format.json { head :no_content }
         format.js {
-          @version = params[:_version]
           render "update_#{@do}"
         }
       else
         format.html { render action: 'edit', _do: "layout" }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
         format.js {
-          @version = params[:_version]
           render "update_#{@do}"
         }
       end
@@ -198,11 +206,10 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:plan_set_id, :category_id, :_do, :user_id, :fixture_id,
         :init_facing, :nominal_size, :base_footage, :usage_percent,
-        :copy_product_only,
-        target_plans:[],
-        optional_products:[],
+        :copy_product_only, :version, :min_product_grade,
+        target_plans: [],
         positions_attributes: [:_destroy, :id,
-          :product_id, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
+          :product_id, :version, :fixture_item_id, :layer, :seq_num, :init_facing, :facing,
           :run, :units, :height_units, :width_units, :depth_units, :oritentation,
           :merch_style, :peg_style,
           :top_cap_height, :top_cap_depth, :bottom_cap_height, :bottom_cap_depth,

@@ -1,5 +1,7 @@
 Ispace::Application.routes.draw do
 
+  resources :stats
+
   get "pages/index"
   resources :plan_sets
   resources :plans
@@ -18,8 +20,11 @@ Ispace::Application.routes.draw do
   resources :brands
   resources :suppliers
   resources :manufacturers
-  resources :products
+
   patch "products/" => "products#update_ex"
+  get "products/upload" => "products#upload"
+  resources :products
+
   resources :import_sheets
 
   resources :fixtures

@@ -32,19 +32,21 @@ class ProductsController < ApplicationController
     # @current_user_store_id
     category_id = params[:category] || Category.default_id
 
-    @products = Product.where(["category_id=?", category_id])
-    product_new = Product.new(category_id: category_id)
-    brands_all = Brand.where(category_id: category_id)
-    suppliers_all = Supplier.where(category_id: category_id)
-    mfrs_all = Manufacturer.where(category_id: category_id)
-
+    if @do == :on_shelf
+      @products = Product.under(category_id).on_shelf
+    else
+      @products = Product.under(category_id)
+    end
     render 'index', locals: {
-      categories_all: Category.all,
-      brands_all: brands_all,
-      mfrs_all: mfrs_all,
-      suppliers_all: suppliers_all,
-      product_new: product_new,
+      brands_all: Brand.under(category_id).select(:id, :name),
+      mfrs_all: Manufacturer.under(category_id).select(:id, :name),
+      suppliers_all: Supplier.under(category_id).select(:id, :name),
+      product_new: Product.new(category_id: category_id),
     }
+  end
+
+  def upload
+    @product = Product.new
   end
 
   # GET /products/1
@@ -77,40 +79,51 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-    @product.user_id = @current_user_id
-
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @product }
-        format.js
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-        format.js
+    if @product.did == :upload
+      @product.process_upload
+      logger.debug "uploaded, files:#{@product.image_file.to_json}"
+      count = @product.image_file.count
+      respond_to do |format|
+        format.html { redirect_to products_path, notice: simple_notice(count: count) }
+      end
+    else
+      @product.user_id = @current_user_id
+      respond_to do |format|
+        if @product.save
+          format.html { redirect_to @product, notice: 'Product was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @product }
+          format.js
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+          format.js
+        end
       end
     end
   end
 
   # PATCH/PUT /products/
   def update_ex
-    @products = params[:products]
-    if @products.any?
-      logger.debug "#{@products}, #{product_attr_params}"
-      products = Product.where(code: @products).update_all(product_attr_params)
+    @codes = params[:products]
+    if @codes.any?
+      logger.debug "update products, #{@codes}, #{product_attr_params}"
+      @products = Product.where(code: @codes)
+      @products.update_all(product_attr_params)
       respond_to do |format|
         format.html {
-          redirect_to products_url, notice:
-            '#{products.size} products were successfully updated.'
+          redirect_to products_url, notice: simple_notice(count: @products.size)
         }
-        format.js {
-          set_products_ex_js
-        }
+        format.js do
+          categories = @products.map { |p| p.category_id }
+          @brands_hash = Brand.where(category_id: categories).to_hash(:id, :name)
+          @suppliers_hash = Supplier.where(category_id: categories).to_hash(:id, :name)
+          @mfrs_hash = Manufacturer.where(category_id: categories).to_hash(:id, :name)
+        end
       end
     else
       logger.error "no product has been selected!"
       respond_to do |format|
-        format.html { redirect_to products_url, notice: 'No product has been selected!' }
+        format.html { redirect_to products_url, notice: simple_notice(message: :update_fail) }
         format.js
       end
     end
@@ -118,7 +131,7 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json
-  def update
+  def update_default
     respond_to do |format|
       if @product.update(product_params)
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
@@ -151,29 +164,26 @@ class ProductsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-      @product = Product.find(params[:id])
-    end
-
-    def set_products_ex_js
-      @product = Product.find(@products.first)
-      @products_hash = Hash[Product.where(code: @products).map {|r| [r.id, r]} ]
-      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
-      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
-      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
+      if params[:id] != "[]"
+        @product = Product.find(params[:id])
+      end
     end
 
     def set_product_update_js
-      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
-      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
-      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
+      @brands_hash = Brand.under(@product.category_id).to_hash(:id, :name)
+      @suppliers_hash = Supplier.under(@product.category_id).to_hash(:id, :name)
+      @mfrs_hash = Manufacturer.under(@product.category_id).to_hash(:id, :name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:category_id, :code, :brand_id, :mfr_id, :supplier_id, :user_id, :id, :name, :height, :width, :depth, :weight, :price_zone, :size_name, :case_pack_name, :barcode, :color)
+      params.require(:product).permit(:_do, :user_id, :category_id, :code, :brand_id,
+        :mfr_id, :supplier_id, :id, :name, :height, :width, :depth, :weight, :price_zone,
+        :size_name, :case_pack_name, :barcode, :color, :image_upload,
+        :grade, :new_product, :on_promotion)
     end
 
     def product_attr_params
-      params.require(:product).permit(:sale_type, :new_product, :on_promotion)
+      params.require(:product).permit(:grade, :new_product, :on_promotion)
     end
 end

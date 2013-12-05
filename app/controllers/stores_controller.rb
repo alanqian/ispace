@@ -37,6 +37,16 @@ class StoresController < ApplicationController
       @new_store_fixture = StoreFixture.new(store_id: @store.id)
       @fixtures_all = Fixture.all
       @categories_all = Category.all.select(:code, :parent_id, :name)
+      if @store.store_fixtures.empty?
+        @store.rebuild_all_fixtures
+      else
+        prev_parent_id = nil
+        @store.store_fixtures.each do |sf|
+          parent_id = Category.upper_code(sf.category_id)
+          sf.show_up_dir = (parent_id != prev_parent_id)
+          prev_parent_id = parent_id
+        end
+      end
     end
   end
 
@@ -46,11 +56,25 @@ class StoresController < ApplicationController
     @store = Store.new(store_params)
     respond_to do |format|
       if @store.save
-        format.html { redirect_to @store, notice: simple_notice }
+        format.html { redirect_to stores_path, notice: simple_notice(store: @store.name) }
         format.json { render action: 'show', status: :created, location: @store }
       else
         format.html { render action: 'new' }
         format.json { render json: @store.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_delete
+    respond_to do |format|
+      if @store.update(deleted_at: Time.now)
+        format.html { redirect_to stores_path, notice: simple_notice(store: @store.name) }
+      else
+        format.html do
+          redirect_to stores_path,
+            notice: simple_notice(message: :update_delete_failed,
+                                  store: @store.name)
+        end
       end
     end
   end
@@ -75,7 +99,10 @@ class StoresController < ApplicationController
   def update_default
     respond_to do |format|
       if @store.update(store_params)
-        format.html { redirect_to edit_store_path(@store, _do: @do), notice: simple_notice }
+        format.html {
+          redirect_to edit_store_path(@store, _do: @do),
+          notice: simple_notice(store: @store.name)
+        }
         format.json { head :no_content }
         format.js { set_store_update_js }
       else
@@ -110,7 +137,8 @@ class StoresController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def store_params
       params.require(:store).permit(:_do,
-        :region_id, :code, :name, :ref_store_id, :area, :location, :memo,
+        :region_id, :code, :name, :ref_store_id, :area, :location, :memo, :grade,
+        :image_file,
         store_fixtures_attributes: [:_destroy, :id,
           :category_id, :category_name, :fixture_id, :code, :memo,
           :use_part_fixture, :parts_start, :parts_run]

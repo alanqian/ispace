@@ -1,18 +1,8 @@
 <%= simple_form_for(@product) do |f| %>
   <%= f.error_notification %>
   <div class="inputs">
-    <%= f.input :category_id, collection: categories_all, prompt: "选择品类",
-      input_html: {
-      data: {
-          brand_id: brands_all.to_hierarchy(:category_id, :id, :name),
-          mfr_id: mfrs_all.to_hierarchy(:category_id, :id, :name),
-          supplier_id: suppliers_all.to_hierarchy(:category_id, :id, :name),
-          selects: {
-            "select#product_brand_id" => "brand-id",
-            "select#product_mfr_id" => "mfr-id",
-            "select#product_supplier_id" => "supplier-id",
-          } },
-        onchange: "javascript: onProductCategoryChange(event,this)" } %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
     <%= f.input :brand_id, collection: [] %>
     <%= f.input :mfr_id, collection: [] %>
     <%= f.input :code %>
@@ -33,3 +23,4 @@
     <%= f.button :submit %>
   </div>
 <% end %>
+<%= category_menu "select-category" %>

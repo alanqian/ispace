@@ -14,19 +14,19 @@ class Bay < ActiveRecord::Base
 
   validates :name, presence: true, length: { maximum: 64 }
   validates :back_height, :back_width, :back_thick, presence: true,
-    numericality: { greater_than: 0.1 }
+    numericality: { greater_than: 0 }
   validates :back_color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/,
     message: 'color' }
 
   validates :notch_spacing, :notch_1st, presence: true,
-    numericality: { greater_than_or_equal_to: 1.0 }
+    numericality: { greater_than_or_equal_to: 1 }
   validates :base_height, :base_width, :base_depth, presence: true,
-    numericality: { greater_than: 0.1 }
+    numericality: { greater_than: 0 }
   validates :base_color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/ }
 
   validates :takeoff_height, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
-  before_save :recalc_space_and_types
+    numericality: { greater_than_or_equal_to: 0 }
+  before_save :update_metrics
 
   # types
   # num_layers
@@ -186,12 +186,12 @@ class Bay < ActiveRecord::Base
   end
 
   # helper for seeds.rb
-  def recalc_space_and_types
+  def update_metrics
     # update space metrics
     self.linear = 0.0
     self.area = 0.0
     self.cube = 0.0
-    open_shelves.each do |el|
+    self.open_shelves.each do |el|
       self.linear += el.width
       self.area += el.width * el.height
       self.cube += el.width * el.height * el.depth
@@ -203,21 +203,9 @@ class Bay < ActiveRecord::Base
   end
 
   def self.template
-    bay = self.new(
-      name: 'bay ',
-      back_height: 185.0,
-      back_width: 120.0,
-      back_thick: 3.0,
-      back_color: '#ffffff',
-      notch_spacing: 1.0,
-      notch_1st: 1.0,
-      base_height: 15.0,
-      base_width: 120.0,
-      base_depth: 50.0,
-      base_color: '#400040',
-      takeoff_height: 190.0,
-    )
+    bay = self.new(APP_CONFIG[:templates][:bay])
     bay.open_shelves.concat(OpenShelf.template(bay))
+    bay.open_shelves[0].name = APP_CONFIG[:templates][:open_shelf_1st_name]
     bay
   end
 

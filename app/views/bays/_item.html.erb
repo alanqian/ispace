@@ -4,9 +4,9 @@
     bay_types(bay.types),
     :bay_size,
     :num_layers,
-    :run,
-    :linear,
-    :area,
-    :cube
+    "%.2f" % (bay.run * 0.001),
+    "%.2f" % (bay.linear * 0.001),
+    "%.2f" % (bay.area * 0.000001),
+    "%.2f" % (bay.cube * 0.000000001)
   %>
 </tr>

@@ -2,8 +2,27 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.bays {
-  margin-left: 0;
+div.bays {
+  margin: 0.3em 0 0 0;
+  .span5 {
+    width: 310px;
+  }
+  div.input.bay_name {
+    margin-left: 1em;
+  }
+  div.inputs.bay_main {
+    padding: 0 1.2em;
+  }
+  hr {
+    margin: 0.3em -1.2em;
+  }
+  div.actions {
+    text-align: center;
+    margin: 0;
+    button {
+      margin: 0 0.3em 0 0.3em;
+    }
+  }
   form {
     margin-left: 0;
   }
@@ -16,15 +35,11 @@
   label>abbr {
     display: none; // hide required mark *
   }
-  fieldset {
-    background-color: #f0f0f0;
-  }
 
   .row {
-    margin-left: 0;
+    margin-left: 0em;
     // clear: both;
   }
-
   .row.hlabel {
     div.input {
       display: inline-block;
@@ -45,7 +60,7 @@
     }
     div.input.span2 {
       label {
-        width: 70px;
+        width: 65px;
       }
     }
   }
@@ -69,8 +84,8 @@
     width: 10em;
   }
   input[type='submit'] {
-    height: 30px;
-    padding: 7px;
+    height: 28px;
+    margin: 10px;
   }
   div.actions {
     padding: 1px;
@@ -83,6 +98,19 @@
       width: 4.5em;
     }
   }
+}
+
+div.bays.form {
+  display: inline-block;
+  float: left;
+  min-height: 560px;
+}
+
+div.bays.preview {
+  display: inline-block;
+  width: 60%;
+  // background-color: blue;
+  clear: both;
 }
 
 #dummy, #template {

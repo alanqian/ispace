@@ -2,6 +2,7 @@
 # update by plan_set#download/plan_set#deploy
 # no destroy
 class Deployment < ActiveRecord::Base
+  default_scope -> { where('discarded_at IS NULL') }
   belongs_to :plan_set
   belongs_to :plan
   belongs_to :store

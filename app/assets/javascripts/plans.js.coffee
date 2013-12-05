@@ -1,19 +1,286 @@
 root = exports ? this
 
+class Position
+  @newIndex: 0
+  @layout_fields:
+    product_id: "?"
+    version: 0
+    fixture_item_id: -1
+    layer: -1
+    seq_num: -1
+    run: 0
+    init_facing: 1
+    facing: 1
+    height_units: 0
+    width_units: 0
+    depth_units: 0
+    leading_gap: 0
+    leading_divider: 0
+    middle_divider: 0
+    trail_divider: 0
+
+  constructor: (index) ->
+    @index = index
+    @newIndex = @index + 1
+    @prefix = "plan_positions_attributes_#{index}"  # id = plan_positions_attributes_0_id
+    @id = null
+    @index
+    Position.newIndex = index + 1
+
+  load: (el) ->
+    for f,v of Position.layout_fields
+      val = $("##{@prefix}_#{f}").val() || v
+      val = parseFloat(val) if typeof v == "number"
+      @[f] = val
+    @id = parseInt(el.value)
+    @run = 0
+    @rank = -1
+    @
+
+  store: (version) ->
+    for f, _ of Position.layout_fields
+      $("##{@prefix}_#{f}").val(@[f])
+    $("##{@prefix}_version").val(version)
+    true
+
+  removeNull: () ->
+    if @new && !@isOnShelf()
+      $("input[id^=#{@prefix}_]").remove()
+      @
+    else
+      null
+
+  dup: () ->
+    position = new Position(Position.newIndex)
+
+    form = $("#plan-layout-form")
+    fields = Position.layout_fields
+    fields.id = null # add a field of id
+    for f, _ of fields
+      # dup property
+      position[f] = @[f]
+      # dup form input element
+      el = $("##{@prefix}_#{f}").clone().appendTo(form)
+      el.attr("id", "#{position.prefix}_#{f}")
+      el.attr("name", "plan[positions_attributes][#{position.index}][#{f}]")
+    position.id = null   # the
+    el = $("##{position.prefix}_id")
+    el.val(null)
+    position.layer = -1
+    position.rank = -1
+    position.seq_num = -1
+    position.fixture_item_id = -1
+    position.run = 0
+    position.new = true
+    position.product = @product
+    position
+
+  isOnShelf: () ->
+    @fixture_item_id > 0 && @layer > 0 && @seq_num >= 0
+
+  offShelf: () ->
+    @fixture_item_id = -1
+    @layer = -1
+    @seq_num = -1
+    @run = 0
+    # DON'T clear facing/width_units, will cause drag/drop bug:
+    #   failed to get facing
+    # this.facing = 0
+    # this.width_units = 0
+
+  setPlace: (fixture_item_id, layer, seq_num, product) ->
+    @fixture_item_id = fixture_item_id
+    @layer = layer
+    @seq_num = seq_num
+    @recalcRun(product)
+
+  getLi: () ->
+    $("li[data-id=#{@index}]")
+
+  recalcRun: (product) ->
+    # TODO: add precious version for calculate run
+    if @isOnShelf()
+      @run = @leading_gap + @leading_divider +
+        product.width * @facing +
+        @middle_divider * (@facing - 1) +
+        @trail_divider
+    else
+      @run = 0
+
+  getWidth: () ->
+    return 0 unless @isOnShelf()
+    return @leading_gap + @leading_divider + @product.width * @facing +
+      @middle_divider * (@facing - 1) + @trail_divider
+
+  getHeight: () ->
+    return 0 unless @isOnShelf()
+    @product.height * @height_units
+
+  getDepth: () ->
+    return 0 unless @isOnShelf()
+    @product.depth * @depth_units
+
+  updateColor: (animate) ->
+    if @bbox
+      @bbox.attr("fill", @product.showingColor)
+    if @border
+      if $("li[data-id=#{@index}]").hasClass("ui-selected")
+        @border.attr("stroke-width", 3).attr("stroke", "yellow")
+      else
+        @border.attr("stroke-width", 1).attr("stroke", "black")
+
+  @display:
+    draw: "drawImage"
+    options: {}
+
+  draw: () ->
+    li = @getLi()
+    if li.length != 1
+      console.log "no li or too many li found, count:#{li.length}"
+      return false
+
+    cx = li.width()
+    cy = li.height()
+    paper = Raphael(li[0], cx, cy)
+    paper.clear
+    @bbox = paper.rect(0, 0, cx, cy)
+
+    @fn[Position.display.draw].call(this, paper, cx, cy)
+
+    # draw border to indicate selected
+    @border = paper.rect(0, 0, cx, cy)
+      .attr("fill", "none")
+      .attr("stroke", "black")
+    return
+
+  fn:
+    drawImage: (paper, cx, cy) ->
+      # image_file = "https://duckduckgo.com/assets/logo_homepage.normal.v102.png"
+      image_file = @product.image_file
+      if image_file && image_file != "" && cx > 10 && cy > 10
+        @bbox.attr("fill", @product.showingColor)
+        img = paper.image(image_file, 0, 0, cx, cy)
+        img[0].preserveAspectRatio.baseVal.align = 6 # (1 = off, 6 = xMidYMid)
+        img[0].preserveAspectRatio.baseVal.meetOrSlice = 1 # (1 = meet, 2 = slice)
+        return true
+      else
+        return @fn.drawName.call(this, paper, cx, cy)
+
+    drawName: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+      return if cy < 8 # too short to hold name
+
+      # try to output several names
+      names = [
+        "#{@product.code}\n#{@product.name}",
+        "#{@product.code} #{@product.name}",
+        @product.name,
+      ]
+      fontSize = Math.min((cy - 3) / 2, 12)
+      for name in names
+        elText = paper.text(cx / 2, cy / 2, name)
+          .attr("font-size", fontSize)
+        bbox = elText.getBBox()
+        if bbox.width <= cx && bbox.height <= cy
+          break # fit
+        else
+          elText.remove()
+          elText = null
+      if elText == null
+        # no fit, show product.code
+        elText = paper.text(cx / 2, cy / 2, @product.code)
+          .attr("font-size", fontSize)
+        bbox = elText.getBBox()
+      # draw text background as white
+      paper.rect(bbox.x, bbox.y, bbox.width, bbox.height)
+        .attr("fill", "white")
+        .insertBefore(elText)
+      return
+
+    drawBlock: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+
+    drawUnits: (paper, cx, cy) ->
+      @bbox.attr("fill", @product.showingColor)
+
+      xRatio = cx / @getWidth()
+      yRatio = cy / @getHeight()
+      # console.log "ratio, x:#{xRatio}, y:#{yRatio}"
+
+      # draw a rows x cols table in LI
+      # leading_gap, leading_divider, col, middle_divider, col, trail_divider
+      rows = @height_units
+      cols = @width_units
+      x = @leading_gap * xRatio # skip leading_gap
+
+      # draw leading divider
+      if @leading_divider > 0
+        width = @leading_divider * xRatio
+        paper.rect(x, cy / 2, width, cy / 2).attr("fill", "black")
+        paper.line(x + width / 2, 0, x + width / 2, cy).attr("stroke", "black")
+        x += width
+
+      # draw block rect
+      width = (@product.width * cols + @middle_divider * (cols - 1)) * xRatio
+      paper.rect(x, 0, width, cy)
+        .attr("stroke", "black")
+
+      run = @product.width + (@product.width + @middle_divider) * (cols - 1)
+      x1 = x
+      x2 = x + run * xRatio
+
+      # draw units grid: vert line
+      for i in [1..cols - 1] by 1
+        x = x1 + @product.width * i * xRatio
+        paper.line(x, 0, x, cy)
+          .attr("stroke", "black")
+      xpos = []
+      if @middle_divider > 0
+        xpos.push [x1, x1 + @product.width * xRatio]
+        for i in [1..cols - 1] by 1
+          x = x1 + (@product.width + @middle_divider) * i * xRatio
+          paper.line(x, 0, x, cy)
+            .attr("stroke", "black")
+          xpos.push [x, x1 + @product.width * (i + 1) * xRatio]
+        xpos.push [x2 - @product.width * xRatio, x2]
+
+      # draw units grid: horz line
+      y = 0
+      if @middle_divider > 0
+        for i in [1..rows - 1] by 1
+          y = (@product.height * i) * yRatio
+          for x in xpos
+            paper.line(x[0], y, x[1], y)
+              .attr("stroke", "black")
+      else
+        for i in [1..rows - 1] by 1
+          y = (@product.height * i) * yRatio
+          paper.line(x1, y, x2, y)
+            .attr("stroke", "black")
+
+      # trail_divider
+      if @trail_divider > 0
+        width = @trail_divider * xRatio
+        paper.rect(x2, cy / 2, width, cy / 2)
+          .attr("fill", "black")
+        paper.line(x2 + width / 2, 0, x2 + width / 2, cy / 2)
+          .attr("stroke", "black")
+      return
+
 class PlanEditor
+  @foo: 0
   slotMap: {}     # slot => [ul, space]
   positionMap: {} # position id => position
-  sortedPositions: [] # position
-  productMap: {}  # product_id => position_id, code, name, :price_zone, height, width, depth
+  sortedProducts: [] # product with run/rank
+  productMap: {}  # product_id => position_index, code, name, :price_zone, height, width, depth
   showingColor: "color" # product color
   debug: true
   editVersion: 0 # for plan layout editor
   savedVersion: 0 # for plan layout editor
   liIndex: 0
   activeSlotUL: null
-  selectedItems: [] # [li, position_id]
+  selectedItems: [] # [li, position_index]
   dataTable: null
-
   layout_fields:
     product_id: "?"
     fixture_item_id: -1
@@ -52,9 +319,10 @@ class PlanEditor
 
   initDataTable: (dataTable) ->
     @dataTable = dataTable
-    @updateTableRanks()
-    for id,position of @positionMap
-      @updateTableFacing(position)
+    for _, position of @positionMap
+      @updateTableFacing(position.product_id)
+    for _, product of @productMap
+      @dataTable.updateProductRank(product)
 
   initHandler: () ->
     console.log "init handlers"
@@ -89,11 +357,14 @@ class PlanEditor
     brands = $("#products-data").data("brands")
     mfrs = $("#products-data").data("mfrs")
     suppliers = $("#products-data").data("suppliers")
-    for id,product of @productMap
+    for _, product of @productMap
       product.color ||= "#CC0000"
       product.brand_color = brands[product.brand_id] || "#CCCC00"
       product.mfr_color = mfrs[product.mfr_id] || "#CC00CC"
       product.supplier_color = suppliers[product.supplier_id] || "#00CCCC"
+      product.showingColor = product.color
+      product.run = 0
+      product.rank = -1
 
   initSlotMap: () ->
     console.log "build slots"
@@ -204,7 +475,7 @@ class PlanEditor
     for slot, item of @slotMap
       ul = item.ul
       ul.empty() # remove all LIs at first
-      positions = slotPosition[slot] # [position_id, seq_num, ..]
+      positions = slotPosition[slot] # [position_index, seq_num, ..]
       # add items if exists
       if positions
         positions.sort (a, b) ->
@@ -214,7 +485,7 @@ class PlanEditor
     @setSaved(@editVersion)
 
   newSlotItem: (position, ul) ->
-    li = $("<li id='pos_#{@liIndex++}' class='sortable-item' data-id='#{position.id}'></li>").appendTo(ul)
+    li = $("<li id='pos_#{@liIndex++}' class='sortable-item' data-id='#{position.index}'></li>").appendTo(ul)
     # set default position for new item to slot
     product_id = position.product_id
     product = @productMap[product_id]
@@ -235,21 +506,22 @@ class PlanEditor
     #      update all items in slot, include his one;
     #    else
     #      update this item only
-    position_id = $(li).data("id")
-    position = @positionMap[position_id]
+    position_index = $(li).data("id")
+    position = @positionMap[position_index]
     product = @productMap[position.product_id]
-    new_run = position.setPlace($(ul).data("fixture-item"), $(ul).data("layer"), 0, product)
-    @updatePositionRun(position, new_run)
+    old_run = position.run
+    position.setPlace($(ul).data("fixture-item"), $(ul).data("layer"), 0, product)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(ul, 0, $(li), position)
 
   removeItemFromSlot: (li, ul) ->
     # 1. unset place info for position: fixture-item/layer
     # 2.+3. very like above addItemToSlot work flow
-    position_id = $(li).data("id")
-    position = @positionMap[position_id]
+    position_index = $(li).data("id")
+    position = @positionMap[position_index]
     old_run = position.run
     position.offShelf()
-    @updatePositionRun(position, 0)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(ul, old_run, null, position)
 
   dumpSlot: (ulId) ->
@@ -289,7 +561,7 @@ class PlanEditor
       (id: 3, run: 0, rank: -1 )
       (id: 4, run: 0, rank: -1 )
     ]
-    @sortedPositions = []
+    @sortedProducts = []
     for pos in tests
       map[pos.id] = pos
 
@@ -303,19 +575,21 @@ class PlanEditor
     ]
     for pos in tests
       p = map[pos.id]
-      @updatePositionRun(p, pos.new_run)
+      old_run = p.run
+      p.run = pos.new_run
+      @updatePositionRun(p, old_run)
       console.log "updateRun", p, p.rank, ":", pos._rank
 
-      console.log "verified err:", err, @sortedPositions
+      console.log "verified err:", err, @sortedProducts
     true
 
-  verifyPositionRank: () ->
-    return true if @sortedPositions.length == 0
+  verifyProductRank: () ->
+    return true if @sortedProducts.length == 0
     err = 0
     prev_rank = 0
-    prev_run = @sortedPositions[0].run
+    prev_run = @sortedProducts[0].run
     index = 0
-    for position in @sortedPositions
+    for position in @sortedProducts
       if position.run > prev_run
         console.log "wrong run", position, position.run, ":", prev_run
         err++
@@ -328,82 +602,101 @@ class PlanEditor
     console.log "position rank array verified, err:", err
     return err == 0
 
-  updatePositionRun: (position, new_run) ->
-    if Math.abs(position.run - new_run) < 0.1
+  updatePositionRun: (position, old_run) ->
+    if Math.abs(position.run - old_run) < 0.1
       return false
 
-    if position.id == "105"
-      console.log "break"
-    max = @sortedPositions.length - 1
+    #if position.id == "105"
+    #  console.log "break"
+    product = position.product
+    updated_run = product.run - old_run + position.run
+    max = @sortedProducts.length - 1
 
     # when delete old, items in (old_index, max], rank -= 1
     # expand old rank to min_index, max_index
-    if position.rank >= 0
-      max_index = min_index = position.rank # the 1st position with same rank
-      while max_index < max && @sortedPositions[max_index + 1].rank == position.rank
+    if product.rank >= 0
+      max_index = min_index = product.rank # the 1st position with same rank
+      while max_index < max && @sortedProducts[max_index + 1].rank == product.rank
         max_index++
       # find the true old index
-      old_index = @sortedPositions.indexOf(position, min_index)
+      old_index = @sortedProducts.indexOf(product, min_index)
     else
       max_index = max + 1 # out of the end of list
       old_index = -1
 
     # when insert new, items in [new_index, max], rank += 1
     # therefore, expand insert point to right when posible
-    if new_run < 0.1 || max < 0 || @sortedPositions[max].run >= new_run
+    if updated_run < 0.1 || max < 0 || @sortedProducts[max].run >= updated_run
       new_index = max + 1 # to the end of list
     else
-      new_index = @binarySearch @sortedPositions, (pos) ->
-        pos.run - new_run # in desc order
-      while new_index <= max && @sortedPositions[new_index].run >= new_run # float==
+      new_index = @binarySearch @sortedProducts, (pos) ->
+        pos.run - updated_run # in desc order
+      while new_index <= max && @sortedProducts[new_index].run >= updated_run # float==
         new_index++
 
     # calculate new rank
-    if new_run < 0.1
+    if updated_run < 0.1
       new_rank = -1
-    else if new_index == 0 || @sortedPositions[new_index - 1].run > new_run
+    else if new_index == 0 || @sortedProducts[new_index - 1].run > updated_run
       new_rank = new_index
     else
-      new_rank = @sortedPositions[new_index - 1].rank
+      new_rank = @sortedProducts[new_index - 1].rank
 
     # update ranks of the modified items by insert/delete
     # (max_index, new_index) --, or,  [new_index, max_index] ++
     if max_index < new_index
       new_rank--
       for i in [(max_index + 1)...new_index] by 1
-        @sortedPositions[i].rank--
+        @sortedProducts[i].rank--
     else
       rindex = Math.min(max_index, max)
       for i in [new_index..rindex] by 1
-        @sortedPositions[i].rank++
+        @sortedProducts[i].rank++
 
     # modify the array
     if old_index != new_index
       # insert new
       if new_rank >= 0
-        @sortedPositions.splice(new_index, 0, position)
+        @sortedProducts.splice(new_index, 0, product)
 
       # than remove old
       if old_index >= 0
         if old_index > new_index
           old_index++
-        @sortedPositions.splice(old_index, 1)
+        @sortedProducts.splice(old_index, 1)
 
-    #console.log @sortedPositions.length, "update rank, id:", position.id, "new_run:", new_run, "rank:", new_rank
-    position.run = new_run
-    position.rank = new_rank
+    #console.log @sortedProducts.length, "update rank, id:", position.id, "old_run:", old_run, "rank:", new_rank
+    product.run = updated_run
+    product.rank = new_rank
     @updateTableRanks()
 
   updateTableRanks: () ->
     # update rank for all positions to dataTable
     if @dataTable != null
-      for pos in @sortedPositions
-        @dataTable.updateProductRank(pos)
+      for product in @sortedProducts
+        @dataTable.updateProductRank(product)
     return true
 
-  updateTableFacing: (position) ->
+  updateTableFacing: (product_id) ->
     if @dataTable != null
-      @dataTable.updateProductFacing(position)
+      product = @productMap[product_id]
+
+    if product
+      indices = product.position_index
+      init_facing = null
+      if indices
+        run = 0
+        facing = 0
+        for index in indices
+          position = @positionMap[index]
+          if position
+            init_facing ||= position.init_facing
+            if position.isOnShelf()
+              facing += position.facing
+              run += position.getWidth()
+      if init_facing
+        @dataTable.updateProductFacing(product_id, init_facing, facing)
+        product.run = run
 
   updateSlotSpace: (ul, old_run, li, position) ->
     @setDirty()
@@ -440,73 +733,6 @@ class PlanEditor
       # update the changed item only
       @updateSlotItemView(li, position, ul)
 
-  # update item view: height,width/title/grids/align_bottom
-  updateSlotItemColor: (li, position) ->
-    product = @productMap[position.product_id]
-    $("div.mdse-col", li).css "background-color", product[@showingColor]
-
-  resetSlotItemGrid: (li, position, width_total) ->
-    # create a rows x cols table in LI
-    # leading_gap, leading_divider, col, middle_divider, col, trail_divider
-    self = @
-    li.empty()
-
-    # fairly distribute the height
-    rows = position.height_units
-    height_total = li.height() + 1 # for mdse-col, top-border-width
-    row_heights = []
-    rows_remain = rows
-    row = "<div class='mdse-unit'></div>"
-    for i in [1..rows] by 1
-      pixel = Math.floor(height_total / rows_remain)
-      # border-bottom-width: 1px
-      row_heights.push pixel - 1
-      height_total -= pixel
-      rows_remain--
-
-    # fairly distribute the width
-    width_total-- # mdse-col: border 1px on both sides
-    run_total = position.run
-    getWidth = (run, extra = 0) ->
-      pixel = Math.floor(run * width_total / run_total)
-      width_total -= pixel
-      run_total -= run
-      pixel - extra
-
-    # leading_gap
-    if position.leading_gap > 0
-      gap = "<div class='mdse-gap'></div>"
-      $(gap).appendTo(li).width getWidth(position.leading_gap)
-
-    # leading_divider
-    divider = "<div class='mdse-divider'><div class='top-half'></div><div class='bottom-half'></div></div>"
-    if position.leading_divider > 0
-      $(divider).appendTo(li).width getWidth(position.leading_divider)
-
-    # columns
-    product = @productMap[position.product_id]
-    col_run = product.width
-    cols = position.width_units
-    col = "<div class='mdse-col'></div>"
-    for i in [1..cols] by 1
-      rowDivs = Array(rows+1).join(row)
-      colDiv = $(col).appendTo(li).append(rowDivs).css
-        "width": getWidth(col_run, 1)
-        "background-color": product[self.showingColor]
-      if i < cols
-        if position.middle_divider > 0
-          $(divider).appendTo(li).width getWidth(position.middle_divider)
-        else
-          colDiv.addClass("collapse")
-      # set property: height of each mdse-unit
-      $("div.mdse-unit", colDiv).each (index, el)->
-        $(el).height row_heights[index]
-
-    # trail_divider
-    if position.trail_divider > 0
-        width = (position.trail_divider * li_width / run).toFixed(1)
-        $(divider).appendTo(li).width getWidth(position.trail_divider)
-
   # update all items in slot
   resizeAllSlotItems: (ul) ->
     self = @
@@ -517,8 +743,8 @@ class PlanEditor
     total = @getSlotWidths(ul)
     width = $(ul).width() - 2 - total.extra # for borders and margins
     $("li", ul).each (index, el) ->
-      position_id = $(el).data("id")
-      position = self.positionMap[position_id]
+      position_index = $(el).data("id")
+      position = self.positionMap[position_index]
       self.resizeSlotItemVert(ul, $(el), position, space)
       pixel = Math.floor(width * position.run / virt_width)
       self.resizeSlotItemHorz($(el), position, pixel)
@@ -540,8 +766,8 @@ class PlanEditor
     old_width = li.width()
     if old_width != width
       li.width(width)
-      # resize items inside LI
-      @resetSlotItemGrid(li, position, width)
+      li.empty()
+      position.draw()
 
   getSlotWidths: (ul) ->
     pixels_width = 0
@@ -549,8 +775,8 @@ class PlanEditor
     runs_total = 0
     self = @
     $("li", ul).each (index, el) ->
-      position_id = $(el).data("id")
-      runs_total += self.positionMap[position_id].run
+      position_index = $(el).data("id")
+      runs_total += self.positionMap[position_index].run
       extras_total += $(el).outerWidth(true) - $(el).width()
       pixels_width += $(el).width()
       true
@@ -562,11 +788,12 @@ class PlanEditor
   updateSlotItemView: (li, position, ul) ->
     # update title of LI
     product = @productMap[position.product_id]
-    title = "#{product.name} #{product.price_zone}"
+    title = "#{product.code} #{product.name}"
+    title += " #{product.price_zone}" if product.price_zone
     li.attr("title", title)
 
     # resize vert
-    slotKey = position.slotKey()
+    slotKey = @slotKey(position.fixture_item_id, position.layer)
     space = @slotMap[slotKey]
     @resizeSlotItemVert(ul, li, position, space)
 
@@ -582,19 +809,27 @@ class PlanEditor
     @resizeSlotItemHorz(li, position, width)
 
   selectSlotItem: (el, addMode) ->
+    changed = []
     if !addMode
+      # empty old selection
       for item in @selectedItems
         $(item.li).removeClass("ui-selected")
+        position = @positionMap[item.position_index]
+        if position
+          position.updateColor()
       @selectedItems = []
+
     if el?
+      # add to selection
       li = $(el)
-      position_id = $(el).data("id")
+      position_index = $(el).data("id")
       @selectedItems.push
         li: el
-        position_id: position_id
+        position_index: position_index
       li.addClass("ui-selected")
-      position = @positionMap[position_id]
-      #@resetSlotItemGrid(li, position, li.width()) # for yellow margin
+      position = @positionMap[position_index]
+      if position
+        position.updateColor(true)
 
   getActiveSlotItem: () ->
     if @selectedItems.length == 1
@@ -605,62 +840,27 @@ class PlanEditor
   # load initial positions from form/input
   loadPosition: () ->
     self = @
+    @editVersion = parseInt $("#plan_version").val()
     console.log "init position"
     @positionMap = {}
     slotPosition = {}
     $("#plan-layout-form input[name^='plan[positions_attributes]['][name$='[id]']").each (index,el) ->
-      prefix = el.id.replace(/_id$/, "")
-      id = el.value
-      position =
-        id: id
-        run: 0
-        input_id: (f)->
-          "##{prefix}_#{f}"
-        isOnShelf: () ->
-          this.fixture_item_id > 0 && this.layer > 0 && this.seq_num >= 0
-        offShelf: () ->
-          this.fixture_item_id = -1
-          this.layer = -1
-          this.seq_num = -1
-          this.facing = 0
-          this.width_units = 0
-        setPlace: (fixture_item_id, layer, seq_num, product) ->
-          this.fixture_item_id = fixture_item_id
-          this.layer = layer
-          this.seq_num = seq_num
-          return this.recalcRun(product)
-        slotKey: () ->
-          self.slotKey(this.fixture_item_id, this.layer)
-        getLi: () ->
-          $("li[data-id=#{this.id}]")
-        recalcRun: (product) ->
-          # TODO: add precious version for calculate run
-          if this.isOnShelf()
-            this.leading_gap + this.leading_divider +
-              product.width * this.facing +
-              this.middle_divider * (this.facing - 1) +
-              this.trail_divider
-          else
-            0
+      # load, then add to positionMap
+      position = new Position(index)
+      position.load(el)
+      self.positionMap[position.index] = position
 
-      for f,v of self.layout_fields
-        val = $("##{prefix}_#{f}").val() || v
-        val = parseFloat(val) if typeof v == "number"
-        position[f] = val
-      # initial state, run=0, rank=-1
-      position.run = 0
-      position.rank = -1
-
-      # add to positionMap
-      self.positionMap[el.value] = position
-
-      # mark position to product
+      # link with product
       product_id = position.product_id
+      position.product = self.productMap[product_id]
+
+      # mark position to productMap
       self.productMap[product_id] ||= {}
-      self.productMap[product_id]["position_id"] = id
+      self.productMap[product_id].position_index ||= []
+      self.productMap[product_id].position_index.push position.index
 
       # save position to slotPosition
-      slot = position.slotKey()
+      slot = self.slotKey(position.fixture_item_id, position.layer)
       slotPosition[slot] ||= []
       slotPosition[slot].push position
       true
@@ -672,7 +872,8 @@ class PlanEditor
     # by order of slot items
     self = @
     # store edit version
-    $("#plan_layout_version").val(@editVersion)
+    version = @editVersion
+    $("#plan_version").val(version)
     for slot,item of @slotMap
       ul = item.ul
       fixture_item = ul.data("fixture-item")
@@ -681,17 +882,24 @@ class PlanEditor
       console.log fixture_item, layer
       seq_num = 1
       $("li", ul).each (index, el) ->
-        position_id = $(el).data("id")
-        position = self.positionMap[position_id]
+        position_index = $(el).data("id")
+        position = self.positionMap[position_index]
         product = self.productMap[position.product_id]
-        # self.log "setPlace", position_id, fixture_item, layer, seq_num
+        # self.log "setPlace", position_index, fixture_item, layer, seq_num
         position.setPlace(fixture_item, layer, seq_num++, product)
         true
 
     # store positions to form INPUTs
-    for position_id, position of @positionMap
-      for f,v of @layout_fields
-        $(position.input_id(f)).val(position[f])
+    for _, position of @positionMap
+      if position.removeNull()
+        # remove from index maps
+        indice = @productMap[position.product_id].position_index
+        i = indice.indexOf(position.index)
+        if i >= 0
+          indice.splice(i, 1)
+        @positionMap[position.index] = null
+      else
+        position.store(version)
     return true
 
   save: () ->
@@ -764,57 +972,81 @@ class PlanEditor
   onProductOnShelf: (product_id) ->
     self = @
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
+    positions = product.position_index
+    if positions == null
       console.log "new product, refresh page"
       return false
-    if position.isOnShelf()
-      @log "new position ignored, already on shelf", product_id, position
-    else if @activeSlotUL == null
+    if @activeSlotUL == null
       @log "new position ignored, no active slot", product_id
     else
-      @log "new position added", product_id, @activeSlotUL
-      @newSlotItem(position, @activeSlotUL)
-      position.getLi().click (e) ->
-        self.selectSlotItem(this, e.ctrlKey)
-        self.setActiveSlot(this.parentElement, e.ctrlKey && self.selectedItems.length > 1)
-        e.stopPropagation()
-      @updateTableFacing(position)
+      layer = $(@activeSlotUL).data("layer")
+      isOnLayer = false
+      position = null
+      for index in positions
+        p = @positionMap[index]
+        if p
+          if p.layer == layer
+            isOnLayer = true
+          if position == null && !p.isOnShelf()
+            position = p
+      if isOnLayer
+        @log "new position ignored, already on shelf", product_id, layer, positions
+      else
+        if position == null
+          # no null position available, dup it
+          @log "dup a position to layer", layer, positions[0]
+          position = @positionMap[positions[0]].dup()
+          @positionMap[position.index] = position
+          @productMap[product_id].position_index.push position.index
+          @log "position duped:", position
+        @log "new position added", product_id, @activeSlotUL
+        @newSlotItem(position, @activeSlotUL)
+        position.getLi().click (e) ->
+          self.selectSlotItem(this, e.ctrlKey)
+          self.setActiveSlot(this.parentElement, e.ctrlKey && self.selectedItems.length > 1)
+          e.stopPropagation()
+        @updateTableFacing(product_id)
     return true
 
   onProductOffShelf: (product_id) ->
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
-      console.log "new product, refresh page"
-      return false
-    if !position.isOnShelf()
-      @log "position ignored, already off shelf", product_id, position
-    else
-      @log "position removed", product_id
-      @removePosition(position)
-      @updateTableFacing(position)
-    return true
+    return unless product.position_index
+    for i in product.position_index
+      position = @positionMap[i]
+      if position == null
+        console.log "new product or removed position, do nothing"
+      else if !position.isOnShelf()
+        @log "position ignored, already off shelf", product_id, position
+      else
+        @log "position removed", product_id
+        @removePosition(position)
+        @updateTableFacing(product_id)
+      return true
 
   removePosition: (position) ->
     if !position.isOnShelf()
       return
-    skey = position.slotKey()
+    skey = @slotKey(position.fixture_item_id, position.layer)
     ul = @slotMap[skey].ul
     li = position.getLi()
     li.remove() # remove LI element
     @removeItemFromSlot(li.get(0), ul)
-    @updateTableFacing(position)
+    @updateTableFacing(position.product_id)
     @selectedItems = []
 
   onProductSelect: (product_id) ->
     product = @productMap[product_id]
-    position = @positionMap[product.position_id]
-    if position == null
-      console.log "new product, refresh"
-      return false
-    li = $("li[data-id='#{product.position_id}']").get(0)
-    @selectSlotItem(li, false)
+    return unless product.position_index
+    addSelect = false
+    for index in product.position_index
+      position = @positionMap[index]
+      if position == null
+        console.log "new product or removed position, do nothing"
+        return false
+      li = $("li[data-id='#{index}']").get(0)
+      @selectSlotItem(li, addSelect)
+      $(li).flash()
+      addSelect = true
     return true
 
   onPositionRemove: () ->
@@ -822,27 +1054,27 @@ class PlanEditor
       console.log "no selected items"
     for item in @selectedItems
       el = item.li
-      position = @positionMap[item.position_id]
+      position = @positionMap[item.position_index]
       ul = el.parentNode
       $(el).remove() # remove LI element
       @removeItemFromSlot(el, ul)
-      @updateTableFacing(position)
+      @updateTableFacing(position.product_id)
     @selectedItems = []
     true
 
   onPositionFacingInc: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item.position_id
-      position = @positionMap[position_id]
+      position_index = item.position_index
+      position = @positionMap[position_index]
       @changePositionFacing(item.li, position, 1)
     true
 
   onPositionFacingDec: () ->
     item = @getActiveSlotItem()
     if item != null
-      position_id = item.position_id
-      position = @positionMap[position_id]
+      position_index = item.position_index
+      position = @positionMap[position_index]
       if position.facing > 1
         @changePositionFacing(item.li, position, -1)
     true
@@ -852,12 +1084,12 @@ class PlanEditor
     old_run = position.recalcRun(product)
     position.facing += delta
     position.width_units += delta
-    new_run = position.recalcRun(product)
-    slotKey = position.slotKey()
+    position.recalcRun(product)
+    slotKey = @slotKey(position.fixture_item_id, position.layer)
     slotUL = @slotMap[slotKey].ul
-    @updatePositionRun(position, new_run)
+    @updatePositionRun(position, old_run)
     @updateSlotSpace(slotUL, old_run, $(li), position)
-    @updateTableFacing(position)
+    @updateTableFacing(position.product_id)
 
   onPositionsReorder: () ->
     if @selectedItems.length <= 1
@@ -881,7 +1113,7 @@ class PlanEditor
     $(el).insertAfter(target.li)
     # update the item/slot space relation
     if ulFrom != ulTo
-      console.log el, item.position_id, "change slot"
+      console.log el, item.position_index, "change slot"
       @removeItemFromSlot(el, ulFrom)
       @addItemToSlot(el, ulTo)
 
@@ -895,7 +1127,7 @@ class PlanEditor
         console.log "init"
         # fill the form input with 1st selectedItem
         item = self.selectedItems[0]
-        position = self.positionMap[item.position_id]
+        position = self.positionMap[item.position_index]
         $(elId).val(position.leading_gap)
 
       ok: (dlg) ->
@@ -903,13 +1135,13 @@ class PlanEditor
         new_gap = parseFloat $(elId).val()
         # set each position of selected items
         for item in self.selectedItems
-          position = self.positionMap[item.position_id]
+          position = self.positionMap[item.position_index]
           product = self.productMap[position.product_id]
           old_run = position.recalcRun(product)
           if new_gap != position.leading_gap
             position.leading_gap = new_gap
-            new_run = position.recalcRun(product)
-            self.updatePositionRun(position, new_run)
+            position.recalcRun(product)
+            self.updatePositionRun(position, old_run)
             self.updateSlotSpace($(item.li).parent(), old_run, $(item.li), position)
         return true
     true
@@ -923,7 +1155,7 @@ class PlanEditor
         console.log "init"
         # fill the form input with 1st selectedItem
         item = self.selectedItems[0]
-        position = self.positionMap[item.position_id]
+        position = self.positionMap[item.position_index]
         $("#{prefix}_leading_divider").val(position.leading_divider)
         $("#{prefix}_middle_divider").prop("checked", position.middle_divider > 0)
         $("#{prefix}_trail_divider").prop("checked", position.trail_divider > 0)
@@ -940,7 +1172,7 @@ class PlanEditor
 
         # set each position of selected items
         for item in self.selectedItems
-          position = self.positionMap[item.position_id]
+          position = self.positionMap[item.position_index]
           product = self.productMap[position.product_id]
           old_run = position.recalcRun(product)
           # set new divider
@@ -950,8 +1182,8 @@ class PlanEditor
               position[f] = pos[f]
               changed = true
           if changed
-            new_run = position.recalcRun(product)
-            self.updatePositionRun(position, new_run)
+            position.recalcRun(product)
+            self.updatePositionRun(position, old_run)
             self.updateSlotSpace($(item.li).parent(), old_run, $(item.li), position)
         console.log "ok"
         return true
@@ -979,13 +1211,16 @@ class PlanEditor
     self = @
     if @showingColor != color
       @showingColor = color
+      for _, product of @productMap
+        product.showingColor = product[@showingColor]
       # update color of all slot items with @showingColor
-      for ul,space of @slotMap
+      for ul, space of @slotMap
         $("li", space.ul).each (index, li) ->
-          position_id = $(li).data("id")
-          position = self.positionMap[position_id]
-          self.updateSlotItemColor(li, position)
-    true
+          position_index = $(li).data("id")
+          position = self.positionMap[position_index]
+          if position
+            position.updateColor()
+    return true
 
 class ProductTable
   fields: []
@@ -993,17 +1228,17 @@ class ProductTable
   planEditor: null
   table: null
   selected: []
-  show_sale_type: -1
-  productData: [] # [code,sale_type]
+  show_grade: ""
+  productData: [] # [code,grade]
   productIndex: {}
   maxRank: 1
 
-  onShowProductSaleType: (el) ->
+  onShowProductGrade: (el) ->
     self = @
-    sale_type = parseInt(el.value)
-    if self.show_sale_type != sale_type
-      self.show_sale_type = sale_type
-      console.log "show sale_type:", self.show_sale_type
+    grade = el.value
+    if self.show_grade != grade
+      self.show_grade = grade
+      console.log "show grade:", self.show_grade
       if self.table
         oTable = self.table.dataTable()
         if oTable
@@ -1036,14 +1271,14 @@ class ProductTable
     @table = $(tableId)
     @initFieldMapping()
     @initProductList()
-    # initialize dataTable sale_type filter
+    # initialize dataTable grade filter
     $.fn.dataTableExt.afnFiltering.push (oSettings, aData, iDataIndex) ->
-      # filter sale_type
+      # filter grade
       # console.log "filter: ", iDataIndex, aData
-      if self.show_sale_type == -1
+      if self.show_grade == ""
         return true
-      # if not show all, then show select sale_type
-      return self.productData[iDataIndex][1] == self.show_sale_type
+      # if not show all, then show selected grade
+      return self.productData[iDataIndex][1] == self.show_grade
 
     $("tr", @table).click (e) ->
       console.log "select product", this
@@ -1083,7 +1318,7 @@ class ProductTable
 
   initProductList: () ->
     @productIndex = {}
-    @productData = $("#products-data").data("sale-type")
+    @productData = $("#products-data").data("grade")
     @maxRank = @productData.length
     index = 0
     for data in @productData
@@ -1119,51 +1354,49 @@ class ProductTable
     if @planEditor != null
       @planEditor.onProductOffShelf(product_id)
 
-  updateProductRank: (position) ->
+  updateProductRank: (product) ->
     rank_index = @fieldsMap["plan_info_rank"] || -1
     if rank_index < 0
       console.log "cannot find rank field"
       return false
 
-    product_id = position.product_id
+    product_id = product.code
     oTable = @table.dataTable()
     tr = oTable.$("tr[data-id='#{product_id}']")
     if tr && tr.length > 0
       tds = $("td", tr)
-      rank_text = if position.rank >= 0 then position.rank + 1 else ""
+      rank_text = if product.rank >= 0 then product.rank + 1 else ""
       tds.eq(rank_index).text("#{rank_text}")
 
     row = @productIndex[product_id]
     data = oTable.fnSettings().aoData[row]
     data._aData[rank_index] = rank_text
-    data._aSortData[rank_index] = if position.rank >= 0 then position.rank else @maxRank
+    data._aSortData[rank_index] = if product.rank >= 0 then product.rank else @maxRank
     return true
 
   # update facing/init_facing
-  updateProductFacing: (position) ->
+  updateProductFacing: (product_id, init_facing, facing) ->
     facing_index = @fieldsMap["facings"]
     if facing_index < 0
       console.log "cannot find facings field"
       return false
 
-    product_id = position.product_id
     oTable = @table.dataTable()
     tr = oTable.$("tr[data-id='#{product_id}']")
     # console.log tr
-    facing = if position.isOnShelf() then position.facing else 0
-    facing_text = "#{facing}»#{position.init_facing}"
+    facing_text = "#{facing}»#{init_facing}"
     if tr && tr.length > 0
       tds = $("td", tr)
       tds.eq(facing_index).text(facing_text)
 
     row = @productIndex[product_id]
     data = oTable.fnSettings().aoData[row]
-    facing = facing + 1 / (position.init_facing + 2)
+    facing = facing + 1 / (init_facing + 2)
     data._aData[facing_index] = facing
     data._aSortData[facing_index] = facing
     return true
 
-class PlanPage
+root.PlanPage = class PlanPage
   action: ""
   _do: ""
 
@@ -1180,6 +1413,14 @@ class PlanPage
     root.productTable = new ProductTable
     root.productTable.init("#products-table").bind(root.planEditor)
     $.util.addCmdDelegate(root.productTable)
+
+    # init jqueryui selected
+    $("ol.selectable.single-select").selectable
+      selected: (e, ui) ->
+        $(this).find("li").removeClass("ui-selected")
+        $(ui.selected).addClass("ui-selected")
+        $.util.execCmd $(ui.selected).data("cmd-id"), ui.selected
+
     console.log "plans inited"
     return true
 
@@ -1210,9 +1451,4 @@ class PlanPage
       return false
 
     $("#menu").menu().hide()
-
-root.PlanPage = PlanPage
-
-$ ->
-  $.util.onPageLoad()
 

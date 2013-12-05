@@ -142,7 +142,7 @@ class FixturesController < ApplicationController
         :name, :memo, :user_id, :category_id,
         :flow_l2r,
         :_do,
-        fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous],
+        fixture_items_attributes: [:_destroy, :id, :bay_id, :num_bays, :continuous, :item_index],
         store_fixtures_attributes: [:_destroy, :id, :fixture_id, :store_id,
           :category_id, :category_name, :code])
     end

@@ -13,6 +13,12 @@ Things you may want to cover:
 
 * Configuration
 
+* Prepare public directories
+
+  mkdir public/downloads
+  mkdir -p public/images/stores/
+  for i in {0..256}; do mkdir -f public/images/products/$i; done;
+
 * Database creation
 
 * Database initialization

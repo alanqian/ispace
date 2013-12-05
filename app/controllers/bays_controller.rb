@@ -35,7 +35,7 @@ class BaysController < ApplicationController
 
     respond_to do |format|
       if @bay.save
-        format.html { redirect_to @bay, notice: 'Bay was successfully created.' }
+        format.html { redirect_to bays_path, notice: simple_notice(bay: @bay.name) }
         format.json { render action: 'show', status: :created, location: @bay }
         #format.json { render json: @bay, methods: [:open_shelves, :peg_boards, :freezer_chests, :rear_support_bars,] }
       else
@@ -54,7 +54,7 @@ class BaysController < ApplicationController
   def update
     respond_to do |format|
       if @bay.update(bay_params)
-        format.html { redirect_to @bay, notice: 'Bay was successfully updated.' }
+        format.html { redirect_to bays_path, notice: simple_notice(bay: @bay.name)}
         format.json { head :no_content }
         format.js { set_bay_update_js }
       else
@@ -146,7 +146,7 @@ class BaysController < ApplicationController
       :use_notch, :notch_spacing, :notch_1st,
       :base_height, :base_width, :base_depth, :base_color,
       :takeoff_height,
-      :show_peg_holes,
+      :show_peg_holes, :linear, :area, :cube,
       open_shelves_attributes: [:_destroy, :id, :name, :level,
         :height, :width, :depth, :thick,
         :slope, :riser, :notch_num, :from_base, :color, :from_back,

@@ -5,7 +5,7 @@
     <%= token_tag %>
     <%= f.input :_do, as: :hidden, value: "layout" %>
     <%= f.hidden_field :user_id %>
-    <%= hidden_field_tag "_version", "0", { id: "plan_layout_version" } %>
+    <%= f.hidden_field :version %>
   </div>
 
   <div class="input-positons">
@@ -24,6 +24,7 @@
       <%= pf.hidden_field :leading_divider %>
       <%= pf.hidden_field :middle_divider %>
       <%= pf.hidden_field :trail_divider %>
+      <%= pf.hidden_field :version %>
     <% end %>
   </div>
 

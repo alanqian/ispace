@@ -75,8 +75,6 @@ zh-CN:
       heap: 堆头
 
     attributes:
-      defaults:
-        category_id: 品类
       import_sheet:
         file_upload: 上传文件
         comment: 备注
@@ -100,6 +98,7 @@ zh-CN:
         role: 角色
       brand:
         name: 品牌名
+        category_name: 品类
       supplier:
         name: 供应商名称
       manufacturer:
@@ -122,11 +121,14 @@ zh-CN:
         brand_id: 品牌
         mfr_id: 生产商
         category_id: 品类
-        status: 销售
+        grade: 等级
+        status: 新品促销
         plan_info_rank: 排名
         facings: 排面
         new_product: 新品
         on_promotion: 促销
+        image_file: 商品图片
+        image_upload: 选择商品图片文件或压缩包
       store:
         code: 门店编号
         name: 店名
@@ -135,7 +137,8 @@ zh-CN:
         location: 位置
         grade: 等级
         region_id: 区域
-        ref_store_id: 样板店
+        ref_store_id: 标准店
+        image_file: 布局图
         memo: 备注
       region:
         code: 编码
@@ -154,10 +157,6 @@ zh-CN:
         code: 货架编号
         name: 货架名称
         num_bays: 货备数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         parts: 部分货架
       bay:
         back_height: 背板高度
@@ -176,15 +175,11 @@ zh-CN:
         name: 货备名称
         bay_size: 尺寸(高/宽/深)
         num_layers: 层数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         ref_count: 货架数
         types: 类型
       open_shelf:
         name: 名称
-        height: 隔层高度
+        height: 商品层高
         width: 隔板宽度
         depth: 隔板深度
         thick: 隔板厚
@@ -226,10 +221,6 @@ zh-CN:
       fixture:
         name: 货架名称
         num_bays: 货备数
-        run: 行程
-        linear: 长度
-        area: 面积
-        cube: 体积
         ref_count: 门店数
         memo: 备注
         flow_l2r: 向右排货
@@ -245,7 +236,7 @@ zh-CN:
         published_at: 发布
         undeployed_stores: 未部署
         to_deploy_at: 计划部署
-        model_stores: 选择样板店
+        model_stores: 选择标准店
         completed_ratio: 完成度
         deployed: 完成
         download: 下载
@@ -256,16 +247,21 @@ zh-CN:
         plan_set_name: 规划名称
         category_name: 规划品类
         fixture_id: 货架
-        store_name: 样板店
+        store_name: 标准店
         num_stores: 门店数
         usage_percent: 空间使用率
         init_facing: 初始排面数
+        min_product_grade: 商品最低等级
         positions:
           leading_gap: 前置间隙
           leading_divider: 前分隔物
           middle_divider: 货品间分隔物
           trail_divider: 后分隔物
-
+      stat:
+        agg_id: 品牌
+        num_facings: 排面
+        num_positions: 商品数量
+        percentage: 排面百分比%
     errors:
       models:
         user:
@@ -283,64 +279,6 @@ zh-CN:
       category: "导入品类"
       store: "导入门店"
 
-  dict:
-    colors:
-      默认色: '#EEEEEE'
-      绿色:   '#7bd148'
-      天蓝色: '#5484ed'
-      蓝色:   '#a4bdfc'
-      青绿色: '#46d6db'
-      浅绿色: '#7ae7bf'
-      深绿色: '#51b749'
-      黄色:   '#fbd75b'
-      棕黄色: '#ffb878'
-      浅红色: '#ff887c'
-      红色:   '#dc2127'
-      紫色:   '#dbadff'
-      灰色:   '#e1e1e1'
-      白色:   '#ffffff'
-    prices:
-      "高": "a"
-      "中": "b"
-      "低": "c"
-    sale_type:
-      0: 必卖品
-      1: 可卖品
-      2: 下架商品
-    new_product: 新
-    on_promotion: 促
-    category: 品类
-    desc: 备注
-    color: 颜色
-    height: 高度
-    width: 宽度
-    depth: 深度
-    weight: 重量
-    brand: 品牌
-    unset: 未设置
-    removeOpenShelf: 从货备中删除本层隔板
-    removePegboard: 从货备中删除本层钉板
-    removeFreezerChest: 从货备中删除冷冻柜
-    removeRearSupportBar: 从货备中删除本层悬挂条
-    removeHeap: 删除堆头
-    #######################################
-    plan: 规划
-    plan_set: 规划组
-    fixture: 货架
-    bay: 货备
-    obstacle: 障碍
-    notch_spacing: 槽空间
-    takeoff_height: 伸手高度
-    peg_hole: 钉孔
-    relative_to_shelf_below: 相对于下层货架的位置
-    shelf: 隔板
-    peg_board: 钉板
-    chest_space: 腔体空间
-    rsb: 后支撑条
-    range: 排面
-    facing: 排面
-    range_info: 排面
-
   categories:
     index:
       id: "品类"
@@ -348,132 +286,3 @@ zh-CN:
     edit:
       id: "品类"
       desc: "备注"
-  import_sheets:
-    import_stores:
-      region:
-        code: 区域代码
-        name: 区域名称
-        consume_type: 区域消费类型
-        memo: 区域备注
-      store:
-        code: 门店编号
-        name: 门店名称
-        location: 门店地段
-        area: 门店面积
-        depot_area: 仓库面积
-        grade: 等级
-        memo: 门店备注
-      _custom:
-        # customized mapping add here
-        "便利店海信系统编码": "store.code"
-        "加油站简称": "store.name"
-        "地理位置": "store.location"
-        "便利店面积": "store.area"
-        "仓库面积": "store.depot_area"
-        "门店等级": "store.grade"
-        "隶属公司": "region.name[0]"
-        "公司编码": "region.code[0]"
-        "隶属片区": "region.name[1]"
-        "片区编码": "region.code[1]"
-      #user:
-      #  name: 用户名
-      #  email: 用户邮箱
-      #  tel: 用户电话
-      #  memo: 用户备注
-      # region.consume_type: 区域消费类型
-      _required:
-        region.code[0]: 区域编码
-        region.name[0]: 区域
-        store.code: 门店编号
-        store.name: 门店名称
-        store.location: 门店地段
-        store.area: 门店面积
-        store.grade: 门店等级
-    import_categories:
-      category:
-        code[0]: 大类代码
-        name[0]: 大类名称
-        code[1]: 中类代码
-        name[1]: 中类名称
-        code[2]: 小类代码
-        name[2]: 小类名称
-    import_products:
-      product:
-        code: "商品标识"
-        name: "商品名称"
-        height: "高度"
-        width: "宽度"
-        depth: "深度"
-        weight: "重量"
-        price_zone: "价格带"
-        size_name: "规格(大小)"
-        case_pack_name: "包装"
-        barcode: "条形码"
-        color: "颜色"
-        sale_type: "销售类型"
-        new_product: "新品"
-        on_promotion: "促销"
-      brand:
-        name: "品牌"
-      supplier:
-        name: "供应商"
-      manufacturer:
-        name: "生产商"
-      category:
-        code: "编码"
-        name: "名称"
-      _required:
-        "product.code": "产品标识"
-        "product.name": "产品名称"
-        "product.height": "高度"
-        "product.width": "宽度"
-        "product.depth": "深度"
-      _custom:
-        # customized mapping add here
-        "产品标识": "product.code"
-        "名称": "product.name"
-        "大小": "product.size_name"
-        "品牌编码": "brand._pair"
-        "商品|编码": "product.code"
-        "商品|名称": "product.name"
-        "商品|英文名称": "product.en_name"
-        "商品|简称": "product.abbr_name"
-        "商品|条形码": "product.barcode"
-        "单位": "product.unit"
-        "规格": "product.size_name"
-        "重量（克）": "product.weight"
-        "高（毫米）": "product.height"
-        "长（毫米）": "product.width"
-        "宽（毫米）": "product.depth"
-        "多包装单位": "product.pack_units"
-        "销售季节": "product.sale_season"
-        "保质期（天）": "product.shelf_life"
-        "品类": "category._pair"
-        "进项税计算类型": "product.tax_type"
-        "引进时无税进价": "product.input_price"
-        "引进时含税进价": "product.input_price_with_tax"
-        "进项税率(%)": "product.input_tax_ratio"
-        "引进时零售价": "product.input_sale_price"
-        "销项税率(%)": "product.output_tax_ratio"
-        "进货保质期前置": "product.shelf_life_input"
-        "配送保质期前置": "product.shelf_life_dist"
-        "可用": "product.available"
-        "商品状态": "product.status_pair"
-        "引进时会员价": "product.input_member_price"
-    import_sales:
-      product:
-        code: "商品标识"
-        name: "商品名称"
-        size_name: "规格(大小)"
-      sale:
-        facing: "排面数"
-        price: "价格"
-        volume: "销售速度"
-        value: "销售额"
-        margin: "利润"
-      _custom:
-        # customized mapping add here
-        "产品标识": "product.code"
-        "名称": "product.name"
-        "大小": "product.size_name"
-        "排面": "sale.facing"

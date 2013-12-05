@@ -5,7 +5,16 @@ class PlanSet < ActiveRecord::Base
   has_many :plans, dependent: :destroy
   has_many :deployments, -> { order("deployed_by, download_1st_at") }
 
+  validates :name, presence: true
+  validates :name, length: { minimum: 2 }
+  validates :to_deploy_at, presence: true
+  validates :category_id, presence: true
+  validates :category_name, presence: true
+  validates :note, presence: true
+  validates :model_stores, presence: true, on: :update
+
   attr_accessor :model_stores
+  attr_accessor :store_name  # by search
   before_save :update_redundancy
 
   def model_stores
@@ -34,6 +43,7 @@ class PlanSet < ActiveRecord::Base
           plan_set_id: self.id,
           category_id: self.category_id,
           store_id: store_id,
+          user_id: self.user_id,
         })
         self.plans << plan
         update_recent_plan(plan)
@@ -176,7 +186,7 @@ class PlanSet < ActiveRecord::Base
         deployeds = []
         downloads = []
         nones = []
-        deploys.select { |dp| dp.plan_set_id = plan_set.id }.each do |d|
+        deploys.select { |dp| dp.plan_set_id == plan_set.id }.each do |d|
           pd = d.to_plan_deploy
           if pd.deployed_at != nil
             deployeds.push pd

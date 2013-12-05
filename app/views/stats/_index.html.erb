@@ -1,0 +1,47 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Job</th>
+      <th>Stat type</th>
+      <th>Category</th>
+      <th>Plan set</th>
+      <th>Rel model</th>
+      <th>Agg</th>
+      <th>Num positions</th>
+      <th>Run</th>
+      <th>Num facings</th>
+      <th>Outcome</th>
+      <th>Percentage</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stats.each do |stat| %>
+      <tr>
+        <td><%= stat.name %></td>
+        <td><%= stat.job_id %></td>
+        <td><%= stat.stat_type %></td>
+        <td><%= stat.category_id %></td>
+        <td><%= stat.plan_set_id %></td>
+        <td><%= stat.rel_model %></td>
+        <td><%= stat.agg_id %></td>
+        <td><%= stat.num_positions %></td>
+        <td><%= stat.run %></td>
+        <td><%= stat.num_facings %></td>
+        <td><%= stat.outcome %></td>
+        <td><%= stat.percentage %></td>
+        <td><%= link_to 'Show', stat %></td>
+        <td><%= link_to 'Edit', edit_stat_path(stat) %></td>
+        <td><%= link_to 'Destroy', stat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Stat', new_stat_path %>

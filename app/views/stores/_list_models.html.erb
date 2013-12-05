@@ -2,7 +2,7 @@
 <table id="stores-table"
   data-sinfo="共_TOTAL_个门店"
   data-sscrolly="38em"
-  data-sinfoempty="请重新选择品类或重新搜索"
+  data-sinfoempty="请重新搜索"
   class="dataTable grid-control no-wrap resizable" cellspacing=0>
   <thead>
     <tr>
@@ -15,7 +15,8 @@
         :area,
         :depot_area,
         :location,
-        :grade # [ :ref_store_id, sort: false ],
+        :grade, # [ :ref_store_id, sort: false ],
+        ""
         ) %>
     </tr>
   </thead>
@@ -37,7 +38,8 @@
           :area,
           :depot_area,
           :location,
-          :grade
+          :grade,
+          link_to("删除", store_path(store, "store[_do]" => :delete), method: :put, data: { confirm: "确定删除门店？" } )
         %>
       </tr>
     <% end %>

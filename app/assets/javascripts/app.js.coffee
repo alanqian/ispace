@@ -335,10 +335,35 @@ root.wizardProc = (jq_sel) ->
       console.log "close wizard dialog, then destroy"
       $("div#import-wizard").dialog('destroy')
 
+root.updateDataTableRow = (trSel, rowData, highlightColor) ->
+  tr = $(trSel)
+  if tr.length != 1
+    console.log "cannot find row or too many rows: #{trSel}"
+    return
+
+  oTable = tr.closest("table").dataTable()
+  oTable.fnUpdate rowData, tr[0]
+
+root.updateDataTableCell = (trSel, colName, cellData, highlightColor) ->
+  tr = $(trSel)
+  if tr.length != 1
+    console.log "cannot find row or too many rows: #{trSel}"
+    return
+
+  table = tr.closest("table")
+  ths = table.find("thead tr th")
+  th = table.find("thead tr th[data-col='#{colName}']")
+  oTable = table.dataTable()
+  iCol = ths.index(th)
+  if oTable && iCol >= 0
+    oTable.fnUpdate cellData, tr[0], iCol
+
 root.refreshDataTr = (trSel, html, highlightColor) ->
   tr = $(trSel)
   clazz = tr.attr("class")
   bgColor = tr.css("background-color")
+  #rowData = $(html).find("td").map (index, el) -> el.innerText
+  #updateDataTableRow trSel, $.makeArray(rowData)
   tr.replaceWith(html)
   tr = $(trSel).attr("class", clazz)
 
@@ -506,7 +531,7 @@ class InplaceEditor
     return null
 
   isParentTD: (el) ->
-    el.parentElement.tagName == "TD"
+    el.parentElement != null && el.parentElement.tagName == "TD"
 
   unbind: ()->
     console.log "unbinding..."
@@ -693,6 +718,24 @@ root.onDataTableCategoryChange = (event, el)->
   if $(el).val() != ""
     window.location = $(el).data("url") + $(el).val()
 
+root.onSelectCategory = (el) ->
+  id = $(el).data("id")
+  name = $(el).text()
+  filter = $(el).attr("filter")
+  if filter < 0
+    return true
+  $inputName = $("#" + $(el).data("src-element"))
+  dataType = $inputName.data("type")
+  $inputName.data("id", id)
+  $inputName.val(name)
+
+  inputId = $inputName.prev "input[type=hidden][data-type=#{dataType}]"
+  if inputId.length > 0
+    inputId.val(id)
+    inputId.data("name", name)
+    $.util.execCmd("category-changed", inputId[0])
+  return true
+
 root.onClickSelectAll = (e, el) ->
   target = $(el).data("target")
   if target
@@ -810,6 +853,8 @@ root.dataTableUtil =
     return opts
 
 $ ->
+  $.util.init()
+
   console.log "loading common components..."
   # $.ajaxSettings.dataType = "json"
   $("#menubar").menu({ position: { my: "left top", at: "left-1 top+35" } })
@@ -835,7 +880,7 @@ $ ->
     filterDiv = $("##{table.id}-filter")
     filterDiv = $("#dataTable-filter") if filterDiv.length == 0
     if filterDiv.length > 0
-      filterDiv.children().appendTo("div#{wrapper} div.top div#data_filter")
+      $("div#{wrapper} div.top div#data_filter").append filterDiv.children()
     return true
 
   # resizable, tabs, tabs-bottom, ...
@@ -843,6 +888,9 @@ $ ->
   setInplaceEditUI()
   $("div.accordion").accordion
     collapsible: true
-
   console.log "common components loaded"
+
+  # initialize the page
+  $.util.onPageLoad()
+  console.log "page loaded"
 

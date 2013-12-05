@@ -4,28 +4,28 @@ class OpenShelf < ActiveRecord::Base
 
   validates :name, presence: true, length: { maximum: 64 }
   validates :height, :width, :depth, :thick, presence: true,
-    numericality: { greater_than_or_equal_to: 0.1 }
+    numericality: { greater_than_or_equal_to: 1 }
   validates :slope, :riser, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
 
   validates :notch_num, presence: true,
     numericality: { greater_than_or_equal_to: 0 }
   validates :from_base, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
 
   validates :color, presence: true, format: { with: %r/#[0-9a-fA-F]{1,6}/,
     message: 'color' }
 
   validates :from_back, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
   validates :finger_space, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
   validates :x_position, presence: true,
-    numericality: { greater_than_or_equal_to: 0.0 }
+    numericality: { greater_than_or_equal_to: 0 }
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first || self.new
-    r.id = nil
+    r = self.new(APP_CONFIG[:templates][:open_shelf])
+    r.from_base = bay.notch_to(r.notch_num)
     r.bay_id = bay.id
     r.width = bay.back_width
     r.depth = bay.base_depth
@@ -100,6 +100,8 @@ class OpenShelf < ActiveRecord::Base
           valign: :center
       end
     end
+  rescue Exception => e
+    logger.warn "failed in position_to_pdf, e: #{e}, #{e.backtrace}"
   end
 
   # origin=base
@@ -139,11 +141,17 @@ class OpenShelf < ActiveRecord::Base
       # draw each positions
       #logger.debug "draw positions, width:#{width} start:#{start} stop:#{stop} left_run:#{left_run} left:#{left}"
       horz = left_run - left
-      for i in start..(stop - 1)
-        # draw full position
-        block = blocks[i]
-        position_to_pdf(pdf, block, horz)
-        horz += block.run
+      if start >= 0
+        for i in start..(stop - 1)
+          # draw full position
+          block = blocks[i]
+          if block
+            position_to_pdf(pdf, block, horz)
+            horz += block.run
+          else
+            logger.warn "nil block, #{start}..#{stop-1}, i:#{i}"
+          end
+        end
       end
       #logger.debug "horz: #{left_run-left}, #{horz}"
 
@@ -225,7 +233,7 @@ class OpenShelf < ActiveRecord::Base
 
     when :text
       # write text on shelf
-      #text = "第#{level}层, 深度: #{depth}cm"
+      #text = "第#{level}层, 深度: #{depth}mm"
       cx *= num_bays
       text = pdf.ostate.options[:open_shelf][:shelf_text].template(level: level, depth: depth)
       size = 100

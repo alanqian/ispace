@@ -6,3 +6,13 @@
 <h3>完成规划</h3>
 <%= render 'deployed_list', deployments: @plan_sets[:deployed] %>
 
+<!--
+<h3>门店规划</h3>
+<%#= render 'deployed_list_store' %>
+
+<%= simple_form_for PlanSet.new do |f| %>
+  <%= f.input_field :_do, as: :hidden, value: :search %>
+  <%= f.input :store_name %>
+  <%= f.submit "搜索" %>
+<% end %>
+-->

@@ -10,13 +10,16 @@ User.create(
   username: '管理员',
   role: 'admin'
 )
-User.create(
-  email: 'd@g.cn',
-  password: '00000000',
-  password_confirmation: '00000000',
-  username: '007',
-  role: 'designer'
-)
+
+1.upto(9) do |n|
+  User.create(
+    email: "d#{n}@g.cn",
+    password: '00000000',
+    password_confirmation: '00000000',
+    username: "00#{n}",
+    role: 'designer'
+  )
+end
 
 # create default user for each store
 Store.all.each do |store|

@@ -10,7 +10,7 @@ module ApplicationHelper
     else
       model = controller_name.classify.downcase
     end
-    prefixs = ["activerecord.attributes.#{model}", "dict"]
+    prefixs = ["activerecord.attributes.#{model}", "simple_form.labels.defaults", "dict"]
     prefixs.each do |prefix|
       s = I18n.t("#{prefix}.#{field}", default: '')
       return s unless s.empty?
@@ -45,6 +45,7 @@ module ApplicationHelper
   end
 
   def color_tag(color)
+    return "" unless color && !color.empty?
     content_tag(:span, raw("&nbsp;"), class: "colorbox", style: "background-color: #{color};")
   end
 
@@ -109,6 +110,14 @@ module ApplicationHelper
     end
   end
 
+  def product_grade_options(grade = "Q", all_grade = nil)
+    opts = {}
+    if all_grade
+      opts[all_grade] = ""
+    end
+    opts.merge I18n.t("dict.grades").select { |a,_| a.to_s <= grade.to_s } .invert
+  end
+
   def select_one_check(id, sel_target, opts = {})
     opts ||= {}
     opts[:onclick] ||= "javascript: onClickSelectOne(event, this);"
@@ -170,7 +179,7 @@ module ApplicationHelper
     ths = []
     data_array.each do |col|
       if col.is_a?(Array)
-        logger.debug "data col: #{col}"
+        # logger.debug "data col: #{col}"
         # w/ opts
         field = col.shift
         if field == :select_all
@@ -299,5 +308,55 @@ module ApplicationHelper
 
   def bay_types(types)
     types.map { |t| I18n.t("activerecord.models.#{t}") }.join("+")
+  end
+
+  # categories, from plain sorted ActiveRecord::Relation to list of:
+  #  name[3], code[3], show[3]
+  def hier_categories(categories)
+    name = Array.new(3, "")
+    code = Array.new(3, "")
+    show = Array.new(3, false)
+    prev_level = -1
+    list = []
+    prev_code = Array.new(3, nil)
+    tmp = categories.dup.push(OpenStruct.new({code: "xx", name:"xx"}))
+    tmp.each do |cat|
+      level = (cat.code.length - 1) / 2
+      if level <= prev_level
+        # back to previous level, output the row, then empty it
+        if prev_level < 2
+          name.fill("", (prev_level + 1)..2)
+          code.fill("", (prev_level + 1)..2)
+        end
+        0.upto(2) { |i| show[i] = (code[i] != prev_code[i]) }
+        prev_code = code.dup
+        list.push(OpenStruct.new({
+          name: name.dup,
+          code: prev_code,
+          show: show.dup
+        }))
+        prev_level = -1
+      end
+      code[level] = cat.code
+      name[level] = cat.name
+      prev_level = level
+    end
+    list
+  end
+
+  # define category_menu for tree-input
+  def category_menu(cmd = "select-category")
+    tree_input_menu(cmd, Category.tree.to_json)
+  end
+
+  def tree_input_menu(cmd, tree)
+    content_tag :div, "", class: "ui-tree-input-menu hide", data: {
+      cmd: cmd, tree: tree }
+  end
+
+  def deploy_stores(dpm, item)
+    # [#<struct PlanDeploy plan_id=2, store_id=1, store_name="安庆大龙山加油站", downloaded_at=nil, deployed_at=nil>]
+    list = dpm[item]
+    list.map { |e| e.store_name } .join(", ")
   end
 end

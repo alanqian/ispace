@@ -14,12 +14,13 @@
         # [:status, input: false, sort: false],
         [:facings, width: "3em"],
         [:name, width: "4em"],
+        [:color, width: "2em"],
         :size_name,
         :code,
         [:plan_info_rank, width: "3em"],
         [:price_zone, width: "4em"],
         :brand_id,
-        [:sale_type, show: false, search: false]) %>
+        [:grade, show: false, search: false]) %>
     </tr>
   </thead>
   <tbody>
@@ -32,19 +33,9 @@
 
 <div id="dataTable-filter">
   <div id="product-toolbar">
-    <%
-      opt_class = Struct.new(:id, :name)
-      sale_types_opt = [
-        opt_class.new(-1, "全部")
-      ]
-      t("dict.sale_type").each do |type,name|
-        if type <= 1
-          sale_types_opt.push opt_class.new(type, name)
-        end
-      end
-    %>
-    <%= select_tag "show-product-sale-type",
-      options_from_collection_for_select(sale_types_opt, "id", "name", -1),
+    <% grade_opts = product_grade_options(min_product_grade, "全部") %>
+    <%= select_tag "show-product-grade",
+      options_from_collection_for_select(grade_opts, :last, :first, -1),
       class: "toolbar-select",
       title: "选择显示的单品种类"
     %>

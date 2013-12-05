@@ -17,7 +17,7 @@ class ImportSale < ImportSheet
   def import_row(params, row_index)
     sale_params = params[:sale].merge @common
     product_id = params[:product][:code]
-    if Product.exists?(product_id)
+    if Product.exists?(code: product_id)
       sale_params[:product_id] = product_id
       sale_id = Sale.create(sale_params).id
       @count += 1

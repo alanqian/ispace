@@ -104,10 +104,14 @@ root.updateFixtureMetrics = ->
         window.fixture.linear += bay.linear * num_bays
         window.fixture.area += bay.area * num_bays
         window.fixture.cube += bay.cube * num_bays
-  $("#run").html(window.fixture.run)
-  $("#linear").html(window.fixture.linear)
-  $("#area").html(window.fixture.area)
-  $("#cube").html(window.fixture.cube)
+  window.fixture.run *= 0.001
+  window.fixture.linear *= 0.001
+  window.fixture.area *= 0.000001
+  window.fixture.cube *= 0.000000001
+  $("#run").html(window.fixture.run.toFixed(2) + "m")
+  $("#linear").html(window.fixture.linear.toFixed(2) + "m")
+  $("#area").html(window.fixture.area.toFixed(2) + "m²")
+  $("#cube").html(window.fixture.cube.toFixed(2) + "m³")
 
 root.updateControls = (updateMetricOnly) ->
   if !updateMetricOnly
@@ -118,8 +122,10 @@ root.updateControls = (updateMetricOnly) ->
     $("td.fixture_item select", container).change updateFixtureMetrics
   updateFixtureMetrics()
 
-$ ->
-  setFixture = ->
+class FixturePage
+  fixture: null
+
+  setFixture: () ->
     window.fixture = {
       active: -1,
       newIndex: $("td.fixture_item").parent().length + 10,
@@ -135,24 +141,32 @@ $ ->
         return @active
     }
 
-  console.log "fixture editor start..."
-  $("form[data-disabled=true]").each (index, form) ->
-    $(":input[type!=hidden]", form).attr("disabled", true)
-    $("input.enable_form", form).attr("disabled", false)
-    $("input.enable_form").click (e) ->
-      e.preventDefault()
-      $(":input[type!=hidden]", form).attr("disabled", false)
-      $(this).hide()
+  onLoadNew: () ->
+    @loadEditor()
 
-  if $("#fixture_metrics").length > 0
-    window.bays = $("#fixture_metrics").data("bays")
-    console.log "#{Object.keys(window.bays).length} bays in system"
+  onLoadEdit: () ->
+    @loadEditor()
 
-    # move template outside of the form
-    $("form").after($("#template"))
-    setFixture()
-    updateControls(false)
-  else
-    console.log "no bays"
-  console.log "fixture editor loaded."
+  loadEditor: () ->
+    console.log "fixture editor start..."
+    $("form[data-disabled=true]").each (index, form) ->
+      $(":input[type!=hidden]", form).attr("disabled", true)
+      $("input.enable_form", form).attr("disabled", false)
+      $("input.enable_form").click (e) ->
+        e.preventDefault()
+        $(":input[type!=hidden]", form).attr("disabled", false)
+        $(this).hide()
 
+    if $("#fixture_metrics").length > 0
+      window.bays = $("#fixture_metrics").data("bays")
+      console.log "#{Object.keys(window.bays).length} bays in system"
+
+      # move template outside of the form
+      $("form").after($("#template"))
+      @setFixture()
+      updateControls(false)
+    else
+      console.log "no bays"
+    console.log "fixture editor loaded."
+
+root.FixturePage = FixturePage

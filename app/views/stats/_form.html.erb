@@ -1,0 +1,22 @@
+<%= simple_form_for(@stat) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :name %>
+    <%= f.input :job_id %>
+    <%= f.input :stat_type %>
+    <%= f.input :category_id %>
+    <%= f.input :plan_set_id %>
+    <%= f.input :rel_model %>
+    <%= f.input :agg_id %>
+    <%= f.input :num_positions %>
+    <%= f.input :run %>
+    <%= f.input :num_facings %>
+    <%= f.input :outcome %>
+    <%= f.input :percentage %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

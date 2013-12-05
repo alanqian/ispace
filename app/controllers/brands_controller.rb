@@ -50,9 +50,8 @@ class BrandsController < ApplicationController
   # GET /brands.json
   def index
     category_id = params[:category] || Category.default_id
-    @brands = Brand.where(["category_id=?", category_id])
-    brand_new = Brand.new(category_id: category_id)
-    render 'index', locals: { categories: Category.all, brand_new: brand_new }
+    @brands = Brand.under(category_id)
+    render 'index', locals: { brand_new: Brand.new(category_id: category_id) }
   end
 
   # GET /brands/1
@@ -142,6 +141,7 @@ class BrandsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def brand_params
-      params.require(:brand).permit(:name, :category_id, :color)
+      # only attribute can be modified: :color
+      params.require(:brand).permit(:color)
     end
 end

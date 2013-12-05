@@ -60,6 +60,3 @@ class PlanSetPage
           console.log "click", e.node
 
 root.PlanSetPage = PlanSetPage
-
-$ ->
-  $.util.onPageLoad()

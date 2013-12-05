@@ -4,12 +4,12 @@
 #
 root = exports ? this
 
-$ ->
-  console.log "brands.js start"
-  # inplace-edit init
-  # setDataTableListUI() # mv to app.js
-
-  # notes for simple color picker
-  # $('select.colorpicker').simplecolorpicker({picker: true})
-  # simplecolorpicker("destroy")
+root.BrandPage = class BrandPage
+  onCategoryChanged: (el) ->
+    id = $(el).val()
+    url = $(el).data("url")
+    # only for index page, the input element has data url
+    if url && id
+      window.location = url + id
+    return true
 

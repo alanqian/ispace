@@ -5,18 +5,8 @@
   <div class="inputs">
     <%= f.hidden_field :user_id %>
     <%= f.input :name %>
-    <%= f.hidden_field :category_id %>
-    <%# for, data-value, data-labels is for auto-complete %>
-    <%= f.input :category_name, input_html: {
-      for: "plan_set_category_id",
-      class: "ui-tree-input",
-      data: {
-        cmd: "select-category",
-        tree: @categories_all.to_json,
-        value: "code",
-        labels: ["name", "pinyin", "code"], },
-      disabled: disable_category
-    } %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
 
     <%= f.input :to_deploy_at %>
     <%= f.input :note, as: :text  %>
@@ -40,4 +30,5 @@
 <% end %>
 
 <ul id="ui-tree-input"></ul>
+<%= category_menu "select-category" %>
 

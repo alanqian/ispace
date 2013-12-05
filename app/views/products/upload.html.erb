@@ -1,0 +1,22 @@
+<% content_for_title :upload %>
+
+<h3>商品图片上传</h3>
+
+<ol>
+  <li>请上传包含多个商品图片的zip文件或单个商品的jpg文件</li>
+  <li>商品的图片文件必须与编码一致！<br>
+      如编码为00456的商品的图片文件应为：00456.jpg
+  </li>
+<ol>
+<br>
+
+<%= simple_form_for(@product) do |f| %>
+  <%= f.error_notification %>
+  <div class="inputs">
+    <%= f.input_field :_do, as: :hidden, value: "upload" %>
+    <%= f.input :image_upload, as: :file, class: "compact" %>
+  </div>
+  <div class="actions">
+    <%= f.submit "上传文件" %>
+  </div>
+<% end %>

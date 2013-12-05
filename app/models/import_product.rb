@@ -143,17 +143,14 @@ class ImportProduct < ImportSheet
   def normalize_product_params(params)
     params[:size_name] = params[:size_name].to_s.downcase
     params[:status] = params.delete(:status_pair).split("-").first
-    # mm -> cm
-    [:width, :height, :depth].each do |attr|
-      params[attr] = params[attr].to_i / 10.0
-    end
   end
 
   def import_product(params)
     return unless params[:product]
 
     product_params = params[:product]
-    if Product.exists?({ code: product_params[:code]})
+    code = product_params[:code]
+    if Product.exists?(code: code)
       logger.debug "product import skiped, code:#{product_params[:code]}, import_id:#{self.id}"
     else
       normalize_product_params(product_params)
@@ -167,7 +164,7 @@ class ImportProduct < ImportSheet
       })
       product_id = Product.create(product_params).id
       @count[:product] += 1
-      logger.debug "product imported, id:#{product_id}, import_id:#{self.id}"
+      logger.debug "product imported, id:#{product_id}, code:#{code} import_id:#{self.id}"
     end
     return true
   end
@@ -677,7 +674,7 @@ class ImportSheet < ActiveRecord::Base
       case_pack_name: "包装",
       bar_code: "条形码",
       color: "颜色",
-      sale_type: "商品类型",
+      grade: "等级",
       new_product: "新品",
       on_promotion: "促销",
     },

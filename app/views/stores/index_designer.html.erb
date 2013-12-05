@@ -1,8 +1,8 @@
 <% content_for_title :index_designer %>
 
 <div id="stores-list">
-  <p>店名标注<sup>*</sup>的是样板店, 标注<sup>?</sup>的门店尚未设置样板店<br/>
-     点击样板店进行货架配置</p>
+  <p>店名标注<sup>*</sup>的是标准店, 标注<sup>?</sup>的门店尚未设置标准店<br/>
+     点击标准店进行货架配置</p>
   <% store_new.id = 0 %>
   <%= simple_form_for(store_new, method: "patch",
                       html: { id: "set-model-stores-form" }) do |f| %>
@@ -18,10 +18,10 @@
     </div>
     <%= render 'list_models', stores: @stores, regions: @regions %>
     <div id="dataTable-filter">
-      <%= f.button :submit, "设为样板店", title: "将选中门店设为样板店" %>
+      <%= f.button :submit, "设为标准店", title: "将选中门店设为标准店" %>
       <span>&nbsp</span>
-      <%= link_to "设置样板店", "#", id: "setup-model-store", title: "指定选中门店的样板店" %>
-      <%#= f.button :submit, "设置样板店" %>
+      <%= link_to "设置标准店", "#", id: "setup-model-store", title: "指定选中门店的标准店" %>
+      <%#= f.button :submit, "设置标准店" %>
     </div>
   <% end %>
 </div>
@@ -33,3 +33,5 @@
     <li><a id="set-ref-store-id" data-id="<%= store.id %>" href="#"><%= store.name %></a></li>
   <% end %>
 </ul>
+<%= link_to "新建门店", new_store_path %>
+

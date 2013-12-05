@@ -17,8 +17,7 @@ class FreezerChest < ActiveRecord::Base
   end
 
   def self.template(bay)
-    r = self.where(bay_id: -1).first || self.new
-    r.id = nil
+    r = self.new(APP_CONFIG[:templates][:freezer_chest])
     r.bay_id = bay.id
     r
   end

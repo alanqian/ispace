@@ -3,6 +3,7 @@ module CategoriesHelper
   def to_hier3_list(categories)
     name = Array.new(3, "")
     code = Array.new(3, "")
+    color = Array.new(3, "")
     prev_index = -1
     list = []
     clear = true
@@ -10,13 +11,15 @@ module CategoriesHelper
       index = (cat.code.length - 1) / 2
       if index <= prev_index
         # output the row, then empty it
-        list.push(OpenStruct.new({name: name, code: code}))
+        list.push(OpenStruct.new({name: name, code: code, color: color}))
         name = Array.new(3, "")
         code = Array.new(3, "")
+        color = Array.new(3, "")
         clear = true
       end
       code[index] = cat.code
       name[index] = cat.name
+      color[index] = cat.color
       clear = false
       prev_index = index
       #(index+1).upto(2) do |i|
@@ -25,7 +28,7 @@ module CategoriesHelper
       #end
     end
     # output the last row
-    list.push(OpenStruct.new({name: name, code: code})) unless clear
+    list.push(OpenStruct.new({name: name, code: code, color: color})) unless clear
     list
   end
 end

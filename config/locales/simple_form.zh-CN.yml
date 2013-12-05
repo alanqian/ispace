@@ -18,13 +18,16 @@ zh-CN:
       back: 返回
       publish: 发布
       unpublish: 取消发布
-      set_as_model_store: 设为样板店
-      set_model_store: '设置样板店...'
+      set_as_model_store: 设为标准店
+      set_model_store: '设置标准店...'
 
     titles:
+      stat:
+        index: 分析统计
+
       plan_set:
         new: 新建空间规划
-        add_store: 添加样板店
+        add_store: 添加标准店
         publish: 发布空间规划
         defaults: 修改空间规划
         open: 空间规划：设计
@@ -32,12 +35,13 @@ zh-CN:
         index: 空间规划
         index_design: 规划设计
         index_deploy: 部署管理
+        index_search: 门店规划
         deploy_recent: 最新规划
         deploy_report: 完成上报
         deploy_deployed: 历史规划
       plan:
-        index: 样板店规划
-        new: 空间规划：增加样板店
+        index: 标准店规划
+        new: 空间规划：增加标准店
         edit: 设置门店参数
         edit_setup: 设置门店规划
         edit_layout: 门店空间设计
@@ -80,10 +84,11 @@ zh-CN:
         edit: 更新制造商信息
       product:
         index: 单品管理
-        index_on_sale: 在售商品
-        index_off_sale: 未上架商品
+        index_on_shelf: 在售商品
+        index_off_shelf: 未上架商品
         edit: 更新商品信息
         new: 新建商品
+        upload: 商品图片上传
       sale:
         index: 销售信息管理
         edit: 更新销售信息
@@ -107,11 +112,22 @@ zh-CN:
         index: 用户管理
     notices:
       store:
-        update: 门店信息更新完毕
-        create: 成功创建了一个门店
-        update_model_store: 样板店设置成功，继续操作
-        update_model_store_fail: 样板店设置失败！
-        update_fixture: 成功设置样板店货架！
+        update: 门店#{store}信息更新完毕
+        create: 新建了一个门店%{store}
+        update_model_store: 标准店设置成功，继续操作
+        update_model_store_fail: 标准店设置失败！
+        update_fixture: 成功设置标准店货架！
+        update_delete: 门店%{store}已删除!
+        update_delete_fail: 门店%{store}删除失败!
+      bay:
+        create: 创建了货备%{bay}
+        update: 修改了货备%{bay}
+      product:
+        update_ex: 更新了%{count}个单品
+        update_fail: 没有更新单品
+        create_upload: 商品图片上传完成，共更新了%{count}个商品的图片
+      plan_set:
+        create: 创建空间规划%{plan_set}第一步完成，接下来请选择规划包含的标准店...
 
     required:
       text: 'required'
@@ -124,7 +140,15 @@ zh-CN:
       default_message: "Some errors were found, please take a look:"
       # import_sheet: "import sheet error message"
 
-    # labels: move to activerecord.attributes: <model>.<attribute>
+    labels:
+      defaults:
+        category_id: 品类
+        category_name: 品类
+        run: 行程(m)
+        linear: 长度(m)
+        area: 面积(m²)
+        cube: 体积(m³)
+      #others: move to activerecord.attributes: <model>.<attribute>
 
     # "hints" is put after input element! write it ONLY WHEN NECESSARY!
     hints:
@@ -139,9 +163,10 @@ zh-CN:
       plan:
         init_facing: (对未上架的商品有效)
         category_name: (新规划才能更改品类)
+        min_product_grade: (至少达到此等级的商品才能上架)
 
       plan_set:
-        category_name: (新规划才能更改品类)
+        category_id: (新规划才能更改品类)
 
     # By default, show in EMPTY input element in gray color
     placeholders:
@@ -152,7 +177,19 @@ zh-CN:
       plan_set:
         name: 规划名称
         note: 填写本规划的说明，部署的要求等等；此处说明内容会打印在给门店的规划书的扉页
-        category_name: 品类
+        category_id: 品类
+      bay:
+        name: 货备名称，如：120x7层板
+        open_shelves:
+          name: 隔板
+        peg_boards:
+          name: 钉板
+        freezer_chests:
+          name: 腔体(冷藏柜)
+        rear_support_bars:
+          name: 后支撑条
+        heaps:
+          name: 堆头
 
     options:
       # struct:: model/field/option: message

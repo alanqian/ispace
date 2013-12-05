@@ -1,6 +1,6 @@
   id = "<%= @category.id %>"
   new_tr = "<%=j render partial: 'item', locals: { category: @category } %>"
-  sel = "#categories-list tr[data-id=#{id}]"
+  sel = "#categories-list tr[data-id='#{id}']"
 
 <% if @category.errors.any? %>
   # show errors

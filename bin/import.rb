@@ -3,6 +3,15 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
 
 imports = {
+  "bay" => {
+    files: "货架标准类别.csv"
+  },
+  "sale" => "",
+  "product" => {
+    #files: "商品档案1.csv",
+    files: "尺寸.csv",
+    klass: Brand,
+  },
   "category" => {
     files: "分类.xlsx",
   },
@@ -10,11 +19,6 @@ imports = {
     files: "便利店基础信息.xlsx",
     klass: Region,
   },
-  "product" => {
-    files: "商品档案1.csv",
-    klass: Brand,
-  },
-  "sale" => "",
   #"product" => ["商品档案1.xlsx",
   #  "商品档案2.xlsx",
   #  "商品档案3.xlsx",
@@ -54,7 +58,7 @@ imports.each do |t, import|
   end
 end
 
-[Category, Region, Store, Brand, Product].each do |model|
+[Bay, Category, Region, Store, Brand, Product].each do |model|
   puts "#{model.to_s}: #{model.count}"
 end
 

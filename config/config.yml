@@ -7,7 +7,67 @@ production:
 development:
   perform_authentication: false
 
-common:
+all:
+  :templates:
+    :bay:
+      :name: ''
+      :back_height: 1850
+      :back_width: 1200
+      :back_thick: 30
+      :back_color: '#ffffff'
+      :notch_spacing: 10
+      :notch_1st: 10
+      :base_height: 150
+      :base_width: 1200
+      :base_depth: 500
+      :base_color: '#8b0000'
+      :takeoff_height: 1900
+    :open_shelf_1st_name: 1.隔板
+    :open_shelf:
+      :name: ""
+      :height: 200
+      :width: 1200
+      :depth: 500
+      :thick: 50
+      :slope: 0
+      :riser: 0
+      :notch_num: 1
+      :from_base: 10
+      :color: '#dcdcdc'
+      :from_back: 0
+      :finger_space: 0
+      :x_position: 0
+    :peg_board:
+      :name: ""
+      :height: 2000
+      :depth: 300
+      :vert_space: 60
+      :horz_space: 60
+      :vert_start: 60
+      :horz_start: 60
+      :notch_num: 1
+      :from_base: 10
+      :color: '#dcdcdc'
+    :freezer_chest:
+      :name: ''
+      :height: 900
+      :depth: 1000
+      :wall_thick: 40
+      :inside_height: 800
+      :merch_height: 700
+      :color: '#c0c0c0'
+    :rear_support_bar:
+      name: ""
+      height: 300
+      bar_depth: 40
+      bar_thick: 40
+      from_back: 450
+      hook_length: 400
+      notch_num: 20
+      from_base: 800
+      color: '#ff00ff'
+      bar_slope: 0
+
   pdf_fonts:
     :font_families:
       XiHei:
@@ -79,10 +139,15 @@ common:
       - :run
       - :spercent
     :summary_header:
-      - 供应商
+      - look_at summary_names
       - 位置
       - 总排面
       - 百分比(%)
+    :summary_by: :brand
+    #:summary_by: :supplier
+    :summary_names:
+      :brand: 品牌
+      :supplier: 供应商
     :title:
       :cover: 品类规划
       :toc: 目录
@@ -93,6 +158,6 @@ common:
       :summary: 商品汇总表
     :open_shelf:
       :shelf_text: "第#{level}层, 深度: #{depth}厘米"
-      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}cm"
-      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}cm"
+      :l2r_layer_name: "» #{fixture.name} » 第#{layer.layer}层 » 深度: #{layer.depth}mm"
+      :r2l_layer_name: "« #{fixture.name} « 第#{layer.layer}层 « 深度: #{layer.depth}mm"
 

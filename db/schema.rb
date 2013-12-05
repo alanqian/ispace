@@ -11,20 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131119165124) do
+ActiveRecord::Schema.define(version: 20131203143206) do
 
   create_table "bays", force: true do |t|
-    t.string   "name",                                   null: false
-    t.decimal  "back_height",   precision: 6,  scale: 1, null: false
-    t.decimal  "back_width",    precision: 7,  scale: 1, null: false
-    t.decimal  "back_thick",    precision: 6,  scale: 1, null: false
-    t.string   "back_color",                             null: false
-    t.decimal  "notch_spacing", precision: 6,  scale: 1
-    t.decimal  "notch_1st",     precision: 6,  scale: 1
-    t.decimal  "base_height",   precision: 6,  scale: 1, null: false
-    t.decimal  "base_width",    precision: 6,  scale: 1, null: false
-    t.decimal  "base_depth",    precision: 6,  scale: 1, null: false
-    t.string   "base_color",                             null: false
+    t.string   "name",                                                null: false
+    t.integer  "back_height",                                         null: false
+    t.integer  "back_width",                                          null: false
+    t.integer  "back_thick",                                          null: false
+    t.string   "back_color",                                          null: false
+    t.integer  "notch_spacing",                          default: 20, null: false
+    t.integer  "notch_1st",                              default: 20, null: false
+    t.integer  "base_height",                                         null: false
+    t.integer  "base_width",                                          null: false
+    t.integer  "base_depth",                                          null: false
+    t.string   "base_color",                                          null: false
     t.integer  "num_layers"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -51,15 +51,16 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",                                 null: false
+    t.string   "name",                               null: false
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",         limit: 32,              null: false
-    t.string   "parent_id",    limit: 32
-    t.integer  "import_id",               default: -1
+    t.string   "code",       limit: 32,              null: false
+    t.string   "parent_id",  limit: 32
+    t.integer  "import_id",             default: -1
     t.string   "pinyin"
-    t.string   "display_name"
+    t.string   "full_name"
+    t.string   "color"
   end
 
   add_index "categories", ["code"], name: "index_categories_on_code", unique: true, using: :btree
@@ -137,15 +138,15 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   create_table "freezer_chests", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",        precision: 6, scale: 1,             null: false
-    t.decimal  "depth",         precision: 6, scale: 1,             null: false
-    t.decimal  "wall_thick",    precision: 6, scale: 1,             null: false
-    t.decimal  "inside_height", precision: 6, scale: 1,             null: false
-    t.decimal  "merch_height",  precision: 6, scale: 1,             null: false
+    t.integer  "height",                    null: false
+    t.integer  "depth",                     null: false
+    t.integer  "wall_thick",                null: false
+    t.integer  "inside_height",             null: false
+    t.integer  "merch_height",              null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                                 default: 0, null: false
+    t.integer  "level",         default: 0, null: false
   end
 
   add_index "freezer_chests", ["bay_id"], name: "index_freezer_chests_on_bay_id", using: :btree
@@ -186,18 +187,18 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   create_table "open_shelves", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",       precision: 6, scale: 1,             null: false
-    t.decimal  "width",        precision: 6, scale: 1,             null: false
-    t.decimal  "depth",        precision: 6, scale: 1,             null: false
-    t.decimal  "thick",        precision: 6, scale: 1,             null: false
+    t.integer  "height",                                           null: false
+    t.integer  "width",                                            null: false
+    t.integer  "depth",                                            null: false
+    t.integer  "thick",                                            null: false
     t.decimal  "slope",        precision: 4, scale: 1,             null: false
-    t.decimal  "riser",        precision: 6, scale: 1,             null: false
+    t.integer  "riser",                                            null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",    precision: 6, scale: 1,             null: false
+    t.integer  "from_base",                                        null: false
     t.string   "color"
-    t.decimal  "from_back",    precision: 6, scale: 1,             null: false
-    t.decimal  "finger_space", precision: 6, scale: 1,             null: false
-    t.decimal  "x_position",   precision: 6, scale: 1,             null: false
+    t.integer  "from_back",                                        null: false
+    t.integer  "finger_space",                                     null: false
+    t.integer  "x_position",                                       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "level",                                default: 0, null: false
@@ -208,18 +209,18 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   create_table "peg_boards", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",     precision: 6, scale: 1,             null: false
-    t.decimal  "depth",      precision: 6, scale: 1,             null: false
-    t.decimal  "vert_space", precision: 6, scale: 1,             null: false
-    t.decimal  "horz_space", precision: 6, scale: 1,             null: false
-    t.decimal  "vert_start", precision: 6, scale: 1,             null: false
-    t.decimal  "horz_start", precision: 6, scale: 1,             null: false
+    t.integer  "height",                 null: false
+    t.integer  "depth",                  null: false
+    t.integer  "vert_space",             null: false
+    t.integer  "horz_space",             null: false
+    t.integer  "vert_start",             null: false
+    t.integer  "horz_start",             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",  precision: 6, scale: 1,             null: false
+    t.integer  "from_base",              null: false
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                              default: 0, null: false
+    t.integer  "level",      default: 0, null: false
   end
 
   add_index "peg_boards", ["bay_id"], name: "index_peg_boards_on_bay_id", using: :btree
@@ -248,12 +249,12 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   add_index "plan_sets", ["user_id"], name: "index_plan_sets_on_user_id", using: :btree
 
   create_table "plans", force: true do |t|
-    t.integer  "plan_set_id",                                                          null: false
-    t.string   "category_id",                                                          null: false
+    t.integer  "plan_set_id",                                                            null: false
+    t.string   "category_id",                                                            null: false
     t.integer  "user_id"
-    t.integer  "store_id",                                                             null: false
+    t.integer  "store_id",                                                               null: false
     t.integer  "num_stores",                                               default: 0
-    t.integer  "fixture_id",                                                           null: false
+    t.integer  "fixture_id",                                                             null: false
     t.integer  "init_facing",                                              default: 1
     t.decimal  "nominal_size",                    precision: 10, scale: 2
     t.decimal  "base_footage",                    precision: 10, scale: 2
@@ -268,6 +269,8 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.integer  "num_done_normals",                                         default: 0
     t.integer  "fixture_version"
     t.string   "parts",               limit: 512
+    t.integer  "version",                                                  default: 0,   null: false
+    t.string   "min_product_grade",   limit: 2,                            default: "Q", null: false
   end
 
   add_index "plans", ["category_id"], name: "index_plans_on_category_id", using: :btree
@@ -280,11 +283,11 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   create_table "positions", force: true do |t|
     t.integer  "plan_id"
     t.integer  "store_id"
-    t.string   "product_id",                                             null: false
+    t.string   "product_id",                    null: false
     t.integer  "layer"
     t.integer  "seq_num"
     t.integer  "facing"
-    t.decimal  "run",              precision: 10, scale: 1
+    t.integer  "run"
     t.integer  "units"
     t.integer  "height_units"
     t.integer  "width_units"
@@ -292,36 +295,37 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.string   "oritentation"
     t.string   "merch_style"
     t.string   "peg_style"
-    t.decimal  "top_cap_width",    precision: 10, scale: 1
-    t.decimal  "top_cap_depth",    precision: 10, scale: 1
-    t.decimal  "bottom_cap_width", precision: 10, scale: 1
-    t.decimal  "bottom_cap_depth", precision: 10, scale: 1
-    t.decimal  "left_cap_width",   precision: 10, scale: 1
-    t.decimal  "left_cap_depth",   precision: 10, scale: 1
-    t.decimal  "right_cap_width",  precision: 10, scale: 1
-    t.decimal  "right_cap_depth",  precision: 10, scale: 1
-    t.decimal  "leading_gap",      precision: 10, scale: 1
-    t.decimal  "leading_divider",  precision: 10, scale: 1
-    t.decimal  "middle_divider",   precision: 10, scale: 1
-    t.decimal  "trail_divider",    precision: 10, scale: 1
+    t.integer  "top_cap_width"
+    t.integer  "top_cap_depth"
+    t.integer  "bottom_cap_width"
+    t.integer  "bottom_cap_depth"
+    t.integer  "left_cap_width"
+    t.integer  "left_cap_depth"
+    t.integer  "right_cap_width"
+    t.integer  "right_cap_depth"
+    t.integer  "leading_gap"
+    t.integer  "leading_divider"
+    t.integer  "middle_divider"
+    t.integer  "trail_divider"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "fixture_item_id",                           default: -1, null: false
-    t.integer  "init_facing",                                            null: false
+    t.integer  "fixture_item_id",  default: -1, null: false
+    t.integer  "init_facing",                   null: false
+    t.integer  "version",          default: 0,  null: false
   end
 
-  create_table "products", id: false, force: true do |t|
-    t.string   "code",                                                          null: false
+  create_table "products", force: true do |t|
+    t.string   "code",                                                                      null: false
     t.string   "category_id"
     t.integer  "brand_id"
     t.integer  "mfr_id"
     t.integer  "user_id"
-    t.integer  "import_id",                                     default: -1
+    t.integer  "import_id",                                               default: -1
     t.string   "name"
-    t.decimal  "height",               precision: 10, scale: 0
-    t.decimal  "width",                precision: 10, scale: 0
-    t.decimal  "depth",                precision: 10, scale: 0
-    t.decimal  "weight",               precision: 10, scale: 0
+    t.integer  "height",                                                                    null: false
+    t.integer  "width",                                                                     null: false
+    t.integer  "depth",                                                                     null: false
+    t.decimal  "weight",                         precision: 10, scale: 0
     t.string   "price_zone"
     t.string   "size_name"
     t.string   "case_pack_name"
@@ -332,9 +336,8 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_id"
-    t.integer  "sale_type",                                     default: 1
-    t.boolean  "new_product",                                   default: false
-    t.boolean  "on_promotion",                                  default: false
+    t.boolean  "new_product",                                             default: false
+    t.boolean  "on_promotion",                                            default: false
     t.string   "abbr_name"
     t.string   "en_name"
     t.string   "unit"
@@ -342,18 +345,22 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.string   "sale_season"
     t.integer  "shelf_life"
     t.string   "tax_type"
-    t.decimal  "input_price",          precision: 15, scale: 4
-    t.decimal  "input_price_with_tax", precision: 15, scale: 4
-    t.decimal  "input_tax_ratio",      precision: 5,  scale: 3
-    t.decimal  "output_tax_ratio",     precision: 5,  scale: 3
-    t.decimal  "input_sale_price",     precision: 15, scale: 4
-    t.decimal  "input_member_price",   precision: 15, scale: 4
+    t.decimal  "input_price",                    precision: 15, scale: 4
+    t.decimal  "input_price_with_tax",           precision: 15, scale: 4
+    t.decimal  "input_tax_ratio",                precision: 5,  scale: 3
+    t.decimal  "output_tax_ratio",               precision: 5,  scale: 3
+    t.decimal  "input_sale_price",               precision: 15, scale: 4
+    t.decimal  "input_member_price",             precision: 15, scale: 4
     t.integer  "shelf_life_input"
     t.integer  "shelf_life_dist"
     t.integer  "available"
     t.integer  "status"
+    t.string   "grade",                limit: 2,                          default: "B",     null: false
+    t.string   "image_file"
+    t.string   "merch_style",                                             default: "stack", null: false
   end
 
+  add_index "products", ["category_id", "grade"], name: "index_products_on_category_id_and_grade", using: :btree
   add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
   add_index "products", ["code"], name: "index_products_on_code", unique: true, using: :btree
   add_index "products", ["discard_from"], name: "index_products_on_discard_from", using: :btree
@@ -364,18 +371,18 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   create_table "rear_support_bars", force: true do |t|
     t.integer  "bay_id"
     t.string   "name"
-    t.decimal  "height",      precision: 6, scale: 1,             null: false
-    t.decimal  "bar_depth",   precision: 6, scale: 1,             null: false
-    t.decimal  "bar_thick",   precision: 6, scale: 1,             null: false
-    t.decimal  "from_back",   precision: 6, scale: 1,             null: false
-    t.decimal  "hook_length", precision: 6, scale: 1,             null: false
+    t.integer  "height",                  null: false
+    t.integer  "bar_depth",               null: false
+    t.integer  "bar_thick",               null: false
+    t.integer  "from_back",               null: false
+    t.integer  "hook_length",             null: false
     t.integer  "notch_num"
-    t.decimal  "from_base",   precision: 6, scale: 1,             null: false
+    t.integer  "from_base",               null: false
     t.string   "color"
-    t.decimal  "bar_slope",   precision: 4, scale: 1,             null: false
+    t.integer  "bar_slope",               null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level",                               default: 0, null: false
+    t.integer  "level",       default: 0, null: false
   end
 
   add_index "rear_support_bars", ["bay_id"], name: "index_rear_support_bars_on_bay_id", using: :btree
@@ -404,7 +411,7 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.integer  "import_id",                            default: -1
     t.decimal  "price",       precision: 10, scale: 2
     t.integer  "facing"
-    t.decimal  "run",         precision: 10, scale: 2
+    t.integer  "run"
     t.integer  "volume"
     t.integer  "volume_rank"
     t.decimal  "value",       precision: 10, scale: 0
@@ -431,6 +438,23 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   add_index "sales", ["store_id"], name: "index_sales_on_store_id", using: :btree
   add_index "sales", ["updated_at"], name: "index_sales_on_updated_at", using: :btree
 
+  create_table "stats", force: true do |t|
+    t.string   "name"
+    t.integer  "job_id"
+    t.string   "stat_type"
+    t.string   "category_id"
+    t.integer  "plan_set_id"
+    t.string   "rel_model"
+    t.integer  "agg_id"
+    t.integer  "num_positions"
+    t.integer  "run"
+    t.integer  "num_facings"
+    t.decimal  "outcome",       precision: 15, scale: 4
+    t.decimal  "percentage",    precision: 5,  scale: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "store_fixtures", force: true do |t|
     t.string   "code",        null: false
     t.integer  "fixture_id",  null: false
@@ -449,7 +473,7 @@ ActiveRecord::Schema.define(version: 20131119165124) do
   add_index "store_fixtures", ["store_id", "code"], name: "index_store_fixtures_on_store_id_and_code", unique: true, using: :btree
 
   create_table "stores", force: true do |t|
-    t.string   "region_id",                                                    null: false
+    t.string   "region_id",                                                     null: false
     t.string   "name"
     t.string   "memo"
     t.datetime "created_at"
@@ -463,7 +487,9 @@ ActiveRecord::Schema.define(version: 20131119165124) do
     t.string   "region_name",                                     default: ""
     t.string   "pinyin"
     t.decimal  "depot_area",              precision: 6, scale: 1
-    t.string   "grade"
+    t.string   "grade",        limit: 2,                          default: "B", null: false
+    t.datetime "deleted_at"
+    t.string   "image_file"
   end
 
   add_index "stores", ["area"], name: "index_stores_on_area", using: :btree

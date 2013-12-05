@@ -6,8 +6,6 @@
                       html: { id: "suppliers-form", class: "inplace", },
                      ) do |f| %>
     <div class="inputs">
-      <%= f.input :name %>
-      <%= f.input :desc %>
       <%= f.input :color, as: :color %>
     </div>
     <div class="actions">
@@ -16,9 +14,8 @@
     <table id="suppliers-table" data-form="#suppliers-form" data-sinfoempty="请重新选择品类或重新搜索" class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
       <thead>
         <tr>
-          <th class="name" data-input="supplier[name]"><%=tf :name %></th>
-          <th class="color" data-input="supplier[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
-          <th class="desc" data-input="supplier[desc]"><%=tf :desc %></th>
+          <th data-col="name" class="name"><%=tf :name %></th>
+          <th data-col="color" class="color" data-input="supplier[color]" data-no-sort="1" data-no-search="1"><%=tf :color %></th>
         </tr>
       </thead>
       <tbody>
@@ -34,13 +31,12 @@
   <%= simple_form_for(supplier_new, remote:true,
                       url: "#",
                       html: { id: "suppliers-choose-category" }) do |f| %>
-    <%= f.input :category_id, collection: categories, prompt: "选择品类",
-      label: "",
-      input_html: {
-        data: { url: suppliers_path(category: "") },
-        onchange: "javascript: onDataTableCategoryChange(event,this)" } %>
-    <%# = select_tag category_id, options_from_collection_for_select(categories, "name", "name") %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category",
+      data: { url: suppliers_path(category: "") } %>
   <% end %>
 </div>
 
-<%= link_to 'New Supplier', new_supplier_path %>
+<%= category_menu "select-category" %>
+
+<%#= link_to 'New Supplier', new_supplier_path %>
