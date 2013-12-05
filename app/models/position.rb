@@ -1,6 +1,6 @@
 class Position < ActiveRecord::Base
   belongs_to :plan
-  belongs_to :product
+  belongs_to :product, primary_key: :code
   scope :on_shelf, -> { where("layer >= 0 AND seq_num >= 0") }
   scope :not_on_shelf, -> { where("layer IS NULL OR layer < 0 OR seq_num IS NULL OR seq_num < 0") }
 

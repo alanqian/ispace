@@ -6,7 +6,6 @@ class Product < ActiveRecord::Base
   HASH_SIZE = 257
 
   belongs_to :category
-  self.primary_key = "code"
 
   scope :on_shelf, ->(grade = 'Q') { where(["grade <= ?", grade]) }
   attr_accessor :image_upload

@@ -51,15 +51,15 @@ ActiveRecord::Schema.define(version: 20131203143206) do
   add_index "brands", ["name", "category_id"], name: "index_brands_on_name_and_category_id", unique: true, using: :btree
 
   create_table "categories", id: false, force: true do |t|
-    t.string   "name",                                 null: false
+    t.string   "name",                               null: false
     t.string   "memo"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code",         limit: 32,              null: false
-    t.string   "parent_id",    limit: 32
-    t.integer  "import_id",               default: -1
+    t.string   "code",       limit: 32,              null: false
+    t.string   "parent_id",  limit: 32
+    t.integer  "import_id",             default: -1
     t.string   "pinyin"
-    t.string   "display_name"
+    t.string   "full_name"
     t.string   "color"
   end
 
@@ -314,7 +314,7 @@ ActiveRecord::Schema.define(version: 20131203143206) do
     t.integer  "version",          default: 0,  null: false
   end
 
-  create_table "products", id: false, force: true do |t|
+  create_table "products", force: true do |t|
     t.string   "code",                                                                      null: false
     t.string   "category_id"
     t.integer  "brand_id"

@@ -104,17 +104,21 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/
   def update_ex
-    @products = params[:products]
-    if @products.any?
-      logger.debug "#{@products}, #{product_attr_params}"
-      products = Product.where(code: @products).update_all(product_attr_params)
+    @codes = params[:products]
+    if @codes.any?
+      logger.debug "update products, #{@codes}, #{product_attr_params}"
+      @products = Product.where(code: @codes)
+      @products.update_all(product_attr_params)
       respond_to do |format|
         format.html {
           redirect_to products_url, notice: simple_notice(count: @products.size)
         }
-        format.js {
-          set_products_ex_js
-        }
+        format.js do
+          categories = @products.map { |p| p.category_id }
+          @brands_hash = Brand.where(category_id: categories).to_hash(:id, :name)
+          @suppliers_hash = Supplier.where(category_id: categories).to_hash(:id, :name)
+          @mfrs_hash = Manufacturer.where(category_id: categories).to_hash(:id, :name)
+        end
       end
     else
       logger.error "no product has been selected!"
@@ -165,18 +169,10 @@ class ProductsController < ApplicationController
       end
     end
 
-    def set_products_ex_js
-      @product = Product.find(@products.first)
-      @products_hash = Hash[Product.where(code: @products).map {|r| [r.id, r]} ]
-      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
-      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
-      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
-    end
-
     def set_product_update_js
-      @brands_hash = Brand.where(category_id: @product.category_id).to_hash(:id, :name)
-      @suppliers_hash = Supplier.where(category_id: @product.category_id).to_hash(:id, :name)
-      @mfrs_hash = Manufacturer.where(category_id: @product.category_id).to_hash(:id, :name)
+      @brands_hash = Brand.under(@product.category_id).to_hash(:id, :name)
+      @suppliers_hash = Supplier.under(@product.category_id).to_hash(:id, :name)
+      @mfrs_hash = Manufacturer.under(@product.category_id).to_hash(:id, :name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
