@@ -1,0 +1,394 @@
+// Place all the styles related to the plans controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// toolbar buttons
+.small-button {
+   font-size: .8em !important;
+}
+
+.large-button {
+   font-size: 1.8em !important;
+}
+
+div#products-container {
+  margin: 8px 0 10px;
+}
+div#plan-edit-layout-form {
+  height: 0px;
+}
+div#products-data {
+  margin: 4px 0;
+}
+
+
+.toolbar-select {
+  max-width: 8em;
+  min-width: 3em;
+  font-size: 110%;
+  height: 26px;
+}
+
+.ui-button {
+  // toolbar: 20x18, 2px gap between 2 rows
+  // --- the 1st row, 20x18 ---
+  // 1.1 plan-new
+  .ui-icon.ui-plan-close {
+    background-image: url(/assets/toolbar.png);
+    background-position: 0px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.2 plan-edit-summary
+  .ui-icon.ui-plan-edit-summary {
+    background-image: url(/assets/toolbar.png);
+    //background-position: -20px 0px;
+    background-position: -300px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.3 plan-copy-to
+  .ui-icon.ui-plan-copy-to {
+    background-image: url(/assets/toolbar.png);
+    background-position: -40px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.4 position-facing-inc
+  .ui-icon.ui-position-facing-inc {
+    background-image: url(/assets/toolbar.png);
+    background-position: -60px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.5 position-facing-dec
+  .ui-icon.ui-position-facing-dec {
+    background-image: url(/assets/toolbar.png);
+    background-position: -80px 0px;
+    width: 20px;
+    height: 18px;
+  }
+
+  // 1.6 position-remove
+  .ui-icon.ui-position-remove {
+    background-image: url(/assets/toolbar.png);
+    background-position: -100px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.7 positions-reorder
+  .ui-icon.ui-positions-reorder {
+    background-image: url(/assets/toolbar.png);
+    background-position: -120px 0px;
+    width: 20px;
+    height: 18px;
+  }
+
+  // 1.8 position-edit-leading-gaps
+  .ui-icon.ui-position-edit-leading-gaps {
+    background-image: url(/assets/toolbar.png);
+    background-position: -140px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.9 position-edit-dividers
+  .ui-icon.ui-position-edit-dividers {
+    background-image: url(/assets/toolbar.png);
+    background-position: -160px 0px;
+    width: 20px;
+    height: 18px;
+  }
+
+  // 1.10 switch-product-information
+  .ui-icon.ui-switch-product-information {
+    background-image: url(/assets/toolbar.png);
+    background-position: -180px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.11 sort
+  .ui-icon.ui-sort {
+    background-image: url(/assets/toolbar.png);
+    background-position: -200px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.12 select-showing-information
+  .ui-icon.ui-select-showing-information {
+    background-image: url(/assets/toolbar.png);
+    background-position: -220px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.13 switch-show-colors(x4)
+  .ui-icon.ui-switch-show-colors {
+    background-image: url(/assets/toolbar.png);
+    background-position: -240px 0px;
+    width: 20px;
+    height: 18px;
+  }
+  // 1.17 switch-show-colors(x4)
+  .ui-icon.ui-plan-save {
+    background-image: url(/assets/toolbar.png);
+    //background-position: -320px 0px;
+    background-position: -320px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // --- the 2nd row, 20x18 ---
+
+  // 2.1 bay-add-open-shelf
+  .ui-icon.ui-bay-add-open-shelf {
+    background-image: url(/assets/toolbar.png);
+    background-position: 0px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.2 bay-add-peg-board
+  .ui-icon.ui-bay-add-peg-board {
+    background-image: url(/assets/toolbar.png);
+    background-position: -20px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.3 bay-add-freezer-chest
+  .ui-icon.ui-bay-add-freezer-chest {
+    background-image: url(/assets/toolbar.png);
+    background-position: -40px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.4 bay-add-rear-support-bar
+  .ui-icon.ui-bay-add-rear-support-bar {
+    background-image: url(/assets/toolbar.png);
+    background-position: -60px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.5 bay-add-heap
+  .ui-icon.ui-bay-add-heap {
+    background-image: url(/assets/toolbar.png);
+    background-position: -80px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.6 bay-remove-layer
+  .ui-icon.ui-bay-remove-layer {
+    background-image: url(/assets/toolbar.png);
+    background-position: -100px -20px;
+    width: 20px;
+    height: 18px;
+  }
+
+  // 2.7 fixture-add-bay
+  .ui-icon.ui-fixture-add-bay {
+    background-image: url(/assets/toolbar.png);
+    background-position: -120px -20px;
+    width: 20px;
+    height: 18px;
+  }
+  // 2.8 fixture-remove-bay
+  .ui-icon.ui-fixture-remove-bay {
+    background-image: url(/assets/toolbar.png);
+    background-position: -140px -20px;
+    width: 20px;
+    height: 18px;
+  }
+
+  // --- the 3rd row, 32x32 ---
+  // 3.1 product-force-on-sale
+  .ui-icon.ui-product-force-on-sale {
+    background-image: url(/assets/toolbar.png);
+    background-position: -0px -40px;
+    width: 32px;
+    height: 32px;
+  }
+
+  // 3.2 product-on-sale
+  .ui-icon.ui-product-on-sale {
+    background-image: url(/assets/toolbar.png);
+    background-position: -32px -40px;
+    width: 32px;
+    height: 32px;
+  }
+  // 3.3 product-off-sale
+  .ui-icon.ui-product-off-sale {
+    background-image: url(/assets/toolbar.png);
+    background-position: -64px -40px;
+    width: 32px;
+    height: 32px;
+  }
+  // 3.4 product-on-promotion
+  .ui-icon.ui-product-on-promotion {
+    background-image: url(/assets/toolbar.png);
+    background-position: -96px -40px;
+    width: 32px;
+    height: 32px;
+  }
+  // 3.5 product-on-sale-new
+  .ui-icon.ui-product-on-sale-new {
+    background-image: url(/assets/toolbar.png);
+    background-position: -128px -40px;
+    width: 32px;
+    height: 32px;
+  }
+  // 3.6 product-force-on-sale-new
+  .ui-icon.ui-product-force-on-sale-new {
+    background-image: url(/assets/toolbar.png);
+    background-position: -160px -40px;
+    width: 32px;
+    height: 32px;
+  }
+  // 3.7 product-set-sale-type, 46x25
+  .ui-icon.ui-product-set-sale-type {
+    background-image: url(/assets/toolbar.png);
+    background-position: -192px -40px;
+    width: 46px;
+    height: 25px;
+  }
+}
+
+//.ui-button.ui-state-hover {
+// }
+
+// sortable-editor
+ul.sortable-editor.ui-selected {
+  background-color: #0000CC;
+}
+
+div.space-overflow {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  width: 5em;
+  font-size: 8pt;
+  text-align: center;
+  height: 1.5em;
+  border: 2px solid #777777;
+  background-color: #CCCCCC;
+}
+
+ul.sortable-editor {
+  list-style-type: none;
+  position: relative;
+  z-index: 1;
+  //overflow: hidden;
+  float: left;
+  clear: both;
+  border-width: 0px;
+  margin: 0px;
+  padding: 0px;
+  margin-right: 0px;
+  background-color: transparent;
+  //padding: 2.5em;
+  //min-width: 5em;
+  //min-height: 5em;
+  li {
+    display: inline-block;
+    float: left;
+    margin: 0;
+    margin-left: 1px;
+    border: 0px none transparent;
+    //padding: 1px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  li:last-child {
+    margin-right: 1px;
+  }
+  li.ui-selected {
+    //margin-left: 0;
+    //margin-right: 0;
+    // border: 1px solid yellow;
+    // #background-color: #000088;
+    //div.mdse-col {
+    //  border-color: yellow;
+    //}
+  }
+}
+
+li.sortable-item {
+}
+
+div.fixture-layout {
+  display: block;
+  width: 700px;
+  height: 350px;
+  border: 1px solid blue;
+
+  div.fixture-item-layout {
+    display: inline-block;
+    float: left;
+    height: 100%;
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+
+    div.bay-layer {
+      display: block;
+      float: left;
+      border: 1px solid black;
+      width: 100%;
+    }
+
+    div.bay-single {
+      display: inline-block;
+      float: left;
+      border-color: black;
+      border-style: solid;
+      border-width: 0 1px 0;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    div.bay-single:last-child {
+      border-width: 0;
+    }
+
+    div.bay-space {
+    }
+    div.bay-shelf {
+    }
+  }
+}
+
+.overlay {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  border: 1px solid red;
+  z-index: 1;
+}
+
+ol.selectable .ui-selecting { background: #FECA40; }
+ol.selectable .ui-selected { background: #F39814; color: white; }
+ol.selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+ol.selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+
+div#plan-edit-summary-dialog {
+  width: 400px;
+  height: 260px;
+}
+
+div#plan-copy-to-dialog {
+  width: 480px;
+  height: 390px;
+}
+
+div#plan-positions-gap-dialog {
+  width: 280px;
+  height: 160px;
+}
+
+div#plan-positions-divider-dialog {
+  width: 280px;
+  height: 180px;
+}
+
+table#products-table {
+  td.sorting_1 {
+    background-color: transparent
+  }
+}
+

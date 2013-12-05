@@ -1,0 +1,12 @@
+<tr data-id="<%= bay.id %>">
+  <%= data_td_list bay,
+    link_to("#{bay.name}(#{bay.ref_count})", edit_bay_path(bay)) ,
+    bay_types(bay.types),
+    :bay_size,
+    :num_layers,
+    "%.2f" % (bay.run * 0.001),
+    "%.2f" % (bay.linear * 0.001),
+    "%.2f" % (bay.area * 0.000001),
+    "%.2f" % (bay.cube * 0.000000001)
+  %>
+</tr>

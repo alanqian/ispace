@@ -1,0 +1,56 @@
+<%# Edit Position Details %>
+<%= simple_form_for(@plan, remote: true, html: {id: "position-detail-form"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= token_tag %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "position" } %>
+    <%= f.hidden_field :user_id %>
+  </div>
+
+  <div class="input-positons">
+    <%= f.simple_fields_for(:positions, @position, child_index: "99999") do |nf| %>
+      <%= nf.hidden_field :product_id %>
+      <%= nf.hidden_field :fixture_item_id %>
+      <%= nf.hidden_field :layer %>
+      <%= nf.hidden_field :seq_num %>
+      <%= nf.hidden_field :init_facing %>
+      <%= nf.hidden_field :facing %>
+
+      <%# Units %>
+      <%= nf.input :height_units %>
+      <%= nf.input :width_units %>
+      <%= nf.input :depth_units %>
+      <%# -------- %>
+      <%= nf.input :oritentation %>
+      <%= nf.input :merch_style %>
+      <%= nf.input :peg_style %>
+      <%# -------- %>
+      <%= nf.input :top_cap_height %>
+      <%= nf.input :top_cap_depth %>
+      <%# -------- %>
+      <%= nf.input :bottom_cap_height %>
+      <%= nf.input :bottom_cap_depth %>
+      <%# -------- %>
+      <%= nf.input :left_cap_width %>
+      <%= nf.input :left_cap_depth %>
+      <%# -------- %>
+      <%= nf.input :right_cap_width %>
+      <%= nf.input :right_cap_depth %>
+      <%# -------- %>
+      <%= nf.input :leading_gap %>
+      <%# -------- %>
+      <%= nf.input :leading_divider %>
+      <%= nf.input :middle_divider %>
+      <%= nf.input :trail_divider %>
+    <% end %>
+  </div>
+  <div id="position-preview">
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+    <%= f.button :submit, "Cancel" %>
+  </div>
+<% end %>
+

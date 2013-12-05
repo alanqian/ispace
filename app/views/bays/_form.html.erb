@@ -1,0 +1,84 @@
+<div class="span5 form bays">
+  <%= simple_form_for @bay, html: { class: "span5 bay"} do |f| %>
+  <%= f.error_notification %>
+
+  <div id="bay-form-main" class="ui-widget">
+    <h3 class="ui-accordion-header ui-helper-reset ui-state-default
+      ui-accordion-header-active ui-state-active ui-corner-top">
+      <%= f.input :name %>
+    </h3>
+    <div class="inputs bay_main ui-accordion-content ui-helper-reset ui-widget-content
+      ui-corner-bottom ui-accordion-content-active">
+      <div class="row vlabel">
+        <%= f.input :back_height, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :back_width, wrapper_html: { class: 'span1' } %>
+        <%= f.input :back_thick, wrapper_html: { class: 'span1' } %>
+        <%= f.input :back_color, as: :color, wrapper_html: { class: 'span1' } %>
+      </div>
+      <div class="row hlabel">
+        <%= f.input :use_notch, wrapper_html: { class: 'col_check' }, :as => :boolean, :boolean_style => :inline, :label => false %>
+        <%= f.input :notch_spacing, wrapper_html: { class: 'col_pre notch_on' } %>
+        <%= f.input :notch_1st, wrapper_html: { class: 'col_end notch_on' } %>
+      </div>
+      <div class="row vlabel">
+        <%= f.input :base_height, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_width, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_depth, wrapper_html: { class: 'span1' }  %>
+        <%= f.input :base_color, as: :color, wrapper_html: { class: 'span1' } %>
+      </div>
+      <hr/>
+      <%#= f.input :takeoff_height, disabled: true, wrapper_html: { class: 'col_end' } %>
+      <%#= f.input :show_peg_holes, wrapper_html: { class: 'check_end' }, :as => :boolean, :boolean_style => :inline %>
+
+      <% buttons = [
+        # id, text, icon
+        #--- the 1st row, 20x18 ---
+        # ["plan-save", "ui-icon-disk"],
+        ["add-open-shelf",  "添加隔板"],
+        ['add-peg-board',     '添加钉板'],
+        ['add-freezer-chest', "添加腔体(冰柜)"],
+        ['add-rear-support-bar', "添加后支撑条"],
+      ] %>
+      <div class="actions ui-widget-header-x">
+        <% buttons.each do |btn| %>
+          <%
+            id, text, icon = btn
+            icon ||= "ui-bay-#{id}"
+          %>
+          <%= button_tag text, type: :button, id: id, class: "toolbar-button",
+            data: { icon: icon } %>
+        <% end %>
+        <% save_text = @bay.id.nil? ? "新建货备" : "保存货备" %>
+        <%#= button_tag save_text, type: :button, id: "bay-save", class: "toolbar-button" %>
+        <%= f.submit save_text %>
+      </div>
+    </div>
+  </div>
+  <div id='accordion'>
+  </div>
+
+  <div id="template">
+    <% @templates.each do |id, model_name, template_obj| %>
+      <%= f.simple_fields_for(model_name, template_obj, child_index: "new_#{id}_index") do |builder| %>
+        <div id="<%= id %>" data-id="<%= "new_#{id}_index" %>">
+          <%= render "#{id}_fields", f: builder %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div id="dummy">
+      <% ["open_shelf", "peg_board", "freezer_chest", "rear_support_bar"].each do |elem| %>
+        <%= f.simple_fields_for elem.pluralize.to_sym do |builder| %>
+          <div class="elem_inputs">
+            <%= render "#{elem}_fields", f: builder %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+<% end %>
+</div>
+<div id="bay-preview" class="preview bays">
+  <p>preview</p>
+</div>

@@ -1,0 +1,18 @@
+<ul class="nav nav-list">
+  <li class="nav-header">门店</li>
+  <li><%= link_to "门店管理", stores_path %></li>
+  <li><%= link_to "区域设置", regions_path %></li>
+  <li><%= link_to "导入门店", new_import_sheet_path(_t: 'store') %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">用户</li>
+  <li><%= link_to "用户管理", users_path %></li>
+  <li><%= link_to "添加用户", new_user_path %></li>
+  <li><%= link_to "注销用户", users_path(_do: :delete) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">设置</li>
+  <li><%= link_to "管理员设置", edit_user_path(current_user) %></li>
+  <li><%= link_to "用户密码重置", edit_user_path(id: 0) %></li>
+</ul>
+

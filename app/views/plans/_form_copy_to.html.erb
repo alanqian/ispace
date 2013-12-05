@@ -1,0 +1,47 @@
+<%= simple_form_for(@plan, remote: true, html: {id: "plan-copy-to-form"}) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.hidden_field :user_id %>
+    <%= token_tag %>
+    <%= f.input :_do, as: :hidden, input_html: { value: "copy_to" } %>
+
+    <div id="plan-set-info">
+      <%#= f.hidden_field :plan_set_id %>
+      <%#= f.hidden_field :category_id %>
+    </div>
+    <div id=store-info>
+      <%= f.input :store_name, disabled: true %>
+      <%= f.input :num_stores, disabled: true %>
+      <%= f.input :usage_percent, disabled: true %>
+      <%= f.input :init_facing, disabled: true %>
+    </div>
+
+    <%= field_set_tag "复制内容：", id: "copy-options" do %>
+      <% copy_options = [[true, '仅复制上架商品和排面数'], [false, '同时复制商品和布局']] %>
+      <%= f.collection_radio_buttons :copy_product_only, copy_options, :first, :last %>
+    <% end %>
+    <%
+      plans_all = @plan.plan_set.plans
+      plans = plans_all.reject { |p| p.id == @plan.id }
+      plans_info = plans_all.to_hash(:id, :fixture_name, :finish_state)
+    %>
+    <%= field_set_tag "复制到其他标准店", id: "model-stores" do %>
+      <%= select_all_check "plan[target_plans][]"%>
+      <%= label_tag "select-all", "全选" %>
+      <%= f.collection_check_boxes :target_plans, plans, :id, :store_name,
+        {}, { class: "select-one", onclick: "javascript: onClickSelectOne(event, this);",
+          data: {"select-all" => "#SELECT_ALL"}} %>
+    <% end %>
+
+    <div id="selected-store-info" data-plans-info="<%= plans_info.to_json %>">
+      <p>货架: <span id="selected-store-fixture"><%= plans_info[@plan.id][:fixture_name] %></span>,
+         空间使用率: <span id="plan-usage-percent"><%= plans_info[@plan.id][:finish_state][:usage_percent] %></span></p>
+      <p>已上架货品数：必卖品:
+            <span id="plan-num-done-priors"><%= plans_info[@plan.id][:finish_state][:num_done_priors] %></span> /
+            <span id="plan-num-prior-products"><%= plans_info[@plan.id][:finish_state][:num_prior_products] %></span>,
+         可卖品:
+            <span id="plan-num-done-normals"><%= plans_info[@plan.id][:finish_state][:num_done_normals] %></span> /
+            <span id="plan-num-normal-products"><%= plans_info[@plan.id][:finish_state][:num_normal_products] %></span>
+    </div>
+    <%#= f.submit %>
+<% end %>

@@ -1,0 +1,31 @@
+<% content_for_title :index %>
+
+<h3><%= stat_title %></h3>
+<div id="stats-list">
+  <table id="stats-table"
+    data-sinfoempty="请重新搜索"
+    class="dataTable grid-control no-wrap" cellspacing=0>
+    <thead>
+      <tr>
+        <%= data_th_list :stat,
+          :agg_id,
+          :num_facings,
+          :num_positions,
+          :percentage
+        %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @stats.each do |stat| %>
+        <tr data-id="<%= stat.id %>">
+          <%= data_td_list stat,
+            agg_dict[stat.agg_id],
+            :num_facings,
+            :num_positions,
+            :percentage
+          %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

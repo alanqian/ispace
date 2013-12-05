@@ -1,0 +1,7 @@
+<ul>
+  <% import_sheet.imported[:count].each do |k,count| %>
+    <% table = t("activerecord.models.#{k}") %>
+    <% controller = k.to_s.pluralize %>
+    <li><%= link_to "#{table}: #{count}", controller: controller, action: 'index', import_id: import_sheet.id %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,288 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+zh-CN:
+  ago: 前
+  yesno:
+    Yes: 是
+    No: 否
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time: # formats, see strftime
+    seconds: 秒
+    minutes: 分
+    hours: 小时
+    days: 天
+    joiner: ""
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      today: "今天 %H:%M"
+      yesterday: "昨天 %H:%M"
+      the_day_before_yesterday: "前天 %H:%M"
+      this_week: "本周%a %H:%M"
+      last_week: "上周%a %H:%M"
+      this_month: "%b%e日 周%a"
+      last_month: "%b%e日"
+      date_only: "%y年%b%e日"
+
+  # Validation messages can be set for a specific model+attribute, model, attribute, or globally.
+  # In the model user.rb define the validation
+  #   validates :email, :presence: true
+  helpers:
+    submit:
+      bay:
+        create: 新建货备
+        update: 保存
+      fixture:
+        create: 新建货架
+        update: 更新货架
+
+  activerecord:
+    models:
+      category: 品类
+      region: 区域
+      store: 门店
+      user: 用户
+      brand: 品牌
+      supplier: 供应商
+      manufacturer: 生产商
+      product: 商品
+      sale: 销售记录
+      bay: 货备
+      open_shelf: 开架
+      rear_support_bar: 后支撑条
+      freezer_chest: 冰柜
+      peg_board: 钉板
+      heap: 堆头
+
+    attributes:
+      import_sheet:
+        file_upload: 上传文件
+        comment: 备注
+        upload_sheet: '请上传商品信息的电子表文件(xls,xlsx,csv)'
+        filename: 上传文件
+      category:
+        code: 品类编码
+        name: 品类名称
+        parent_id: 上级品类
+        codes: 编码
+        memo: 备注
+        name_0: 大类
+        name_1: 中类
+        name_2: 小类
+      user:
+        email: 邮箱
+        username: 用户名
+        telephone: 电话号码
+        employee_id: 员工号码
+        store_id: 所属门店
+        role: 角色
+      brand:
+        name: 品牌名
+        category_name: 品类
+      supplier:
+        name: 供应商名称
+      manufacturer:
+        name:  生产商名称
+      product:
+        barcode: 条码
+        supplier: 供应商
+        mfr: 生产商
+        code: 编码
+        id: 编码
+        name: 品名
+        price_zone: 价格带
+        size_name: 规格
+        case_pack_name: 包装
+        color: 颜色
+        height: 高度
+        width: 宽度
+        depth: 深度
+        weight: 重量
+        brand_id: 品牌
+        mfr_id: 生产商
+        category_id: 品类
+        grade: 等级
+        status: 新品促销
+        plan_info_rank: 排名
+        facings: 排面
+        new_product: 新品
+        on_promotion: 促销
+        image_file: 商品图片
+        image_upload: 选择商品图片文件或压缩包
+      store:
+        code: 门店编号
+        name: 店名
+        area: 面积
+        depot_area: 仓库面积
+        location: 位置
+        grade: 等级
+        region_id: 区域
+        ref_store_id: 标准店
+        image_file: 布局图
+        memo: 备注
+      region:
+        code: 编码
+        name: 区域
+        consume_type: 消费类型
+        memo: 备注
+      fixture_item:
+        bay_id: 货备
+        num_bays: 货备数
+        continuous: 货备连通
+      store_fixture:
+        store_id: 配置门店
+        fixture_id: 货架
+        category_id: 部署品类
+        category_name: 部署品类
+        code: 货架编号
+        name: 货架名称
+        num_bays: 货备数
+        parts: 部分货架
+      bay:
+        back_height: 背板高度
+        back_width: 背板宽度
+        back_thick: 背板厚度
+        back_color: 背板颜色
+        notch_spacing: 槽孔间距
+        notch_1st: 第1槽孔
+        base_height: 基底高
+        base_width: 基底宽度
+        base_depth: 基底深度
+        base_color: 基底颜色
+        takeoff_height: 购物高度
+        show_peg_holes: 显示钉板
+        elem_count: 层数
+        name: 货备名称
+        bay_size: 尺寸(高/宽/深)
+        num_layers: 层数
+        ref_count: 货架数
+        types: 类型
+      open_shelf:
+        name: 名称
+        height: 商品层高
+        width: 隔板宽度
+        depth: 隔板深度
+        thick: 隔板厚
+        slope: 隔板倾角
+        riser: 支撑板高
+        notch_num: 槽孔号
+        from_base: 距基底高
+        color: 隔板颜色
+        from_back: 距背板
+        finger_space: 插手空间
+        x_position: x轴
+      peg_board:
+        height: 高度
+        depth: 钉深
+        horz_space: 水平空间
+        vert_space: 垂直空间
+        horz_start: 水平起始
+        vert_start: 垂直起始
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+      freezer_chest:
+        height: 高度
+        depth: 深度
+        inside_height: 内部高
+        wall_thick: 腔壁厚
+        merch_height: 商品高度
+        color: 颜色
+      rear_support_bar:
+        height: 高度
+        bar_depth: 条深度
+        bar_thick: 条厚度
+        from_back: 距背板
+        hook_length: 挂钩长
+        notch_num: 槽孔号
+        from_base: 距基底
+        color: 颜色
+        bar_slope: 条倾斜度
+      fixture:
+        name: 货架名称
+        num_bays: 货备数
+        ref_count: 门店数
+        memo: 备注
+        flow_l2r: 向右排货
+        continuous: 货备连通
+      plan_set:
+        name: 规划名称
+        category_id: 品类
+        category_name: 品类
+        created_at: 开始规划
+        note: 规划说明
+        num_stores: 门店数
+        recent_plans: 最近编辑
+        published_at: 发布
+        undeployed_stores: 未部署
+        to_deploy_at: 计划部署
+        model_stores: 选择标准店
+        completed_ratio: 完成度
+        deployed: 完成
+        download: 下载
+        downloaded_time: 下载时间
+        deployed_time: 部署时间
+        none: 无操作
+      plan:
+        plan_set_name: 规划名称
+        category_name: 规划品类
+        fixture_id: 货架
+        store_name: 标准店
+        num_stores: 门店数
+        usage_percent: 空间使用率
+        init_facing: 初始排面数
+        min_product_grade: 商品最低等级
+        positions:
+          leading_gap: 前置间隙
+          leading_divider: 前分隔物
+          middle_divider: 货品间分隔物
+          trail_divider: 后分隔物
+      stat:
+        agg_id: 品牌
+        num_facings: 排面
+        num_positions: 商品数量
+        percentage: 排面百分比%
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "is required"
+
+  import_sheet:
+    comment: "write comment for this upload file, please"
+    file_upload: "上传文件"
+    filename: "文件名"
+    title:
+      sale: "导入销售数据"
+      product: "导入商品"
+      category: "导入品类"
+      store: "导入门店"
+
+  categories:
+    index:
+      id: "品类"
+      new: "添加新品类"
+    edit:
+      id: "品类"
+      desc: "备注"

@@ -1,0 +1,44 @@
+<h1>Listing import_sheets</h1>
+
+<p>should show:<br>
+<p>  import_date, comment, filename, imported: count..., #show, #discard link
+
+<p>product: category:*, product:* + brand:*, supplier:*, manufacture:*
+<p>sale: sale:*
+<p>test: all fields
+
+<table>
+  <thead>
+    <tr>
+      <th>Filename</th>
+      <th>Comment</th>
+      <th>Store</th>
+      <th>User</th>
+      <th>Imported.Sheets</th>
+      <th>Imported.Sales</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @import_sheets.each do |import_sheet| %>
+      <% count = import_sheet.imported[:count] %>
+      <% sheets = import_sheet.imported[:sheets].map {|s| s[:name] } %>
+      <tr>
+        <td><%= import_sheet.filename %></td>
+        <td><%= import_sheet.comment %></td>
+        <td><%= import_sheet.store_id %></td>
+        <td><%= import_sheet.user_id %></td>
+        <td><%= sheets %></td>
+        <td><%= count[:sale] %></td>
+        <td><%= link_to 'Show', import_sheet_path(import_sheet, part: "result") %></td>
+        <td><%= link_to 'Discard', import_sheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Import sheet', new_import_sheet_path(_t: @t) %>

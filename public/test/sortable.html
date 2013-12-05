@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>jQuery UI Sortable - Connect lists</title>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<style>
+#sortable1, #sortable2 {
+    display: block;
+    float: top;
+    overflow: hidden;
+    white-space:nowrap;
+    list-style-type: none;
+    padding: 2px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+#sortable1 li, #sortable2 li {
+    display: inline-block;
+    margin: 1px;
+    padding: 1px;
+    /*font-size: 1em;
+    width: 120px; */
+}
+.ui-default {
+    border: 1px solid red;
+}
+.ui-highlight {
+    border: 1px solid blue;
+}
+table {
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-collapse: collapse;
+    padding: 1px;
+}
+td {
+    width: 10px;
+    height: 10px;
+    margin: 0;
+    padding: 0;
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    background-color: red;
+}
+</style>
+<script>
+$(function() {
+    $("li").html($("#demo").clone())
+
+    $( "#sortable1, #sortable2" ).sortable({
+        connectWith: ".connectedSortable"
+        }).disableSelection();
+    });
+
+</script>
+</head>
+<body>
+<ul id="sortable1" class="connectedSortable">
+<li id="foo_1" class="ui-default">Item a.1</li>
+<li id="foo_2" class="ui-default">Item a.2</li>
+<li id="foo_3" class="ui-default">Item a.3</li>
+<li id="foo_4" class="ui-default">Item a.4</li>
+<li id="foo_5" class="ui-default">Item a.5</li>
+</ul>
+<ul id="sortable2" class="connectedSortable">
+<li id="bar_1" lass="ui-highlight">Item b.1</li>
+<li id="bar_2" class="ui-highlight">Item b.2</li>
+<li id="bar_3" class="ui-highlight">Item b.3</li>
+<li id="bar_4" class="ui-highlight">Item b.4</li>
+<li id="bar_5" class="ui-highlight">Item b.5</li>
+</ul>
+
+<hr>
+<h2>table grid</h2>
+<table id=demo>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+</table>
+
+</body>
+</html>
+

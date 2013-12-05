@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  bay_id: 1
+  name: rear_support_bar1
+  height: 9.99
+  bar_depth: 9.99
+  bar_thick: 9.99
+  from_back: 9.99
+  hook_length: 9.99
+  from_base: 2.22
+  notch_num: 1
+  color: "#000000"
+  bar_slope: 20.0
+
+two:
+  bay_id: 1
+  name: rear_support_bar2
+  height: 9.99
+  bar_depth: 9.99
+  bar_thick: 9.99
+  from_back: 9.99
+  hook_length: 9.99
+  from_base: 2.22
+  notch_num: 1
+  color: "#000000"
+  bar_slope: 30.0

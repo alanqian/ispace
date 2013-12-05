@@ -1,0 +1,4 @@
+<tr data-id="<%= region.id %>">
+  <% logger.info(region.inspect) %>
+  <%= data_td_list region, :code, :name, :consume_type, :memo %>
+</tr>

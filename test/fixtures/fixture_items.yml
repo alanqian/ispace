@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  fixture_id: 1
+  name: '111'
+  bay_id: 1
+  num_bays: 1
+  item_index: 1
+  continuous: false
+
+two:
+  fixture_id: 1
+  name: '222'
+  bay_id: 1
+  num_bays: 1
+  item_index: 1
+  continuous: false

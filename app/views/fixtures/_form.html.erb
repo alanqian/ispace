@@ -1,0 +1,65 @@
+<% opt_disabled = (@do == :deploy) %>
+<%# opt_disabled = (@do == :deploy) || fixture.ref_store.any? %>
+<%= simple_form_for(fixture, data: { disabled: opt_disabled }) do |f| %>
+  <%= f.error_notification %>
+
+  <div id="fixture_basic" class="inputs">
+    <%= f.input :name %>
+    <%= f.button :submit %>
+    <%#= f.button :submit, "返回" %>
+  </div>
+  <div class="row">
+    <div class="span2">
+      <table id="fixture_metrics" border=1 cellspacing=0 cellpadding=2 data-bays="<%= @space.to_json %>">
+        <tbody>
+          <tr>
+            <td>行程</td>
+            <td id="run">0.0</td>
+          </tr>
+          <tr>
+            <td>长度</td>
+            <td id="linear">0.0</td>
+          </tr>
+          <tr>
+            <td>面积</td>
+            <td id="area">0.0</td>
+          </tr>
+          <tr>
+            <td>体积</td>
+            <td id="cube">0.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="span40p">
+      <%= submit_tag "+", class: 'add_element', id: 'add_fixture_item', 'data-id' => '#fixture_item', title: 'add bay', onclick: "addFixtureItem(event,this);" %>
+      <%= submit_tag "-", class: 'add_element', id: 'remove_fixture_item', title: 'remove bay', onclick: "removeFixtureItem(event);" %>
+    </div>
+    <div class="span4">
+      <table id="items" border=1 cellspacing=0 cellpadding=2>
+      <thead>
+      <tr>
+        <th><%=tf :bay_id %></th>
+        <th><%=tf :num_bays %></th>
+        <th><%=tf :continuous %></th>
+      </tr>
+      </thead>
+      <tbody id="fixture_items">
+        <%= f.simple_fields_for :fixture_items do |builder| %>
+          <%= render "fixture_item_fields", f: builder, bays: @bays %>
+        <% end %>
+      </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="template">
+    <%# id: fixture_item, model_name: :fixture_items, template_obj: @fixture_item_new %>
+    <table>
+    <%= f.simple_fields_for(:fixture_items, @fixture_item_new, child_index: "new_fixture_item_index") do |builder| %>
+      <tbody id="fixture_item" data-id="new_fixture_item_index" data-target="#fixture_items" %>
+        <%= render "fixture_item_fields", f: builder, bays: @bays %>
+      </tbody>
+    <% end %>
+    </table>
+  </div>
+<% end %>

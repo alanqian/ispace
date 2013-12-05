@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: bay1
+  back_height: 9.99
+  back_width: 9.99
+  back_thick: 9.99
+  back_color: "#ffffff"
+  notch_spacing: 9.99
+  notch_1st: 9.99
+  base_height: 9.99
+  base_width: 9.99
+  base_depth: 9.99
+  base_color: "#000000"
+
+two:
+  name: bay2
+  back_height: 9.99
+  back_width: 9.99
+  back_thick: 9.99
+  back_color: "#ffffff"
+  notch_spacing: 9.99
+  notch_1st: 9.99
+  base_height: 9.99
+  base_width: 9.99
+  base_depth: 9.99
+  base_color: "#000000"

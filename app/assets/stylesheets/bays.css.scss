@@ -1,0 +1,157 @@
+// Place all the styles related to the bays controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+div.bays {
+  margin: 0.3em 0 0 0;
+  .span5 {
+    width: 310px;
+  }
+  div.input.bay_name {
+    margin-left: 1em;
+  }
+  div.inputs.bay_main {
+    padding: 0 1.2em;
+  }
+  hr {
+    margin: 0.3em -1.2em;
+  }
+  div.actions {
+    text-align: center;
+    margin: 0;
+    button {
+      margin: 0 0.3em 0 0.3em;
+    }
+  }
+  form {
+    margin-left: 0;
+  }
+  // clear the global min-width
+  form div.input label {
+    min-width: initial;
+    margin: 0;
+    text-align: left;
+  }
+  label>abbr {
+    display: none; // hide required mark *
+  }
+
+  .row {
+    margin-left: 0em;
+    // clear: both;
+  }
+  .row.hlabel {
+    div.input {
+      display: inline-block;
+      label {
+        display: inline-block;
+        min-width: 1em;
+        padding: 0 4px 0 0;
+        text-align: right;
+      }
+      input, select {
+        display: inline-block;
+        width: 54px;
+        padding: 0 4px;
+      }
+      input[type="checkbox"] {
+        width: 10px;
+      }
+    }
+    div.input.span2 {
+      label {
+        width: 65px;
+      }
+    }
+  }
+  .row.vlabel {
+    div.input {
+      padding: 0 4px;
+      input {
+        width: 54px;
+        padding: 0;
+      }
+    }
+  }
+  #accordion {
+    font-size: 13px;
+  }
+  .ui-accordion .ui-accordion-header {
+    padding: .2em .5em .2em .7em;
+  }
+  h3>input {
+    margin-left: 18px;
+    width: 10em;
+  }
+  input[type='submit'] {
+    height: 28px;
+    margin: 10px;
+  }
+  div.actions {
+    padding: 1px;
+    margin: 4px 0;
+  }
+  div.bay_name {
+    label {
+      display: inline-block;
+      min-width: 2em;
+      width: 4.5em;
+    }
+  }
+}
+
+div.bays.form {
+  display: inline-block;
+  float: left;
+  min-height: 560px;
+}
+
+div.bays.preview {
+  display: inline-block;
+  width: 60%;
+  // background-color: blue;
+  clear: both;
+}
+
+#dummy, #template {
+  display: none;
+}
+
+#add_open_shelf {
+  background: url('/assets/add_open_shelf.png') no-repeat top;
+}
+#add_peg_board {
+  background: url('/assets/add_peg_board.png') no-repeat top;
+}
+#add_rear_supported_bar {
+  background: url('/assets/add_rear_supported_bar.png') no-repeat top;
+}
+#add_freezer_chest {
+  background: url('/assets/add_freezer_chest.png') no-repeat top;
+}
+
+a.remove_element {
+  display: inline-block;
+  float: right;
+  padding: 1px;
+  width: 1em;
+}
+
+input.add_element {
+  display: inline-block;
+  width: 32px;
+  height: 31px;
+  background-color: #cccccc;
+  border: 2px outset #dddddd;
+  color: #222222;
+  padding:3px 3px 3px 3px;
+  margin: 1px;
+}
+
+input.add_element:active {
+  background-color: #cccccc;
+  border: 2px inset #dddddd;
+  color: #222222;
+  padding: 1px 5px 5px 1px;
+  margin: 0px;
+}

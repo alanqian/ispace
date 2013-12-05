@@ -1,0 +1,42 @@
+<ul class="nav nav-list">
+  <li class="nav-header">门店</li>
+  <li><%= link_to "门店管理", stores_path %></li>
+  <li><%= link_to "门店动态", stores_path(_do: :activity) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">空间</li>
+  <li><%= link_to "空间规划", plan_sets_path %></li>
+  <li><%= link_to "规划设计", plan_sets_path(_do: :design) %></li>
+  <li><%= link_to "部署管理", plan_sets_path(_do: :deploy) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">货架</li>
+  <li><%= link_to "货备管理", bays_path %></li>
+  <li><%= link_to "货架管理", fixtures_path %></li>
+  <li><%= link_to "货架配置", fixtures_path(_do: :deploy) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">商品</li>
+  <li><%= link_to "品牌", brands_path  %></li>
+  <li><%= link_to "供应商", suppliers_path %></li>
+  <li><%= link_to "制造商", manufacturers_path %></li>
+  <li><%= link_to "单品", products_path %></li>
+  <li><%= link_to "在售商品", products_path(_do: :on_shelf) %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">数据</li>
+  <li><%= link_to "上传商品", new_import_sheet_path(_t: 'product') %></li>
+  <li><%= link_to "上传列表", import_sheets_path(_t: 'product') %></li>
+  <li><%= link_to "分析统计", stats_path %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">品类</li>
+  <li><%= link_to "品类", categories_path %></li>
+  <li><%= link_to "品类导入", new_import_sheet_path(_t: 'category') %></li>
+</ul>
+<ul class="nav nav-list">
+  <li class="nav-header">设置</li>
+  <li><%= link_to "用户信息", edit_user_path(current_user) %></li>
+  <li><%= link_to "面积范围", "#" %></li>
+  <li><%= link_to "统计公式", "#" %></li>
+</ul>

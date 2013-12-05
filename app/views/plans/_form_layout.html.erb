@@ -1,0 +1,35 @@
+<%= simple_form_for(@plan, remote: true, html: { id: "plan-layout-form" }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= token_tag %>
+    <%= f.input :_do, as: :hidden, value: "layout" %>
+    <%= f.hidden_field :user_id %>
+    <%= f.hidden_field :version %>
+  </div>
+
+  <div class="input-positons">
+    <%= f.simple_fields_for :positions do |pf| %>
+      <%= pf.hidden_field :product_id %>
+      <%= pf.hidden_field :fixture_item_id %>
+      <%= pf.hidden_field :layer %>
+      <%= pf.hidden_field :seq_num %>
+      <%= pf.hidden_field :run %>
+      <%= pf.hidden_field :init_facing %>
+      <%= pf.hidden_field :facing %>
+      <%= pf.hidden_field :height_units %>
+      <%= pf.hidden_field :width_units %>
+      <%= pf.hidden_field :depth_units %>
+      <%= pf.hidden_field :leading_gap %>
+      <%= pf.hidden_field :leading_divider %>
+      <%= pf.hidden_field :middle_divider %>
+      <%= pf.hidden_field :trail_divider %>
+      <%= pf.hidden_field :version %>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%#= f.button :submit %>
+  </div>
+<% end %>
+

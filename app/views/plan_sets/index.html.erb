@@ -1,0 +1,52 @@
+<% content_for_title :index %>
+
+<%#
+<!--
+<table id="plan_sets-table" data-form="#plan_sets-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>品类</th>
+      <th>标准店</th>
+      <th>门店数</th>
+      <th>发布时间</th>
+      <th>未发布样板</th>
+      <th>未实施门店</th>
+      <th>创建时间</th>
+      <th data-no-sort="1"></th>
+    </tr>
+  </thead>
+-->
+
+  <li>select undeployed planset#list, buttons: planset#new, planset#rename, planset#remove</li>
+  <li>plan_set#edit: name/notes/plans</li>
+  <li>plans#index, in planset</li>
+  <li>plan#new, in this planset, may modify</li>
+  <li>plan#edit, summary, form;</li>
+
+  Plan.status
+    :closed   finished
+    :new      new created, empty
+    :open     in editing, percentage string
+  PlanSet.status
+    :new        new created, empty
+    :open       in designing
+    :published  published, pdf generated
+    :closed     deployed
+%>
+
+<h3>最新规划</h3>
+<%# == new plan_set, order by create_time %>
+<%= render 'editing_list', plan_sets: @plan_sets[:design] %>
+
+<h3>快捷链接</h3>
+<%= render 'recent_list', plan_sets: @plan_sets[:recent_plans]  %>
+
+<h3>规划部署</h3>
+<%= render 'deploying_list', deployments: @plan_sets[:deploying] %>
+
+<h3>完成规划</h3>
+<%= render 'deployed_list', deployments: @plan_sets[:deployed] %>
+

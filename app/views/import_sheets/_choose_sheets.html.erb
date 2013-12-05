@@ -1,0 +1,30 @@
+<div id="import-wizard" title="导入商品：选择活动工作表...2/3">
+  <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
+  <% empty_sheet_ids = import_sheet.sheets.select { |e| e[:empty] } . map { |e| e[:id] } %>
+  <%= simple_form_for(import_sheet, action: "update", remote: true) do |f| %>
+    <%# = f.error_notification %>
+    <%= f.error :base %>
+    <%= f.hidden_field :step %>
+    <div class="inputs">
+      <%= f.input :filename, input_html: { size: 20, title: "上传文件", disabled: true } %>
+      <%= f.input :comment, input_html: { size: 22, title: "你的备注" } %>
+      <%= f.collection_check_boxes :sel_sheets, coll, :first, :last %>
+      <%= f.input :category_id, collection: categories, prompt: "品类?" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
+      <%= f.submit "上一步", data: { "wizard-action" => "prev" } %>
+      <%= f.submit "下一步", data: { "wizard-action" => "next" } %>
+    </div>
+  <% end %>
+  <script type="text/javascript">
+    // disable the empty sheets checkboxes
+    <% empty_sheet_ids.each do |id| %>
+      var inputCheck = $("input[name='import_sheet[sel_sheets][]'][value='<%= id %>']");
+      inputCheck.prop("disabled", true);
+      var label = $('label[for="' + inputCheck.attr('id') + '"]');
+      label.text(label.text()+"(空)");
+    <% end %>
+  </script>
+</div>

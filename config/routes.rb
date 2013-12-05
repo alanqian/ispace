@@ -1,9 +1,52 @@
 Ispace::Application.routes.draw do
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
 
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  resources :stats
+
+  get "pages/index"
+  resources :plan_sets
+  resources :plans
+
+  devise_for :users, path: 'auth'
+  devise_scope :user do
+    get "sign_in" => "devise/sessions#new", as: :sign_in
+    delete "sign_out" => "devise/sessions#destroy", as: :sign_out
+  end
+
+  resources :users
+
+  resources :sales
+
+  get "mdses/" => "mdses#index"
+  resources :brands
+  resources :suppliers
+  resources :manufacturers
+
+  patch "products/" => "products#update_ex"
+  get "products/upload" => "products#upload"
+  resources :products
+
+  resources :import_sheets
+
+  resources :fixtures
+  patch "stores/" => "stores#update"
+  resources :stores
+  resources :regions, except: [:patch]
+  patch "regions/*id", to: "regions#update", defaults: { format: 'js' }
+
+  # removed resources
+  # resources :fixture_items
+  # resources :rear_support_bars
+  # resources :freezer_chests
+  # resources :peg_boards
+  # resources :open_shelves
+
+  resources :bays
+
+  get "categories/manage"
+  post "categories/bulk_update"
+  resources :categories
+
+  root 'pages#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

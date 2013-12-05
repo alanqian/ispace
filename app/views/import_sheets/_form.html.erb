@@ -1,0 +1,36 @@
+<% target = import_sheet._target %>
+<% edit_mode = import_sheet.filename && import_sheet.errors.empty? %>
+
+<div id="import-upload" title="<%= t("import_sheet.title.#{target}")%>：上传文件">
+<%= simple_form_for(import_sheet, remote: false) do |f| %>
+  <%= token_tag %>
+  <%#= render 'errors' import_sheet: import_sheet %>
+  <%= f.error_notification %>
+
+  <div class="inputs uploaded">
+    <%= render 'imported', import_sheet: import_sheet %>
+  </div>
+
+  <div class="inputs upload">
+    <%= f.hidden_field :store_id %>
+    <%= f.hidden_field :user_id %>
+    <%= f.hidden_field :type %>
+    <%= f.hidden_field :_do, value: "upload" %>
+    <%= f.input :comment, input_html: { placeholder: '', title: t("import_sheet.comment") } %>
+    <% if edit_mode %>
+      <%= f.input :filename, disabled: true, label: t('import_sheet.filename') %>
+    <% end %>
+    <%= f.input :file_upload, as: :file %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
+    <%= f.submit "上传", data: { "wizard-action" => "next" } %>
+    <% if edit_mode %>
+      <%= f.submit "导入", data: { "wizard-action" => "next" } %>
+    <% end %>
+  </div>
+
+<% end %>
+</div>
+<!-- <span class="clear"><span> -->

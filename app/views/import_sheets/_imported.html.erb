@@ -1,0 +1,31 @@
+<ul>
+  <% sheets = import_sheet.imported[:sheets] %>
+  <% bad_sheets = import_sheet.imported[:bad_sheets] %>
+  <% if import_sheet.filename %>
+    <li>上传文件：<%= import_sheet.filename %></li>
+  <% end %>
+  <% if sheets %>
+    <% if sheets.any? %>
+      <% names = sheets.map { |s| s[:name] }.join(", ") %>
+      <% fields = sheets.map { |s| s[:fields] }.flatten.uniq.join(", ") %>
+      <% ignores = sheets.map { |s| s[:ignore] }.flatten.uniq.join(", ") %>
+      <li>有效工作表: <%= names %></li>
+      <li>有效字段: <%= fields %></li>
+      <% if !ignores.empty? %>
+        <li>未识别字段: <%= ignores %></li>
+      <% end %>
+    <% else %>
+      <li>有效工作表: 无</li>
+    <% end %>
+  <% end %>
+  <% if bad_sheets && bad_sheets.any? %>
+    <% names = bad_sheets.map { |s| s[:name] }.join(", ") %>
+    <% ignores = bad_sheets.map { |s| s[:ignore] }.flatten.uniq.join(", ") %>
+    <% missing = bad_sheets.map { |s| s[:missing] }.flatten.uniq.join(", ") %>
+    <li>无效工作表：<%= names %></li>
+    <% if !ignores.empty? %>
+      <li>未识别字段: <%= ignores %></li>
+    <% end %>
+    <li>缺少字段: <%= missing %></li>
+  <% end %>
+</ul>

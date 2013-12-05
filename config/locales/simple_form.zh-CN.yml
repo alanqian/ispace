@@ -1,0 +1,202 @@
+zh-CN:
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    commits:
+      yes: 是
+      no: 否
+      ok: 确定
+      cancel: 取消
+      prev: 上一步
+      next: 下一步
+      finish: 完成
+      upload: 上传
+      import: 导入
+      discard: 放弃导入
+      update: 更新
+      new: 新建
+      back: 返回
+      publish: 发布
+      unpublish: 取消发布
+      set_as_model_store: 设为标准店
+      set_model_store: '设置标准店...'
+
+    titles:
+      stat:
+        index: 分析统计
+
+      plan_set:
+        new: 新建空间规划
+        add_store: 添加标准店
+        publish: 发布空间规划
+        defaults: 修改空间规划
+        open: 空间规划：设计
+        deploy: 空间规划：部署情况
+        index: 空间规划
+        index_design: 规划设计
+        index_deploy: 部署管理
+        index_search: 门店规划
+        deploy_recent: 最新规划
+        deploy_report: 完成上报
+        deploy_deployed: 历史规划
+      plan:
+        index: 标准店规划
+        new: 空间规划：增加标准店
+        edit: 设置门店参数
+        edit_setup: 设置门店规划
+        edit_layout: 门店空间设计
+      store:
+        index: 门店列表
+        new: 新建门店
+        index_designer: 门店管理
+        index_activity: 门店动态
+        edit: 修改门店信息
+        edit_fixture: 门店货架部署
+      region:
+        index: 区域设置
+        new: 新建区域
+        edit: 更新区域信息
+      bay:
+        new: 新建货备
+        edit: 编辑货备
+        index: 货备管理
+      fixture:
+        index: 货架管理
+        new: 新建货架
+        edit: 编辑货架
+        deploy: 货架配置
+        index_store: 门店货架
+      category:
+        index: 品类管理
+        new: 新建品类
+        edit: 更新品类
+      brand:
+        index: 品牌管理
+        edit: 更新品牌信息
+        new: 新建品牌
+      supplier:
+        index: 供应商管理
+        edit: 更新供应商信息
+        new: 新建供应商
+      manufacturer:
+        index: 制造商管理
+        new: 新建制造商
+        edit: 更新制造商信息
+      product:
+        index: 单品管理
+        index_on_shelf: 在售商品
+        index_off_shelf: 未上架商品
+        edit: 更新商品信息
+        new: 新建商品
+        upload: 商品图片上传
+      sale:
+        index: 销售信息管理
+        edit: 更新销售信息
+        new: 新增销售信息
+      import_sheet:
+        new_product: 上传商品文件
+        index_product: 商品导入列表
+        edit_import_product: 导入商品
+        new_sale: 上传销售数据文件
+        index_sale: 销售数据导入列表
+        edit_import_sale: 销售数据导入
+        new_store: 上传门店信息文件
+        index_store: 门店导入列表
+        edit_import_store: 门店导入
+        new_category: 上传品类文件
+        index_category: 品类导入列表
+        edit_import_category: 导入品类
+      user:
+        new: 新建用户
+        edit: 用户信息
+        index: 用户管理
+    notices:
+      store:
+        update: 门店#{store}信息更新完毕
+        create: 新建了一个门店%{store}
+        update_model_store: 标准店设置成功，继续操作
+        update_model_store_fail: 标准店设置失败！
+        update_fixture: 成功设置标准店货架！
+        update_delete: 门店%{store}已删除!
+        update_delete_fail: 门店%{store}删除失败!
+      bay:
+        create: 创建了货备%{bay}
+        update: 修改了货备%{bay}
+      product:
+        update_ex: 更新了%{count}个单品
+        update_fail: 没有更新单品
+        create_upload: 商品图片上传完成，共更新了%{count}个商品的图片
+      plan_set:
+        create: 创建空间规划%{plan_set}第一步完成，接下来请选择规划包含的标准店...
+
+    required:
+      text: 'required'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+
+    error_notification:
+      default_message: "Some errors were found, please take a look:"
+      # import_sheet: "import sheet error message"
+
+    labels:
+      defaults:
+        category_id: 品类
+        category_name: 品类
+        run: 行程(m)
+        linear: 长度(m)
+        area: 面积(m²)
+        cube: 体积(m³)
+      #others: move to activerecord.attributes: <model>.<attribute>
+
+    # "hints" is put after input element! write it ONLY WHEN NECESSARY!
+    hints:
+      defaults:
+      #  username: 'User name to sign in.'
+      #  password: 'No special characters, please.'
+      import_sheet:
+        #upload_sheet: "*.xls,*.xlsx,*.csv"
+        #filename: "xls,xlsx,csv file:"
+        #comment: "comment"
+        #category_id: "Category of Product"
+      plan:
+        init_facing: (对未上架的商品有效)
+        category_name: (新规划才能更改品类)
+        min_product_grade: (至少达到此等级的商品才能上架)
+
+      plan_set:
+        category_id: (新规划才能更改品类)
+
+    # By default, show in EMPTY input element in gray color
+    placeholders:
+      # model/field: message
+      import_sheet:
+        filename: "--filename--"
+        comment: "--comment for this upload file, --"
+      plan_set:
+        name: 规划名称
+        note: 填写本规划的说明，部署的要求等等；此处说明内容会打印在给门店的规划书的扉页
+        category_id: 品类
+      bay:
+        name: 货备名称，如：120x7层板
+        open_shelves:
+          name: 隔板
+        peg_boards:
+          name: 钉板
+        freezer_chests:
+          name: 腔体(冷藏柜)
+        rear_support_bars:
+          name: 后支撑条
+        heaps:
+          name: 堆头
+
+    options:
+      # struct:: model/field/option: message
+
+# ActiveRecord error messages:
+# Generic model error messages:
+#   https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml
+# ActiveRecord error messages, include how to write own messages:
+#   https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml
+

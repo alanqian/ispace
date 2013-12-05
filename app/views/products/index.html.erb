@@ -1,0 +1,102 @@
+<% content_for_title @full_action %>
+
+<div id="products-list">
+  <%= simple_form_for(product_new, method: "patch", remote: true,
+                      data: { url: product_path(product_new) },
+                      html: { id: "products-form", class: "inplace", }) do |f| %>
+    <div class="inputs">
+      <%= f.input :height %>
+      <%= f.input :width %>
+      <%= f.input :depth %>
+      <%= f.input :weight %>
+      <%= f.input :price_zone, collection: t("dict.prices") %>
+      <%= f.input :color, as: :color %>
+    </div>
+    <table id="products-table" data-form="#products-form"
+      data-sinfoempty="请重新选择品类或重新搜索"
+      class="dataTable grid-control no-wrap resizable inplace_edit" cellspacing=0>
+      <thead>
+        <tr>
+          <%= data_th_list :product,
+            [:select_all, "products[]"],
+            [:grade, input: false],
+            [:code, input: false],
+            [:brand_id, input: false],
+            [:name, input: false],
+            [:status, input: false, sort: false],
+            [:color, sort: false, search: false],
+            :height, :width, :depth, :weight, :price_zone,
+            [:size_name, input: false],
+            [:case_pack_name, input: false],
+            [:barcode, input: false],
+            [:supplier_id, input: false],
+            [:mfr_id, input: false]
+          %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <%= render '/products/item', product: product,
+            brands_hash: brands_all.to_hash(:id, :name),
+            suppliers_hash: suppliers_all.to_hash(:id, :name),
+            mfrs_hash: mfrs_all.to_hash(:id, :name) %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div id="dataTable-filter">
+  <%= simple_form_for(product_new, remote:true,
+                      url: "#",
+                      html: { id: "products-choose-category" }) do |f| %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category",
+      data: { url: products_path(category: "") } %>
+    <%= link_to "设置等级", "#", id: "select-products-grade", class: "cmd_ui" %>
+    <%= link_to "新品促销", "#", id: "select-products-on-sale", class: "cmd_ui" %>
+    <%= link_to "上传图片", "/products/upload" %>
+    <div id="setup-place"></div>
+  <% end %>
+</div>
+
+<%= category_menu "select-category" %>
+
+<%= simple_form_for(product_new, method: "patch", remote: true,
+                    url: product_path(product_new),
+                    html: { id: "products-set-on-sale-form"}) do |f| %>
+  <div class="inputs">
+    <%= f.input_field :new_product, as: :hidden %>
+    <%= f.input_field :on_promotion, as: :hidden %>
+  </div>
+  <%= hidden_field_tag "products[]" %>
+<% end %>
+
+<%= simple_form_for(product_new, method: "patch", remote: true,
+                    url: product_path(product_new),
+                    html: { id: "products-set-grade-form"}) do |f| %>
+  <div class="inputs">
+    <%= f.input_field :grade, as: :hidden %>
+  </div>
+  <%= hidden_field_tag "products[]" %>
+<% end %>
+
+<%# popup-menu %>
+<ul id="select-products-on-sale-menu" class="popup-menu">
+  <li><a id="set-products-on-sale" data-new_product="0" data-on_promotion="0" href="#">普通</a></li>
+  <li><a id="set-products-on-sale" data-new_product="1" data-on_promotion="0" href="#">新品</a></li>
+  <li><a id="set-products-on-sale" data-new_product="0" data-on_promotion="1" href="#">促销品</a></li>
+  <li><a id="set-products-on-sale" data-new_product="1" data-on_promotion="1" href="#">新品促销</a></li>
+</ul>
+
+<%# popup-menu %>
+<ul id="select-products-grade-menu" class="popup-menu">
+  <% I18n.t("dict.grades").each do |grade, label| %>
+    <li>
+      <%= link_to label, "#", id: "set-products-grade", data: { grade: grade } %>
+    </li>
+  <% end %>
+</ul>
+
+<%#= link_to 'New Product', new_product_path %>
+

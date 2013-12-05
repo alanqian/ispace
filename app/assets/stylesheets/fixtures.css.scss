@@ -1,0 +1,83 @@
+// Place all the styles related to the fixtures controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+form.edit_fixture, form.new_fixture {
+  tr.active {
+    background-color: #0000cc;
+  }
+  div.input.fixture_name {
+    display: inline-block;
+    margin-right: 1em;
+  }
+  table#fixture_metrics {
+    tr {
+      td:first-child {
+        background-color: #dddddd;
+        width: 3em;
+        text-align: center;
+      }
+      td:last-child {
+        background-color: #ffffff;
+        min-width: 4.5em;
+        text-align: left;
+        padding-left: 0.2em;
+      }
+    }
+  }
+
+  table#items {
+    width: 19em;
+    tr {
+      th {
+        width: 3.5em;
+      }
+      th:first-child {
+        width: 10em;
+      }
+      th:last-child {
+        width: 4.5em;
+      }
+    }
+    td>select[id$='_bay_id'] {
+      width: 96%;
+    }
+    td>select[id$='_continuous'] {
+      width: 3.5em;
+    }
+    td>input.integer {
+      width: 90%;
+    }
+  }
+}
+
+form.edit_fixture_deploy {
+  display: block;
+  margin-left: 0;
+  float: none !important;
+  div.input {
+    display: block;
+    width: 100%;
+    label {
+      display: inline-block;
+      min-width: 70px;
+      abbr {
+        display: inline-block;
+      }
+    }
+    select {
+      width: 8em;
+    }
+    input {
+      width: 7em;
+    }
+  }
+}
+
+#fixture_basic {
+  box-sizing: border-box;
+  .input label {
+    width: auto;
+    min-width: initial;
+  }
+}

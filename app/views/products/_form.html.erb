@@ -1,0 +1,26 @@
+<%= simple_form_for(@product) do |f| %>
+  <%= f.error_notification %>
+  <div class="inputs">
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
+    <%= f.input :brand_id, collection: [] %>
+    <%= f.input :mfr_id, collection: [] %>
+    <%= f.input :code %>
+    <%= f.input :name %>
+    <%= f.input :height %>
+    <%= f.input :width %>
+    <%= f.input :depth %>
+    <%= f.input :weight %>
+    <%= f.input :price_zone, collection: t("dict.prices") %>
+    <%= f.input :size_name %>
+    <%= f.input :case_pack_name %>
+    <%= f.input :barcode %>
+    <%= f.input :color, as: :color %>
+    <%= f.input :supplier_id, collection: [] %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+<%= category_menu "select-category" %>

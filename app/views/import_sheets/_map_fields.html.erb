@@ -1,0 +1,49 @@
+<div id="import-wizard" title="导入商品：设置字段映射...3/3">
+  <% coll = import_sheet.sheets.map { |e| [e[:id], e[:name]] } %>
+  <% fields = import_sheet.sheet_fields %>
+  <% map_from = Hash[fields.zip([""] * fields.size)] %>
+  <%= simple_form_for(import_sheet, action: "update", remote: true) do |f| %>
+    <%# = f.error_notification %>
+    <%= f.error :base %>
+    <%= f.hidden_field :step %>
+    <div class="inputs map">
+      <%= f.input :filename, input_html: { size: 40, title: "上传文件", disabled: true } %>
+      <div class="mapping-src">
+        <%= label_tag :mapping, "电子表字段:", class: "header" %>
+        <div class="mapping-src-fields">
+          <table border=1 cellspacing=0 cellpadding=2>
+          <%= f.simple_fields_for :mapping, OpenStruct.new(Hash[fields.zip([""] * fields.size)]) do |fm| %>
+            <% fields.each do |field| %>
+              <tr>
+                <td width='50%' class="mapping-name"><%= field %></td>
+                <td width='50%' class="mapping-input" data-field="<%= field %>">
+                <%= fm.hidden_field field %>
+                <span></span>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          </table>
+        </div>
+      </div>
+      <%= button_tag '自动映射 »', onclick: 'mapUtil.autoMapping(event,this);return false;', "data-src" => auto_mapping.to_json %>
+      <div class="mapping-dest">
+        <%= label_tag :mapping, "映射字段:", class: "header" %>
+        <ul class="mapping-to-fields">
+        <% to_fields.each do |field| %>
+          <li data-field="<%= field[0] %>"><%= field[1] %></li>
+        <% end %>
+        </ul>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="actions">
+      <%= f.submit "取消", data: { "wizard-action" => "cancel" } %>
+      <%= f.submit "« 上一步", data: { "wizard-action" => "prev" } %>
+      <%= f.submit "完成", data: { "wizard-action" => "finish" } %>
+    </div>
+  <% end %>
+  <script type="text/javascript">
+    window.mapUtil.init();
+  </script>
+</div>

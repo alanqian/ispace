@@ -1,0 +1,9 @@
+<% content_for_title :index %>
+
+<div id="bays-list">
+  <%= render 'list', bays: @bays %>
+</div>
+
+<div id="dataTable-filter" class="dataTable_filter">
+  <%= link_to '新建货备', new_bay_path %>
+</div>

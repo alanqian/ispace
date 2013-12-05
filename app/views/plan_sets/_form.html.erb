@@ -1,0 +1,34 @@
+<%= simple_form_for(@plan_set) do |f| %>
+  <%= f.error_notification %>
+  <% disable_category = @plan_set.plans.any? %>
+
+  <div class="inputs">
+    <%= f.hidden_field :user_id %>
+    <%= f.input :name %>
+    <%= f.input :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
+
+    <%= f.input :to_deploy_at %>
+    <%= f.input :note, as: :text  %>
+
+    <%# --- add model store --- %>
+    <% if @plan_set.id %>
+      <%= f.input :_do, as: :hidden, input_html: { value: "add_store" } %>
+      <% model_store_info = @model_stores_all.to_hash(:id, :location, :area, :ref_count, :region_name) %>
+      <div id="model-store-info" data-stores="<%= model_store_info.to_json %>">
+        <p><strong><span id="store_name"></span></strong>：<u><span id="store_location"></span>, <span id="store_area"></span>m²,
+            门店数：<span id="store_ref_count"></span>, 属<span id="store_region_name"></span></u></p>
+      </div>
+      <%= f.input :model_stores, as: :check_boxes, collection: @model_stores_all,
+        wrapper_html: { class: "ui-selected-mark" } %>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit, "确定" %>
+  </div>
+<% end %>
+
+<ul id="ui-tree-input"></ul>
+<%= category_menu "select-category" %>
+

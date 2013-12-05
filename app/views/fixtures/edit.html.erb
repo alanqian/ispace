@@ -1,0 +1,15 @@
+<% content_for_title(@do || :edit) %>
+<hr/>
+
+<%= render 'form', fixture: @fixture %>
+
+<hr />
+<%= render 'deploy_to',
+  fixture: @fixture,
+  store_dict: @stores_all.to_hash(:id, :name),
+  category_dict: @categories_all.to_hash(:code, :name),
+  model_stores_all: @model_stores_all
+%>
+<hr />
+<%#= link_to 'Show', @fixture %>
+<%#= link_to 'Back', fixtures_path %>

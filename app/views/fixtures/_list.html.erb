@@ -1,0 +1,22 @@
+<table id="fixtures-table" data-form="#fixtures-form" data-sinfoempty="请重新选择品类或重新搜索"
+  class="dataTable grid-control no-wrap resizable" cellspacing=0> <thead>
+    <tr>
+      <%=data_th_list :fixture,
+        :name,
+        :num_bays,
+        :run,
+        :linear,
+        :area,
+        :cube,
+        :ref_count,
+        ["", sort: false, search: false]
+      %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% fixtures.each do |fixture| %>
+      <%= render 'item', fixture: fixture %>
+    <% end %>
+  </tbody>
+</table>

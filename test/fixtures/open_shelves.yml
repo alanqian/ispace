@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  height: 9.99
+  width: 110
+  depth: 9.99
+  thick: 9.99
+  slope: 9.99
+  riser: 9.99
+  from_base: 0
+  notch_num: 1
+  color: "#ffffff"
+  from_back: 9.99
+  finger_space: 9.99
+  x_position: 0.0
+
+two:
+  name: MyString2
+  height: 9.99
+  width: 110
+  depth: 9.99
+  thick: 9.99
+  slope: 9.99
+  riser: 9.99
+  from_base: 0
+  notch_num: 1
+  color: "#ffffff"
+  from_back: 9.99
+  finger_space: 9.99
+  x_position: 0.0

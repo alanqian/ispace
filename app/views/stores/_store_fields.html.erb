@@ -1,0 +1,28 @@
+<tr>
+  <td>
+    <span data-id="<%= parent_id %>" class="category_mid <%= hide_class %>"><%= upper_category %></span>
+  </td>
+  <td>
+    <%= f.input_field :category_id, as: :tree, class: "category-name",
+      cmd: "select-category" %>
+  </td>
+  <td>
+    <%= f.input_field :fixture_id, as: :select, collection: @fixtures_all, class: "fixture" %>
+  </td>
+  <td>
+    <%= f.input_field :code, class: "code" %>
+  </td>
+  <td>
+    <%= f.input_field :use_part_fixture, as: :boolean, title: "钩选使用部分货架", class: "ui-group-checkbox", for: "input.ui-group.parts" %>
+    <%= f.input_field :parts_start, as: :integer, class: "parts start ui-group" %>
+    <%= f.input_field :parts_run, as: :integer, class: "parts run ui-group" %>
+  </td>
+  <td>
+    <%= f.input_field :memo, class: "memo" %>
+  </td>
+  <td>
+    <%= f.hidden_field :_destroy %>
+    <%= link_to raw("&times;"), "#", id: "remove_store_fixture", class: "cmd_ui", title: "删除货架" %>
+    <%= link_to raw("&plus;"), "#", id: "add_store_fixture", class: "cmd_ui", title: "增加货架" %>
+  </td>
+</tr>

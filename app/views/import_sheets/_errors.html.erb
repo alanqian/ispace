@@ -1,0 +1,14 @@
+<% if import_sheet.errors.any? %>
+  <%= f.error_notification %>
+  <div class="errors">
+    <% if import_sheet.errors[:file_upload].any? %>
+      <%= import_sheet.errors[:file_upload] %><br>
+    <% end %>
+    <% if import_sheet.errors[:sheets].any? %>
+      <%=raw import_sheet.errors[:sheets] %><br>
+    <% end %>
+    <% if import_sheet.errors[:mapping].any? %>
+      <%=raw import_sheet.errors[:mapping] %>
+    <% end %>
+  </div>
+<% end %>
