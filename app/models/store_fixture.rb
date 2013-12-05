@@ -57,6 +57,7 @@ class StoreFixture < ActiveRecord::Base
   end
 
   def self.store_fixture(store_id, category_id)
+    # TODO: category_id?, first?
     self.where(["store_id=? and category_id=?", store_id, category_id]).first
   end
 

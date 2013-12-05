@@ -8,7 +8,7 @@ class StatsController < ApplicationController
     category_id = @stats[0].category_id
     render "index", locals: {
       stat_title: @stats[0].name,
-      agg_dict: Brand.where(category_id: category_id).select(:id, :name).to_hash(:id, :name),
+      agg_dict: Brand.under(category_id).select(:id, :name).to_hash(:id, :name),
     }
   end
 

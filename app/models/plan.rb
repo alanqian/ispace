@@ -216,7 +216,7 @@ class Plan < ActiveRecord::Base
   def blocks_by_brand
     product_map = on_shelves.select(:code, :name, :brand_id, :color, :width, :height, :depth)
       .to_hash(:id, :id, :brand_id, :width, :height, :depth)
-    brand_map = Brand.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
+    brand_map = Brand.under(category_id).to_hash(:id, :id, :name, :color)
     blocks = {}
     positions.each do |p|
       if p.on_shelf?
@@ -245,7 +245,7 @@ class Plan < ActiveRecord::Base
 
     attr_id = "#{by}_id".to_sym
     attr_klass = by.to_s.classify.constantize
-    attr_map = attr_klass.where(["category_id=?", category_id]).to_hash(:id, :id, :name, :color)
+    attr_map = attr_klass.under(category_id).to_hash(:id, :id, :name, :color)
 
     blocks = {}
     total_run = 0
